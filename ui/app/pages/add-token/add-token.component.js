@@ -144,7 +144,7 @@ class AddToken extends Component {
   }
 
   async attemptToAutoFillTokenParams(address) {
-    const { symbol = '', decimals = 0 } = await this.tokenInfoGetter(address);
+    const { symbol = '', decimals = '0' } = await this.tokenInfoGetter(address);
 
     const autoFilled = Boolean(symbol && decimals);
     this.setState({ autoFilled });

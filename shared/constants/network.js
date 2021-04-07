@@ -45,11 +45,11 @@ export const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET, GOERLI];
 export const BUILDINT_PROVIDER_TYPES = [HECO, BSC, MATIC]
 export const SECURE_NETWORKS = [].concat(INFURA_PROVIDER_TYPES).concat(BUILDINT_PROVIDER_TYPES)
 
-export const HECO_RPC_URL = "https://http-mainnet-node.huobichain.com";
+export const HECO_RPC_URL = "https://heco1.onekey.so/rpc";
 export const HECO_TICKER = "HT";
 export const HECO_IMAGE = "./images/ht_logo.svg";
 
-export const BSC_RPC_URL = "https://bsc-dataseed.binance.org/";
+export const BSC_RPC_URL = "https://bsc1.onekey.so/rpc";
 export const BSC_TICKER = "BNB";
 export const BSC_IMAGE = "./images/bsc_logo.svg";
 

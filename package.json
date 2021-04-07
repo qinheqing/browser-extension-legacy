@@ -52,8 +52,7 @@
     "storybook:build": "build-storybook -c .storybook -o storybook-build --static-dir ./app ./storybook/images",
     "storybook:deploy": "storybook-to-ghpages --existing-output-dir storybook-build --remote storybook --branch master",
     "update-changelog": "./development/auto-changelog.sh",
-    "generate:migration": "./development/generate-migration.sh",
-    "postinstall": "patch-package"
+    "generate:migration": "./development/generate-migration.sh"
   },
   "resolutions": {
     "**/configstore/dot-prop": "^5.1.1",
@@ -79,7 +78,7 @@
     "@fortawesome/fontawesome-free": "^5.13.0",
     "@lavamoat/preinstall-always-fail": "^1.0.0",
     "@material-ui/core": "^4.11.0",
-    "@metamask/contract-metadata": "^1.22.0",
+    "@metamask/contract-metadata": "^1.23.0",
     "@metamask/controllers": "^5.1.0",
     "@metamask/eth-ledger-bridge-keyring": "^0.3.0",
     "@metamask/eth-token-tracker": "^3.0.1",
@@ -88,6 +87,7 @@
     "@metamask/jazzicon": "^2.0.0",
     "@metamask/logo": "^2.5.0",
     "@metamask/obs-store": "^5.0.0",
+    "@onekeyhq/eth-trezor-keyring": "0.6.0",
     "@popperjs/core": "^2.4.0",
     "@reduxjs/toolkit": "^1.5.0",
     "@sentry/browser": "^5.26.0",
@@ -117,7 +117,6 @@
     "eth-query": "^2.1.2",
     "eth-rpc-errors": "^4.0.2",
     "eth-sig-util": "^3.0.0",
-    "eth-trezor-keyring": "^0.6.0",
     "ethereum-ens-network-map": "^1.0.2",
     "ethereumjs-abi": "^0.6.4",
     "ethereumjs-tx": "1.3.7",
@@ -311,7 +310,8 @@
       "tiny-secp256k1": false,
       "@lavamoat/preinstall-always-fail": false,
       "fsevents": false,
-      "metamask-crx": false
+      "metamask-crx": false,
+      "registry.npm.taobao.org:/postinstall-postinstall/download/postinstall-postinstall-2.1.0.tgz": false
     }
   }
 }

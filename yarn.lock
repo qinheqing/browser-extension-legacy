@@ -2036,7 +2036,7 @@
   resolved "https://registry.yarnpkg.com/@metamask/contract-metadata/-/contract-metadata-1.22.0.tgz#55cc84756c703c433176b484b1d34f0e03d16d1e"
   integrity sha512-t4ijbU+4OH9UAlrPkfLPFo6KmkRTRZJHB+Vly4ajF8oZMnota5YjVVl/SmltsoRC9xvJtRn9DUVf3YMHMIdofw==
 
-"@metamask/contract-metadata@^1.22.0":
+"@metamask/contract-metadata@^1.23.0":
   version "1.23.0"
   resolved "https://registry.yarnpkg.com/@metamask/contract-metadata/-/contract-metadata-1.23.0.tgz#c70be7f3eaeeb791651ce793b7cdc230e9780b18"
   integrity sha512-oTUqL9dtXtbng60DZMRsBmZ5HiOUUfEsZjuswOJ0yHO24YsW0ktCcgCJVYPv1HcOsF0SVrRtG4rtrvOl4nY+HA==
@@ -2230,6 +2230,74 @@
     node-gyp "^7.1.0"
     puka "^1.0.1"
     read-package-json-fast "^1.1.3"
+
+"@onekeyhq/blockchain-link@^1.0.17":
+  version "1.0.17"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/blockchain-link/1.0.17/abe9453e9f2dde5ea860d923f09b66f170e0eb0e72a8229348e424af8c9108ae#260775ec11251f93989a52d1faf541d3157231a2"
+  integrity sha512-Jo7ai36LkES9FlyC/6TeOa/mwShOWxG+cKbNKn+cAjBCtK1yRFlssOL6c9Q+tDHIsPAq9l60G6nIX/UJiDfUPw==
+  dependencies:
+    bignumber.js "^9.0.1"
+    es6-promise "^4.2.8"
+    events "^3.2.0"
+    ripple-lib "1.8.2"
+    tiny-worker "^2.3.0"
+    ws "^7.4.0"
+
+"@onekeyhq/connect@^8.1.26-extended":
+  version "8.1.26-extended"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/connect/8.1.26-extended/bc1517c657abe2c88f31efd589756bf6086add4e557cef2a9a61520cbf36fa5f#9eed1b1dd19650ea2fbe45cc535ba9cf360b59b5"
+  integrity sha512-WIAWXucK/Uq7HYUkpHJN5nUEyTGbU4gG6JJn9KgDY2GAUrT5hjCR2OUruTBxg0oeWnQMpv/SEYw6IrNAbJpxOw==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    "@onekeyhq/blockchain-link" "^1.0.17"
+    "@onekeyhq/link" "1.7.3"
+    "@onekeyhq/rollout" "1.0.6"
+    "@trezor/utxo-lib" "^0.1.2"
+    bchaddrjs "0.4.9"
+    bignumber.js "^9.0.1"
+    bowser "^2.11.0"
+    events "^3.2.0"
+    hd-wallet "9.1.0"
+    keccak "^3.0.1"
+    node-fetch "^2.6.1"
+    parse-uri "^1.0.3"
+    patch-package "^6.2.2"
+    postinstall-postinstall "^2.1.0"
+    tiny-worker "^2.3.0"
+    whatwg-fetch "^3.5.0"
+
+"@onekeyhq/eth-trezor-keyring@0.6.0":
+  version "0.6.0"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-trezor-keyring/0.6.0/9155a2826e2b5002b756a254206dbe59fe1e8879724be096d9d57242fd2793ed#28a2b26bc5bf518bb9500a005b91d8e7f5e6105d"
+  integrity sha512-/7PQcJHZLHLVA/khuIUzpxpUmvkSK9Pv0eZ3Ju4uWi0qFYygXRJ0fkCaoS6ASJgodIDdqOqqDrqPk8yX2EoVbw==
+  dependencies:
+    "@onekeyhq/connect" "^8.1.26-extended"
+    eth-sig-util "^1.4.2"
+    ethereumjs-tx "^1.3.4"
+    ethereumjs-util "^7.0.9"
+    hdkey "0.8.0"
+
+"@onekeyhq/link@1.7.3":
+  version "1.7.3"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/link/1.7.3/6284d33e0473704a0d775e625613559ae99b2e02a7c5333225db93e2c4dea0f4#be22d71e4a0325659f91b50c73a50bbcea6ff137"
+  integrity sha512-qP8slAuQ6BhDBMGJSe3X4eQC+6V7san2G6ie6774e3VxrEgmEyAr9ZzETltXBX5WhuXx9xj+nJlLGtugi1GAaw==
+  dependencies:
+    bigi "^1.4.1"
+    ecurve "^1.0.3"
+    json-stable-stringify "^1.0.1"
+    node-fetch "^2.6.1"
+    object.values "^1.1.2"
+    protobufjs-old-fixed-webpack "3.8.5"
+    semver-compare "^1.0.0"
+    whatwg-fetch "^3.5.0"
+
+"@onekeyhq/rollout@1.0.6":
+  version "1.0.6"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/rollout/1.0.6/dab197211436334fa96d5e9c4796aacf7ffc82e58c26e5b8110d5f5663175bd2#ecf85780b70827d566c5ed4bb48f4a2553b1cdd4"
+  integrity sha512-jMH5C+G9jEU7TeUnUSXvw54+VKq2jXFdN0eJrmFTMi8CybwcaQwlUfKtcbU5jm3KCX3+VBA7XK3ka/7e+lL1jg==
+  dependencies:
+    cross-fetch "^3.0.6"
+    runtypes "^5.0.1"
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.4.2":
   version "0.4.3"
@@ -2896,27 +2964,32 @@
     "@babel/runtime" "^7.10.3"
     "@testing-library/dom" "^7.17.1"
 
-"@trezor/blockchain-link@^1.0.17":
-  version "1.0.17"
-  resolved "https://registry.npm.taobao.org/@trezor/blockchain-link/download/@trezor/blockchain-link-1.0.17.tgz#3155b44ee9beb71326986d404385ede673519b3c"
-  integrity sha1-MVW0Tum+txMmmG1AQ4Xt5nNRmzw=
+"@trezor/utxo-lib@0.1.1":
+  version "0.1.1"
+  resolved "https://registry.npm.taobao.org/@trezor/utxo-lib/download/@trezor/utxo-lib-0.1.1.tgz#63cb4b3accc90352a42a1c866fce8bfbb1c94b26"
+  integrity sha1-Y8tLOszJA1KkKhyGb86L+7HJSyY=
   dependencies:
-    bignumber.js "^9.0.1"
-    es6-promise "^4.2.8"
-    events "^3.2.0"
-    ripple-lib "1.8.2"
-    tiny-worker "^2.3.0"
-    ws "^7.4.0"
+    bech32 "0.0.3"
+    bigi "^1.4.0"
+    bip66 "^1.1.0"
+    bitcoin-ops "^1.3.0"
+    blake2b "https://github.com/BitGo/blake2b#6268e6dd678661e0acc4359e9171b97eb1ebf8ac"
+    bs58check "^2.0.0"
+    create-hash "^1.1.0"
+    create-hmac "^1.1.3"
+    debug "~3.1.0"
+    ecurve "^1.0.0"
+    merkle-lib "^2.0.10"
+    pushdata-bitcoin "^1.0.1"
+    randombytes "^2.0.1"
+    safe-buffer "^5.0.1"
+    typeforce "^1.11.3"
+    varuint-bitcoin "^1.0.4"
+    wif "^2.0.1"
+  optionalDependencies:
+    secp256k1 "^3.5.2"
 
-"@trezor/rollout@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.npm.taobao.org/@trezor/rollout/download/@trezor/rollout-1.0.7.tgz#e4ee8281866ab6712ccc8873f3a383621b1a18ca"
-  integrity sha1-5O6CgYZqtnEszIhz86ODYhsaGMo=
-  dependencies:
-    cross-fetch "^3.0.6"
-    runtypes "^5.0.1"
-
-"@trezor/utxo-lib@0.1.2", "@trezor/utxo-lib@^0.1.2":
+"@trezor/utxo-lib@^0.1.2":
   version "0.1.2"
   resolved "https://registry.npm.taobao.org/@trezor/utxo-lib/download/@trezor/utxo-lib-0.1.2.tgz#19319a424b0d0c648b0df456f1849eb08697fb44"
   integrity sha1-GTGaQksNDGSLDfRW8YSesIaX+0Q=
@@ -2956,6 +3029,13 @@
   version "4.11.6"
   resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-4.11.6.tgz#c306c70d9358aaea33cd4eda092a742b9505967c"
   integrity sha512-pqr857jrp2kPuO9uRjZ3PwnJTjoQy+fcdxvBTvHm6dkmEL9q+hDD/2j/0ELOBPtPnS8LjCX0gI9nbl8lVkadpg==
+  dependencies:
+    "@types/node" "*"
+
+"@types/bn.js@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.npm.taobao.org/@types/bn.js/download/@types/bn.js-5.1.0.tgz#32c5d271503a12653c62cf4d2b45e6eab8cebc68"
+  integrity sha1-MsXScVA6EmU8Ys9NK0Xm6rjOvGg=
   dependencies:
     "@types/node" "*"
 
@@ -5502,15 +5582,21 @@ batch-processor@1.0.0:
   resolved "https://registry.yarnpkg.com/batch-processor/-/batch-processor-1.0.0.tgz#75c95c32b748e0850d10c2b168f6bdbe9891ace8"
   integrity sha1-dclcMrdI4IUNEMKxaPa9vpiRrOg=
 
-bchaddrjs@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.npm.taobao.org/bchaddrjs/download/bchaddrjs-0.5.2.tgz#1f52b5077329774e7c82d4882964628106bb11a0"
-  integrity sha1-H1K1B3Mpd058gtSIKWRigQa7EaA=
+bchaddrjs@0.4.9:
+  version "0.4.9"
+  resolved "https://registry.npm.taobao.org/bchaddrjs/download/bchaddrjs-0.4.9.tgz#c17036bf5bab31bfbb9f3cec432c7c578f0faf46"
+  integrity sha1-wXA2v1urMb+7nzzsQyx8V48Pr0Y=
   dependencies:
-    bs58check "2.1.2"
-    buffer "^6.0.3"
-    cashaddrjs "0.4.4"
-    stream-browserify "^3.0.0"
+    bs58check "^2.1.2"
+    cashaddrjs "^0.3.12"
+
+bchaddrjs@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.npm.taobao.org/bchaddrjs/download/bchaddrjs-0.3.2.tgz#62d4915f8f69012b7a16ae9fd0c99eca3a8ccf91"
+  integrity sha1-YtSRX49pASt6Fq6f0MmeyjqMz5E=
+  dependencies:
+    bs58check "^2.1.2"
+    cashaddrjs "^0.3.3"
 
 bcrypt-pbkdf@^1.0.0:
   version "1.0.2"
@@ -6102,7 +6188,7 @@ bs58@^2.0.1:
   resolved "https://registry.yarnpkg.com/bs58/-/bs58-2.0.1.tgz#55908d58f1982aba2008fa1bed8f91998a29bf8d"
   integrity sha1-VZCNWPGYKrogCPob7Y+RmYopv40=
 
-bs58check@2.1.2, bs58check@<3.0.0, bs58check@^2.0.0, bs58check@^2.1.1, bs58check@^2.1.2:
+bs58check@<3.0.0, bs58check@^2.0.0, bs58check@^2.1.1, bs58check@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/bs58check/-/bs58check-2.1.2.tgz#53b018291228d82a5aa08e7d796fdafda54aebfc"
   integrity sha512-0TS1jicxdU09dwJMNZtVAfzPi6Q6QeN0pM1Fkzrjn+XYHvzMKPU3pHVpva+769iNVSfIYWf7LJ6WR+BuuMf8cA==
@@ -6206,14 +6292,6 @@ buffer@^5.0.5, buffer@^5.2.1:
   dependencies:
     base64-js "^1.3.1"
     ieee754 "^1.1.13"
-
-buffer@^6.0.3:
-  version "6.0.3"
-  resolved "https://registry.npm.taobao.org/buffer/download/buffer-6.0.3.tgz?cache=0&sync_timestamp=1606098159535&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fbuffer%2Fdownload%2Fbuffer-6.0.3.tgz#2ace578459cc8fbe2a70aaa8f52ee63b6a74c6c6"
-  integrity sha1-Ks5XhFnMj74qcKqo9S7mO2p0xsY=
-  dependencies:
-    base64-js "^1.3.1"
-    ieee754 "^1.2.1"
 
 buffer@~5.2.1:
   version "5.2.1"
@@ -6496,10 +6574,10 @@ caseless@~0.12.0:
   resolved "https://registry.yarnpkg.com/caseless/-/caseless-0.12.0.tgz#1b681c21ff84033c826543090689420d187151dc"
   integrity sha1-G2gcIf+EAzyCZUMJBolCDRhxUdw=
 
-cashaddrjs@0.4.4:
-  version "0.4.4"
-  resolved "https://registry.npm.taobao.org/cashaddrjs/download/cashaddrjs-0.4.4.tgz#169f1ae620d325db77700273d972282adeeee331"
-  integrity sha1-Fp8a5iDTJdt3cAJz2XIoKt7u4zE=
+cashaddrjs@^0.3.12, cashaddrjs@^0.3.3:
+  version "0.3.12"
+  resolved "https://registry.npm.taobao.org/cashaddrjs/download/cashaddrjs-0.3.12.tgz#73089588113459741e854aa842db1f7816d8428d"
+  integrity sha1-cwiViBE0WXQehUqoQtsfeBbYQo0=
   dependencies:
     big-integer "1.6.36"
 
@@ -9751,17 +9829,6 @@ eth-simple-keyring@^3.5.0:
     events "^1.1.1"
     xtend "^4.0.1"
 
-eth-trezor-keyring@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.npm.taobao.org/eth-trezor-keyring/download/eth-trezor-keyring-0.6.0.tgz#85192ab5d98be28512a58b0bc731e4e6a124ba27"
-  integrity sha1-hRkqtdmL4oUSpYsLxzHk5qEkuic=
-  dependencies:
-    eth-sig-util "^1.4.2"
-    ethereumjs-tx "^1.3.4"
-    ethereumjs-util "^5.1.5"
-    hdkey "0.8.0"
-    trezor-connect "8.1.23-extended"
-
 eth-tx-summary@^3.1.2:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/eth-tx-summary/-/eth-tx-summary-3.2.4.tgz#e10eb95eb57cdfe549bf29f97f1e4f1db679035c"
@@ -9971,6 +10038,18 @@ ethereumjs-util@^7.0.2:
   integrity sha512-JJt7tDpCAmDPw/sGoFYeq0guOVqT3pTE9xlEbBmc/nlCij3JRCoS2c96SQ6kXVHOT3xWUNLDm5QCJLQaUnVAtQ==
   dependencies:
     "@types/bn.js" "^4.11.3"
+    bn.js "^5.1.2"
+    create-hash "^1.1.2"
+    ethereum-cryptography "^0.1.3"
+    ethjs-util "0.1.6"
+    rlp "^2.2.4"
+
+ethereumjs-util@^7.0.9:
+  version "7.0.10"
+  resolved "https://registry.npm.taobao.org/ethereumjs-util/download/ethereumjs-util-7.0.10.tgz#5fb7b69fa1fda0acc59634cf39d6b0291180fc1f"
+  integrity sha1-X7e2n6H9oKzFljTPOdawKRGA/B8=
+  dependencies:
+    "@types/bn.js" "^5.1.0"
     bn.js "^5.1.2"
     create-hash "^1.1.2"
     ethereum-cryptography "^0.1.3"
@@ -10941,6 +11020,13 @@ find-yarn-workspace-root@^1.2.1:
   dependencies:
     fs-extra "^4.0.3"
     micromatch "^3.1.4"
+
+find-yarn-workspace-root@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npm.taobao.org/find-yarn-workspace-root/download/find-yarn-workspace-root-2.0.0.tgz#f47fb8d239c900eb78179aa81b66673eac88f7bd"
+  integrity sha1-9H+40jnJAOt4F5qoG2ZnPqyI970=
+  dependencies:
+    micromatch "^4.0.2"
 
 findup-sync@^2.0.0:
   version "2.0.0"
@@ -12466,13 +12552,13 @@ hastscript@^6.0.0:
     property-information "^5.0.0"
     space-separated-tokens "^1.0.0"
 
-hd-wallet@9.1.1:
-  version "9.1.1"
-  resolved "https://registry.npm.taobao.org/hd-wallet/download/hd-wallet-9.1.1.tgz#4a6e49ff09e8cb4bbe0127133cfaf80e24142096"
-  integrity sha1-Sm5J/wnoy0u+AScTPPr4DiQUIJY=
+hd-wallet@9.1.0:
+  version "9.1.0"
+  resolved "https://registry.npm.taobao.org/hd-wallet/download/hd-wallet-9.1.0.tgz#0cfdae4e0d7147438c7802fedce29b7d049c0f5f"
+  integrity sha1-DP2uTg1xR0OMeAL+3OKbfQScD18=
   dependencies:
-    "@trezor/utxo-lib" "0.1.2"
-    bchaddrjs "^0.5.2"
+    "@trezor/utxo-lib" "0.1.1"
+    bchaddrjs "^0.3.2"
     bignumber.js "^9.0.1"
     queue "^6.0.1"
     socket.io-client "^2.2.0"
@@ -12816,7 +12902,7 @@ idna-uts46@^1.0.1:
   dependencies:
     punycode "^2.1.0"
 
-ieee754@^1.1.13, ieee754@^1.1.4, ieee754@^1.1.8, ieee754@^1.2.1:
+ieee754@^1.1.13, ieee754@^1.1.4, ieee754@^1.1.8:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
   integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
@@ -18210,6 +18296,14 @@ open@^7.0.2, open@^7.0.3:
     is-docker "^2.0.0"
     is-wsl "^2.1.1"
 
+open@^7.4.2:
+  version "7.4.2"
+  resolved "https://registry.npm.taobao.org/open/download/open-7.4.2.tgz?cache=0&sync_timestamp=1617434341063&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fopen%2Fdownload%2Fopen-7.4.2.tgz#b8147e26dcf3e426316c730089fd71edd29c2321"
+  integrity sha1-uBR+Jtzz5CYxbHMAif1x7dKcIyE=
+  dependencies:
+    is-docker "^2.0.0"
+    is-wsl "^2.1.1"
+
 opencollective-postinstall@^2.0.0:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/opencollective-postinstall/-/opencollective-postinstall-2.0.2.tgz#5657f1bede69b6e33a45939b061eb53d3c6c3a89"
@@ -18919,6 +19013,25 @@ patch-package@6.2.2:
     slash "^2.0.0"
     tmp "^0.0.33"
 
+patch-package@^6.2.2:
+  version "6.4.7"
+  resolved "https://registry.npm.taobao.org/patch-package/download/patch-package-6.4.7.tgz#2282d53c397909a0d9ef92dae3fdeb558382b148"
+  integrity sha1-IoLVPDl5CaDZ75La4/3rVYOCsUg=
+  dependencies:
+    "@yarnpkg/lockfile" "^1.1.0"
+    chalk "^2.4.2"
+    cross-spawn "^6.0.5"
+    find-yarn-workspace-root "^2.0.0"
+    fs-extra "^7.0.1"
+    is-ci "^2.0.0"
+    klaw-sync "^6.0.0"
+    minimist "^1.2.0"
+    open "^7.4.2"
+    rimraf "^2.6.3"
+    semver "^5.6.0"
+    slash "^2.0.0"
+    tmp "^0.0.33"
+
 path-browserify@0.0.1, path-browserify@~0.0.0:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/path-browserify/-/path-browserify-0.0.1.tgz#e6c4ddd7ed3aa27c68a20cc4e50e1a4ee83bbc4a"
@@ -19520,6 +19633,11 @@ postcss@^7.0.0, postcss@^7.0.14, postcss@^7.0.16, postcss@^7.0.2, postcss@^7.0.2
     chalk "^2.4.2"
     source-map "^0.6.1"
     supports-color "^6.1.0"
+
+postinstall-postinstall@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.npm.taobao.org/postinstall-postinstall/download/postinstall-postinstall-2.1.0.tgz#4f7f77441ef539d1512c40bd04c71b06a4704ca3"
+  integrity sha1-T393RB71OdFRLEC9BMcbBqRwTKM=
 
 postmsg-rpc@^2.4.0:
   version "2.4.0"
@@ -20866,7 +20984,7 @@ readable-stream@1.1.x, readable-stream@^1.0.33:
     isarray "0.0.1"
     string_decoder "~0.10.x"
 
-"readable-stream@2 || 3", readable-stream@^3.0.0, readable-stream@^3.0.1, readable-stream@^3.0.2, readable-stream@^3.0.5, readable-stream@^3.0.6, readable-stream@^3.1.1, readable-stream@^3.4.0, readable-stream@^3.5.0, readable-stream@^3.6.0:
+"readable-stream@2 || 3", readable-stream@^3.0.0, readable-stream@^3.0.1, readable-stream@^3.0.2, readable-stream@^3.0.5, readable-stream@^3.0.6, readable-stream@^3.1.1, readable-stream@^3.4.0, readable-stream@^3.6.0:
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/readable-stream/-/readable-stream-3.6.0.tgz#337bbda3adc0706bd3e024426a286d4b4b2c9198"
   integrity sha512-BViHy7LKeTz4oNnkcLJ+lVSL6vpiFeX6/d3oSH8zCW7UxP2onchk+vTGB143xuFjHS3deTgkKoXXymXqymiIdA==
@@ -22960,14 +23078,6 @@ stream-browserify@^2.0.0, stream-browserify@^2.0.1:
     inherits "~2.0.1"
     readable-stream "^2.0.2"
 
-stream-browserify@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.npm.taobao.org/stream-browserify/download/stream-browserify-3.0.0.tgz#22b0a2850cdf6503e73085da1fc7b7d0c2122f2f"
-  integrity sha1-IrCihQzfZQPnMIXaH8e30MISLy8=
-  dependencies:
-    inherits "~2.0.4"
-    readable-stream "^3.5.0"
-
 stream-combiner2@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/stream-combiner2/-/stream-combiner2-1.1.1.tgz#fb4d8a1420ea362764e21ad4780397bebcb41cbe"
@@ -24061,41 +24171,6 @@ tree-kill@^1.2.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/tree-kill/-/tree-kill-1.2.2.tgz#4ca09a9092c88b73a7cdc5e8a01b507b0790a0cc"
   integrity sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==
-
-trezor-connect@8.1.23-extended:
-  version "8.1.23-extended"
-  resolved "https://registry.npm.taobao.org/trezor-connect/download/trezor-connect-8.1.23-extended.tgz#353369a9f136216630b9673a239dcdb140abe49e"
-  integrity sha1-NTNpqfE2IWYwuWc6I53NsUCr5J4=
-  dependencies:
-    "@babel/runtime" "^7.12.5"
-    "@trezor/blockchain-link" "^1.0.17"
-    "@trezor/rollout" "1.0.7"
-    "@trezor/utxo-lib" "^0.1.2"
-    bchaddrjs "^0.5.2"
-    bignumber.js "^9.0.1"
-    bowser "^2.11.0"
-    events "^3.2.0"
-    hd-wallet "9.1.1"
-    keccak "^3.0.1"
-    node-fetch "^2.6.1"
-    parse-uri "^1.0.3"
-    tiny-worker "^2.3.0"
-    trezor-link "1.7.3"
-    whatwg-fetch "^3.5.0"
-
-trezor-link@1.7.3:
-  version "1.7.3"
-  resolved "https://registry.npm.taobao.org/trezor-link/download/trezor-link-1.7.3.tgz#33c4b558913a3da395243018c04ee1804affcdc3"
-  integrity sha1-M8S1WJE6PaOVJDAYwE7hgEr/zcM=
-  dependencies:
-    bigi "^1.4.1"
-    ecurve "^1.0.3"
-    json-stable-stringify "^1.0.1"
-    node-fetch "^2.6.1"
-    object.values "^1.1.2"
-    protobufjs-old-fixed-webpack "3.8.5"
-    semver-compare "^1.0.0"
-    whatwg-fetch "^3.5.0"
 
 trim-newlines@^1.0.0:
   version "1.0.0"

@@ -13,7 +13,20 @@ let EthTokens = Object.entries(EthTokenMap)
       address,
       logoURI: '/images/contract/' + tokenData.logo
     }))
-  .filter((tokenData) => Boolean(tokenData.erc20))
+  .filter((tokenData) => Boolean(tokenData.erc20));
+
+const builtInTokens = [
+  {
+    address: "0xd533a949740bb3306d119cc777fa900ba034cd52",
+    logoURI: "https://assets.coingecko.com/coins/images/12124/small/Curve.png?1597369484",
+    name: "Curve DAO Token",
+    logo: "https://assets.coingecko.com/coins/images/12124/small/Curve.png?1597369484",
+    symbol: "CRV",
+    decimals: "18",
+  }
+]
+
+EthTokens = EthTokens.concat(builtInTokens);
 
 
 const HecoTokens = flatten(HecoTokenMap);

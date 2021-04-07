@@ -57,7 +57,7 @@ export default class SelectAction extends PureComponent {
                   </div>
                   <div className="select-action__button-text-small">
                    <p>{t('importYourExisting')}</p>
-                   <p class="select-action__warning">{t('notUseHardware')}</p>
+                   <p className="select-action__warning">{t('notUseHardware')}</p>
                   </div>
                 </div>
                 <Button
