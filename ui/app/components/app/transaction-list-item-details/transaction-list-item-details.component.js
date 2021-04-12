@@ -34,6 +34,7 @@ export default class TransactionListItemDetails extends PureComponent {
     title: PropTypes.string.isRequired,
     onClose: PropTypes.func.isRequired,
     recipientEns: PropTypes.string,
+    chainId: PropTypes.string,
     recipientAddress: PropTypes.string,
     rpcPrefs: PropTypes.object,
     senderAddress: PropTypes.string.isRequired,
@@ -139,7 +140,9 @@ export default class TransactionListItemDetails extends PureComponent {
 
   render() {
     const { t } = this.context;
+    const { chainId } = this.props;
     const { justCopied } = this.state;
+    const isOfficeChain = [1, 3, 4, 5, 42].includes(+chainId);
     const {
       transactionGroup,
       primaryCurrency,
@@ -195,11 +198,7 @@ export default class TransactionListItemDetails extends PureComponent {
               <Tooltip
                 wrapperClassName="transaction-list-item-details__header-button"
                 containerClassName="transaction-list-item-details__header-button-tooltip-container"
-                title={
-                  blockExplorerUrl
-                    ? t('viewOnCustomBlockExplorer', [blockExplorerUrl])
-                    : t('viewOnEtherscan')
-                }
+                title={!isOfficeChain ? t('viewinExplorer') : t('viewOnEtherscan')}
               >
                 <Button
                   type="raised"

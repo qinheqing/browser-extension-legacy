@@ -1,11 +1,17 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
+import {
+  getCurrentChainId
+} from '../../../selectors';
+import { useSelector } from 'react-redux';
 import { I18nContext } from '../../../contexts/i18n';
 import { Menu, MenuItem } from '../../../components/ui/menu';
 
 const TokenOptions = ({ onRemove, onViewEtherscan, tokenSymbol }) => {
   const t = useContext(I18nContext);
+  const chainId = useSelector(getCurrentChainId);
+  const isOfficeChain = [1, 3, 4, 5, 42].includes(+chainId);
   const [tokenOptionsButtonElement, setTokenOptionsButtonElement] = useState(
     null,
   );
@@ -33,7 +39,7 @@ const TokenOptions = ({ onRemove, onViewEtherscan, tokenSymbol }) => {
               onViewEtherscan();
             }}
           >
-            {t('viewOnEtherscan')}
+             {!isOfficeChain ? t('viewinExplorer') : t('viewOnEtherscan')}
           </MenuItem>
           <MenuItem
             iconClassName="fas fa-trash-alt token-options__icon"

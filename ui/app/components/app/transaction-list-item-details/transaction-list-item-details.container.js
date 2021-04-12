@@ -4,6 +4,7 @@ import { tryReverseResolveAddress } from '../../../store/actions';
 import {
   getAddressBook,
   getRpcPrefsForCurrentProvider,
+  getCurrentChainId,
 } from '../../../selectors';
 import TransactionListItemDetails from './transaction-list-item-details.component';
 
@@ -30,6 +31,7 @@ const mapStateToProps = (state, ownProps) => {
     rpcPrefs,
     recipientEns,
     senderNickname: getNickName(senderAddress),
+    chainId: getCurrentChainId(state),
     recipientNickname: recipientAddress ? getNickName(recipientAddress) : null,
   };
 };
