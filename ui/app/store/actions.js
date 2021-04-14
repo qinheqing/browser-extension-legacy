@@ -399,7 +399,7 @@ export function connectHardware(deviceName, page, hdPath) {
   log.debug(`background.connectHardware`, deviceName, page, hdPath);
   return async (dispatch) => {
     dispatch(
-      showLoadingIndication(`Looking for your ${capitalize(deviceName)}...`),
+      showLoadingIndication(`Looking for your ${capitalize(deviceName)}....`),
     );
 
     let accounts;

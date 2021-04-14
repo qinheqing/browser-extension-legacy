@@ -17,6 +17,8 @@ const conf = require('rc')('metamask', {
   SEGMENT_HOST: process.env.SEGMENT_HOST,
   SEGMENT_WRITE_KEY: process.env.SEGMENT_WRITE_KEY,
   SEGMENT_LEGACY_WRITE_KEY: process.env.SEGMENT_LEGACY_WRITE_KEY,
+  SENTRY_DSN: process.env.SENTRY_DSN,
+  SENTRY_DSN_DEV: process.env.SENTRY_DSN_DEV,
 });
 
 const baseManifest = require('../../app/manifest/_base.json');
@@ -324,7 +326,8 @@ function createScriptTasks({ browserPlatforms, livereload }) {
         PUBNUB_SUB_KEY: process.env.PUBNUB_SUB_KEY || '',
         PUBNUB_PUB_KEY: process.env.PUBNUB_PUB_KEY || '',
         CONF: opts.devMode ? conf : {},
-        SENTRY_DSN: process.env.SENTRY_DSN,
+        SENTRY_DSN: process.env.SENTRY_DSN || conf.SENTRY_DSN,
+        SENTRY_DSN_DEV: process.env.SENTRY_DSN_DEV || conf.SENTRY_DSN_DEV,
         INFURA_PROJECT_ID: opts.testing
           ? '00000000000000000000000000000000'
           : conf.INFURA_PROJECT_ID,
