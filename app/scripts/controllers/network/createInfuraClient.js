@@ -10,12 +10,12 @@ import BlockTracker from 'eth-block-tracker';
 import createFetchMiddleware from 'eth-json-rpc-middleware/fetch';
 
 import { NETWORK_TYPE_TO_ID_MAP } from '../../../../shared/constants/network';
-import { MAINNET } from '../../../../shared/constants/network';
+import { MAINNET, ETH_RPC_URL } from '../../../../shared/constants/network';
 
 export default function createInfuraClient({ network, projectId }) {
   const infuraMiddleware =
     network === MAINNET
-      ? createFetchMiddleware({ rpcUrl: 'https://eth1.onekey.so/rpc' })
+      ? createFetchMiddleware({ rpcUrl: ETH_RPC_URL })
       : createInfuraMiddleware({
           network,
           projectId,
