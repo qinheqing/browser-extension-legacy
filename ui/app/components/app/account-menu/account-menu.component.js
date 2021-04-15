@@ -255,6 +255,7 @@ export default class AccountMenu extends Component {
   }
 
   setShouldShowScrollButton = () => {
+    if (!this.accountsRef) return
     const { scrollTop, offsetHeight, scrollHeight } = this.accountsRef;
 
     const canScroll = scrollHeight > offsetHeight;

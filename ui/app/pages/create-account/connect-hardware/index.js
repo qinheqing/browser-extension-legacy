@@ -5,6 +5,7 @@ import * as actions from '../../../store/actions';
 import {
   getMetaMaskAccounts,
   getMetaMaskAccountsConnected,
+  getProvider
 } from '../../../selectors';
 import { formatBalance } from '../../../helpers/utils/util';
 import { getMostRecentOverviewPage } from '../../../ducks/history/history';
@@ -31,11 +32,11 @@ class ConnectHardwareForm extends Component {
   };
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { accounts } = nextProps;
+    const { accounts, ticker } = nextProps;
     const newAccounts = this.state.accounts.map((a) => {
       const normalizedAddress = a.address.toLowerCase();
       const balanceValue = accounts[normalizedAddress]?.balance || null;
-      a.balance = balanceValue ? formatBalance(balanceValue, 6) : '...';
+      a.balance = balanceValue ? formatBalance(balanceValue, 6, true, ticker) : '...';
       return a;
     });
     this.setState({ accounts: newAccounts });
@@ -101,6 +102,7 @@ class ConnectHardwareForm extends Component {
   }
 
   getPage = (device, page, hdPath) => {
+    const { ticker } = this.props;
     this.props
       .connectHardware(device, page, hdPath)
       .then((accounts) => {
@@ -117,7 +119,7 @@ class ConnectHardwareForm extends Component {
             const balanceValue =
               this.props.accounts[normalizedAddress]?.balance || null;
             account.balance = balanceValue
-              ? formatBalance(balanceValue, 6)
+              ? formatBalance(balanceValue, 6, true, ticker)
               : '...';
             return account;
           });
@@ -293,6 +295,7 @@ ConnectHardwareForm.propTypes = {
   connectedAccounts: PropTypes.array.isRequired,
   defaultHdPaths: PropTypes.object,
   mostRecentOverviewPage: PropTypes.string.isRequired,
+  ticker: PropTypes.string
 };
 
 const mapStateToProps = (state) => {
@@ -300,6 +303,7 @@ const mapStateToProps = (state) => {
     metamask: { network },
   } = state;
   const accounts = getMetaMaskAccounts(state);
+  const provider = getProvider(state);
   const connectedAccounts = getMetaMaskAccountsConnected(state);
   const {
     appState: { defaultHdPaths },
@@ -311,6 +315,7 @@ const mapStateToProps = (state) => {
     connectedAccounts,
     defaultHdPaths,
     mostRecentOverviewPage: getMostRecentOverviewPage(state),
+    ticker: provider.ticker || "ETH"
   };
 };
 
