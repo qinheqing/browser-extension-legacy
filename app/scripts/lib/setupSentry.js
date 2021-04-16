@@ -1,5 +1,6 @@
 import * as Sentry from '@sentry/browser';
 import { Dedupe, ExtraErrorData } from '@sentry/integrations';
+import { Integrations } from '@sentry/tracing';
 
 import extractEthjsErrorMessage from './extractEthjsErrorMessage';
 
@@ -7,9 +8,8 @@ import extractEthjsErrorMessage from './extractEthjsErrorMessage';
 // Destructuring breaks the inlining of the environment variables
 const METAMASK_DEBUG = process.env.METAMASK_DEBUG;
 const METAMASK_ENVIRONMENT = process.env.METAMASK_ENVIRONMENT;
-/* eslint-enable prefer-destructuring */
-const SENTRY_DSN_DEV =
-  'https://4e1d0ef1f2ad48c3ad75bd55f998b259@o554722.ingest.sentry.io/5683636';
+const SENTRY_DSN = process.env.SENTRY_DSN;
+const SENTRY_DSN_DEV = process.env.SENTRY_DSN_DEV;
 
 // This describes the subset of Redux state attached to errors sent to Sentry
 // These properties have some potential to be useful for debugging, and they do
@@ -71,9 +71,17 @@ export default function setupSentry({ release, getState }) {
   let sentryTarget;
 
   if (METAMASK_DEBUG) {
-    return undefined;
+    if (!SENTRY_DSN_DEV) {
+      throw new Error(
+        `Missing SENTRY_DSN_DEV environment variable in development environment`,
+      );
+    }
+    console.log(
+      `Setting up Sentry Remote Error Reporting for '${METAMASK_ENVIRONMENT}': SENTRY_DSN_DEV`,
+    );
+    sentryTarget = SENTRY_DSN_DEV;
   } else if (METAMASK_ENVIRONMENT === 'production') {
-    if (!process.env.SENTRY_DSN) {
+    if (!SENTRY_DSN) {
       throw new Error(
         `Missing SENTRY_DSN environment variable in production environment`,
       );
@@ -81,21 +89,22 @@ export default function setupSentry({ release, getState }) {
     console.log(
       `Setting up Sentry Remote Error Reporting for '${METAMASK_ENVIRONMENT}': SENTRY_DSN`,
     );
-    sentryTarget = process.env.SENTRY_DSN;
-  } else {
-    console.log(
-      `Setting up Sentry Remote Error Reporting for '${METAMASK_ENVIRONMENT}': SENTRY_DSN_DEV`,
-    );
-    sentryTarget = SENTRY_DSN_DEV;
+    sentryTarget = SENTRY_DSN;
   }
 
   Sentry.init({
     dsn: sentryTarget,
     debug: METAMASK_DEBUG,
     environment: METAMASK_ENVIRONMENT,
-    integrations: [new Dedupe(), new ExtraErrorData()],
+    integrations: [
+      new Dedupe(),
+      new ExtraErrorData(),
+      new Integrations.BrowserTracing(),
+    ],
     release,
     beforeSend: (report) => rewriteReport(report),
+    // Setup Apdex
+    tracesSampleRate: METAMASK_DEBUG ? 1.0 : 0.2,
   });
 
   function rewriteReport(report) {

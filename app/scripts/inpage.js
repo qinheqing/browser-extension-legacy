@@ -51,7 +51,7 @@ const metamaskStream = new LocalMessageDuplexStream({
 
 initializeProvider({
   connectionStream: metamaskStream,
-  jsonRpcStreamName: "onekey-provider",
+  jsonRpcStreamName: 'onekey-provider',
   logger: log,
   shouldShimWeb3: true,
 });

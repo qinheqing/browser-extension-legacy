@@ -42,8 +42,22 @@ yarn start
 
 ## Build for Publishing
 
+Simply run the following commands. If you wanna setup more tools, take a look of the setups below.
+
 ```bash
 yarn dist
+```
+
+### Production Setups
+
+To setup infura, segment, sentry. Run `cp .metamaskrc.dist .metamaskrc`, and update your configuration.
+
+```env
+; Extra environment variables
+INFURA_PROJECT_ID=00000000000
+SEGMENT_WRITE_KEY=
+SENTRY_DSN=
+SENTRY_DSN_DEV=
 ```
 
 ## Other Docs
