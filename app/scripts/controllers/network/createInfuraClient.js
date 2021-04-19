@@ -13,15 +13,11 @@ import { NETWORK_TYPE_TO_ID_MAP } from '../../../../shared/constants/network';
 import { MAINNET, ETH_RPC_URL } from '../../../../shared/constants/network';
 
 export default function createInfuraClient({ network, projectId }) {
+  const rpcUrl = NETWORK_TYPE_TO_ID_MAP[network] && NETWORK_TYPE_TO_ID_MAP[network].rpcUrl
   const infuraMiddleware =
-    network === MAINNET
-      ? createFetchMiddleware({ rpcUrl: ETH_RPC_URL })
-      : createInfuraMiddleware({
-          network,
-          projectId,
-          maxAttempts: 5,
-          source: 'metamask',
-        });
+    rpcUrl
+      ? createFetchMiddleware({ rpcUrl })
+      : createInfuraMiddleware({ network, projectId, maxAttempts: 5, source: 'metamask' });
   const infuraProvider = providerFromMiddleware(infuraMiddleware);
   const blockTracker = new BlockTracker({ provider: infuraProvider });
   

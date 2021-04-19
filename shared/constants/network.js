@@ -59,7 +59,6 @@ export const MATIC_RPC_URL = "https://rpc-mainnet.matic.network";
 export const MATIC_TICKER = 'MATIC';
 export const MATIC_IMAGE = './images/matic_logo.svg';
 
-
 export const NETWORK_TYPE_TO_TICKER_MAP = {
   [HECO]: HECO_TICKER,
   [BSC]: BSC_TICKER,
@@ -81,7 +80,7 @@ export const NETWORK_TYPE_TO_ID_MAP = {
   [RINKEBY]: { networkId: RINKEBY_NETWORK_ID, chainId: RINKEBY_CHAIN_ID },
   [KOVAN]: { networkId: KOVAN_NETWORK_ID, chainId: KOVAN_CHAIN_ID },
   [GOERLI]: { networkId: GOERLI_NETWORK_ID, chainId: GOERLI_CHAIN_ID },
-  [MAINNET]: { networkId: MAINNET_NETWORK_ID, chainId: MAINNET_CHAIN_ID },
+  [MAINNET]: { networkId: MAINNET_NETWORK_ID, chainId: MAINNET_CHAIN_ID, rpcUrl: ETH_RPC_URL },
 };
 
 export const NETWORK_TO_NAME_MAP = {

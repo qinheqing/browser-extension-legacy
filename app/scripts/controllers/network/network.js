@@ -256,7 +256,8 @@ export default class NetworkController extends EventEmitter {
       this._configureInfuraProvider(type, this._infuraProjectId);
       // url-based rpc endpoints
     } else if (BUILDINT_PROVIDER_TYPES.includes(type)) {
-      this._configureStandardProvider(rpcUrl, chainId);
+      this._configureInfuraProvider(type);
+      // this._configureStandardProvider(rpcUrl, chainId);
     } else if (type === NETWORK_TYPE_RPC) {
       this._configureStandardProvider(rpcUrl, chainId);
     } else {
