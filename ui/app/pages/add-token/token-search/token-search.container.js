@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import Fuse from 'fuse.js';
 
 import TokenSearch from './token-search.component';
-import { contractTokens } from "../../../../tokens"
+import { contractTokens } from "../../../../../shared/tokens"
 
 const fuse = new Fuse([], {
   shouldSort: true,

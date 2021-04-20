@@ -8,7 +8,6 @@ import log from 'loglevel';
 import { LISTED_CONTRACT_ADDRESSES } from '../../../shared/constants/tokens';
 import { NETWORK_TYPE_TO_ID_MAP } from '../../../shared/constants/network';
 import { isPrefixedFormattedHexString } from '../../../shared/modules/network.utils';
-import { NETWORK_EVENTS } from './network';
 
 export default class PreferencesController {
   /**
@@ -73,7 +72,7 @@ export default class PreferencesController {
     this.store.setMaxListeners(12);
     this.openPopup = opts.openPopup;
     this.migrateAddressBookState = opts.migrateAddressBookState;
-    this._subscribeToNetworkDidChange();
+    this._subscribeProviderType();
 
     global.setPreference = (key, value) => {
       return this.setFeatureFlag(key, value);
@@ -201,18 +200,16 @@ export default class PreferencesController {
       ids[address] = { name: `Account ${index + 1}`, address, ...oldId };
       return ids;
     }, {});
-    const accountTokens = oldAccountTokens;
-    const accountHiddenTokens = oldAccountHiddenTokens;
-    // const accountTokens = addresses.reduce((tokens, address) => {
-    //   const oldTokens = oldAccountTokens[address] || {};
-    //   tokens[address] = oldTokens;
-    //   return tokens;
-    // }, {});
-    // const accountHiddenTokens = addresses.reduce((hiddenTokens, address) => {
-    //   const oldHiddenTokens = oldAccountHiddenTokens[address] || {};
-    //   hiddenTokens[address] = oldHiddenTokens;
-    //   return hiddenTokens;
-    // }, {});
+    const accountTokens = addresses.reduce((tokens, address) => {
+      const oldTokens = oldAccountTokens[address] || {};
+      tokens[address] = oldTokens;
+      return tokens;
+    }, {});
+    const accountHiddenTokens = addresses.reduce((hiddenTokens, address) => {
+      const oldHiddenTokens = oldAccountHiddenTokens[address] || {};
+      hiddenTokens[address] = oldHiddenTokens;
+      return hiddenTokens;
+    }, {});
     this.store.updateState({ identities, accountTokens, accountHiddenTokens });
   }
 
@@ -233,8 +230,8 @@ export default class PreferencesController {
       throw new Error(`${address} can't be deleted cause it was not found`);
     }
     delete identities[address];
-    // delete accountTokens[address];
-    // delete accountHiddenTokens[address];
+    delete accountTokens[address];
+    delete accountHiddenTokens[address];
     this.store.updateState({ identities, accountTokens, accountHiddenTokens });
 
     // If the selected account is no longer valid,
@@ -265,9 +262,9 @@ export default class PreferencesController {
       }
       // add missing identity
       const identityCount = Object.keys(identities).length;
-      
-      // accountTokens[address] = {};
-      // accountHiddenTokens[address] = {};
+
+      accountTokens[address] = {};
+      accountHiddenTokens[address] = {};
       identities[address] = { name: `Account ${identityCount + 1}`, address };
     });
     this.store.updateState({ identities, accountTokens, accountHiddenTokens });
@@ -670,11 +667,12 @@ export default class PreferencesController {
   //
 
   /**
-   * Handle updating token list to reflect current network by listening for the
-   * NETWORK_DID_CHANGE event.
+   * Subscription to network provider type.
+   *
+   *
    */
-  _subscribeToNetworkDidChange() {
-    this.network.on(NETWORK_EVENTS.NETWORK_DID_CHANGE, () => {
+  _subscribeProviderType() {
+    this.network.providerStore.subscribe(() => {
       const { tokens, hiddenTokens } = this._getTokenRelatedStates();
       this._updateAccountTokens(tokens, this.getAssetImages(), hiddenTokens);
     });
@@ -691,11 +689,12 @@ export default class PreferencesController {
   _updateAccountTokens(tokens, assetImages, hiddenTokens) {
     const {
       accountTokens,
-      chainId,
+      providerType,
+      selectedAddress,
       accountHiddenTokens,
     } = this._getTokenRelatedStates();
-    accountTokens[chainId] = tokens;
-    accountHiddenTokens[chainId] = hiddenTokens;
+    accountTokens[selectedAddress][providerType] = tokens;
+    accountHiddenTokens[selectedAddress][providerType] = hiddenTokens;
     this.store.updateState({
       accountTokens,
       tokens,
@@ -731,22 +730,27 @@ export default class PreferencesController {
       // eslint-disable-next-line no-param-reassign
       selectedAddress = this.store.getState().selectedAddress;
     }
-    const chainId = this.network.getCurrentChainId();
-
-    if (!(chainId in accountTokens)) {
-      accountTokens[chainId] = [];
+    const providerType = this.network.providerStore.getState().type;
+    if (!(selectedAddress in accountTokens)) {
+      accountTokens[selectedAddress] = {};
     }
-    if (!(chainId in accountHiddenTokens)) {
-      accountHiddenTokens[chainId] = [];
+    if (!(selectedAddress in accountHiddenTokens)) {
+      accountHiddenTokens[selectedAddress] = {};
     }
-    const tokens = accountTokens[chainId];
-    const hiddenTokens = accountHiddenTokens[chainId];
+    if (!(providerType in accountTokens[selectedAddress])) {
+      accountTokens[selectedAddress][providerType] = [];
+    }
+    if (!(providerType in accountHiddenTokens[selectedAddress])) {
+      accountHiddenTokens[selectedAddress][providerType] = [];
+    }
+    const tokens = accountTokens[selectedAddress][providerType];
+    const hiddenTokens = accountHiddenTokens[selectedAddress][providerType];
     return {
       tokens,
       accountTokens,
       hiddenTokens,
       accountHiddenTokens,
-      chainId,
+      providerType,
       selectedAddress,
     };
   }
@@ -788,9 +792,9 @@ export default class PreferencesController {
     if (typeof symbol !== 'string') {
       throw ethErrors.rpc.invalidParams(`Invalid symbol: not a string.`);
     }
-    if (!(symbol.length < 11)) {
+    if (!(symbol.length < 12)) {
       throw ethErrors.rpc.invalidParams(
-        `Invalid symbol "${symbol}": longer than 10 characters.`,
+        `Invalid symbol "${symbol}": longer than 6 characters.`,
       );
     }
     const numDecimals = parseInt(decimals, 10);

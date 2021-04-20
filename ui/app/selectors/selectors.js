@@ -13,7 +13,7 @@ import {
   checksumAddress,
   getAccountByAddress,
 } from '../helpers/utils/util';
-import { contractMap } from "../../tokens"
+import { contractMap } from "../../../shared/tokens"
 import { getPermissionsRequestCount } from './permissions';
 
 export function getNetworkIdentifier(state) {

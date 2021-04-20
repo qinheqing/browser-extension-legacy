@@ -1,9 +1,16 @@
 import Web3 from 'web3';
-import contracts from '@metamask/contract-metadata';
 import { warn } from 'loglevel';
 import SINGLE_CALL_BALANCES_ABI from 'single-call-balance-checker-abi';
-import { MAINNET_CHAIN_ID } from '../../../shared/constants/network';
-import { SINGLE_CALL_BALANCES_ADDRESS } from '../constants/contracts';
+import {
+  MAINNET_CHAIN_ID,
+  BSC_CHAIN_ID,
+  HECO_CHAIN_ID,
+} from '../../../shared/constants/network';
+import {
+  SINGLE_CALL_BALANCES_ADDRESS,
+  SINGLE_CALL_BALANCES_ADDRESS_BSC,
+} from '../constants/contracts';
+import { contractMap } from '../../../shared/tokens';
 
 // By default, poll every 3 minutes
 const DEFAULT_INTERVAL = 180 * 1000;
@@ -37,7 +44,17 @@ export default class DetectTokensController {
     if (!this.isActive) {
       return;
     }
-    if (this._network.store.getState().provider.chainId !== MAINNET_CHAIN_ID) {
+    const { chainId, type } = this._network.store.getState().provider;
+    if (
+      chainId !== MAINNET_CHAIN_ID &&
+      chainId !== BSC_CHAIN_ID &&
+      chainId !== HECO_CHAIN_ID
+    ) {
+      return;
+    }
+
+    const contracts = contractMap[type];
+    if (!contracts) {
       return;
     }
 
@@ -45,7 +62,8 @@ export default class DetectTokensController {
     this.web3.setProvider(this._network._provider);
     for (const contractAddress in contracts) {
       if (
-        contracts[contractAddress].erc20 &&
+        // contracts[contractAddress].erc20 &&
+        contracts[contractAddress] &&
         !this.tokenAddresses.includes(contractAddress.toLowerCase()) &&
         !this.hiddenTokens.includes(contractAddress.toLowerCase())
       ) {
@@ -54,8 +72,13 @@ export default class DetectTokensController {
     }
 
     let result;
+    let abiAddress =
+      chainId === MAINNET_CHAIN_ID
+        ? SINGLE_CALL_BALANCES_ADDRESS
+        : SINGLE_CALL_BALANCES_ADDRESS_BSC;
+
     try {
-      result = await this._getTokenBalances(tokensToDetect);
+      result = await this._getTokenBalances(tokensToDetect, abiAddress);
     } catch (error) {
       warn(
         `MetaMask - DetectTokensController single call balance fetch failed`,
@@ -76,10 +99,10 @@ export default class DetectTokensController {
     });
   }
 
-  async _getTokenBalances(tokens) {
+  async _getTokenBalances(tokens, abiAddress = SINGLE_CALL_BALANCES_ADDRESS) {
     const ethContract = this.web3.eth
       .contract(SINGLE_CALL_BALANCES_ABI)
-      .at(SINGLE_CALL_BALANCES_ADDRESS);
+      .at(abiAddress);
     return new Promise((resolve, reject) => {
       ethContract.balances([this.selectedAddress], tokens, (error, result) => {
         if (error) {

@@ -19,6 +19,8 @@ import {
   RINKEBY_CHAIN_ID,
   ROPSTEN_CHAIN_ID,
   KOVAN_CHAIN_ID,
+  BSC_CHAIN_ID,
+  HECO_CHAIN_ID
 } from '../../../shared/constants/network';
 
 import {
@@ -26,8 +28,11 @@ import {
   SINGLE_CALL_BALANCES_ADDRESS_RINKEBY,
   SINGLE_CALL_BALANCES_ADDRESS_ROPSTEN,
   SINGLE_CALL_BALANCES_ADDRESS_KOVAN,
+  SINGLE_CALL_BALANCES_ADDRESS_BSC,
+  SINGLE_CALL_BALANCES_ADDRESS_HECO
 } from '../constants/contracts';
 import { bnToHex } from './util';
+import { Array } from 'globalthis/implementation';
 
 /**
  * This module is responsible for tracking any number of accounts and caching their current balances & transaction
@@ -236,6 +241,20 @@ export default class AccountTracker {
         );
         break;
 
+      case BSC_CHAIN_ID:
+        await this._updateAccountsViaBalanceChecker(
+          addresses,
+          SINGLE_CALL_BALANCES_ADDRESS_BSC,
+        );
+        break;
+
+      case HECO_CHAIN_ID:
+        await this._updateAccountsViaBalanceChecker(
+          addresses,
+          SINGLE_CALL_BALANCES_ADDRESS_HECO,
+        );
+        break;
+
       default:
         await Promise.all(addresses.map(this._updateAccount.bind(this)));
     }
@@ -285,10 +304,12 @@ export default class AccountTracker {
         Promise.all(addresses.map(this._updateAccount.bind(this)));
         return;
       }
-      addresses.forEach((address, index) => {
-        const balance = bnToHex(result[index]);
-        accounts[address] = { address, balance };
-      });
+      if (result && Array.isArray(result)) {
+        addresses.forEach((address, index) => {
+          const balance = bnToHex(result[index]);
+          accounts[address] = { address, balance };
+        });
+      }
       this.store.updateState({ accounts });
     });
   }
