@@ -11,6 +11,7 @@ import {
   SINGLE_CALL_BALANCES_ADDRESS_BSC,
 } from '../constants/contracts';
 import { contractMap } from '../../../shared/tokens';
+import { NETWORK_EVENTS } from "./network";
 
 // By default, poll every 3 minutes
 const DEFAULT_INTERVAL = 180 * 1000;
@@ -177,6 +178,9 @@ export default class DetectTokensController {
     }
     this._network = network;
     this.web3 = new Web3(network._provider);
+    network.on(NETWORK_EVENTS.NETWORK_DID_CHANGE, () => {
+      this.detectNewTokens();
+    })
   }
 
   /**

@@ -72,6 +72,26 @@ export const TEST_CHAINS = [
   KOVAN_CHAIN_ID,
 ];
 
+
+export const NETWORK_FALLBACK_URL = {
+  [MAINNET]: [
+    "https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161",
+    "https://mainnet.infura.io/v3/0f1946aacbeb4f98a83cc1058764dbc1",
+  ],
+  [BSC]: [
+    "https://bsc-dataseed.binance.org",
+    "https://bsc-dataseed1.defibit.io",
+    "https://bsc-dataseed1.ninicoin.io",
+    "https://bsc-dataseed2.defibit.io",
+    "https://bsc-dataseed3.defibit.io"
+  ],
+  [HECO]: [
+    "https://http-mainnet-node.huobichain.com",
+    "https://http-mainnet-node.defibox.com",
+    "https://http-mainnet.hecochain.com"
+  ]
+}
+
 export const NETWORK_TYPE_TO_ID_MAP = {
   [MATIC]: { networkId: MATIC_NETWORK_ID, chainId: MATIC_CHAIN_ID, ticker: MATIC_TICKER, rpcUrl: MATIC_RPC_URL, image: MATIC_IMAGE },
   [HECO]: { networkId: HECO_NETWORK_ID, chainId: HECO_CHAIN_ID, ticker: HECO_TICKER, rpcUrl: HECO_RPC_URL, image: HECO_IMAGE },

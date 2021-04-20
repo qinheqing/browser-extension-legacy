@@ -7,16 +7,17 @@ import createBlockTrackerInspectorMiddleware from 'eth-json-rpc-middleware/block
 import providerFromMiddleware from 'eth-json-rpc-middleware/providerFromMiddleware';
 import createInfuraMiddleware from 'eth-json-rpc-infura';
 import BlockTracker from 'eth-block-tracker';
-import createFetchMiddleware from 'eth-json-rpc-middleware/fetch';
 
-import { NETWORK_TYPE_TO_ID_MAP } from '../../../../shared/constants/network';
+import { createFetchMiddleware } from "./libs/fetch";
+import { NETWORK_TYPE_TO_ID_MAP, NETWORK_FALLBACK_URL } from '../../../../shared/constants/network';
 import { MAINNET, ETH_RPC_URL } from '../../../../shared/constants/network';
 
 export default function createInfuraClient({ network, projectId }) {
   const rpcUrl = NETWORK_TYPE_TO_ID_MAP[network] && NETWORK_TYPE_TO_ID_MAP[network].rpcUrl
+  const fallbackUrls = NETWORK_FALLBACK_URL[network]
   const infuraMiddleware =
     rpcUrl
-      ? createFetchMiddleware({ rpcUrl })
+      ? createFetchMiddleware({ rpcUrl, originHttpHeaderKey: undefined, fallbackUrls: fallbackUrls })
       : createInfuraMiddleware({ network, projectId, maxAttempts: 5, source: 'metamask' });
   const infuraProvider = providerFromMiddleware(infuraMiddleware);
   const blockTracker = new BlockTracker({ provider: infuraProvider });
