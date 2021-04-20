@@ -37,11 +37,36 @@ const dependencies = Object.keys(
   (packageJSON && packageJSON.dependencies) || {},
 );
 const materialUIDependencies = ['@material-ui/core'];
+const metamaskDepenendencies = [
+  'eth-block-tracker',
+  'eth-ens-namehash',
+  'eth-json-rpc-filters',
+  'eth-json-rpc-infura',
+  'eth-json-rpc-middleware',
+  'eth-keyring-controller',
+  'eth-method-registry',
+  'eth-phishing-detect',
+  'eth-query',
+  'eth-rpc-errors',
+  'ethers',
+  'json-rpc-engine',
+  'json-rpc-middleware-stream',
+  'safe-event-emitter',
+  'rpc-cap',
+  '@metamask/contract-metadata',
+  '@metamask/controllers',
+  '@metamask/eth-token-tracker',
+  '@metamask/inpage-provider',
+  '@metamask/jazzicon',
+  '@metamask/logo',
+  '@metamask/obs-store',
+
+];
 const reactDepenendencies = dependencies.filter((dep) => dep.match(/react/u));
 
 const externalDependenciesMap = {
   background: ['3box'],
-  ui: [...materialUIDependencies, ...reactDepenendencies],
+  ui: [...materialUIDependencies, ...reactDepenendencies, ...metamaskDepenendencies],
 };
 
 function createScriptTasks({ browserPlatforms, livereload }) {
