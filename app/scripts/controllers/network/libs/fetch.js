@@ -11,6 +11,10 @@ const RETRIABLE_ERRORS = [
   'failed to parse response body',
   // ignore errors where http req failed to establish
   'Failed to fetch',
+  'JSON-RPC Error: Response has no result for request',
+  'missing trie node',
+  'header not found',
+  'request rate limited',
   'TypeError: NetworkError when attempting to fetch resource.'
 ]
 
@@ -18,7 +22,7 @@ function getFallbackUrl(defaultUrl, count, fallbackUrls) {
     if (count === 0 || !fallbackUrls || !Array.isArray(fallbackUrls) || fallbackUrls.length === 0) {
         return defaultUrl;
     }
-    const i = count % fallbackUrls.length;
+    const i = (count - 1) % fallbackUrls.length;
     const fallback = fallbackUrls[i];
     if (typeof fallback === "string") { return fallback }
     return defaultUrl
@@ -88,12 +92,13 @@ function parseResponse (fetchRes, body) {
   }
   // check for rpc error
   if (body.error) throw ethErrors.rpc.internal({
+    message: body.error.message,
     data: body.error,
   })
 
   if (body.result === undefined || body.result === null) {
     throw ethErrors.rpc.internal({
-        message: "JSON-RPC get empty result",
+        message: "JSON-RPC Error: Response has no result for request",
         data: body
     })
   }
