@@ -300,8 +300,8 @@ function getSuggestedTokenCount(state) {
 }
 
 export function getIsMainnet(state) {
-  const networkType = getNetworkIdentifier(state);
-  return networkType === MAINNET;
+  const { type } = getProvider(state);
+  return type === MAINNET;
 }
 
 export function getUnapprovedConfirmations(state) {
@@ -310,8 +310,8 @@ export function getUnapprovedConfirmations(state) {
 }
 
 export function getIsBuiltnet(state) {
-  const networkType = getMetricsNetworkIdentifier(state);
-  return BUILDINT_PROVIDER_TYPES.includes(networkType);
+  const { type } = getProvider(state);
+  return BUILDINT_PROVIDER_TYPES.includes(type);
 }
 
 export function getIsTestnet(state) {
