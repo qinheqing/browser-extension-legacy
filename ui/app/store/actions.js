@@ -2177,6 +2177,23 @@ export function setUseBlockie(val) {
   };
 }
 
+export function setUseAutoSwitchChain(val) {
+  return (dispatch) => {
+    dispatch(showLoadingIndication());
+    log.debug(`background.setUseAutoSwitchChain`);
+    background.setUseAutoSwitchChain(val, (err) => {
+      dispatch(hideLoadingIndication());
+      if (err) {
+        dispatch(displayWarning(err.message));
+      }
+    });
+    dispatch({
+      type: actionConstants.SET_USE_AUTO_SWITCH_CHAIN,
+      value: val,
+    });
+  };
+}
+
 export function setUseNonceField(val) {
   return (dispatch) => {
     dispatch(showLoadingIndication());

@@ -1,0 +1,13 @@
+diff --git a/node_modules/@metamask/inpage-provider/dist/MetaMaskInpageProvider.js b/node_modules/@metamask/inpage-provider/dist/MetaMaskInpageProvider.js
+index e883d84..44e5857 100644
+--- a/node_modules/@metamask/inpage-provider/dist/MetaMaskInpageProvider.js
++++ b/node_modules/@metamask/inpage-provider/dist/MetaMaskInpageProvider.js
+@@ -108,7 +108,7 @@ class MetaMaskInpageProvider extends safe_event_emitter_1.default {
+             else if (method === 'metamask_unlockStateChanged') {
+                 this._handleUnlockStateChanged(params);
+             }
+-            else if (method === 'metamask_chainChanged') {
++            else if (method === 'metamask_chainChanged' && this.selectedAddress) {
+                 this._handleChainChanged(params);
+             }
+             else if (utils_1.EMITTED_NOTIFICATIONS.includes(method)) {

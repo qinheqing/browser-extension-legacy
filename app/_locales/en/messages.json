@@ -2247,5 +2247,8 @@
   },
   "notUseHardware": {
     "message": "Do not import Mnemonic Phrase from OneKey Hardware Device"
+  },
+  "useAutoSwitchChain": {
+    "message": "Auto Switch Network"
   }
 }

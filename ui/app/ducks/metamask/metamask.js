@@ -33,6 +33,7 @@ export default function reduceMetamask(state = {}, action) {
       ensResolutionError: '',
     },
     useBlockie: false,
+    useAutoSwitchChain: false,
     featureFlags: {},
     welcomeScreenSeen: false,
     currentLocale: '',
@@ -303,6 +304,12 @@ export default function reduceMetamask(state = {}, action) {
       return {
         ...metamaskState,
         useBlockie: action.value,
+      };
+    
+    case actionConstants.SET_USE_AUTO_SWITCH_CHAIN:
+      return {
+        ...metamaskState,
+        useAutoSwitchChain: action.value,
       };
 
     case actionConstants.UPDATE_FEATURE_FLAGS:

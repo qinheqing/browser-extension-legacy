@@ -40,6 +40,7 @@ export default class PreferencesController {
       hiddenTokens: [],
       suggestedTokens: {},
       useBlockie: false,
+      useAutoSwitchChain: false,
       useNonceField: false,
       usePhishDetect: true,
 
@@ -96,6 +97,16 @@ export default class PreferencesController {
    */
   setUseBlockie(val) {
     this.store.updateState({ useBlockie: val });
+  }
+
+  /**
+   * Setter for the `useAutoSwitchChain` property
+   *
+   * @param {boolean} val - Whether or not the user use auto switch chain
+   *
+   */
+  setUseAutoSwitchChain(val) {
+    this.store.updateState({ useAutoSwitchChain: val });
   }
 
   /**

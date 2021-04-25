@@ -2220,5 +2220,8 @@
   },
   "notUseHardware": {
     "message": "请勿导入OneKey硬件设备内的助记词"
+  },
+  "useAutoSwitchChain": {
+    "message": "自动切换网络"
   }
 }

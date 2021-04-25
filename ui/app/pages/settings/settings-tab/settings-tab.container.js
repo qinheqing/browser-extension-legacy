@@ -2,6 +2,7 @@ import { connect } from 'react-redux';
 import {
   setCurrentCurrency,
   setUseBlockie,
+  setUseAutoSwitchChain,
   updateCurrentLocale,
   setUseNativeCurrencyAsPrimaryCurrencyPreference,
   setParticipateInMetaMetrics,
@@ -19,6 +20,7 @@ const mapStateToProps = (state) => {
     conversionDate,
     nativeCurrency,
     useBlockie,
+    useAutoSwitchChain,
     currentLocale,
   } = metamask;
   const { useNativeCurrencyAsPrimaryCurrency } = getPreferences(state);
@@ -30,6 +32,7 @@ const mapStateToProps = (state) => {
     conversionDate,
     nativeCurrency,
     useBlockie,
+    useAutoSwitchChain,
     useNativeCurrencyAsPrimaryCurrency,
   };
 };
@@ -38,6 +41,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     setCurrentCurrency: (currency) => dispatch(setCurrentCurrency(currency)),
     setUseBlockie: (value) => dispatch(setUseBlockie(value)),
+    setUseAutoSwitchChain: (value) => dispatch(setUseAutoSwitchChain(value)),
     updateCurrentLocale: (key) => dispatch(updateCurrentLocale(key)),
     setUseNativeCurrencyAsPrimaryCurrencyPreference: (value) => {
       return dispatch(setUseNativeCurrencyAsPrimaryCurrencyPreference(value));

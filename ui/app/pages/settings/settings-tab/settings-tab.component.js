@@ -31,11 +31,13 @@ export default class SettingsTab extends PureComponent {
 
   static propTypes = {
     setUseBlockie: PropTypes.func,
+    setUseAutoSwitchChain: PropTypes.func,
     setCurrentCurrency: PropTypes.func,
     warning: PropTypes.string,
     updateCurrentLocale: PropTypes.func,
     currentLocale: PropTypes.string,
     useBlockie: PropTypes.bool,
+    useAutoSwitchChain: PropTypes.bool,
     currentCurrency: PropTypes.string,
     conversionDate: PropTypes.number,
     nativeCurrency: PropTypes.string,
@@ -124,6 +126,29 @@ export default class SettingsTab extends PureComponent {
     );
   }
 
+  renderAutoSwitchChainOptIn() {
+    const { t } = this.context;
+    const { useAutoSwitchChain, setUseAutoSwitchChain } = this.props;
+
+    return (
+      <div className="settings-page__content-row">
+        <div className="settings-page__content-item">
+          <span>{this.context.t('useAutoSwitchChain')}</span>
+        </div>
+        <div className="settings-page__content-item">
+          <div className="settings-page__content-item-col">
+            <ToggleButton
+              value={useAutoSwitchChain}
+              onToggle={(value) => setUseAutoSwitchChain(!value)}
+              offLabel={t('off')}
+              onLabel={t('on')}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   renderUsePrimaryCurrencyOptions() {
     const { t } = this.context;
     const {
@@ -192,6 +217,7 @@ export default class SettingsTab extends PureComponent {
         {this.renderUsePrimaryCurrencyOptions()}
         {this.renderCurrentLocale()}
         {this.renderBlockieOptIn()}
+        {this.renderAutoSwitchChainOptIn()}
       </div>
     );
   }

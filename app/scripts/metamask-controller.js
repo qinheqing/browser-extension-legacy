@@ -59,6 +59,7 @@ import nodeify from './lib/nodeify';
 import accountImporter from './account-import-strategies';
 import seedPhraseVerifier from './lib/seed-phrase-verifier';
 import MetaMetricsController from './controllers/metametrics';
+import DetectChainController from './controllers/detect-chain';
 import { segment, segmentLegacy } from './lib/segment';
 
 export const METAMASK_CONTROLLER_EVENTS = {
@@ -162,6 +163,9 @@ export default class MetamaskController extends EventEmitter {
     this.currencyRateController.nativeCurrency = this.networkController.getNativeCurrency();
 
     this.phishingController = new PhishingController();
+    this.detectChainController = new DetectChainController({
+      networkController: this.networkController,
+    });
 
     // now we can initialize the RPC provider, which other controllers require
     this.initializeProvider();
@@ -597,6 +601,7 @@ export default class MetamaskController extends EventEmitter {
       getState: (cb) => cb(null, this.getState()),
       setCurrentCurrency: this.setCurrentCurrency.bind(this),
       setUseBlockie: this.setUseBlockie.bind(this),
+      setUseAutoSwitchChain: this.setUseAutoSwitchChain.bind(this),
       setUseNonceField: this.setUseNonceField.bind(this),
       setUsePhishDetect: this.setUsePhishDetect.bind(this),
       setIpfsGateway: this.setIpfsGateway.bind(this),
@@ -1294,8 +1299,8 @@ export default class MetamaskController extends EventEmitter {
     index,
     deviceName,
     hdPath,
-    hdPathDescription
-    ) {
+    hdPathDescription,
+  ) {
     const keyring = await this.getKeyringForDevice(deviceName, hdPath);
 
     keyring.setAccountToUnlock(index);
@@ -1305,7 +1310,9 @@ export default class MetamaskController extends EventEmitter {
     this.preferencesController.setAddresses(newAccounts);
     newAccounts.forEach((address) => {
       if (!oldAccounts.includes(address)) {
-        const label = `${deviceName[0].toUpperCase()}${deviceName.slice(1)} ${parseInt(index, 10) + 1} ${hdPathDescription || ''}`.trim();
+        const label = `${deviceName[0].toUpperCase()}${deviceName.slice(1)} ${
+          parseInt(index, 10) + 1
+        } ${hdPathDescription || ''}`.trim();
         this.preferencesController.setAccountLabel(address, label);
         // Select the account
         this.preferencesController.setSelectedAddress(address);
@@ -1919,7 +1926,7 @@ export default class MetamaskController extends EventEmitter {
    * @param {MessageSender} sender - The sender of the messages on this stream
    */
   setupUntrustedCommunication(connectionStream, sender) {
-    const { usePhishDetect } = this.preferencesController.store.getState();
+    const { usePhishDetect, useAutoSwitchChain } = this.preferencesController.store.getState();
     const { hostname } = new URL(sender.url);
     // Check if new connection is blocked if phishing detection is on
     if (usePhishDetect && this.phishingController.test(hostname)) {
@@ -1937,6 +1944,10 @@ export default class MetamaskController extends EventEmitter {
     // TODO:LegacyProvider: Delete
     // legacy streams
     this.setupPublicConfig(mux.createStream('publicConfig'));
+
+    if (useAutoSwitchChain && this.detectChainController.test(hostname)) {
+      this.detectChainController.switch(hostname);
+    }
   }
 
   /**
@@ -1953,7 +1964,11 @@ export default class MetamaskController extends EventEmitter {
     const mux = setupMultiplex(connectionStream);
     // connect features
     this.setupControllerConnection(mux.createStream('onekey-controller'));
-    this.setupProviderConnection(mux.createStream('onekey-provider'), sender, true);
+    this.setupProviderConnection(
+      mux.createStream('onekey-provider'),
+      sender,
+      true,
+    );
   }
 
   /**
@@ -2611,6 +2626,24 @@ export default class MetamaskController extends EventEmitter {
   setUseBlockie(val, cb) {
     try {
       this.preferencesController.setUseBlockie(val);
+      cb(null);
+      return;
+    } catch (err) {
+      cb(err);
+      // eslint-disable-next-line no-useless-return
+      return;
+    }
+  }
+
+  /**
+   * Sets whether or not to use auto switch chain.
+   * @param {boolean} val - True for use switch chain, false for not.
+   * @param {Function} cb - A callback function called when complete.
+   */
+  
+  setUseAutoSwitchChain(val, cb) {
+    try {
+      this.preferencesController.setUseAutoSwitchChain(val);
       cb(null);
       return;
     } catch (err) {
