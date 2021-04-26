@@ -1946,7 +1946,16 @@ export default class MetamaskController extends EventEmitter {
     this.setupPublicConfig(mux.createStream('publicConfig'));
 
     if (useAutoSwitchChain && this.detectChainController.test(hostname)) {
-      this.detectChainController.switch(hostname);
+      this.extension.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        const tab = tabs && tabs[0];
+        const tabId = sender.tab && sender.tab.id;
+        console.log(tabs[0], sender)
+        console.log(tab.id, tabId)
+        console.log(tab.id === tabId)
+        if (tab.id === tabId) {
+          this.detectChainController.switch(hostname);
+        }
+      })
     }
   }
 
