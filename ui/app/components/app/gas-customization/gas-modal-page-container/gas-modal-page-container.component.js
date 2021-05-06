@@ -117,19 +117,23 @@ export default class GasModalPageContainer extends Component {
     const {
       gasPriceButtonGroupProps,
       hideBasic,
+      isMainnet,
       infoRowProps: { newTotalFiat, newTotalEth, sendAmount, transactionFee },
     } = this.props;
 
     let tabsToRender = [
       {
-        name: this.context.t('basic'),
-        content: this.renderBasicTabContent(gasPriceButtonGroupProps),
-      },
-      {
         name: this.context.t('advanced'),
         content: this.renderAdvancedTabContent(),
-      },
+      }
     ];
+
+    if (isMainnet || process.env.IN_TEST) {
+      tabsToRender.unshift({
+        name: this.context.t('basic'),
+        content: this.renderBasicTabContent(gasPriceButtonGroupProps),
+      })
+    }
 
     if (hideBasic) {
       tabsToRender = tabsToRender.slice(1);

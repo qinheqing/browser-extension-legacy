@@ -191,7 +191,9 @@ async function fetchEthGasPriceEstimates(state) {
     toDenomination: 'GWEI',
   });
   const basicEstimates = {
+    safeLow: Number(averageGasPriceInDecGWEI),
     average: Number(averageGasPriceInDecGWEI),
+    fast: Number(averageGasPriceInDecGWEI)
   };
   const timeRetrieved = Date.now();
 

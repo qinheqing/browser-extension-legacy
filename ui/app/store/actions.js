@@ -399,7 +399,11 @@ export function connectHardware(deviceName, page, hdPath) {
   log.debug(`background.connectHardware`, deviceName, page, hdPath);
   return async (dispatch) => {
     dispatch(
-      showLoadingIndication(`Looking for your ${capitalize(deviceName)}....`),
+      showLoadingIndication(`
+        正在查找您的 ${capitalize(
+          deviceName,
+        )} 设备，请在弹出的标签页 https://connect.onekey.so/popup.html 中点击操作...
+      `),
     );
 
     let accounts;
@@ -2486,8 +2490,6 @@ export function clearPermissions() {
     background.clearPermissions();
   };
 }
-
-
 // Pending Approvals
 
 /**

@@ -20,7 +20,11 @@ import {
   MATIC,
   MATIC_CHAIN_ID,
   MATIC_RPC_URL,
-  MATIC_TICKER
+  MATIC_TICKER,
+  XDAI,
+  XDAI_CHAIN_ID,
+  XDAI_RPC_URL,
+  XDAI_TICKER
 } from '../../../../../shared/constants/network';
 
 const defaultNetworksData = [
@@ -61,6 +65,15 @@ const defaultNetworksData = [
     blockExplorerUrl: 'https://explorer-mainnet.maticvigil.com',
   },
   {
+    labelKey: XDAI,
+    iconColor: '#48A9A6',
+    providerType: XDAI,
+    rpcUrl: XDAI_RPC_URL,
+    chainId: XDAI_CHAIN_ID,
+    ticker: XDAI_TICKER,
+    blockExplorerUrl: 'https://blockscout.com/xdai/mainnet​',
+  },
+  {
     labelKey: ROPSTEN,
     iconColor: '#FF4A8D',
     providerType: ROPSTEN,
@@ -77,15 +90,6 @@ const defaultNetworksData = [
     chainId: RINKEBY_CHAIN_ID,
     ticker: 'ETH',
     blockExplorerUrl: 'https://rinkeby.etherscan.io',
-  },
-  {
-    labelKey: GOERLI,
-    iconColor: '#3099f2',
-    providerType: GOERLI,
-    rpcUrl: `https://goerli.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
-    chainId: GOERLI_CHAIN_ID,
-    ticker: 'ETH',
-    blockExplorerUrl: 'https://goerli.etherscan.io',
   },
   {
     labelKey: KOVAN,

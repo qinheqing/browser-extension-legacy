@@ -32,7 +32,7 @@ export function createFetchMiddleware ({ rpcUrl, originHttpHeaderKey, fallbackUr
   return createAsyncMiddleware(async (req, res, next) => {
     
     // attempt request multiple times
-    const maxAttempts = 5
+    const maxAttempts = 8
     const retryInterval = 1000
     
     for (let attempt = 0; attempt < maxAttempts; attempt++) {

@@ -5,7 +5,7 @@ import * as actions from '../../../store/actions';
 import {
   getMetaMaskAccounts,
   getMetaMaskAccountsConnected,
-  getProvider
+  getProvider,
 } from '../../../selectors';
 import { formatBalance } from '../../../helpers/utils/util';
 import { getMostRecentOverviewPage } from '../../../ducks/history/history';
@@ -36,7 +36,9 @@ class ConnectHardwareForm extends Component {
     const newAccounts = this.state.accounts.map((a) => {
       const normalizedAddress = a.address.toLowerCase();
       const balanceValue = accounts[normalizedAddress]?.balance || null;
-      a.balance = balanceValue ? formatBalance(balanceValue, 6, true, ticker) : '...';
+      a.balance = balanceValue
+        ? formatBalance(balanceValue, 6, true, ticker)
+        : '...';
       return a;
     });
     this.setState({ accounts: newAccounts });
@@ -237,7 +239,37 @@ class ConnectHardwareForm extends Component {
       );
     }
     return this.state.error ? (
-      <span className="hw-connect__error">{this.state.error}</span>
+      <>
+        <span className="hw-connect__error">{this.state.error}</span>
+        <div className="hw-connect__error__detail">
+          <div className="hw-connect__error__title">
+            检测到您有硬件连接问题，可以按照以下步骤排查：
+          </div>
+          <ul className="hw-connect__error__list__container">
+            <li>
+              Transport is Missing: 您没有安装 OneKey Bridge，请点击前往
+              <a href="https://desktop.onekey.so/bridge/">
+                https://desktop.onekey.so/bridge/
+              </a>
+              安装此工具连接硬件。
+            </li>
+            <li>
+              Iframe Timeout：请确认您使用的其他插件（例如
+              ADBlock）是否阻挡脚本或标签页的弹出，请把 onekey.so
+              域名及其所有子域名加入插件白名单。
+            </li>
+            <li>
+              其他错误：请确认您是否开启了多个 https://connect.onekey.so
+              标签页！请关闭 <b>其他所有标签页</b> 和 <b>OneKey Desktop</b>
+              等可能有连接冲突的页面和软件！
+            </li>
+            <li>
+              在确认关闭了其他所有标签页和 OneKey Desktop
+              等可能有连接冲突的软件后，请重新点击重试。
+            </li>
+          </ul>
+        </div>
+      </>
     ) : null;
   }
 
@@ -295,7 +327,7 @@ ConnectHardwareForm.propTypes = {
   connectedAccounts: PropTypes.array.isRequired,
   defaultHdPaths: PropTypes.object,
   mostRecentOverviewPage: PropTypes.string.isRequired,
-  ticker: PropTypes.string
+  ticker: PropTypes.string,
 };
 
 const mapStateToProps = (state) => {
@@ -315,7 +347,7 @@ const mapStateToProps = (state) => {
     connectedAccounts,
     defaultHdPaths,
     mostRecentOverviewPage: getMostRecentOverviewPage(state),
-    ticker: provider.ticker || "ETH"
+    ticker: provider.ticker || 'ETH',
   };
 };
 

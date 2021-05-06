@@ -1,7 +1,7 @@
 {
-  "name": "CoinGecko",
-  "logoURI": "https://www.coingecko.com/assets/thumbnail-007177f3eca19695592f0b8b0eabbdae282b54154e1be912285c9034ea6cbaf2.png",
   "keywords": ["defi"],
+  "logoURI": "https://www.coingecko.com/assets/thumbnail-007177f3eca19695592f0b8b0eabbdae282b54154e1be912285c9034ea6cbaf2.png",
+  "name": "CoinGecko",
   "timestamp": "2021-04-13T11:01:18.742+00:00",
   "tokens": [
     {
@@ -16597,5 +16597,9 @@
       "logoURI": "https://assets.coingecko.com/coins/images/14759/thumb/revomon.jpeg?1618243538"
     }
   ],
-  "version": { "major": 189, "minor": 1, "patch": 0 }
+  "version": {
+    "major": 189,
+    "minor": 1,
+    "patch": 0
+  }
 }

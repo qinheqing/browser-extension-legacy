@@ -1,17 +1,9 @@
 {
-  "name": "HT token List",
-  "timestamp": "2020-08-11T22:55:13.889Z",
-  "version": {
-    "major": 1,
-    "minor": 2,
-    "patch": 6
-  },
-  "tags": {},
+  "keywords": ["MDEX", "default"],
   "logoURI": "ipfs://QmZgpZq1HkVS7YCThNJeR51KFVo5AL8P3ThA2y9wcw53p9",
-  "keywords": [
-    "MDEX",
-    "default"
-  ],
+  "name": "HT token List",
+  "tags": {},
+  "timestamp": "2020-08-11T22:55:13.889Z",
   "tokens": [
     {
       "name": "Heco-Peg HUSD Token",
@@ -1085,5 +1077,10 @@
       "chainId": 128,
       "logoURI": "https://mdex.com/token-icons/heco/0x765277eebeca2e31912c9946eae1021199b39c61.png"
     }
-  ]
+  ],
+  "version": {
+    "major": 1,
+    "minor": 2,
+    "patch": 6
+  }
 }

@@ -281,13 +281,13 @@ class NetworkDropdown extends Component {
           </div>
         </div>
         {this.renderNetworkEntry('mainnet')}
-        {this.renderNetworkEntry('heco')}
         {this.renderNetworkEntry('bsc')}
+        {this.renderNetworkEntry('heco')}
         {this.renderNetworkEntry('matic')}
+        {this.renderNetworkEntry('xdai')}
         {this.renderNetworkEntry('ropsten')}
         {this.renderNetworkEntry('kovan')}
         {this.renderNetworkEntry('rinkeby')}
-        {this.renderNetworkEntry('goerli')}
 
         {this.renderCustomRpcList(rpcListDetail, this.props.provider)}
         <DropdownMenuItem

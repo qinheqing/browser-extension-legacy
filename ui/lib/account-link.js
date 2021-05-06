@@ -27,6 +27,8 @@ export default function getAccountLink(address, network, rpcPrefs) {
       return `https://bscscan.com/address/${address}`;
     case 137:
       return `https://explorer-mainnet.maticvigil.com/address/${address}`;
+    case 100:
+      return `https://blockscout.com/xdai/mainnet/address/${address}`;
     default:
       return '';
   }

@@ -34,7 +34,7 @@
   }
 
   &__text-blue {
-    color: $primary-blue;
+    color: $primary;
     cursor: pointer;
   }
 
@@ -140,7 +140,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-end;
-      color: $primary-blue;
+      color: $primary;
     }
   }
 

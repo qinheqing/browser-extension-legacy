@@ -6,6 +6,7 @@ export const GOERLI = 'goerli';
 export const HECO = 'heco';
 export const BSC = 'bsc';
 export const MATIC = 'matic';
+export const XDAI = "xdai";
 export const NETWORK_TYPE_RPC = 'rpc';
 
 export const MAINNET_NETWORK_ID = '1';
@@ -15,6 +16,7 @@ export const GOERLI_NETWORK_ID = '5';
 export const KOVAN_NETWORK_ID = '42';
 export const HECO_NETWORK_ID = '128';
 export const BSC_NETWORK_ID = '56';
+export const XDAI_NETWORK_ID = '100';
 export const MATIC_NETWORK_ID = '137';
 
 export const MAINNET_CHAIN_ID = '0x1';
@@ -24,7 +26,8 @@ export const GOERLI_CHAIN_ID = '0x5';
 export const KOVAN_CHAIN_ID = '0x2a';
 export const HECO_CHAIN_ID = '0x80';
 export const BSC_CHAIN_ID = '0x38';
-export const MATIC_CHAIN_ID = '0x89'
+export const XDAI_CHAIN_ID = "0x64";
+export const MATIC_CHAIN_ID = '0x89';
 
 /**
  * The largest possible chain ID we can handle.
@@ -39,10 +42,12 @@ export const MAINNET_DISPLAY_NAME = 'Ethereum Mainnet';
 export const GOERLI_DISPLAY_NAME = 'Goerli';
 export const HECO_DISPLAY_NAME = 'Heco Mainnet';
 export const BSC_DISPLAY_NAME = 'Bsc Mainnet';
-export const MATIC_DISPLAY_NAME = 'Matic Mainnet';
+export const XDAI_DISPLAY_NAME = 'xDai Mainnet';
+export const MATIC_DISPLAY_NAME = 'Polygon Mainnet';
+
 
 export const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET, GOERLI];
-export const BUILDINT_PROVIDER_TYPES = [HECO, BSC, MATIC]
+export const BUILDINT_PROVIDER_TYPES = [HECO, BSC, MATIC, XDAI]
 export const SECURE_NETWORKS = [].concat(INFURA_PROVIDER_TYPES).concat(BUILDINT_PROVIDER_TYPES)
 
 export const ETH_RPC_URL = "https://rpc.blkdb.cn/eth"
@@ -58,6 +63,10 @@ export const BSC_IMAGE = "./images/bsc_logo.svg";
 export const MATIC_RPC_URL = "https://rpc-mainnet.matic.network";
 export const MATIC_TICKER = 'MATIC';
 export const MATIC_IMAGE = './images/matic_logo.svg';
+
+export const XDAI_RPC_URL = "https://rpc.xdaichain.com";
+export const XDAI_TICKER = 'xDai';
+export const XDAI_IMAGE = './images/xdai_logo.svg';
 
 export const NETWORK_TYPE_TO_TICKER_MAP = {
   [HECO]: HECO_TICKER,
@@ -93,6 +102,7 @@ export const NETWORK_FALLBACK_URL = {
 }
 
 export const NETWORK_TYPE_TO_ID_MAP = {
+  [XDAI]: { networkId: XDAI_NETWORK_ID, chainId: XDAI_CHAIN_ID, ticker: XDAI_TICKER, rpcUrl: XDAI_RPC_URL, image: XDAI_IMAGE },
   [MATIC]: { networkId: MATIC_NETWORK_ID, chainId: MATIC_CHAIN_ID, ticker: MATIC_TICKER, rpcUrl: MATIC_RPC_URL, image: MATIC_IMAGE },
   [HECO]: { networkId: HECO_NETWORK_ID, chainId: HECO_CHAIN_ID, ticker: HECO_TICKER, rpcUrl: HECO_RPC_URL, image: HECO_IMAGE },
   [BSC]: { networkId: BSC_NETWORK_ID, chainId: BSC_CHAIN_ID, ticker: BSC_TICKER, rpcUrl: BSC_RPC_URL, image: BSC_IMAGE },
@@ -112,6 +122,7 @@ export const NETWORK_TO_NAME_MAP = {
   [HECO]: HECO_DISPLAY_NAME,
   [BSC]: BSC_DISPLAY_NAME,
   [MATIC]: MATIC_DISPLAY_NAME,
+  [XDAI]: XDAI_DISPLAY_NAME,
 
   [ROPSTEN_NETWORK_ID]: ROPSTEN_DISPLAY_NAME,
   [RINKEBY_NETWORK_ID]: RINKEBY_DISPLAY_NAME,
@@ -121,6 +132,7 @@ export const NETWORK_TO_NAME_MAP = {
   [HECO_NETWORK_ID]: HECO_DISPLAY_NAME,
   [BSC_NETWORK_ID]: BSC_DISPLAY_NAME,
   [MATIC_NETWORK_ID]: MATIC_DISPLAY_NAME,
+  [XDAI_NETWORK_ID]: XDAI_DISPLAY_NAME,
 
   [ROPSTEN_CHAIN_ID]: ROPSTEN_DISPLAY_NAME,
   [RINKEBY_CHAIN_ID]: RINKEBY_DISPLAY_NAME,
@@ -130,6 +142,7 @@ export const NETWORK_TO_NAME_MAP = {
   [HECO_CHAIN_ID]: HECO_DISPLAY_NAME,
   [BSC_CHAIN_ID]: BSC_DISPLAY_NAME,
   [MATIC_CHAIN_ID]: MATIC_DISPLAY_NAME,
+  [XDAI_CHAIN_ID]: XDAI_DISPLAY_NAME,
 };
 
 export const CHAIN_ID_TO_TYPE_MAP = Object.entries(

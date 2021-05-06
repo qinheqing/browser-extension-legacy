@@ -34,7 +34,8 @@ export const COLORS = {
   TRANSPARENT: 'transparent',
   HECO: "heco",
   BSC: "bsc",
-  MATIC: "matic"
+  MATIC: "matic",
+  XDAI: "xdai"
 };
 
 export const TYPOGRAPHY = {

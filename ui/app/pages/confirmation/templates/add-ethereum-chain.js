@@ -71,8 +71,9 @@ const INVALID_CHAIN = {
 
 async function getAlerts(pendingApproval) {
   const alerts = [];
+  // CORS on firefox
   const safeChainsList = await fetchWithCache(
-    'https://chainid.network/chains.json',
+    `https://www.onekey.so/api/image?imgUrl=${encodeURIComponent('https://chainid.network/chains.json')}`,
   );
   const matchedChain = safeChainsList.find(
     (chain) =>
@@ -140,26 +141,7 @@ function getValues(pendingApproval, t, actions) {
             element: 'b',
             key: 'bolded-text',
             children: `${t('addEthereumChainConfirmationRisks')} `,
-          },
-          // {
-          //   element: 'MetaMaskTranslation',
-          //   key: 'learn-about-risks',
-          //   props: {
-          //     translationKey: 'addEthereumChainConfirmationRisksLearnMore',
-          //     variables: [
-          //       {
-          //         element: 'a',
-          //         children: t('addEthereumChainConfirmationRisksLearnMoreLink'),
-          //         key: 'addEthereumChainConfirmationRisksLearnMoreLink',
-          //         props: {
-          //           href:
-          //             'https://metamask.zendesk.com/hc/en-us/articles/360056196151',
-          //           target: '__blank',
-          //         },
-          //       },
-          //     ],
-          //   },
-          // },
+          }
         ],
         props: {
           variant: TYPOGRAPHY.H7,

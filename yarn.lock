@@ -2231,10 +2231,10 @@
     puka "^1.0.1"
     read-package-json-fast "^1.1.3"
 
-"@onekeyhq/blockchain-link@^1.0.17":
-  version "1.0.17"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/blockchain-link/1.0.17/abe9453e9f2dde5ea860d923f09b66f170e0eb0e72a8229348e424af8c9108ae#260775ec11251f93989a52d1faf541d3157231a2"
-  integrity sha512-Jo7ai36LkES9FlyC/6TeOa/mwShOWxG+cKbNKn+cAjBCtK1yRFlssOL6c9Q+tDHIsPAq9l60G6nIX/UJiDfUPw==
+"@onekeyhq/blockchain-link@1.0.18":
+  version "1.0.18"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/blockchain-link/1.0.18/3a7d001c51d810dfc369eaabadfd53004279088798f6df37515c45cb39c2e37c#fbbce52bef3bc31496468f89ef353e950426283e"
+  integrity sha512-/hbmQ8nwtFu0vNK6srcH533atAotOWrsXN8JKDY1Q4MhwyyISRO/fFDfFUJBRBvqOim83xs3D4ZZ9brK/new6g==
   dependencies:
     bignumber.js "^9.0.1"
     es6-promise "^4.2.8"
@@ -2243,14 +2243,14 @@
     tiny-worker "^2.3.0"
     ws "^7.4.0"
 
-"@onekeyhq/connect@^8.1.26-extended":
-  version "8.1.26-extended"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/connect/8.1.26-extended/bc1517c657abe2c88f31efd589756bf6086add4e557cef2a9a61520cbf36fa5f#9eed1b1dd19650ea2fbe45cc535ba9cf360b59b5"
-  integrity sha512-WIAWXucK/Uq7HYUkpHJN5nUEyTGbU4gG6JJn9KgDY2GAUrT5hjCR2OUruTBxg0oeWnQMpv/SEYw6IrNAbJpxOw==
+"@onekeyhq/connect@8.1.29-extended":
+  version "8.1.29-extended"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/connect/8.1.29-extended/acb957b33af659c6688cd9c85672f549d487ff763dbfdec33c87f3f082b0a5f9#e35e2d9fde22707d6d47597907ed65cdb9344e85"
+  integrity sha512-JBjWym0KTr3AQph9KY0fkcgG0l35vl1C2a0kRAGXK+di1uSfIvRdnETG1f7AODuxT6qJPTUJC4PFsrwaqdS0Ig==
   dependencies:
     "@babel/runtime" "^7.12.5"
-    "@onekeyhq/blockchain-link" "^1.0.17"
-    "@onekeyhq/link" "1.7.3"
+    "@onekeyhq/blockchain-link" "1.0.18"
+    "@onekeyhq/link" "1.7.4"
     "@onekeyhq/rollout" "1.0.6"
     "@trezor/utxo-lib" "^0.1.2"
     bchaddrjs "0.4.9"
@@ -2266,21 +2266,21 @@
     tiny-worker "^2.3.0"
     whatwg-fetch "^3.5.0"
 
-"@onekeyhq/eth-trezor-keyring@0.6.0":
-  version "0.6.0"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-trezor-keyring/0.6.0/9155a2826e2b5002b756a254206dbe59fe1e8879724be096d9d57242fd2793ed#28a2b26bc5bf518bb9500a005b91d8e7f5e6105d"
-  integrity sha512-/7PQcJHZLHLVA/khuIUzpxpUmvkSK9Pv0eZ3Ju4uWi0qFYygXRJ0fkCaoS6ASJgodIDdqOqqDrqPk8yX2EoVbw==
+"@onekeyhq/eth-trezor-keyring@0.6.2":
+  version "0.6.2"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-trezor-keyring/0.6.2/b0e3277f4f7edc692ccc276671033c11e0b3ccfc9505a9e4ceca843898e82ef5#a8df4dc54b7f940b6470f76d22f36e8ad21addd9"
+  integrity sha512-fGvuuWWZxqRfOUzXju5pJwI3Us1bmApUikIOLvcTDkmmEml9kRIAURXVvH/uZBEjBNghM8L8HnEgzI0QvEMlDg==
   dependencies:
-    "@onekeyhq/connect" "^8.1.26-extended"
+    "@onekeyhq/connect" "8.1.29-extended"
     eth-sig-util "^1.4.2"
     ethereumjs-tx "^1.3.4"
     ethereumjs-util "^7.0.9"
     hdkey "0.8.0"
 
-"@onekeyhq/link@1.7.3":
-  version "1.7.3"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/link/1.7.3/6284d33e0473704a0d775e625613559ae99b2e02a7c5333225db93e2c4dea0f4#be22d71e4a0325659f91b50c73a50bbcea6ff137"
-  integrity sha512-qP8slAuQ6BhDBMGJSe3X4eQC+6V7san2G6ie6774e3VxrEgmEyAr9ZzETltXBX5WhuXx9xj+nJlLGtugi1GAaw==
+"@onekeyhq/link@1.7.4":
+  version "1.7.4"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/link/1.7.4/402d6273fb1b91b8ada6522d462cbfe8fa862ec206f9f3215f0bed77d1b53d48#1c39db71f059e608941ee7219ae6f5f522c80289"
+  integrity sha512-tcfjMu8rD+Mg3imkEbULd4Tf+bLBKCzbo9LPWYjrFdRrNUXHTCiqX8gAmLffelGRJ+NpZPzbmXeHGKLvIWlF6g==
   dependencies:
     bigi "^1.4.1"
     ecurve "^1.0.3"
