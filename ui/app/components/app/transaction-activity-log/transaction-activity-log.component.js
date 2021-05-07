@@ -30,6 +30,7 @@ export default class TransactionActivityLog extends PureComponent {
   };
 
   handleActivityClick = (hash) => {
+    if (!hash) return;
     const { primaryTransaction, rpcPrefs } = this.props;
     const { metamaskNetworkId } = primaryTransaction;
 
