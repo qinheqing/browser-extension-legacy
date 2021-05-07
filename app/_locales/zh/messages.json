@@ -2226,5 +2226,8 @@
   },
   "xdai": {
     "message": "xDai 主网"
+  },
+  "fantom": {
+    "message": "FANTOM 主网"
   }
 }

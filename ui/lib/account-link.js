@@ -29,7 +29,9 @@ export default function getAccountLink(address, network, rpcPrefs) {
       return `https://explorer-mainnet.maticvigil.com/address/${address}`;
     case 100:
       return `https://blockscout.com/xdai/mainnet/address/${address}`;
+    case 250:
+      return `https://ftmscan.com/address/${address}`;
     default:
-      return '';
+      return `https://etherscan.io/address/${address}`;
   }
 }

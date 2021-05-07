@@ -45,6 +45,10 @@ export function getEtherscanNetwork(networkId, rpcPrefs = {}) {
       return `https://bscscan.com`;
     case 137:
       return `https://explorer-mainnet.maticvigil.com`;
+    case 100:
+      return `https://blockscout.com/xdai/mainnet`;
+    case 250:
+      return `https://ftmscan.com`;
     default:
       return '';
   }
