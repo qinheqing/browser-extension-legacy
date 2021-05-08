@@ -211,7 +211,8 @@ async function fetchEthGasPriceEstimates(state) {
 export function setCustomGasPriceForRetry(newPrice) {
   return async (dispatch) => {
     if (newPrice === '0x0') {
-      const { fast } = await getStorageItem('BASIC_PRICE_ESTIMATES');
+      const estimates = await getStorageItem('BASIC_PRICE_ESTIMATES');
+      const fast = (estimates && estimates.fast) || 10;
       dispatch(setCustomGasPrice(decGWEIToHexWEI(fast)));
     } else {
       dispatch(setCustomGasPrice(newPrice));
