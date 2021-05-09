@@ -149,7 +149,7 @@ class AddToken extends Component {
     const autoFilled = Boolean(symbol && decimals);
     this.setState({ autoFilled });
     this.handleCustomSymbolChange(symbol || '');
-    this.handleCustomDecimalsChange(decimals);
+    this.handleCustomDecimalsChange(decimals || '0');
   }
 
   handleCustomAddressChange(value) {
@@ -169,7 +169,7 @@ class AddToken extends Component {
         this.setState({
           customAddressError: this.context.t('invalidAddress'),
           customSymbol: '',
-          customDecimals: 0,
+          customDecimals: '0',
           customSymbolError: null,
           customDecimalsError: null,
         });

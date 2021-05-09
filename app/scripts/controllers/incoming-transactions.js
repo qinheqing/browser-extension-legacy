@@ -22,6 +22,9 @@ import {
   RINKEBY_CHAIN_ID,
   ROPSTEN,
   ROPSTEN_CHAIN_ID,
+  TEST_CHAINS,
+  HECO_CHAIN_ID,
+  BSC_CHAIN_ID
 } from '../../../shared/constants/network';
 import { NETWORK_EVENTS } from './network';
 
@@ -40,6 +43,8 @@ const etherscanSupportedNetworks = [
   MAINNET_CHAIN_ID,
   RINKEBY_CHAIN_ID,
   ROPSTEN_CHAIN_ID,
+  BSC_CHAIN_ID,
+  HECO_CHAIN_ID
 ];
 
 export default class IncomingTransactionsController {
@@ -214,13 +219,21 @@ export default class IncomingTransactionsController {
     return this._processTxFetchResponse(fetchedTxResponse);
   }
 
-  async _fetchTxs(address, fromBlock, chainId) {
-    const etherscanSubdomain =
-      chainId === MAINNET_CHAIN_ID
-        ? 'api'
-        : `api-${CHAIN_ID_TO_TYPE_MAP[chainId]}`;
+  getBlockApiUrl(chainId) {
+    if (chainId === MAINNET_CHAIN_ID) {
+      return "https://api.etherscan.io"
+    } else if (chainId === HECO_CHAIN_ID) {
+      return 'https://api.hecoinfo.com';
+    } else if (chainId === BSC_CHAIN_ID) {
+      return 'https://api.bscscan.com';
+    } else {
+      let etherscanSubdomain = `api-${CHAIN_ID_TO_TYPE_MAP[chainId]}`
+      return `https://${etherscanSubdomain}.etherscan.io`;
+    }
+  }
 
-    const apiUrl = `https://${etherscanSubdomain}.etherscan.io`;
+  async _fetchTxs(address, fromBlock, chainId) {
+    const apiUrl = this.getBlockApiUrl(chainId);
     let url = `${apiUrl}/api?module=account&action=txlist&address=${address}&tag=latest&page=1`;
 
     if (fromBlock) {

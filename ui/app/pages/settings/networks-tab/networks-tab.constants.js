@@ -24,7 +24,11 @@ import {
   XDAI,
   XDAI_CHAIN_ID,
   XDAI_RPC_URL,
-  XDAI_TICKER
+  XDAI_TICKER,
+  FANTOM,
+  FANTOM_CHAIN_ID,
+  FANTOM_RPC_URL,
+  FANTOM_TICKER
 } from '../../../../../shared/constants/network';
 
 const defaultNetworksData = [
@@ -72,6 +76,15 @@ const defaultNetworksData = [
     chainId: XDAI_CHAIN_ID,
     ticker: XDAI_TICKER,
     blockExplorerUrl: 'https://blockscout.com/xdai/mainnet​',
+  },
+  {
+    labelKey: FANTOM,
+    iconColor: '#1969ff',
+    providerType: FANTOM,
+    rpcUrl: FANTOM_RPC_URL,
+    chainId: FANTOM_CHAIN_ID,
+    ticker: FANTOM_TICKER,
+    blockExplorerUrl: 'https://ftmscan.com',
   },
   {
     labelKey: ROPSTEN,

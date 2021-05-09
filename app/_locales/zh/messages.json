@@ -2226,5 +2226,23 @@
   },
   "xdai": {
     "message": "xDai 主网"
+  },
+  "fantom": {
+    "message": "FANTOM 主网"
+  },
+  "xOfYPending": {
+    "message": "$1 of $2 进行中"
+  },
+  "unrecognizedChain": {
+    "message": "无法识别此自定义网络。 我们建议您在继续之前先 $1",
+    "description": "$1 is a clickable link with text defined by the 'unrecognizedChanLinkText' key. The link will open to instructions for users to validate custom network details."
+  },
+  "unrecognizedChainLinkText": {
+    "message": "验证网络详细信息",
+    "description": "Serves as link text for the 'unrecognizedChain' key. This text will be embedded inside the translation for that key."
+  },
+  "mismatchedChain": {
+    "message": "网络 ChainId 和我们的记录不匹配. 我们建议你使用前先 $1",
+    "description": "$1 is a clickable link with text defined by the 'mismatchedChainLinkText' key"
   }
 }

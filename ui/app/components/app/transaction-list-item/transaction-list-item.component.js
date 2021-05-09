@@ -59,6 +59,7 @@ export default function TransactionListItem({
     category === TRANSACTION_GROUP_CATEGORIES.SIGNATURE_REQUEST;
   const isApproval = category === TRANSACTION_GROUP_CATEGORIES.APPROVAL;
   const isUnapproved = status === TRANSACTION_STATUSES.UNAPPROVED;
+  const isApproved = status === TRANSACTION_STATUSES.APPROVED
   const isSwap = category === TRANSACTION_GROUP_CATEGORIES.SWAP;
 
   const className = classnames('transaction-list-item', {
@@ -90,7 +91,7 @@ export default function TransactionListItem({
         {t('cancel')}
       </Button>
     );
-    if (hasCancelled || !isPending || isUnapproved) {
+    if (hasCancelled || !isPending || isUnapproved || isApproved) {
       return null;
     }
 
@@ -111,7 +112,7 @@ export default function TransactionListItem({
   ]);
 
   const speedUpButton = useMemo(() => {
-    if (!shouldShowSpeedUp || !isPending || isUnapproved) {
+    if (!shouldShowSpeedUp || !isPending || isUnapproved || isApproved) {
       return null;
     }
     return (

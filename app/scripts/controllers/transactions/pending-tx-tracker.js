@@ -91,9 +91,7 @@ export default class PendingTransactionTracker extends EventEmitter {
           errorMessage.includes('known transaction') ||
           // parity
           errorMessage.includes('gas price too low to replace') ||
-          errorMessage.includes(
-            'transaction with the same hash was already imported',
-          ) ||
+          errorMessage.includes('transaction with the same hash was already imported') ||
           // other
           errorMessage.includes('gateway timeout') ||
           errorMessage.includes('nonce too low');
@@ -167,6 +165,16 @@ export default class PendingTransactionTracker extends EventEmitter {
   async _checkPendingTx(txMeta) {
     const txHash = txMeta.hash;
     const txId = txMeta.id;
+    
+    // if tx status is approved for 60 seconds, we think it has failed
+    if (txMeta.status === TRANSACTION_STATUSES.APPROVED) {
+      if (new Date().getTime() > (txMeta.time + 60 * 1000)) {
+        const timeoutTxErr = new Error('We had an error while approving this transaction');
+        timeoutTxErr.name = 'TxOperationTimeoutError';
+        this.emit('tx:failed', txId, timeoutTxErr);
+      }
+      return
+    }
 
     // Only check submitted txs
     if (txMeta.status !== TRANSACTION_STATUSES.SUBMITTED) {

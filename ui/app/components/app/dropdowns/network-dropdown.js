@@ -285,6 +285,7 @@ class NetworkDropdown extends Component {
         {this.renderNetworkEntry('heco')}
         {this.renderNetworkEntry('matic')}
         {this.renderNetworkEntry('xdai')}
+        {this.renderNetworkEntry('fantom')}
         {this.renderNetworkEntry('ropsten')}
         {this.renderNetworkEntry('kovan')}
         {this.renderNetworkEntry('rinkeby')}
