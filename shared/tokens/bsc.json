@@ -1115,6 +1115,14 @@
       "address": "0x9bd547446ea13c0c13df2c1885e1f5b019a77441",
       "decimals": 2,
       "chainId": 56
+    },
+    {
+      "name": "Nerve",
+      "symbol": "NRV",
+      "logoURI": "https://bscscan.com/token/images/nerve_32.png?v=2",
+      "address": "0x42f6f551ae042cbe50c739158b4f0cac0edb9096",
+      "decimals": 18,
+      "chainId": 56
     }
   ],
   "version": {
