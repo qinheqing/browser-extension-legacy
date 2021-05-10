@@ -62,14 +62,14 @@ export function useTransactionDisplayData(transactionGroup) {
   const t = useI18nContext();
   const { initialTransaction, primaryTransaction } = transactionGroup;
   // initialTransaction contains the data we need to derive the primary purpose of this transaction group
-  const { transactionCategory } = initialTransaction;
+  const { transactionCategory } = primaryTransaction;
 
-  const { from: senderAddress, to } = initialTransaction.txParams || {};
+  const { from: senderAddress, to } = primaryTransaction.txParams || {};
 
   // for smart contract interactions, methodData can be used to derive the name of the action being taken
   const methodData =
     useSelector((state) =>
-      getKnownMethodData(state, initialTransaction?.txParams?.data),
+      getKnownMethodData(state, primaryTransaction?.txParams?.data),
     ) || {};
 
   const displayedStatusKey = getStatusKey(primaryTransaction);
@@ -112,7 +112,7 @@ export function useTransactionDisplayData(transactionGroup) {
   );
 
   const origin = stripHttpSchemes(
-    initialTransaction.origin || initialTransaction.msgParams?.origin || '',
+    primaryTransaction.origin || primaryTransaction.msgParams?.origin || '',
   );
 
   // used to append to the primary display value. initialized to either token.symbol or undefined
