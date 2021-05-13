@@ -166,11 +166,11 @@ export default class PendingTransactionTracker extends EventEmitter {
     const txHash = txMeta.hash;
     const txId = txMeta.id;
     
-    // if tx status is approved for 60 seconds, we think it has failed
+    // if tx status is approved for 120 seconds, we think it has failed
     if (txMeta.status === TRANSACTION_STATUSES.APPROVED) {
-      if (new Date().getTime() > (txMeta.time + 60 * 1000)) {
-        const timeoutTxErr = new Error('We had an error while approving this transaction');
-        timeoutTxErr.name = 'TxOperationTimeoutError';
+      if (new Date().getTime() > (txMeta.time + 180 * 1000)) {
+        const timeoutTxErr = new Error('交易签名超时');
+        timeoutTxErr.name = 'TranscationSignTimeoutError';
         this.emit('tx:failed', txId, timeoutTxErr);
       }
       return

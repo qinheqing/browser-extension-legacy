@@ -298,13 +298,13 @@ export default class AccountTracker {
     ethContract.balances(addresses, ethBalance, (error, result) => {
       if (error) {
         log.warn(
-          `MetaMask - Account Tracker single call balance fetch failed`,
+          `OneKey - Account Tracker single call balance fetch failed`,
           error,
         );
         Promise.all(addresses.map(this._updateAccount.bind(this)));
         return;
       }
-      if (result && Array.isArray(result)) {
+      if (result && Array.isArray(result) && addresses.length === result.length) {
         addresses.forEach((address, index) => {
           const balance = bnToHex(result[index]);
           accounts[address] = { address, balance };

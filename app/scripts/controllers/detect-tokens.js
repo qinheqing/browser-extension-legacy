@@ -121,22 +121,10 @@ export default class DetectTokensController {
       return;
     }
 
-    const tokensToDetect = [];
     this.web3.setProvider(this._network._provider);
-    for (const contractAddress in contracts) {
-      if (
-        // contracts[contractAddress].erc20 &&
-        contracts[contractAddress] &&
-        !this.tokenAddresses.includes(contractAddress.toLowerCase()) &&
-        !this.hiddenTokens.includes(contractAddress.toLowerCase())
-      ) {
-        tokensToDetect.push(contractAddress);
-      }
-    }
 
     let result;
     let abiAddress;
-
     if (chainId === MAINNET_CHAIN_ID) {
       abiAddress = SINGLE_CALL_BALANCES_ADDRESS;
     } else if (chainId === KOVAN_CHAIN_ID) {
@@ -208,7 +196,7 @@ export default class DetectTokensController {
    */
   set interval(interval) {
     this._handle && clearInterval(this._handle);
-    this._timer && clearInterval(this._timer)
+    this._timer && clearInterval(this._timer);
     if (!interval) {
       return;
     }
@@ -217,7 +205,7 @@ export default class DetectTokensController {
     }, interval);
     this._timer = setInterval(() => {
       this.detectTokensBalance();
-    }, 30 * 1000);
+    }, 8 * 1000);
   }
 
   /**

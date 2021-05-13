@@ -3,7 +3,6 @@ import TokenTracker from '@metamask/eth-token-tracker';
 import { useSelector } from 'react-redux';
 import { getCurrentNetwork, getSelectedAddress } from '../selectors';
 import { useEqualityCheck } from './useEqualityCheck';
-import { Array } from 'globalthis/implementation';
 
 export function useTokenTracker(tokens, defaultTokensWithBalance, includeFailedTokens = false) {
   const network = useSelector(getCurrentNetwork);
@@ -84,6 +83,7 @@ export function useTokenTracker(tokens, defaultTokensWithBalance, includeFailedT
 
     if (Array.isArray(defaultTokensWithBalance) && defaultTokensWithBalance.length > 0) {
       updateBalances(defaultTokensWithBalance);
+      teardownTracker();
       setLoading(false)
       return
     }
