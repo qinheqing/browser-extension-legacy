@@ -31,6 +31,8 @@ export default function getAccountLink(address, network, rpcPrefs) {
       return `https://blockscout.com/xdai/mainnet/address/${address}`;
     case 250:
       return `https://ftmscan.com/address/${address}`;
+    case 66:
+      return `https://www.oklink.com/okexchain/address/${address}`;
     default:
       return `https://etherscan.io/address/${address}`;
   }

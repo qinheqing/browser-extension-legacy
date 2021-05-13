@@ -36,7 +36,8 @@ export const COLORS = {
   BSC: "bsc",
   MATIC: "matic",
   XDAI: "xdai",
-  FANTOM: "fantom"
+  FANTOM: "fantom",
+  OKEX: "okex"
 };
 
 export const TYPOGRAPHY = {

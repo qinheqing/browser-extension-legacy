@@ -2244,5 +2244,8 @@
   "mismatchedChain": {
     "message": "网络 ChainId 和我们的记录不匹配. 我们建议你使用前先 $1",
     "description": "$1 is a clickable link with text defined by the 'mismatchedChainLinkText' key"
+  },
+  "okex": {
+    "message": "OKEx 主网"
   }
 }

@@ -28,7 +28,11 @@ import {
   FANTOM,
   FANTOM_CHAIN_ID,
   FANTOM_RPC_URL,
-  FANTOM_TICKER
+  FANTOM_TICKER,
+  OKEX,
+  OKEX_CHAIN_ID,
+  OKEX_RPC_URL,
+  OKEX_TICKER
 } from '../../../../../shared/constants/network';
 
 const defaultNetworksData = [
@@ -85,6 +89,15 @@ const defaultNetworksData = [
     chainId: FANTOM_CHAIN_ID,
     ticker: FANTOM_TICKER,
     blockExplorerUrl: 'https://ftmscan.com',
+  },
+  {
+    labelKey: OKEX,
+    iconColor: '#1969ff',
+    providerType: OKEX,
+    rpcUrl: OKEX_RPC_URL,
+    chainId: OKEX_CHAIN_ID,
+    ticker: OKEX_TICKER,
+    blockExplorerUrl: 'https://www.oklink.com/okexchain',
   },
   {
     labelKey: ROPSTEN,

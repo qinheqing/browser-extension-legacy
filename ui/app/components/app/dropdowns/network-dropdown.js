@@ -283,6 +283,7 @@ class NetworkDropdown extends Component {
         {this.renderNetworkEntry('mainnet')}
         {this.renderNetworkEntry('bsc')}
         {this.renderNetworkEntry('heco')}
+        {this.renderNetworkEntry('okex')}
         {this.renderNetworkEntry('matic')}
         {this.renderNetworkEntry('xdai')}
         {this.renderNetworkEntry('fantom')}

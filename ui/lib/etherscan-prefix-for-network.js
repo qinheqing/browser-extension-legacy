@@ -49,7 +49,9 @@ export function getEtherscanNetwork(networkId, rpcPrefs = {}) {
       return `https://blockscout.com/xdai/mainnet`;
     case 250:
       return `https://ftmscan.com`;
+    case 66:
+      return `https://www.oklink.com/okexchain`;
     default:
-      return '';
+      return 'https://etherscan.io';
   }
 }
