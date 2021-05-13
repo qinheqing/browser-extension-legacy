@@ -35,8 +35,10 @@ export default class PreferencesController {
       frequentRpcListDetail: [],
       accountTokens: {},
       accountHiddenTokens: {},
+      accountTokensWithBalance: {},
       assetImages: {},
       tokens: [],
+      tokensWithBalance: [],
       hiddenTokens: [],
       suggestedTokens: {},
       useBlockie: false,
@@ -684,8 +686,9 @@ export default class PreferencesController {
    */
   _subscribeProviderType() {
     this.network.providerStore.subscribe(() => {
-      const { tokens, hiddenTokens } = this._getTokenRelatedStates();
+      const { tokens, hiddenTokens, tokensWithBalance = [] } = this._getTokenRelatedStates();
       this._updateAccountTokens(tokens, this.getAssetImages(), hiddenTokens);
+      this.updateTokensWithBalance(tokensWithBalance);
     });
   }
 
@@ -715,6 +718,16 @@ export default class PreferencesController {
     });
   }
 
+  updateTokensWithBalance(tokensWithBalance) {
+    const {
+      accountTokensWithBalance,
+      providerType,
+      selectedAddress,
+    } = this._getTokenRelatedStates();
+    accountTokensWithBalance[selectedAddress][providerType] = tokensWithBalance;
+    this.store.updateState({ accountTokensWithBalance, tokensWithBalance });
+  }
+
   /**
    * Updates `tokens` and `hiddenTokens` of current account and network.
    *
@@ -736,7 +749,7 @@ export default class PreferencesController {
    *
    */
   _getTokenRelatedStates(selectedAddress) {
-    const { accountTokens, accountHiddenTokens } = this.store.getState();
+    const { accountTokens, accountHiddenTokens, accountTokensWithBalance } = this.store.getState();
     if (!selectedAddress) {
       // eslint-disable-next-line no-param-reassign
       selectedAddress = this.store.getState().selectedAddress;
@@ -748,19 +761,28 @@ export default class PreferencesController {
     if (!(selectedAddress in accountHiddenTokens)) {
       accountHiddenTokens[selectedAddress] = {};
     }
+    if (!(selectedAddress in accountTokensWithBalance)) {
+      accountTokensWithBalance[selectedAddress] = {};
+    }
     if (!(providerType in accountTokens[selectedAddress])) {
       accountTokens[selectedAddress][providerType] = [];
     }
     if (!(providerType in accountHiddenTokens[selectedAddress])) {
       accountHiddenTokens[selectedAddress][providerType] = [];
     }
+    if (!(providerType in accountTokensWithBalance[selectedAddress])) {
+      accountTokensWithBalance[selectedAddress][providerType] = [];
+    }
     const tokens = accountTokens[selectedAddress][providerType];
     const hiddenTokens = accountHiddenTokens[selectedAddress][providerType];
+    const tokensWithBalance = accountTokensWithBalance[selectedAddress][providerType];
     return {
       tokens,
       accountTokens,
       hiddenTokens,
       accountHiddenTokens,
+      tokensWithBalance,
+      accountTokensWithBalance,
       providerType,
       selectedAddress,
     };

@@ -2275,5 +2275,8 @@
   },
   "okex": {
     "message": "OKExChain Mainnet"
+  },
+  "symbolRequired": {
+    "message": "Symbol required"
   }
 }

@@ -3,8 +3,9 @@ import TokenTracker from '@metamask/eth-token-tracker';
 import { useSelector } from 'react-redux';
 import { getCurrentNetwork, getSelectedAddress } from '../selectors';
 import { useEqualityCheck } from './useEqualityCheck';
+import { Array } from 'globalthis/implementation';
 
-export function useTokenTracker(tokens, includeFailedTokens = false) {
+export function useTokenTracker(tokens, defaultTokensWithBalance, includeFailedTokens = false) {
   const network = useSelector(getCurrentNetwork);
   const userAddress = useSelector(getSelectedAddress);
 
@@ -77,7 +78,14 @@ export function useTokenTracker(tokens, includeFailedTokens = false) {
       // When the values above change, the effect will be restarted. We also teardown
       // tracker because inevitably this effect will run again momentarily.
       teardownTracker();
+      setLoading(false);
       return;
+    }
+
+    if (Array.isArray(defaultTokensWithBalance) && defaultTokensWithBalance.length > 0) {
+      updateBalances(defaultTokensWithBalance);
+      setLoading(false)
+      return
     }
 
     if (memoizedTokens.length === 0) {
@@ -93,6 +101,7 @@ export function useTokenTracker(tokens, includeFailedTokens = false) {
     memoizedTokens,
     updateBalances,
     buildTracker,
+    defaultTokensWithBalance
   ]);
 
   return { loading, tokensWithBalances, error };

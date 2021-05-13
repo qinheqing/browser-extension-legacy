@@ -2247,5 +2247,8 @@
   },
   "okex": {
     "message": "OKEx 主网"
+  },
+  "symbolRequired": {
+    "message": "代币符号不能为空"
   }
 }

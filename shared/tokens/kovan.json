@@ -1,0 +1,30 @@
+{
+  "keywords": ["default"],
+  "logoURI": "ipfs://QmZgpZq1HkVS7YCThNJeR51KFVo5AL8P3ThA2y9wcw53p9",
+  "name": "Kovan token List",
+  "tags": {},
+  "timestamp": "2020-08-11T22:55:13.889Z",
+  "tokens": [
+    {
+      "name": "DAI Token",
+      "address": "0x4f96fe3b7a6cf9725f59d353f723c1bdb64ca6aa",
+      "symbol": "DAI",
+      "decimals": 18,
+      "chainId": 128,
+      "logoURI": "https://kovan.etherscan.io/images/main/empty-token.png"
+    },
+    {
+      "name": "MKR Token",
+      "address": "0xaaf64bfcc32d0f15873a02163e7e500671a4ffcd",
+      "symbol": "MKR",
+      "decimals": 18,
+      "chainId": 128,
+      "logoURI": "https://kovan.etherscan.io/images/main/empty-token.png"
+    }
+  ],
+  "version": {
+    "major": 1,
+    "minor": 2,
+    "patch": 6
+  }
+}

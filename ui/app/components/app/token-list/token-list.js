@@ -7,7 +7,7 @@ import TokenCell from '../token-cell';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import { useTokenTracker } from '../../../hooks/useTokenTracker';
 import { getAssetImages, getContractMap } from '../../../selectors';
-import { getTokens } from '../../../ducks/metamask/metamask';
+import { getTokensWithBalance, getTokens } from '../../../ducks/metamask/metamask';
 
 export default function TokenList({ onTokenClick }) {
   const t = useI18nContext();
@@ -17,7 +17,8 @@ export default function TokenList({ onTokenClick }) {
   // from the background so it has a new reference with each background update,
   // even if the tokens haven't changed
   const tokens = useSelector(getTokens, isEqual);
-  const { loading, tokensWithBalances } = useTokenTracker(tokens, true);
+  const defaultTokensWithBalance = useSelector(getTokensWithBalance, isEqual);
+  const { loading, tokensWithBalances } = useTokenTracker(tokens, defaultTokensWithBalance, true);
 
   if (loading) {
     return (
