@@ -146,20 +146,22 @@ export default class DetectTokensController {
       );
       return;
     }
-  
-    const tokensWithBalance = currentTokens.map((tokenAddress, index) => {
-      const token = cloneDeep(currentTokens[index])
-      const balance = balancesResult[index];
-      if (balance && !balance.isZero()) {
-        token.string = stringifyBalance(balance, currentTokens[index].decimals)
-        token.balance = balance.toString() 
-      } else {
-        token.string = "0"
-        token.balance = "0"
-      }
-      return token
-    });
-    this._preferences.updateTokensWithBalance(tokensWithBalance);
+
+    if (Array.isArray(balancesResult) && balancesResult.length === currentTokens.length) {
+      const tokensWithBalance = currentTokens.map((tokenAddress, index) => {
+        const token = cloneDeep(currentTokens[index])
+        const balance = balancesResult[index];
+        if (balance && !balance.isZero()) {
+          token.string = stringifyBalance(balance, currentTokens[index].decimals)
+          token.balance = balance.toString() 
+        } else {
+          token.string = "0"
+          token.balance = "0"
+        }
+        return token
+      });
+      this._preferences.updateTokensWithBalance(tokensWithBalance);
+    }
   }
 
   async _getTokenBalances(tokens, abiAddress = SINGLE_CALL_BALANCES_ADDRESS) {
