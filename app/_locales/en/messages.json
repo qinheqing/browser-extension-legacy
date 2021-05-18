@@ -2278,5 +2278,14 @@
   },
   "symbolRequired": {
     "message": "Symbol required"
+  },
+  "pasteWatchAccount": {
+    "message": "Paste your interested account address here:"
+  },
+  "watchAcccount": {
+    "message": "Watch Wallet"
+  },
+  "watched": {
+    "message": "watched"
   }
 }

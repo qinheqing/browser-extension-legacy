@@ -239,6 +239,9 @@ export default class AccountMenu extends Component {
       case 'Simple Key Pair':
         label = t('imported');
         break;
+      case 'Watch Account':
+        label = t('watched');
+        break;
       default:
         return null;
     }

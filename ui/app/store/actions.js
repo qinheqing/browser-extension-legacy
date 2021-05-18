@@ -299,6 +299,36 @@ export function removeAccount(address) {
   };
 }
 
+export function importWatchAccount(address) {
+  return async (dispatch) => {
+    let newState;
+    dispatch(
+      showLoadingIndication('This may take a while, please be patient.'),
+    );
+    try {
+      log.debug(`background.importWatchAccount`);
+      await promisifiedBackground.importWatchAccount(address);
+      log.debug(`background.getState`);
+      newState = await promisifiedBackground.getState();
+    } catch (err) {
+      dispatch(displayWarning(err.message));
+      throw err;
+    } finally {
+      dispatch(hideLoadingIndication());
+    }
+
+    dispatch(updateMetamaskState(newState));
+    if (newState.selectedAddress) {
+      dispatch({
+        type: actionConstants.SHOW_ACCOUNT_DETAIL,
+        value: newState.selectedAddress,
+      });
+    }
+    return newState;
+  };
+}
+
+
 export function importNewAccount(strategy, args) {
   return async (dispatch) => {
     let newState;

@@ -6,6 +6,7 @@ import Dropdown from '../../../components/ui/dropdown';
 // Subviews
 import JsonImportView from './json';
 import PrivateKeyImportView from './private-key';
+import WatchAcccountView from "./watch"
 
 export default class AccountImportSubview extends Component {
   static contextTypes = {
@@ -15,7 +16,7 @@ export default class AccountImportSubview extends Component {
   state = {};
 
   getMenuItemTexts() {
-    return [this.context.t('privateKey'), this.context.t('jsonFile')];
+    return [this.context.t('privateKey'), this.context.t('jsonFile'), this.context.t('watchAcccount')];
   }
 
   renderImportView() {
@@ -28,6 +29,8 @@ export default class AccountImportSubview extends Component {
         return <PrivateKeyImportView />;
       case this.context.t('jsonFile'):
         return <JsonImportView />;
+      case this.context.t('watchAcccount'):
+        return <WatchAcccountView />;
       default:
         return <JsonImportView />;
     }

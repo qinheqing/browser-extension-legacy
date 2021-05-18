@@ -2172,7 +2172,7 @@
     "message": "在 $1 查看"
   },
   "viewOnEtherscan": {
-    "message": "在 Etherscan（以太坊浏览器）上查看"
+    "message": "在以太坊浏览器上查看"
   },
   "viewinExplorer": {
     "message": "在区块链浏览器中查看"
@@ -2250,5 +2250,14 @@
   },
   "symbolRequired": {
     "message": "代币符号不能为空"
+  },
+  "pasteWatchAccount": {
+    "message": "请粘贴观察钱包地址"
+  },
+  "watchAcccount": {
+    "message": "观察钱包"
+  },
+  "watched": {
+    "message": "观察"
   }
 }

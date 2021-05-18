@@ -24,6 +24,7 @@ import {
   CurrencyRateController,
   PhishingController,
 } from '@metamask/controllers';
+import AddressKeyring from "./lib/eth-address-keyring"
 import { getBackgroundMetaMetricState } from '../../ui/app/selectors';
 import { TRANSACTION_STATUSES } from '../../shared/constants/transaction';
 import ComposableObservableStore from './lib/ComposableObservableStore';
@@ -227,7 +228,7 @@ export default class MetamaskController extends EventEmitter {
       preferencesController: this.preferencesController,
     });
 
-    const additionalKeyrings = [TrezorKeyring, LedgerBridgeKeyring];
+    const additionalKeyrings = [TrezorKeyring, LedgerBridgeKeyring, AddressKeyring];
     this.keyringController = new KeyringController({
       keyringTypes: additionalKeyrings,
       initState: initState.KeyringController,
@@ -620,6 +621,7 @@ export default class MetamaskController extends EventEmitter {
       verifySeedPhrase: nodeify(this.verifySeedPhrase, this),
       resetAccount: nodeify(this.resetAccount, this),
       removeAccount: nodeify(this.removeAccount, this),
+      importWatchAccount: nodeify(this.importWatchAccount, this),
       importAccountWithStrategy: nodeify(this.importAccountWithStrategy, this),
 
       // hardware wallets
@@ -1109,6 +1111,9 @@ export default class MetamaskController extends EventEmitter {
     const simpleKeyPairKeyrings = this.keyringController.getKeyringsByType(
       'Simple Key Pair',
     );
+    const addressKeyrings = this.keyringController.getKeyringsByType(
+      'Watch Mode',
+    );
     const hdAccounts = await hdKeyring.getAccounts();
     const simpleKeyPairKeyringAccounts = await Promise.all(
       simpleKeyPairKeyrings.map((keyring) => keyring.getAccounts()),
@@ -1117,6 +1122,7 @@ export default class MetamaskController extends EventEmitter {
       (acc, accounts) => [...acc, ...accounts],
       [],
     );
+    const addressAccounts = await addressKeyrings.getAccounts();
     const accounts = {
       hd: hdAccounts
         .filter((item, pos) => hdAccounts.indexOf(item) === pos)
@@ -1124,6 +1130,7 @@ export default class MetamaskController extends EventEmitter {
       simpleKeyPair: simpleKeyPairAccounts
         .filter((item, pos) => simpleKeyPairAccounts.indexOf(item) === pos)
         .map((address) => ethUtil.toChecksumAddress(address)),
+      watchMode: addressAccounts,
       ledger: [],
       trezor: [],
     };
@@ -1446,6 +1453,29 @@ export default class MetamaskController extends EventEmitter {
     this.preferencesController.setAddresses(allAccounts);
     // set new account as selected
     await this.preferencesController.setSelectedAddress(accounts[0]);
+  }
+
+  async importWatchAccount(account) {
+    let keyring = this.keyringController.getKeyringsByType('Watch Account')[0];
+    if (!keyring) {
+      keyring = await this.keyringController.addNewKeyring('Watch Account');
+    }
+    const oldAccounts = await keyring.getAccounts();
+
+    keyring.setAccountToAdd(account);
+    await this.keyringController.addNewAccount(keyring);
+    const newAccounts = await keyring.getAccounts();
+    const allAccounts = await this.keyringController.getAccounts();
+
+    newAccounts.forEach((address, i) => {
+      if (!oldAccounts.includes(address)) {
+        const label = `Address ${i}`;
+        this.preferencesController.setAccountLabel(address, label);
+        // Select the account
+        this.preferencesController.setAddresses(allAccounts);
+        this.preferencesController.setSelectedAddress(address);
+      }
+    });
   }
 
   // ---------------------------------------------------------------------------
