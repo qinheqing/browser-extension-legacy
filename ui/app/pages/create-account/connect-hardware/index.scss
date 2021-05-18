@@ -53,7 +53,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 5px;
-    padding: 10px;
+    padding: 15px 10px;
 
     &__img {
       width: 95px;
@@ -63,15 +63,6 @@
   &__btn.selected {
     border-color: $primary;
     width: 149px;
-  }
-
-  &__btn:first-child {
-    margin-right: 15px;
-    margin-left: 20px;
-  }
-
-  &__btn:last-child {
-    margin-right: 20px;
   }
 
   &__hdPath {

@@ -187,10 +187,6 @@ export default class SelectHardware extends Component {
   renderFooter() {
     return (
       <div className="hw-connect__footer">
-        <h3 className="hw-connect__footer__title">
-          {this.context.t('readyToConnect')}
-        </h3>
-        {this.renderButtons()}
         <p className="hw-connect__footer__msg">
           {this.context.t('havingTroubleConnecting')}
           <a
