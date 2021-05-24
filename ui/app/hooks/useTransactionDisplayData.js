@@ -60,7 +60,15 @@ export function useTransactionDisplayData(transactionGroup) {
   const currentAsset = useCurrentAsset();
   const knownTokens = useSelector(getTokens);
   const t = useI18nContext();
-  const { initialTransaction, primaryTransaction } = transactionGroup;
+  const { primaryTransaction } = transactionGroup;
+  let { initialTransaction } = transactionGroup;
+
+  // if primaryTransaction is confirmed, then apply the primaryTransaction as the displayed title
+  //     otherwise initialTransaction (first transaction in transactionGroup) will be applied
+  if (primaryTransaction.status === TRANSACTION_STATUSES.CONFIRMED) {
+    initialTransaction = primaryTransaction;
+  }
+
   // initialTransaction contains the data we need to derive the primary purpose of this transaction group
   const { transactionCategory } = initialTransaction;
 

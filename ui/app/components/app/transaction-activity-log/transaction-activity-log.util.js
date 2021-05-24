@@ -52,12 +52,20 @@ export function getActivities(transaction, isFirstTransaction = false) {
     hash,
     history = [],
     txParams: { gas: paramsGasLimit, gasPrice: paramsGasPrice },
-    xReceipt: { status } = {},
+    txReceipt: { status, gasUsed } = {},
     type,
   } = transaction;
 
   let cachedGasLimit = '0x0';
   let cachedGasPrice = '0x0';
+
+  // display actual Transaction Fee, NOT the max fee (gasLimit * gasPrice)
+  const getActualGasUsed = (gasLimit) => {
+    if (gasUsed) {
+      return `0x${gasUsed}`;
+    }
+    return gasLimit;
+  };
 
   const historyActivities = history.reduce((acc, base, index) => {
     // First history item should be transaction creation
@@ -97,11 +105,11 @@ export function getActivities(transaction, isFirstTransaction = false) {
               const gasFee =
                 cachedGasLimit === '0x0' && cachedGasPrice === '0x0'
                   ? getHexGasTotal({
-                      gasLimit: paramsGasLimit,
+                      gasLimit: getActualGasUsed(paramsGasLimit),
                       gasPrice: paramsGasPrice,
                     })
                   : getHexGasTotal({
-                      gasLimit: cachedGasLimit,
+                      gasLimit: getActualGasUsed(cachedGasLimit),
                       gasPrice: cachedGasPrice,
                     });
 

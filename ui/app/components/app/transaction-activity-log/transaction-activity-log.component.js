@@ -94,7 +94,7 @@ export default class TransactionActivityLog extends PureComponent {
             value,
             fromCurrency: 'ETH',
             conversionRate,
-            numberOfDecimals: 3,
+            numberOfDecimals: 6,
           });
     const formattedTimestamp = formatDate(timestamp, "T 'on' M/d/y");
     const activityText = this.context.t(eventKey, [
