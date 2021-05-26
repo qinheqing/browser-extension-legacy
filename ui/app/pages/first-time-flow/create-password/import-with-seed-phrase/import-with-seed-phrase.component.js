@@ -6,6 +6,7 @@ import Button from '../../../../components/ui/button';
 import {
   INITIALIZE_SELECT_ACTION_ROUTE,
   INITIALIZE_END_OF_FLOW_ROUTE,
+  INITIALIZE_WELCOME_ROUTE,
 } from '../../../../helpers/constants/routes';
 
 const { isValidMnemonic } = ethers.utils;
@@ -227,11 +228,14 @@ export default class ImportWithSeedPhrase extends PureComponent {
                   errorMessage: seedPhraseError,
                 },
               });
-              this.props.history.push(INITIALIZE_SELECT_ACTION_ROUTE);
+              // TODO HW Only模式时，是返回到welcome页面
+              // this.props.history.push(INITIALIZE_SELECT_ACTION_ROUTE);
+              this.props.history.replace(INITIALIZE_WELCOME_ROUTE);
             }}
             href="#"
           >
-            <span>&lt; </span><span>{t('back')}</span>
+            <span>&lt; </span>
+            <span>{t('back')}</span>
           </a>
         </div>
         <div className="first-time-flow__header">
@@ -257,9 +261,7 @@ export default class ImportWithSeedPhrase extends PureComponent {
             />
           )}
           {seedPhraseError && <span className="error">{seedPhraseError}</span>}
-          <div
-            className="first-time-flow__checkbox-container"
-          >
+          <div className="first-time-flow__checkbox-container">
             <div
               className="first-time-flow__checkbox"
               tabIndex="0"
@@ -304,9 +306,7 @@ export default class ImportWithSeedPhrase extends PureComponent {
           margin="normal"
           largeLabel
         />
-        <div
-          className="first-time-flow__checkbox-container"
-        >
+        <div className="first-time-flow__checkbox-container">
           <div
             className="first-time-flow__checkbox first-time-flow__terms"
             tabIndex="0"

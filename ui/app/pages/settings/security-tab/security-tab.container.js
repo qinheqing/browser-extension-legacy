@@ -17,10 +17,12 @@ const mapStateToProps = (state) => {
     featureFlags: { showIncomingTransactions } = {},
     participateInMetaMetrics,
     usePhishDetect,
+    hwOnlyMode
   } = metamask;
 
   return {
     warning,
+    hwOnlyMode,
     showIncomingTransactions,
     participateInMetaMetrics,
     usePhishDetect,

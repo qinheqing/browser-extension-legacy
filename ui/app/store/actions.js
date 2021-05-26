@@ -328,7 +328,6 @@ export function importWatchAccount(address) {
   };
 }
 
-
 export function importNewAccount(strategy, args) {
   return async (dispatch) => {
     let newState;
@@ -2120,6 +2119,16 @@ export function setCompletedOnboarding() {
 export function completeOnboarding() {
   return {
     type: actionConstants.COMPLETE_ONBOARDING,
+  };
+}
+
+export function setHwOnlyModeAsync(status = true) {
+  return async (dispatch) => {
+    await promisifiedBackground.setHwOnlyMode(status);
+    dispatch({
+      type: actionConstants.SET_HW_ONLY_MODE,
+      value: status,
+    });
   };
 }
 

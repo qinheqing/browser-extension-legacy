@@ -3,9 +3,11 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import {
   activeTabHasPermissions,
+  getAccountType,
   getCurrentEthBalance,
   getFirstPermissionRequest,
   getIsMainnet,
+  getMetaMaskAccountsConnected,
   getOriginOfCurrentTab,
   getTotalUnapprovedCount,
   getWeb3ShimUsageStateForOrigin,
@@ -52,8 +54,12 @@ const mapStateToProps = (state) => {
     connectedStatusPopoverHasBeenShown,
     defaultHomeActiveTabName,
     swapsState,
+    hwOnlyMode,
     pendingApprovals = {},
   } = metamask;
+  const connectedAccounts = getMetaMaskAccountsConnected(state);
+  const accountType = getAccountType(state);
+
   const accountBalance = getCurrentEthBalance(state);
   const { forgottenPassword, threeBoxLastUpdated } = appState;
   const totalUnapprovedCount = getTotalUnapprovedCount(state);
@@ -78,6 +84,9 @@ const mapStateToProps = (state) => {
       WEB3_SHIM_USAGE_ALERT_STATES.RECORDED;
 
   return {
+    hwOnlyMode,
+    connectedAccounts,
+    accountType,
     forgottenPassword,
     suggestedTokens,
     swapsEnabled,

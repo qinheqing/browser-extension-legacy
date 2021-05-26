@@ -7,6 +7,7 @@ import {
   getLastConnectedInfo,
   getDomainMetadata,
   getSelectedAddress,
+  getAccountType,
 } from '../../selectors';
 
 import { formatDate } from '../../helpers/utils/util';
@@ -21,6 +22,7 @@ import {
   CONNECT_ROUTE,
   CONNECT_CONFIRM_PERMISSIONS_ROUTE,
 } from '../../helpers/constants/routes';
+import { CONST_ACCOUNT_TYPES } from '../../helpers/constants/common';
 import PermissionApproval from './permissions-connect.component';
 
 const mapStateToProps = (state, ownProps) => {
@@ -30,8 +32,14 @@ const mapStateToProps = (state, ownProps) => {
     },
     location: { pathname },
   } = ownProps;
+  const { hwOnlyMode } = state.metamask;
   const permissionsRequests = getPermissionsRequests(state);
-  const currentAddress = getSelectedAddress(state);
+  let currentAddress = getSelectedAddress(state);
+  const currentAccountType = getAccountType(state);
+
+  if (hwOnlyMode && currentAccountType !== CONST_ACCOUNT_TYPES.HARDWARE) {
+    currentAddress = '';
+  }
 
   const permissionsRequest = permissionsRequests.find(
     (req) => req.metadata.id === permissionsRequestId,

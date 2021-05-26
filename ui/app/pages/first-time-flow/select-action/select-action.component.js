@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '../../../components/ui/button';
 import MetaFoxLogo from '../../../components/ui/metafox-logo';
 import { INITIALIZE_METAMETRICS_OPT_IN_ROUTE } from '../../../helpers/constants/routes';
+import { CONST_FIRST_TIME_FLOW_TYPES } from '../../../helpers/constants/common';
 
 export default class SelectAction extends PureComponent {
   static propTypes = {
@@ -25,12 +26,12 @@ export default class SelectAction extends PureComponent {
   }
 
   handleCreate = () => {
-    this.props.setFirstTimeFlowType('create');
+    this.props.setFirstTimeFlowType(CONST_FIRST_TIME_FLOW_TYPES.CREATE);
     this.props.history.push(INITIALIZE_METAMETRICS_OPT_IN_ROUTE);
   };
 
   handleImport = () => {
-    this.props.setFirstTimeFlowType('import');
+    this.props.setFirstTimeFlowType(CONST_FIRST_TIME_FLOW_TYPES.IMPORT);
     this.props.history.push(INITIALIZE_METAMETRICS_OPT_IN_ROUTE);
   };
 
@@ -56,8 +57,10 @@ export default class SelectAction extends PureComponent {
                     {t('noAlreadyHaveSeed')}
                   </div>
                   <div className="select-action__button-text-small">
-                   <p>{t('importYourExisting')}</p>
-                   <p className="select-action__warning">{t('notUseHardware')}</p>
+                    <p>{t('importYourExisting')}</p>
+                    <p className="select-action__warning">
+                      {t('notUseHardware')}
+                    </p>
                   </div>
                 </div>
                 <Button

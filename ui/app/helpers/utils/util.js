@@ -1,9 +1,16 @@
 import punycode from 'punycode/punycode';
 import abi from 'human-standard-token-abi';
 import BigNumber from 'bignumber.js';
-import ethUtil from 'ethereumjs-util';
+import ethUtil, { stripHexPrefix } from 'ethereumjs-util';
 import { DateTime } from 'luxon';
-import { addHexPrefix } from '../../../../app/scripts/lib/util';
+import extension from 'extensionizer';
+import {
+  addHexPrefix,
+  getEnvironmentType,
+} from '../../../../app/scripts/lib/util';
+import { CONST_ACCOUNT_TYPES } from '../constants/common';
+import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
+import { CONNECT_HARDWARE_ROUTE } from '../constants/routes';
 
 // formatData :: ( date: <Unix Timestamp> ) -> String
 export function formatDate(date, format = "M/d/y 'at' T") {
@@ -463,4 +470,67 @@ export function constructTxParams({
     txParams.to = to;
   }
   return addHexPrefixToObjectValues(txParams);
+}
+
+export function clearBackgroundLocalStore() {
+  extension.runtime.getBackgroundPage((backgroundWindow) => {
+    backgroundWindow.onekeyLocalStore.clear(() => {
+      delayTimeout(1500).then(() => window.location.reload());
+    });
+  });
+}
+
+export function isInDebugTestEnv() {
+  return process.env.IN_TEST === 'true' || process.env.METAMASK_DEBUG;
+}
+
+export function delayTimeout(timeout) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeout);
+  });
+}
+
+export function keyringTypeToAccountType(keyringType) {
+  switch (keyringType) {
+    case 'Trezor Hardware':
+    case 'Ledger Hardware':
+      return CONST_ACCOUNT_TYPES.HARDWARE;
+    case 'Simple Key Pair':
+      return CONST_ACCOUNT_TYPES.IMPORTED;
+    case 'Watch Account':
+      return CONST_ACCOUNT_TYPES.WATCHED;
+    default:
+      return CONST_ACCOUNT_TYPES.DEFAULT;
+  }
+}
+
+export function getAccountKeyring({ account, keyrings }) {
+  const simpleAddress = stripHexPrefix(account.address).toLowerCase();
+
+  const keyring = keyrings.find((kr) => {
+    return (
+      kr.accounts.includes(simpleAddress) ||
+      kr.accounts.includes(account.address)
+    );
+  });
+
+  return keyring;
+}
+
+export function getAccountMetaInfo({ account, keyrings }) {
+  const keyring = getAccountKeyring({ account, keyrings });
+  const accountType = keyringTypeToAccountType(keyring && keyring.type);
+  return {
+    keyring, // TODO remove
+    accountKeyring: keyring,
+    accountType,
+  };
+}
+
+export function goToPageConnectHardware() {
+  if (getEnvironmentType() === ENVIRONMENT_TYPE_POPUP) {
+    global.platform.openExtensionInBrowser(CONNECT_HARDWARE_ROUTE);
+  } else {
+    global.onekeyHistory.push(CONNECT_HARDWARE_ROUTE);
+  }
 }

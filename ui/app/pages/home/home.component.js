@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Redirect, Route } from 'react-router-dom';
-import { formatDate } from '../../helpers/utils/util';
+import { formatDate, goToPageConnectHardware } from '../../helpers/utils/util';
 import AssetList from '../../components/app/asset-list';
 import HomeNotification from '../../components/app/home-notification';
 import MultipleNotifications from '../../components/app/multiple-notifications';
@@ -26,8 +26,12 @@ import {
   AWAITING_SWAP_ROUTE,
   BUILD_QUOTE_ROUTE,
   VIEW_QUOTE_ROUTE,
-  CONFIRMATION_V_NEXT_ROUTE
+  CONFIRMATION_V_NEXT_ROUTE,
+  CONNECT_HARDWARE_ROUTE,
 } from '../../helpers/constants/routes';
+import { CONST_ACCOUNT_TYPES } from '../../helpers/constants/common';
+import { getEnvironmentType } from '../../../../app/scripts/lib/util';
+import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
 
 const LEARN_MORE_URL =
   'https://metamask.zendesk.com/hc/en-us/articles/360045129011-Intro-to-MetaMask-v8-extension';
@@ -41,6 +45,8 @@ export default class Home extends PureComponent {
 
   static propTypes = {
     history: PropTypes.object,
+    hwOnlyMode: PropTypes.bool,
+    accountType: PropTypes.string,
     forgottenPassword: PropTypes.bool,
     suggestedTokens: PropTypes.object,
     unconfirmedTransactionsCount: PropTypes.number,
@@ -89,7 +95,7 @@ export default class Home extends PureComponent {
       haveSwapsQuotes,
       showAwaitingSwapScreen,
       swapsFetchParams,
-      pendingApprovals
+      pendingApprovals,
     } = this.props;
 
     this.setState({ mounted: true });
@@ -285,7 +291,7 @@ export default class Home extends PureComponent {
     );
   };
 
-  render() {
+  renderContent() {
     const { t } = this.context;
     const {
       defaultHomeActiveTabName,
@@ -298,7 +304,72 @@ export default class Home extends PureComponent {
       setSwapsWelcomeMessageHasBeenShown,
       swapsEnabled,
       isMainnet,
+      hwOnlyMode,
+      accountType,
     } = this.props;
+    if (
+      hwOnlyMode &&
+      accountType &&
+      accountType !== CONST_ACCOUNT_TYPES.HARDWARE
+    ) {
+      return (
+        <div className="home__container home__connect-hw">
+          <Button
+            type="secondary"
+            onClick={() => {
+              goToPageConnectHardware();
+            }}
+          >
+            {t('connectHardwareWallet')}
+          </Button>
+        </div>
+      );
+    }
+    return (
+      <div className="home__container">
+        {isPopup && !connectedStatusPopoverHasBeenShown
+          ? this.renderPopover()
+          : null}
+        <div className="home__main-view">
+          <MenuBar />
+          <div className="home__balance-wrapper">
+            <EthOverview />
+          </div>
+          <Tabs
+            defaultActiveTabName={defaultHomeActiveTabName}
+            onTabClick={onTabClick}
+            tabsClassName="home__tabs"
+          >
+            <Tab
+              activeClassName="home__tab--active"
+              className="home__tab"
+              data-testid="home__asset-tab"
+              name={t('assets')}
+            >
+              <AssetList
+                onClickAsset={(asset) =>
+                  history.push(`${ASSET_ROUTE}/${asset}`)
+                }
+              />
+            </Tab>
+            <Tab
+              activeClassName="home__tab--active"
+              className="home__tab"
+              data-testid="home__activity-tab"
+              name={t('activity')}
+            >
+              <TransactionList />
+            </Tab>
+          </Tabs>
+        </div>
+        {this.renderNotifications()}
+      </div>
+    );
+  }
+
+  render() {
+    const { t } = this.context;
+    const { forgottenPassword } = this.props;
 
     if (forgottenPassword) {
       return <Redirect to={{ pathname: RESTORE_VAULT_ROUTE }} />;
@@ -314,44 +385,7 @@ export default class Home extends PureComponent {
           component={ConnectedAccounts}
           exact
         />
-        <div className="home__container">
-          {isPopup && !connectedStatusPopoverHasBeenShown
-            ? this.renderPopover()
-            : null}
-          <div className="home__main-view">
-            <MenuBar />
-            <div className="home__balance-wrapper">
-              <EthOverview />
-            </div>
-            <Tabs
-              defaultActiveTabName={defaultHomeActiveTabName}
-              onTabClick={onTabClick}
-              tabsClassName="home__tabs"
-            >
-              <Tab
-                activeClassName="home__tab--active"
-                className="home__tab"
-                data-testid="home__asset-tab"
-                name={t('assets')}
-              >
-                <AssetList
-                  onClickAsset={(asset) =>
-                    history.push(`${ASSET_ROUTE}/${asset}`)
-                  }
-                />
-              </Tab>
-              <Tab
-                activeClassName="home__tab--active"
-                className="home__tab"
-                data-testid="home__activity-tab"
-                name={t('activity')}
-              >
-                <TransactionList />
-              </Tab>
-            </Tabs>
-          </div>
-          {this.renderNotifications()}
-        </div>
+        {this.renderContent()}
       </div>
     );
   }

@@ -97,6 +97,11 @@ export default class Routes extends Component {
     metricsEvent: PropTypes.func,
   };
 
+  constructor(props) {
+    super(props);
+    global.onekeyHistory = props.history;
+  }
+
   UNSAFE_componentWillMount() {
     const {
       currentCurrency,

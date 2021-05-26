@@ -16,6 +16,7 @@ export default class UnlockPage extends Component {
   static propTypes = {
     history: PropTypes.object.isRequired,
     isUnlocked: PropTypes.bool,
+    hwOnlyMode: PropTypes.bool,
     onImport: PropTypes.func,
     onRestore: PropTypes.func,
     onSubmit: PropTypes.func,
@@ -138,13 +139,16 @@ export default class UnlockPage extends Component {
   render() {
     const { password, error } = this.state;
     const { t } = this.context;
-    const { onImport, onRestore } = this.props;
+    const { onImport, onRestore, hwOnlyMode } = this.props;
 
     return (
       <div className="unlock-page__container">
         <div className="unlock-page">
           <div className="unlock-page__mascot-container">
-            <img src="images/logo.svg" style={{ width: '120px', height: '120px' }} />
+            <img
+              src="images/logo.svg"
+              style={{ width: '120px', height: '120px' }}
+            />
           </div>
           <h1 className="unlock-page__title">{t('welcomeBack')}</h1>
           <div>{t('unlockMessage')}</div>
@@ -163,17 +167,19 @@ export default class UnlockPage extends Component {
             />
           </form>
           {this.renderSubmitButton()}
-          <div className="unlock-page__links">
-            <button className="unlock-page__link" onClick={() => onRestore()}>
-              {t('restoreFromSeed')}
-            </button>
-            <button
-              className="unlock-page__link unlock-page__link--import"
-              onClick={() => onImport()}
-            >
-              {t('importUsingSeed')}
-            </button>
-          </div>
+          {!hwOnlyMode && (
+            <div className="unlock-page__links">
+              <button className="unlock-page__link" onClick={() => onRestore()}>
+                {t('restoreFromSeed')}
+              </button>
+              <button
+                className="unlock-page__link unlock-page__link--import"
+                onClick={() => onImport()}
+              >
+                {t('importUsingSeed')}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     );

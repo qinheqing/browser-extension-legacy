@@ -13,3 +13,16 @@ export const GAS_ESTIMATE_TYPES = {
   FAST: 'FAST',
   FASTEST: 'FASTEST',
 };
+
+export const CONST_FIRST_TIME_FLOW_TYPES = {
+  CREATE: 'create',
+  IMPORT: 'import',
+  CONNECT_HW: 'connect-hw',
+};
+
+export const CONST_ACCOUNT_TYPES = {
+  HARDWARE: 'hardware', // Trezor Hardware, Ledger Hardware
+  IMPORTED: 'imported', // Simple Key Pair
+  WATCHED: 'watched', // Watch Account
+  DEFAULT: 'default',
+};

@@ -793,6 +793,9 @@
   "getStarted": {
     "message": "开始使用"
   },
+  "hwOnlyStarted": {
+    "message": "仅连接硬件使用"
+  },
   "goerli": {
     "message": "Goerli 测试网络"
   },

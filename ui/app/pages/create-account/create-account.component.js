@@ -14,6 +14,7 @@ import ConnectHardwareForm from './connect-hardware';
 export default class CreateAccountPage extends Component {
   renderTabs() {
     const {
+      hwOnlyMode,
       history,
       location: { pathname },
     } = this.props;
@@ -27,18 +28,23 @@ export default class CreateAccountPage extends Component {
 
     return (
       <div className="new-account__tabs">
-        <div
-          className={getClassNames(NEW_ACCOUNT_ROUTE)}
-          onClick={() => history.push(NEW_ACCOUNT_ROUTE)}
-        >
-          {this.context.t('create')}
-        </div>
-        <div
-          className={getClassNames(IMPORT_ACCOUNT_ROUTE)}
-          onClick={() => history.push(IMPORT_ACCOUNT_ROUTE)}
-        >
-          {this.context.t('import')}
-        </div>
+        {!hwOnlyMode && (
+          <>
+            <div
+              className={getClassNames(NEW_ACCOUNT_ROUTE)}
+              onClick={() => history.push(NEW_ACCOUNT_ROUTE)}
+            >
+              {this.context.t('create')}
+            </div>
+            <div
+              className={getClassNames(IMPORT_ACCOUNT_ROUTE)}
+              onClick={() => history.push(IMPORT_ACCOUNT_ROUTE)}
+            >
+              {this.context.t('import')}
+            </div>
+          </>
+        )}
+
         <div
           className={getClassNames(CONNECT_HARDWARE_ROUTE)}
           onClick={() => history.push(CONNECT_HARDWARE_ROUTE)}
@@ -86,6 +92,7 @@ export default class CreateAccountPage extends Component {
 CreateAccountPage.propTypes = {
   location: PropTypes.object,
   history: PropTypes.object,
+  hwOnlyMode: PropTypes.bool,
 };
 
 CreateAccountPage.contextTypes = {

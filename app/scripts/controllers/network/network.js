@@ -18,6 +18,8 @@ import {
   NETWORK_TYPE_TO_ID_MAP,
   MAINNET_CHAIN_ID,
   RINKEBY_CHAIN_ID,
+  ROPSTEN_CHAIN_ID,
+  ROPSTEN,
 } from '../../../../shared/constants/network';
 import {
   isPrefixedFormattedHexString,
@@ -38,7 +40,7 @@ if (process.env.IN_TEST === 'true') {
     nickname: 'Localhost 8545',
   };
 } else if (process.env.METAMASK_DEBUG || env === 'test') {
-  defaultProviderConfigOpts = { type: RINKEBY, chainId: RINKEBY_CHAIN_ID };
+  defaultProviderConfigOpts = { type: ROPSTEN, chainId: ROPSTEN_CHAIN_ID };
 } else {
   defaultProviderConfigOpts = { type: MAINNET, chainId: MAINNET_CHAIN_ID };
 }
@@ -173,7 +175,7 @@ export default class NetworkController extends EventEmitter {
 
   getNativeCurrency() {
     const { type, ticker } = this.getProviderConfig();
-    const nativeCurrency = ticker ? ticker : (NETWORK_TYPE_TO_ID_MAP[type] || "ETH")
+    const nativeCurrency = ticker || NETWORK_TYPE_TO_ID_MAP[type] || 'ETH';
     return nativeCurrency;
   }
 
@@ -197,7 +199,7 @@ export default class NetworkController extends EventEmitter {
   }
 
   async setProviderType(type) {
-    const { rpcUrl, chainId, ticker = "ETH" } = NETWORK_TYPE_TO_ID_MAP[type];
+    const { rpcUrl, chainId, ticker = 'ETH' } = NETWORK_TYPE_TO_ID_MAP[type];
     assert.notStrictEqual(
       type,
       NETWORK_TYPE_RPC,
@@ -207,7 +209,7 @@ export default class NetworkController extends EventEmitter {
       [].concat(INFURA_PROVIDER_TYPES, BUILDINT_PROVIDER_TYPES).includes(type),
       `Unknown Infura provider type "${type}".`,
     );
-    this.setProviderConfig({ type, rpcUrl, chainId, ticker, nickname: "" });
+    this.setProviderConfig({ type, rpcUrl, chainId, ticker, nickname: '' });
   }
 
   resetConnection() {

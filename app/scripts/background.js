@@ -63,6 +63,20 @@ const localStore = inTest ? new ReadOnlyNetworkStore() : new LocalStore();
 let versionedData;
 
 if (inTest || process.env.METAMASK_DEBUG) {
+  // set global localStore for debug
+  global.onekeyLocalStore = localStore;
+  global.onekeyLocalStore.clear = async (callback) => {
+    await localStore.set({ data: {}, meta: {} });
+    console.log(JSON.stringify(await localStore.get(), null, 4));
+    console.log('Page will be reloaded in 3s...');
+    setTimeout(() => {
+      // eslint-disable-next-line node/callback-return
+      callback && callback();
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+    }, 2000);
+  };
   global.metamaskGetState = localStore.get.bind(localStore);
 }
 
