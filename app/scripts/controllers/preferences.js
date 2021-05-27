@@ -65,6 +65,7 @@ export default class PreferencesController {
         useNativeCurrencyAsPrimaryCurrency: true,
       },
       completedOnboarding: false,
+      hwOnlyMode: false,
       // ENS decentralized website resolution
       ipfsGateway: 'dweb.link',
       ...opts.initState,
@@ -657,6 +658,11 @@ export default class PreferencesController {
     return Promise.resolve(true);
   }
 
+  setHwOnlyMode(status = true) {
+    this.store.updateState({ hwOnlyMode: status });
+    return Promise.resolve(true);
+  }
+
   /**
    * A getter for the `ipfsGateway` property
    * @returns {string} The current IPFS gateway domain
@@ -686,7 +692,11 @@ export default class PreferencesController {
    */
   _subscribeProviderType() {
     this.network.providerStore.subscribe(() => {
-      const { tokens, hiddenTokens, tokensWithBalance = [] } = this._getTokenRelatedStates();
+      const {
+        tokens,
+        hiddenTokens,
+        tokensWithBalance = [],
+      } = this._getTokenRelatedStates();
       this._updateAccountTokens(tokens, this.getAssetImages(), hiddenTokens);
       this.updateTokensWithBalance(tokensWithBalance);
     });
@@ -749,7 +759,11 @@ export default class PreferencesController {
    *
    */
   _getTokenRelatedStates(selectedAddress) {
-    const { accountTokens, accountHiddenTokens, accountTokensWithBalance } = this.store.getState();
+    const {
+      accountTokens,
+      accountHiddenTokens,
+      accountTokensWithBalance,
+    } = this.store.getState();
     if (!selectedAddress) {
       // eslint-disable-next-line no-param-reassign
       selectedAddress = this.store.getState().selectedAddress;
@@ -775,7 +789,8 @@ export default class PreferencesController {
     }
     const tokens = accountTokens[selectedAddress][providerType];
     const hiddenTokens = accountHiddenTokens[selectedAddress][providerType];
-    const tokensWithBalance = accountTokensWithBalance[selectedAddress][providerType];
+    const tokensWithBalance =
+      accountTokensWithBalance[selectedAddress][providerType];
     return {
       tokens,
       accountTokens,

@@ -7,7 +7,10 @@ import { getOnboardingInitiator } from '../../../../selectors';
 import RevealSeedPhrase from './reveal-seed-phrase.component';
 
 const mapStateToProps = (state) => {
+  const { hwOnlyMode } = state.metamask;
+
   return {
+    hwOnlyMode,
     onboardingInitiator: getOnboardingInitiator(state),
   };
 };

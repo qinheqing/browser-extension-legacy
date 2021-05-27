@@ -9,10 +9,14 @@ import CheckBox, {
   UNCHECKED,
 } from '../../../components/ui/check-box';
 import Tooltip from '../../../components/ui/tooltip';
-import { PRIMARY } from '../../../helpers/constants/common';
+import {
+  CONST_ACCOUNT_TYPES,
+  PRIMARY,
+} from '../../../helpers/constants/common';
 import UserPreferencedCurrencyDisplay from '../../../components/app/user-preferenced-currency-display';
 import PermissionsConnectHeader from '../../../components/app/permissions-connect-header';
 import PermissionsConnectFooter from '../../../components/app/permissions-connect-footer';
+import { goToPageConnectHardware } from '../../../helpers/utils/util';
 
 export default class ChooseAccount extends Component {
   static propTypes = {
@@ -31,6 +35,8 @@ export default class ChooseAccount extends Component {
     cancelPermissionsRequest: PropTypes.func.isRequired,
     permissionsRequestId: PropTypes.string.isRequired,
     selectedAccountAddresses: PropTypes.object.isRequired,
+    hwOnlyMode: PropTypes.bool,
+    keyrings: PropTypes.array,
     targetDomainMetadata: PropTypes.shape({
       extensionId: PropTypes.string,
       icon: PropTypes.string,
@@ -88,10 +94,21 @@ export default class ChooseAccount extends Component {
   }
 
   renderAccountsList = () => {
-    const { accounts, nativeCurrency, addressLastConnectedMap } = this.props;
+    const {
+      accounts,
+      nativeCurrency,
+      addressLastConnectedMap,
+      keyrings,
+      hwOnlyMode,
+    } = this.props;
     const { selectedAccounts } = this.state;
     return (
       <div className="permissions-connect-choose-account__accounts-list">
+        {!accounts.length && (
+          <div className="permissions-connect-choose-account__accounts-list__no-accounts">
+            {this.context.t('noAccountsFound')}
+          </div>
+        )}
         {accounts.map((account, index) => {
           const { address, addressLabel, balance } = account;
           return (
@@ -137,7 +154,7 @@ export default class ChooseAccount extends Component {
 
   renderAccountsListHeader() {
     const { t } = this.context;
-    const { selectNewAccountViaModal, accounts } = this.props;
+    const { selectNewAccountViaModal, accounts, hwOnlyMode } = this.props;
     const { selectedAccounts } = this.state;
 
     let checked;
@@ -182,27 +199,81 @@ export default class ChooseAccount extends Component {
             </Tooltip>
           </div>
         ) : null}
-        <div
-          className="permissions-connect-choose-account__text-blue"
-          onClick={() =>
-            selectNewAccountViaModal(this.handleAccountClick.bind(this))
-          }
+        {!hwOnlyMode && (
+          <div
+            className="permissions-connect-choose-account__text-blue"
+            onClick={() =>
+              selectNewAccountViaModal(this.handleAccountClick.bind(this))
+            }
+          >
+            {this.context.t('newAccount')}
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  renderActionsFooter() {
+    const {
+      selectAccounts,
+      permissionsRequestId,
+      cancelPermissionsRequest,
+      accounts,
+      hwOnlyMode,
+    } = this.props;
+    const { selectedAccounts } = this.state;
+    const { t } = this.context;
+    const hasAccounts = accounts && accounts.length > 0;
+
+    let buttons = (
+      <>
+        <Button
+          onClick={() => cancelPermissionsRequest(permissionsRequestId)}
+          type="default"
         >
-          {this.context.t('newAccount')}
+          {t('cancel')}
+        </Button>
+        <Button
+          onClick={() => selectAccounts(selectedAccounts)}
+          type="primary"
+          disabled={selectedAccounts.size === 0 || !hasAccounts}
+        >
+          {t('next')}
+        </Button>
+      </>
+    );
+    if (!hasAccounts && hwOnlyMode) {
+      buttons = (
+        <>
+          <Button
+            onClick={() => cancelPermissionsRequest(permissionsRequestId)}
+            type="default"
+          >
+            {t('cancel')}
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              goToPageConnectHardware();
+            }}
+          >
+            {t('connectHardwareWallet')}
+          </Button>
+        </>
+      );
+    }
+    return (
+      <div className="permissions-connect-choose-account__footer-container">
+        <PermissionsConnectFooter />
+        <div className="permissions-connect-choose-account__bottom-buttons">
+          {buttons}
         </div>
       </div>
     );
   }
 
   render() {
-    const {
-      selectAccounts,
-      permissionsRequestId,
-      cancelPermissionsRequest,
-      targetDomainMetadata,
-      accounts,
-    } = this.props;
-    const { selectedAccounts } = this.state;
+    const { targetDomainMetadata, accounts } = this.props;
     const { t } = this.context;
     return (
       <div className="permissions-connect-choose-account">
@@ -219,24 +290,7 @@ export default class ChooseAccount extends Component {
         />
         {this.renderAccountsListHeader()}
         {this.renderAccountsList()}
-        <div className="permissions-connect-choose-account__footer-container">
-          <PermissionsConnectFooter />
-          <div className="permissions-connect-choose-account__bottom-buttons">
-            <Button
-              onClick={() => cancelPermissionsRequest(permissionsRequestId)}
-              type="default"
-            >
-              {t('cancel')}
-            </Button>
-            <Button
-              onClick={() => selectAccounts(selectedAccounts)}
-              type="primary"
-              disabled={selectedAccounts.size === 0}
-            >
-              {t('next')}
-            </Button>
-          </div>
-        </div>
+        {this.renderActionsFooter()}
       </div>
     );
   }

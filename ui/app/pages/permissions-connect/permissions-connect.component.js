@@ -17,7 +17,7 @@ export default class PermissionConnect extends Component {
     getRequestAccountTabIds: PropTypes.func.isRequired,
     getCurrentWindowTab: PropTypes.func.isRequired,
     accounts: PropTypes.array.isRequired,
-    currentAddress: PropTypes.string.isRequired,
+    currentAddress: PropTypes.string,
     origin: PropTypes.string,
     showNewAccountModal: PropTypes.func.isRequired,
     newAccountNumber: PropTypes.number.isRequired,
@@ -52,7 +52,9 @@ export default class PermissionConnect extends Component {
 
   state = {
     redirecting: false,
-    selectedAccountAddresses: new Set([this.props.currentAddress]),
+    selectedAccountAddresses: this.props.currentAddress
+      ? new Set([this.props.currentAddress])
+      : new Set([]),
     permissionsApproved: null,
     origin: this.props.origin,
     targetDomainMetadata: this.props.targetDomainMetadata || {},

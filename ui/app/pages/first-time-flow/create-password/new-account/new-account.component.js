@@ -4,8 +4,11 @@ import Button from '../../../../components/ui/button';
 import {
   INITIALIZE_SEED_PHRASE_ROUTE,
   INITIALIZE_SELECT_ACTION_ROUTE,
+  INITIALIZE_WELCOME_ROUTE,
 } from '../../../../helpers/constants/routes';
 import TextField from '../../../../components/ui/text-field';
+import { isInDebugTestEnv } from '../../../../helpers/utils/util';
+import { CONST_DEFAULT_PASSWORD_IN_TEST } from '../../../../helpers/constants/common';
 
 export default class NewAccount extends PureComponent {
   static contextTypes = {
@@ -19,11 +22,12 @@ export default class NewAccount extends PureComponent {
   };
 
   state = {
-    password: '',
-    confirmPassword: '',
+    password: isInDebugTestEnv() ? CONST_DEFAULT_PASSWORD_IN_TEST : '',
+    confirmPassword: isInDebugTestEnv() ? CONST_DEFAULT_PASSWORD_IN_TEST : '',
     passwordError: '',
     confirmPasswordError: '',
-    termsChecked: false,
+    termsChecked: true,
+
   };
 
   isValid() {
@@ -108,6 +112,7 @@ export default class NewAccount extends PureComponent {
         },
       });
 
+      // show master wallet seed phrase
       history.push(INITIALIZE_SEED_PHRASE_ROUTE);
     } catch (error) {
       this.setState({ passwordError: error.message });
@@ -157,11 +162,13 @@ export default class NewAccount extends PureComponent {
                   name: 'Go Back from Onboarding Create',
                 },
               });
-              this.props.history.push(INITIALIZE_SELECT_ACTION_ROUTE);
+              // this.props.history.push(INITIALIZE_SELECT_ACTION_ROUTE);
+              this.props.history.replace(INITIALIZE_WELCOME_ROUTE);
             }}
             href="#"
           >
-            <span>&lt; </span><span>{t('back')}</span>
+            <span>&lt; </span>
+            <span>{t('back')}</span>
           </a>
         </div>
         <div className="first-time-flow__header">{t('createPassword')}</div>
@@ -195,9 +202,7 @@ export default class NewAccount extends PureComponent {
             fullWidth
             largeLabel
           />
-          <div
-            className="first-time-flow__checkbox-container"
-          >
+          <div className="first-time-flow__checkbox-container">
             <div
               className="first-time-flow__checkbox"
               tabIndex="0"

@@ -13,6 +13,7 @@ export default class SecurityTab extends PureComponent {
   static propTypes = {
     warning: PropTypes.string,
     history: PropTypes.object,
+    hwOnlyMode: PropTypes.bool,
     participateInMetaMetrics: PropTypes.bool.isRequired,
     setParticipateInMetaMetrics: PropTypes.func.isRequired,
     showIncomingTransactions: PropTypes.bool.isRequired,
@@ -23,7 +24,10 @@ export default class SecurityTab extends PureComponent {
 
   renderSeedWords() {
     const { t } = this.context;
-    const { history } = this.props;
+    const { history, hwOnlyMode } = this.props;
+    if (hwOnlyMode) {
+      return null;
+    }
 
     return (
       <div className="settings-page__content-row">

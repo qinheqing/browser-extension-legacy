@@ -95,6 +95,8 @@ export const UPDATE_PREFERENCES = 'UPDATE_PREFERENCES';
 // Onboarding
 export const COMPLETE_ONBOARDING = 'COMPLETE_ONBOARDING';
 
+export const SET_HW_ONLY_MODE = 'SET_HW_ONLY_MODE';
+
 export const SET_MOUSE_USER_STATE = 'SET_MOUSE_USER_STATE';
 
 // Network

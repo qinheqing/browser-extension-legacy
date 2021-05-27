@@ -8,8 +8,9 @@ import {
   INITIALIZE_CONFIRM_SEED_PHRASE_ROUTE,
   DEFAULT_ROUTE,
 } from '../../../../helpers/constants/routes';
-import { exportAsFile } from '../../../../helpers/utils/util';
+import { delayTimeout, exportAsFile } from '../../../../helpers/utils/util';
 import { returnToOnboardingInitiator } from '../../onboarding-initiator-util';
+import LoadingScreen from '../../../../components/ui/loading-screen';
 
 export default class RevealSeedPhrase extends PureComponent {
   static contextTypes = {
@@ -18,6 +19,7 @@ export default class RevealSeedPhrase extends PureComponent {
   };
 
   static propTypes = {
+    hwOnlyMode: PropTypes.bool,
     history: PropTypes.object,
     seedPhrase: PropTypes.string,
     setSeedPhraseBackedUp: PropTypes.func,
@@ -27,6 +29,14 @@ export default class RevealSeedPhrase extends PureComponent {
       tabId: PropTypes.number,
     }),
   };
+
+  componentDidMount() {
+    if (this.props.hwOnlyMode) {
+      delayTimeout(300).then(() => {
+        this.handleSkip();
+      });
+    }
+  }
 
   state = {
     isShowingSeedPhrase: false,
@@ -71,6 +81,7 @@ export default class RevealSeedPhrase extends PureComponent {
       },
     });
 
+    // setCompletedOnboarding
     await Promise.all([setCompletedOnboarding(), setSeedPhraseBackedUp(false)]);
 
     if (onboardingInitiator) {
@@ -123,7 +134,12 @@ export default class RevealSeedPhrase extends PureComponent {
   render() {
     const { t } = this.context;
     const { isShowingSeedPhrase } = this.state;
-    const { onboardingInitiator } = this.props;
+    const { onboardingInitiator, hwOnlyMode } = this.props;
+
+    // if hwOnlyMode, show loading
+    if (hwOnlyMode) {
+      return <LoadingScreen />;
+    }
 
     return (
       <div className="reveal-seed-phrase">

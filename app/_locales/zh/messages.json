@@ -793,6 +793,12 @@
   "getStarted": {
     "message": "开始使用"
   },
+  "hwOnlyStarted": {
+    "message": "仅连接硬件使用"
+  },
+  "hwOnlyModeSwitch": {
+    "message": "仅连接硬件模式"
+  },
   "goerli": {
     "message": "Goerli 测试网络"
   },

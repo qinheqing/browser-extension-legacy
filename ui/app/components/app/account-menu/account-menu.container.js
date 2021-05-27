@@ -24,13 +24,14 @@ const SHOW_SEARCH_ACCOUNTS_MIN_COUNT = 5;
 
 function mapStateToProps(state) {
   const {
-    metamask: { isAccountMenuOpen },
+    metamask: { isAccountMenuOpen, hwOnlyMode },
   } = state;
   const accounts = getMetaMaskAccountsOrdered(state);
   const origin = getOriginOfCurrentTab(state);
   const selectedAddress = getSelectedAddress(state);
 
   return {
+    hwOnlyMode,
     isAccountMenuOpen,
     addressConnectedDomainMap: getAddressConnectedDomainMap(state),
     originOfCurrentTab: origin,

@@ -796,6 +796,12 @@
   "getStarted": {
     "message": "Get Started"
   },
+  "hwOnlyStarted": {
+    "message": "Get Started as HW Only"
+  },
+  "hwOnlyModeSwitch": {
+    "message": "HW Only Mode"
+  },
   "goerli": {
     "message": "Goerli Test Network"
   },

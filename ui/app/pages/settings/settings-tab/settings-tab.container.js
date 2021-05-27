@@ -6,6 +6,7 @@ import {
   updateCurrentLocale,
   setUseNativeCurrencyAsPrimaryCurrencyPreference,
   setParticipateInMetaMetrics,
+  setHwOnlyModeAsync,
 } from '../../../store/actions';
 import { getPreferences } from '../../../selectors';
 import SettingsTab from './settings-tab.component';
@@ -22,6 +23,7 @@ const mapStateToProps = (state) => {
     useBlockie,
     useAutoSwitchChain,
     currentLocale,
+    hwOnlyMode,
   } = metamask;
   const { useNativeCurrencyAsPrimaryCurrency } = getPreferences(state);
 
@@ -32,6 +34,7 @@ const mapStateToProps = (state) => {
     conversionDate,
     nativeCurrency,
     useBlockie,
+    hwOnlyMode,
     useAutoSwitchChain,
     useNativeCurrencyAsPrimaryCurrency,
   };
@@ -48,6 +51,7 @@ const mapDispatchToProps = (dispatch) => {
     },
     setParticipateInMetaMetrics: (val) =>
       dispatch(setParticipateInMetaMetrics(val)),
+    setHwOnlyModeAsync: (val) => dispatch(setHwOnlyModeAsync(val)),
   };
 };
 

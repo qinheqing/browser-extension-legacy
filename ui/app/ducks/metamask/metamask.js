@@ -44,6 +44,7 @@ export default function reduceMetamask(state = {}, action) {
     },
     firstTimeFlowType: null,
     completedOnboarding: false,
+    hwOnlyMode: false,
     knownMethodData: {},
     participateInMetaMetrics: null,
     metaMetricsSendCount: 0,
@@ -305,7 +306,7 @@ export default function reduceMetamask(state = {}, action) {
         ...metamaskState,
         useBlockie: action.value,
       };
-    
+
     case actionConstants.SET_USE_AUTO_SWITCH_CHAIN:
       return {
         ...metamaskState,
@@ -357,6 +358,13 @@ export default function reduceMetamask(state = {}, action) {
       return {
         ...metamaskState,
         completedOnboarding: true,
+      };
+    }
+
+    case actionConstants.SET_HW_ONLY_MODE: {
+      return {
+        ...metamaskState,
+        hwOnlyMode: action.value,
       };
     }
 

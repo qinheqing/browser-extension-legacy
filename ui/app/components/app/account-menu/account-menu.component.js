@@ -9,7 +9,10 @@ import { getEnvironmentType } from '../../../../../app/scripts/lib/util';
 import Identicon from '../../ui/identicon';
 import SiteIcon from '../../ui/site-icon';
 import UserPreferencedCurrencyDisplay from '../user-preferenced-currency-display';
-import { PRIMARY } from '../../../helpers/constants/common';
+import {
+  CONST_ACCOUNT_TYPES,
+  PRIMARY,
+} from '../../../helpers/constants/common';
 import {
   SETTINGS_ROUTE,
   ABOUT_US_ROUTE,
@@ -20,6 +23,13 @@ import {
 } from '../../../helpers/constants/routes';
 import TextField from '../../ui/text-field';
 import SearchIcon from '../../ui/search-icon';
+import {
+  keyringTypeToAccountType,
+  getAccountKeyring,
+  clearBackgroundLocalStore,
+  isInDebugTestEnv,
+  goToPageConnectHardware,
+} from '../../../helpers/utils/util';
 
 export function AccountMenuItem(props) {
   const { icon, children, text, subText, className, onClick } = props;
@@ -58,6 +68,7 @@ export default class AccountMenu extends Component {
   };
 
   static propTypes = {
+    hwOnlyMode: PropTypes.bool,
     shouldShowAccountsSearch: PropTypes.bool,
     accounts: PropTypes.array,
     history: PropTypes.object,
@@ -147,6 +158,7 @@ export default class AccountMenu extends Component {
       showAccountDetail,
       addressConnectedDomainMap,
       originOfCurrentTab,
+      hwOnlyMode,
     } = this.props;
     const { searchQuery } = this.state;
 
@@ -166,15 +178,7 @@ export default class AccountMenu extends Component {
 
     return filteredIdentities.map((identity) => {
       const isSelected = identity.address === selectedAddress;
-
-      const simpleAddress = identity.address.substring(2).toLowerCase();
-
-      const keyring = keyrings.find((kr) => {
-        return (
-          kr.accounts.includes(simpleAddress) ||
-          kr.accounts.includes(identity.address)
-        );
-      });
+      const keyring = getAccountKeyring({ account: identity, keyrings });
       const addressDomains = addressConnectedDomainMap[identity.address] || {};
       const iconAndNameForOpenDomain = addressDomains[originOfCurrentTab];
 
@@ -221,25 +225,22 @@ export default class AccountMenu extends Component {
   }
 
   renderKeyringType(keyring) {
-    const { t } = this.context;
-
-    // Sometimes keyrings aren't loaded yet
     if (!keyring) {
       return null;
     }
+    const { t } = this.context;
+    const accountType = keyringTypeToAccountType(keyring.type);
 
-    const { type } = keyring;
     let label;
 
-    switch (type) {
-      case 'Trezor Hardware':
-      case 'Ledger Hardware':
+    switch (accountType) {
+      case CONST_ACCOUNT_TYPES.HARDWARE:
         label = t('hardware');
         break;
-      case 'Simple Key Pair':
+      case CONST_ACCOUNT_TYPES.IMPORTED:
         label = t('imported');
         break;
-      case 'Watch Account':
+      case CONST_ACCOUNT_TYPES.WATCHED:
         label = t('watched');
         break;
       default:
@@ -258,7 +259,9 @@ export default class AccountMenu extends Component {
   }
 
   setShouldShowScrollButton = () => {
-    if (!this.accountsRef) return
+    if (!this.accountsRef) {
+      return;
+    }
     const { scrollTop, offsetHeight, scrollHeight } = this.accountsRef;
 
     const canScroll = scrollHeight > offsetHeight;
@@ -309,6 +312,7 @@ export default class AccountMenu extends Component {
       toggleAccountMenu,
       lockMetamask,
       history,
+      hwOnlyMode,
     } = this.props;
 
     if (!isAccountMenuOpen) {
@@ -345,48 +349,54 @@ export default class AccountMenu extends Component {
           {this.renderScrollButton()}
         </div>
         <div className="account-menu__divider" />
-        <AccountMenuItem
-          onClick={() => {
-            toggleAccountMenu();
-            metricsEvent({
-              eventOpts: {
-                category: 'Navigation',
-                action: 'Main Menu',
-                name: 'Clicked Create Account',
-              },
-            });
-            history.push(NEW_ACCOUNT_ROUTE);
-          }}
-          icon={
-            <img
-              className="account-menu__item-icon"
-              src="images/plus-btn-white.svg"
-              alt={t('createAccount')}
+
+        {!hwOnlyMode && (
+          <>
+            <AccountMenuItem
+              onClick={() => {
+                toggleAccountMenu();
+                metricsEvent({
+                  eventOpts: {
+                    category: 'Navigation',
+                    action: 'Main Menu',
+                    name: 'Clicked Create Account',
+                  },
+                });
+                history.push(NEW_ACCOUNT_ROUTE);
+              }}
+              icon={
+                <img
+                  className="account-menu__item-icon"
+                  src="images/plus-btn-white.svg"
+                  alt={t('createAccount')}
+                />
+              }
+              text={t('createAccount')}
             />
-          }
-          text={t('createAccount')}
-        />
-        <AccountMenuItem
-          onClick={() => {
-            toggleAccountMenu();
-            metricsEvent({
-              eventOpts: {
-                category: 'Navigation',
-                action: 'Main Menu',
-                name: 'Clicked Import Account',
-              },
-            });
-            history.push(IMPORT_ACCOUNT_ROUTE);
-          }}
-          icon={
-            <img
-              className="account-menu__item-icon"
-              src="images/import-account.svg"
-              alt={t('importAccount')}
+            <AccountMenuItem
+              onClick={() => {
+                toggleAccountMenu();
+                metricsEvent({
+                  eventOpts: {
+                    category: 'Navigation',
+                    action: 'Main Menu',
+                    name: 'Clicked Import Account',
+                  },
+                });
+                history.push(IMPORT_ACCOUNT_ROUTE);
+              }}
+              icon={
+                <img
+                  className="account-menu__item-icon"
+                  src="images/import-account.svg"
+                  alt={t('importAccount')}
+                />
+              }
+              text={t('importAccount')}
             />
-          }
-          text={t('importAccount')}
-        />
+          </>
+        )}
+
         <AccountMenuItem
           onClick={() => {
             toggleAccountMenu();
@@ -397,11 +407,7 @@ export default class AccountMenu extends Component {
                 name: 'Clicked Connect Hardware',
               },
             });
-            if (getEnvironmentType() === ENVIRONMENT_TYPE_POPUP) {
-              global.platform.openExtensionInBrowser(CONNECT_HARDWARE_ROUTE);
-            } else {
-              history.push(CONNECT_HARDWARE_ROUTE);
-            }
+            goToPageConnectHardware();
           }}
           icon={
             <img
@@ -441,6 +447,17 @@ export default class AccountMenu extends Component {
           }
           text={t('settings')}
         />
+
+        {isInDebugTestEnv() && (
+          <AccountMenuItem
+            onClick={() => {
+              if (global.confirm('确认重置插件吗？插件数据将重新初始化')) {
+                clearBackgroundLocalStore();
+              }
+            }}
+            text="重置插件"
+          />
+        )}
       </div>
     );
   }

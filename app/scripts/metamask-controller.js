@@ -24,9 +24,9 @@ import {
   CurrencyRateController,
   PhishingController,
 } from '@metamask/controllers';
-import AddressKeyring from "./lib/eth-address-keyring"
 import { getBackgroundMetaMetricState } from '../../ui/app/selectors';
 import { TRANSACTION_STATUSES } from '../../shared/constants/transaction';
+import AddressKeyring from './lib/eth-address-keyring';
 import ComposableObservableStore from './lib/ComposableObservableStore';
 import AccountTracker from './lib/account-tracker';
 import createLoggerMiddleware from './lib/createLoggerMiddleware';
@@ -228,7 +228,11 @@ export default class MetamaskController extends EventEmitter {
       preferencesController: this.preferencesController,
     });
 
-    const additionalKeyrings = [TrezorKeyring, LedgerBridgeKeyring, AddressKeyring];
+    const additionalKeyrings = [
+      TrezorKeyring,
+      LedgerBridgeKeyring,
+      AddressKeyring,
+    ];
     this.keyringController = new KeyringController({
       keyringTypes: additionalKeyrings,
       initState: initState.KeyringController,
@@ -681,6 +685,10 @@ export default class MetamaskController extends EventEmitter {
       ),
       completeOnboarding: nodeify(
         preferencesController.completeOnboarding,
+        preferencesController,
+      ),
+      setHwOnlyMode: nodeify(
+        preferencesController.setHwOnlyMode,
         preferencesController,
       ),
       addKnownMethodData: nodeify(
@@ -1956,7 +1964,10 @@ export default class MetamaskController extends EventEmitter {
    * @param {MessageSender} sender - The sender of the messages on this stream
    */
   setupUntrustedCommunication(connectionStream, sender) {
-    const { usePhishDetect, useAutoSwitchChain } = this.preferencesController.store.getState();
+    const {
+      usePhishDetect,
+      useAutoSwitchChain,
+    } = this.preferencesController.store.getState();
     const { hostname } = new URL(sender.url);
     // Check if new connection is blocked if phishing detection is on
     if (usePhishDetect && this.phishingController.test(hostname)) {
@@ -1976,13 +1987,16 @@ export default class MetamaskController extends EventEmitter {
     this.setupPublicConfig(mux.createStream('publicConfig'));
 
     if (useAutoSwitchChain && this.detectChainController.test(hostname)) {
-      this.extension.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        const tab = tabs && tabs[0];
-        const tabId = sender.tab && sender.tab.id;
-        if (tab.id === tabId) {
-          this.detectChainController.switch(hostname);
-        }
-      })
+      this.extension.tabs.query(
+        { active: true, currentWindow: true },
+        (tabs) => {
+          const tab = tabs && tabs[0];
+          const tabId = sender.tab && sender.tab.id;
+          if (tab.id === tabId) {
+            this.detectChainController.switch(hostname);
+          }
+        },
+      );
     }
   }
 
@@ -2676,7 +2690,7 @@ export default class MetamaskController extends EventEmitter {
    * @param {boolean} val - True for use switch chain, false for not.
    * @param {Function} cb - A callback function called when complete.
    */
-  
+
   setUseAutoSwitchChain(val, cb) {
     try {
       this.preferencesController.setUseAutoSwitchChain(val);
