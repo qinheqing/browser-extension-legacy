@@ -30,7 +30,9 @@ export default class SettingsTab extends PureComponent {
   };
 
   static propTypes = {
+    setHwOnlyModeAsync: PropTypes.func,
     setUseBlockie: PropTypes.func,
+    hwOnlyMode: PropTypes.bool,
     setUseAutoSwitchChain: PropTypes.func,
     setCurrentCurrency: PropTypes.func,
     warning: PropTypes.string,
@@ -149,6 +151,29 @@ export default class SettingsTab extends PureComponent {
     );
   }
 
+  renderHWOnlyOptIn() {
+    const { t } = this.context;
+    const { setHwOnlyModeAsync, hwOnlyMode } = this.props;
+
+    return (
+      <div className="settings-page__content-row">
+        <div className="settings-page__content-item">
+          <span>{this.context.t('hwOnlyModeSwitch')}</span>
+        </div>
+        <div className="settings-page__content-item">
+          <div className="settings-page__content-item-col">
+            <ToggleButton
+              value={hwOnlyMode}
+              onToggle={(value) => setHwOnlyModeAsync(!value)}
+              offLabel={t('off')}
+              onLabel={t('on')}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   renderUsePrimaryCurrencyOptions() {
     const { t } = this.context;
     const {
@@ -218,6 +243,7 @@ export default class SettingsTab extends PureComponent {
         {this.renderCurrentLocale()}
         {this.renderBlockieOptIn()}
         {this.renderAutoSwitchChainOptIn()}
+        {this.renderHWOnlyOptIn()}
       </div>
     );
   }

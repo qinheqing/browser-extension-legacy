@@ -7,6 +7,7 @@ import TextField from '../../components/ui/text-field';
 import Mascot from '../../components/ui/mascot';
 import { DEFAULT_ROUTE } from '../../helpers/constants/routes';
 import { isInDebugTestEnv } from '../../helpers/utils/util';
+import { CONST_DEFAULT_PASSWORD_IN_TEST } from '../../helpers/constants/common';
 
 export default class UnlockPage extends Component {
   static contextTypes = {
@@ -26,7 +27,7 @@ export default class UnlockPage extends Component {
   };
 
   state = {
-    password: isInDebugTestEnv() ? '88888888' : '',
+    password: isInDebugTestEnv() ? CONST_DEFAULT_PASSWORD_IN_TEST : '',
     error: null,
   };
 

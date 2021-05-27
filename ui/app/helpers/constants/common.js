@@ -14,6 +14,8 @@ export const GAS_ESTIMATE_TYPES = {
   FASTEST: 'FASTEST',
 };
 
+export const CONST_DEFAULT_PASSWORD_IN_TEST = '88888888';
+
 export const CONST_FIRST_TIME_FLOW_TYPES = {
   CREATE: 'create',
   IMPORT: 'import',

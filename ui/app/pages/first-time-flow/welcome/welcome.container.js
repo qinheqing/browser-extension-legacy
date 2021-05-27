@@ -23,7 +23,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     closeWelcomeScreen: () => dispatch(closeWelcomeScreen()),
     setFirstTimeFlowType: (type) => dispatch(setFirstTimeFlowType(type)),
-    setHwOnlyModeAsync: (status) => dispatch(setHwOnlyModeAsync(status)),
+    setHwOnlyModeAsync: (val) => dispatch(setHwOnlyModeAsync(val)),
   };
 };
 

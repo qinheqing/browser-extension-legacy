@@ -7,6 +7,8 @@ import {
   INITIALIZE_WELCOME_ROUTE,
 } from '../../../../helpers/constants/routes';
 import TextField from '../../../../components/ui/text-field';
+import { isInDebugTestEnv } from '../../../../helpers/utils/util';
+import { CONST_DEFAULT_PASSWORD_IN_TEST } from '../../../../helpers/constants/common';
 
 export default class NewAccount extends PureComponent {
   static contextTypes = {
@@ -20,11 +22,12 @@ export default class NewAccount extends PureComponent {
   };
 
   state = {
-    password: '',
-    confirmPassword: '',
+    password: isInDebugTestEnv() ? CONST_DEFAULT_PASSWORD_IN_TEST : '',
+    confirmPassword: isInDebugTestEnv() ? CONST_DEFAULT_PASSWORD_IN_TEST : '',
     passwordError: '',
     confirmPasswordError: '',
-    termsChecked: false,
+    termsChecked: true,
+
   };
 
   isValid() {

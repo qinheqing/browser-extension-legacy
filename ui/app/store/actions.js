@@ -2122,12 +2122,12 @@ export function completeOnboarding() {
   };
 }
 
-export function setHwOnlyModeAsync(status = true) {
+export function setHwOnlyModeAsync(value = true) {
   return async (dispatch) => {
-    await promisifiedBackground.setHwOnlyMode(status);
+    await promisifiedBackground.setHwOnlyMode(value);
     dispatch({
       type: actionConstants.SET_HW_ONLY_MODE,
-      value: status,
+      value,
     });
   };
 }
