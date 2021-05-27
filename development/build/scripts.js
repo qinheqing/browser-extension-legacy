@@ -60,13 +60,16 @@ const metamaskDepenendencies = [
   '@metamask/jazzicon',
   '@metamask/logo',
   '@metamask/obs-store',
-
 ];
 const reactDepenendencies = dependencies.filter((dep) => dep.match(/react/u));
 
 const externalDependenciesMap = {
   background: ['3box'],
-  ui: [...materialUIDependencies, ...reactDepenendencies, ...metamaskDepenendencies],
+  ui: [
+    ...materialUIDependencies,
+    ...reactDepenendencies,
+    ...metamaskDepenendencies,
+  ],
 };
 
 function createScriptTasks({ browserPlatforms, livereload }) {
@@ -353,6 +356,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
         CONF: opts.devMode ? conf : {},
         SENTRY_DSN: process.env.SENTRY_DSN || conf.SENTRY_DSN,
         SENTRY_DSN_DEV: process.env.SENTRY_DSN_DEV || conf.SENTRY_DSN_DEV,
+        ENV_ON_BOARDING_START_CHOICE: process.env.ENV_ON_BOARDING_START_CHOICE,
         INFURA_PROJECT_ID: opts.testing
           ? '00000000000000000000000000000000'
           : conf.INFURA_PROJECT_ID,

@@ -1,6 +1,7 @@
 import EventEmitter from 'events';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import trim from 'lodash/trim';
 import Mascot from '../../../components/ui/mascot';
 import Button from '../../../components/ui/button';
 import {
@@ -51,8 +52,15 @@ export default class Welcome extends PureComponent {
     this.props.history.push(INITIALIZE_METAMETRICS_OPT_IN_ROUTE);
   };
 
+  getOnBoardingStartChoices() {
+    const choiceStr =
+      process.env.ENV_ON_BOARDING_START_CHOICE || 'normal,hardware';
+    return choiceStr.split(',').map(trim);
+  }
+
   render() {
     const { t } = this.context;
+    const choices = this.getOnBoardingStartChoices();
 
     return (
       <div className="welcome-page__wrapper">
@@ -77,21 +85,26 @@ export default class Welcome extends PureComponent {
             <div>{t('metamaskDescription')}</div>
             <div>{t('happyToSeeYou')}</div>
           </div>
-          <Button
-            type="primary"
-            className="first-time-flow__button"
-            onClick={this.handleContinue}
-          >
-            {t('getStarted')}
-          </Button>
-          <div>or</div>
-          <Button
-            type="secondary"
-            className="first-time-flow__button connect-hw-only__button"
-            onClick={this.handleContinueHwOnly}
-          >
-            {t('hwOnlyStarted')}
-          </Button>
+          <div className="welcome-page__buttons">
+            {choices.includes('normal') && (
+              <Button
+                type="primary"
+                className="first-time-flow__button"
+                onClick={this.handleContinue}
+              >
+                {t('getStarted')}
+              </Button>
+            )}
+            {choices.includes('hardware') && (
+              <Button
+                type="secondary"
+                className="first-time-flow__button connect-hw-only__button"
+                onClick={this.handleContinueHwOnly}
+              >
+                {t('hwOnlyStarted')}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     );

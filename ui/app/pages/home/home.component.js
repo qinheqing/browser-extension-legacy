@@ -169,6 +169,7 @@ export default class Home extends PureComponent {
     const {
       history,
       shouldShowSeedPhraseReminder,
+      hwOnlyMode,
       isPopup,
       selectedAddress,
       restoreFromThreeBox,
@@ -209,7 +210,7 @@ export default class Home extends PureComponent {
             key="home-web3ShimUsageNotification"
           />
         ) : null}
-        {shouldShowSeedPhraseReminder ? (
+        {!hwOnlyMode && shouldShowSeedPhraseReminder ? (
           <HomeNotification
             descriptionText={t('backupApprovalNotice')}
             acceptText={t('backupNow')}

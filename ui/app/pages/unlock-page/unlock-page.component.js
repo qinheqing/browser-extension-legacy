@@ -6,6 +6,7 @@ import getCaretCoordinates from 'textarea-caret';
 import TextField from '../../components/ui/text-field';
 import Mascot from '../../components/ui/mascot';
 import { DEFAULT_ROUTE } from '../../helpers/constants/routes';
+import { isInDebugTestEnv } from '../../helpers/utils/util';
 
 export default class UnlockPage extends Component {
   static contextTypes = {
@@ -25,7 +26,7 @@ export default class UnlockPage extends Component {
   };
 
   state = {
-    password: '',
+    password: isInDebugTestEnv() ? '88888888' : '',
     error: null,
   };
 
