@@ -16,10 +16,7 @@ import {
 import UserPreferencedCurrencyDisplay from '../../../components/app/user-preferenced-currency-display';
 import PermissionsConnectHeader from '../../../components/app/permissions-connect-header';
 import PermissionsConnectFooter from '../../../components/app/permissions-connect-footer';
-import {
-  getAccountMetaInfo,
-  goToPageConnectHardware,
-} from '../../../helpers/utils/util';
+import { goToPageConnectHardware } from '../../../helpers/utils/util';
 
 export default class ChooseAccount extends Component {
   static propTypes = {

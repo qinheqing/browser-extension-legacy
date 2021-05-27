@@ -521,7 +521,6 @@ export function getAccountMetaInfo({ account, keyrings }) {
   const keyring = getAccountKeyring({ account, keyrings });
   const accountType = keyringTypeToAccountType(keyring && keyring.type);
   return {
-    keyring, // TODO remove
     accountKeyring: keyring,
     accountType,
   };

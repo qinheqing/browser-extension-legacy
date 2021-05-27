@@ -4,8 +4,6 @@ import { debounce } from 'lodash';
 import Fuse from 'fuse.js';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import classnames from 'classnames';
-import extension from 'extensionizer';
-import * as util from '../../../helpers/utils/util';
 import { ENVIRONMENT_TYPE_POPUP } from '../../../../../shared/constants/app';
 import { getEnvironmentType } from '../../../../../app/scripts/lib/util';
 import Identicon from '../../ui/identicon';
@@ -25,7 +23,13 @@ import {
 } from '../../../helpers/constants/routes';
 import TextField from '../../ui/text-field';
 import SearchIcon from '../../ui/search-icon';
-import { keyringTypeToAccountType } from '../../../helpers/utils/util';
+import {
+  keyringTypeToAccountType,
+  getAccountKeyring,
+  clearBackgroundLocalStore,
+  isInDebugTestEnv,
+  goToPageConnectHardware,
+} from '../../../helpers/utils/util';
 
 export function AccountMenuItem(props) {
   const { icon, children, text, subText, className, onClick } = props;
@@ -174,27 +178,9 @@ export default class AccountMenu extends Component {
 
     return filteredIdentities.map((identity) => {
       const isSelected = identity.address === selectedAddress;
-
-      const simpleAddress = identity.address.substring(2).toLowerCase();
-
-      const keyring = keyrings.find((kr) => {
-        return (
-          kr.accounts.includes(simpleAddress) ||
-          kr.accounts.includes(identity.address)
-        );
-      });
+      const keyring = getAccountKeyring({ account: identity, keyrings });
       const addressDomains = addressConnectedDomainMap[identity.address] || {};
       const iconAndNameForOpenDomain = addressDomains[originOfCurrentTab];
-
-      if (!keyring) {
-        return null;
-      }
-
-      const accountType = keyringTypeToAccountType(keyring.type);
-      // hide all non-hardware accounts if at hwOnly mode
-      if (hwOnlyMode && accountType !== CONST_ACCOUNT_TYPES.HARDWARE) {
-        // return null;
-      }
 
       return (
         <div
@@ -223,7 +209,7 @@ export default class AccountMenu extends Component {
               type={PRIMARY}
             />
           </div>
-          {this.renderKeyringType(accountType)}
+          {this.renderKeyringType(keyring)}
           {iconAndNameForOpenDomain ? (
             <div className="account-menu__icon-list">
               <SiteIcon
@@ -238,8 +224,12 @@ export default class AccountMenu extends Component {
     });
   }
 
-  renderKeyringType(accountType) {
+  renderKeyringType(keyring) {
+    if (!keyring) {
+      return null;
+    }
     const { t } = this.context;
+    const accountType = keyringTypeToAccountType(keyring.type);
 
     let label;
 
@@ -417,11 +407,7 @@ export default class AccountMenu extends Component {
                 name: 'Clicked Connect Hardware',
               },
             });
-            if (getEnvironmentType() === ENVIRONMENT_TYPE_POPUP) {
-              global.platform.openExtensionInBrowser(CONNECT_HARDWARE_ROUTE);
-            } else {
-              history.push(CONNECT_HARDWARE_ROUTE);
-            }
+            goToPageConnectHardware();
           }}
           icon={
             <img
@@ -462,11 +448,11 @@ export default class AccountMenu extends Component {
           text={t('settings')}
         />
 
-        {util.isInDebugTestEnv() && (
+        {isInDebugTestEnv() && (
           <AccountMenuItem
             onClick={() => {
               if (global.confirm('确认重置插件吗？插件数据将重新初始化')) {
-                util.clearBackgroundLocalStore();
+                clearBackgroundLocalStore();
               }
             }}
             text="重置插件"

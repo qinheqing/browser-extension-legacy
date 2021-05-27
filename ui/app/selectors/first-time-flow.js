@@ -9,7 +9,7 @@ export function getFirstTimeFlowTypeRoute(state) {
   const { firstTimeFlowType } = state.metamask;
 
   let nextRoute;
-  // firstTimeFlowType HW only
+  // Page metametrics-opt-in nextRoute for firstTimeFlowType if click [HW only] button
   if (firstTimeFlowType === CONST_FIRST_TIME_FLOW_TYPES.CONNECT_HW) {
     nextRoute = INITIALIZE_CREATE_PASSWORD_ROUTE;
   } else if (firstTimeFlowType === CONST_FIRST_TIME_FLOW_TYPES.CREATE) {

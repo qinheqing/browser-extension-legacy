@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import Button from '../../../../components/ui/button';
 import {
   INITIALIZE_SEED_PHRASE_ROUTE,
-  INITIALIZE_SELECT_ACTION_ROUTE, INITIALIZE_WELCOME_ROUTE,
+  INITIALIZE_SELECT_ACTION_ROUTE,
+  INITIALIZE_WELCOME_ROUTE,
 } from '../../../../helpers/constants/routes';
 import TextField from '../../../../components/ui/text-field';
 
@@ -158,12 +159,13 @@ export default class NewAccount extends PureComponent {
                   name: 'Go Back from Onboarding Create',
                 },
               });
-              this.props.history.replace(INITIALIZE_WELCOME_ROUTE);
               // this.props.history.push(INITIALIZE_SELECT_ACTION_ROUTE);
+              this.props.history.replace(INITIALIZE_WELCOME_ROUTE);
             }}
             href="#"
           >
-            <span>&lt; </span><span>{t('back')}</span>
+            <span>&lt; </span>
+            <span>{t('back')}</span>
           </a>
         </div>
         <div className="first-time-flow__header">{t('createPassword')}</div>
@@ -197,9 +199,7 @@ export default class NewAccount extends PureComponent {
             fullWidth
             largeLabel
           />
-          <div
-            className="first-time-flow__checkbox-container"
-          >
+          <div className="first-time-flow__checkbox-container">
             <div
               className="first-time-flow__checkbox"
               tabIndex="0"

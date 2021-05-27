@@ -228,7 +228,6 @@ export default class ImportWithSeedPhrase extends PureComponent {
                   errorMessage: seedPhraseError,
                 },
               });
-              // TODO HW Only模式时，是返回到welcome页面
               // this.props.history.push(INITIALIZE_SELECT_ACTION_ROUTE);
               this.props.history.replace(INITIALIZE_WELCOME_ROUTE);
             }}

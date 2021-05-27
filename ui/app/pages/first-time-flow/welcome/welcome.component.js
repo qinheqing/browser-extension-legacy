@@ -41,13 +41,13 @@ export default class Welcome extends PureComponent {
     }
   }
 
-  handleContinue = () => {
-    this.props.setHwOnlyModeAsync(false);
+  handleContinue = async () => {
+    await this.props.setHwOnlyModeAsync(false);
     this.props.history.push(INITIALIZE_SELECT_ACTION_ROUTE);
   };
 
-  handleContinueHwOnly = () => {
-    this.props.setHwOnlyModeAsync(true);
+  handleContinueHwOnly = async () => {
+    await this.props.setHwOnlyModeAsync(true);
     this.props.setFirstTimeFlowType(CONST_FIRST_TIME_FLOW_TYPES.CONNECT_HW);
     this.props.history.push(INITIALIZE_METAMETRICS_OPT_IN_ROUTE);
   };

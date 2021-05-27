@@ -9,5 +9,3 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps)(CreateAccountPage);
-
-// export { default } from './create-account.component';
