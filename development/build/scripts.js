@@ -11,6 +11,7 @@ const browserify = require('browserify');
 const envify = require('loose-envify/custom');
 const sourcemaps = require('gulp-sourcemaps');
 const terser = require('gulp-terser-js');
+const path = require('path');
 
 const conf = require('rc')('metamask', {
   INFURA_PROJECT_ID: process.env.INFURA_PROJECT_ID,
@@ -310,6 +311,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
       transform: [],
       debug: true,
       fullPaths: opts.devMode,
+      paths: [path.resolve(__dirname, '../..')],
     });
 
     if (!opts.buildLib) {

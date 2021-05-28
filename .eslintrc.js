@@ -139,6 +139,7 @@ module.exports = {
 
     'no-invalid-this': 'off',
     '@babel/no-invalid-this': 'error',
+    'import/no-unresolved': 'off',
 
     // prettier handles these
     semi: 'off',

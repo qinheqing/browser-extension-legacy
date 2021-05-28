@@ -12,7 +12,7 @@ import {
   getTotalUnapprovedCount,
   getWeb3ShimUsageStateForOrigin,
   unconfirmedTransactionsCountSelector,
-} from '../../selectors';
+} from 'ui/app/selectors';
 
 import {
   restoreFromThreeBox,
@@ -24,22 +24,22 @@ import {
   setSwapsWelcomeMessageHasBeenShown,
   setWeb3ShimUsageAlertDismissed,
   setAlertEnabledness,
-} from '../../store/actions';
-import { setThreeBoxLastUpdated } from '../../ducks/app/app';
-import { getWeb3ShimUsageAlertEnabledness } from '../../ducks/metamask/metamask';
+} from 'ui/app/store/actions';
+import { setThreeBoxLastUpdated } from 'ui/app/ducks/app/app';
+import { getWeb3ShimUsageAlertEnabledness } from 'ui/app/ducks/metamask/metamask';
 import {
   getSwapsWelcomeMessageSeenStatus,
   getSwapsFeatureLiveness,
-} from '../../ducks/swaps/swaps';
-import { getEnvironmentType } from '../../../../app/scripts/lib/util';
+} from 'ui/app/ducks/swaps/swaps';
+import { getEnvironmentType } from 'app/scripts/lib/util';
 import {
   ENVIRONMENT_TYPE_NOTIFICATION,
   ENVIRONMENT_TYPE_POPUP,
-} from '../../../../shared/constants/app';
+} from 'shared/constants/app';
 import {
   ALERT_TYPES,
   WEB3_SHIM_USAGE_ALERT_STATES,
-} from '../../../../shared/constants/alerts';
+} from 'shared/constants/alerts';
 import Home from './home.component';
 
 const mapStateToProps = (state) => {
