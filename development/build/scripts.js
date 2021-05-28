@@ -359,6 +359,8 @@ function createScriptTasks({ browserPlatforms, livereload }) {
         SENTRY_DSN: process.env.SENTRY_DSN || conf.SENTRY_DSN,
         SENTRY_DSN_DEV: process.env.SENTRY_DSN_DEV || conf.SENTRY_DSN_DEV,
         ENV_ON_BOARDING_START_CHOICE: process.env.ENV_ON_BOARDING_START_CHOICE,
+        ENV_DEFAULT_PASSWORD_AUTO_FILLED:
+          process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED||'',
         INFURA_PROJECT_ID: opts.testing
           ? '00000000000000000000000000000000'
           : conf.INFURA_PROJECT_ID,

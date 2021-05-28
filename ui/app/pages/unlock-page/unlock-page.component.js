@@ -4,10 +4,8 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import getCaretCoordinates from 'textarea-caret';
 import TextField from '../../components/ui/text-field';
-import Mascot from '../../components/ui/mascot';
 import { DEFAULT_ROUTE } from '../../helpers/constants/routes';
 import { isInDebugTestEnv } from '../../helpers/utils/util';
-import { CONST_DEFAULT_PASSWORD_IN_TEST } from '../../helpers/constants/common';
 
 export default class UnlockPage extends Component {
   static contextTypes = {
@@ -27,7 +25,7 @@ export default class UnlockPage extends Component {
   };
 
   state = {
-    password: isInDebugTestEnv() ? CONST_DEFAULT_PASSWORD_IN_TEST : '',
+    password: process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED,
     error: null,
   };
 

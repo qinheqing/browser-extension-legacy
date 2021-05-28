@@ -3,12 +3,10 @@ import PropTypes from 'prop-types';
 import Button from '../../../../components/ui/button';
 import {
   INITIALIZE_SEED_PHRASE_ROUTE,
-  INITIALIZE_SELECT_ACTION_ROUTE,
   INITIALIZE_WELCOME_ROUTE,
 } from '../../../../helpers/constants/routes';
 import TextField from '../../../../components/ui/text-field';
 import { isInDebugTestEnv } from '../../../../helpers/utils/util';
-import { CONST_DEFAULT_PASSWORD_IN_TEST } from '../../../../helpers/constants/common';
 
 export default class NewAccount extends PureComponent {
   static contextTypes = {
@@ -22,12 +20,11 @@ export default class NewAccount extends PureComponent {
   };
 
   state = {
-    password: isInDebugTestEnv() ? CONST_DEFAULT_PASSWORD_IN_TEST : '',
-    confirmPassword: isInDebugTestEnv() ? CONST_DEFAULT_PASSWORD_IN_TEST : '',
+    password: process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED,
+    confirmPassword: process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED,
     passwordError: '',
     confirmPasswordError: '',
     termsChecked: true,
-
   };
 
   isValid() {

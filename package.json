@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "setup": "yarn install && yarn allow-scripts",
-    "start": "yarn build dev",
+    "start": "ENV_DEFAULT_PASSWORD_AUTO_FILLED=88888888 yarn build dev",
     "dist": "yarn build prod",
     "build": "node development/build/index.js",
     "start:test": "yarn build testDev",
@@ -287,6 +287,9 @@
   "engines": {
     "node": "^14.15.1",
     "yarn": "^1.16.0"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
   },
   "lavamoat": {
     "allowScripts": {
