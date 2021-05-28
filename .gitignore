@@ -44,3 +44,8 @@ notes.txt
 .nyc_output
 
 .metamaskrc
+
+
+# dotenv
+.env.local
+.env.*.local

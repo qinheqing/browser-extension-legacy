@@ -5,7 +5,7 @@
   "scripts": {
     "prepare": "husky install",
     "setup": "yarn install && yarn allow-scripts",
-    "start": "ENV_DEFAULT_PASSWORD_AUTO_FILLED=88888888 yarn build dev",
+    "start": "yarn build dev",
     "dist": "yarn build prod",
     "build": "node development/build/index.js",
     "start:test": "yarn build testDev",
@@ -220,6 +220,7 @@
     "cross-spawn": "^7.0.3",
     "css-loader": "^2.1.1",
     "del": "^3.0.0",
+    "dotenv-flow": "^3.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "eslint": "^7.7.0",
@@ -295,7 +296,7 @@
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
-    "**/*": [
+    "*.{js,jsx,vue,ts,tsx,scss,sass,css,less}": [
       "yarn lint:changed:fix",
       "git add"
     ]

@@ -3,6 +3,7 @@
 //
 // run any task with "yarn build ${taskName}"
 //
+require('../dotEnvLoad');
 const livereload = require('gulp-livereload');
 const {
   createTask,

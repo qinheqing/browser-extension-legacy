@@ -1,3 +1,4 @@
+const path = require('path');
 const gulp = require('gulp');
 const watch = require('gulp-watch');
 const pify = require('pify');
@@ -11,7 +12,6 @@ const browserify = require('browserify');
 const envify = require('loose-envify/custom');
 const sourcemaps = require('gulp-sourcemaps');
 const terser = require('gulp-terser-js');
-const path = require('path');
 
 const conf = require('rc')('metamask', {
   INFURA_PROJECT_ID: process.env.INFURA_PROJECT_ID,
@@ -360,7 +360,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
         SENTRY_DSN_DEV: process.env.SENTRY_DSN_DEV || conf.SENTRY_DSN_DEV,
         ENV_ON_BOARDING_START_CHOICE: process.env.ENV_ON_BOARDING_START_CHOICE,
         ENV_DEFAULT_PASSWORD_AUTO_FILLED:
-          process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED||'',
+          process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED || '',
         INFURA_PROJECT_ID: opts.testing
           ? '00000000000000000000000000000000'
           : conf.INFURA_PROJECT_ID,
