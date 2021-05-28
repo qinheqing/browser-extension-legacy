@@ -33,6 +33,7 @@ import { CONST_ACCOUNT_TYPES } from '../../helpers/constants/common';
 import { getEnvironmentType } from '../../../../app/scripts/lib/util';
 import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
 
+const ABCCCCCC = 1;
 const LEARN_MORE_URL =
   'https://metamask.zendesk.com/hc/en-us/articles/360045129011-Intro-to-MetaMask-v8-extension';
 const LEGACY_WEB3_URL =
@@ -78,6 +79,7 @@ export default class Home extends PureComponent {
     setWeb3ShimUsageAlertDismissed: PropTypes.func.isRequired,
     originOfCurrentTab: PropTypes.string,
     disableWeb3ShimUsageAlert: PropTypes.func.isRequired,
+    pendingApprovals: PropTypes.array,
   };
 
   state = {

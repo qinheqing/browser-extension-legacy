@@ -52,6 +52,7 @@ module.exports = {
     // Prettier changes and reasoning
 
     'prettier/prettier': 'error',
+    'no-unused-vars': 'warn',
 
     // Our eslint config has the default setting for this as error. This
     // include beforeBlockComment: true, but in order to match the prettier

@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "prepare": "husky install",
     "setup": "yarn install && yarn allow-scripts",
     "start": "ENV_DEFAULT_PASSWORD_AUTO_FILLED=88888888 yarn build dev",
     "dist": "yarn build prod",
@@ -246,8 +247,10 @@
     "gulp-terser-js": "^5.2.2",
     "gulp-watch": "^5.0.1",
     "gulp-zip": "^4.0.0",
+    "husky": "^6.0.0",
     "jsdom": "^11.2.0",
     "koa": "^2.7.0",
+    "lint-staged": "^11.0.0",
     "lockfile-lint": "^4.0.0",
     "loose-envify": "^1.4.0",
     "mocha": "^7.2.0",
@@ -290,6 +293,12 @@
   },
   "gitHooks": {
     "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "**/*": [
+      "yarn lint:changed:fix",
+      "git add"
+    ]
   },
   "lavamoat": {
     "allowScripts": {
