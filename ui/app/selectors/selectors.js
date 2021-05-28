@@ -240,15 +240,32 @@ export function getAddressBookEntryName(state, address) {
   return entry && entry.name !== '' ? entry.name : shortenAddress(address);
 }
 
+export function filterAccountsByHwOnly({ accounts, state }) {
+  const hwOnlyMode = getHwOnlyMode(state);
+  if (hwOnlyMode) {
+    return accounts.filter(
+      (account) =>
+        account.accountType &&
+        account.accountType === CONST_ACCOUNT_TYPES.HARDWARE,
+    );
+  }
+  return accounts;
+}
+
 export function accountsWithSendEtherInfoSelector(state) {
   const accounts = getMetaMaskAccounts(state);
   const identities = getMetaMaskIdentities(state);
 
-  const accountsWithSendEtherInfo = Object.entries(identities).map(
+  let accountsWithSendEtherInfo = Object.entries(identities).map(
     ([key, identity]) => {
       return { ...identity, ...accounts[key] };
     },
   );
+
+  accountsWithSendEtherInfo = filterAccountsByHwOnly({
+    accounts: accountsWithSendEtherInfo,
+    state,
+  });
 
   return accountsWithSendEtherInfo;
 }
