@@ -8,12 +8,14 @@ import {
 } from '../../../../selectors';
 
 import { updateSendTo } from '../../../../store/actions';
+import { filterAccountsByHwOnly } from '../../../../helpers/utils/util';
 import AddRecipient from './add-recipient.component';
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddRecipient);
 
 function mapStateToProps(state) {
   const ensResolution = getSendEnsResolution(state);
+  const { hwOnlyMode } = state.metamask;
 
   let addressBookEntryName = '';
   if (ensResolution) {
@@ -23,9 +25,14 @@ function mapStateToProps(state) {
 
   const addressBook = getAddressBook(state);
 
-  const ownedAccounts = accountsWithSendEtherInfoSelector(state).sort((a, b) =>
+  let ownedAccounts = accountsWithSendEtherInfoSelector(state).sort((a, b) =>
     a.name.localeCompare(b.name),
   );
+
+  ownedAccounts = filterAccountsByHwOnly({
+    accounts: ownedAccounts,
+    hwOnlyMode,
+  });
 
   return {
     addressBook,

@@ -533,3 +533,14 @@ export function goToPageConnectHardware() {
     global.onekeyHistory.push(CONNECT_HARDWARE_ROUTE);
   }
 }
+
+export function filterAccountsByHwOnly({ accounts, hwOnlyMode }) {
+  if (hwOnlyMode) {
+    return accounts.filter(
+      (account) =>
+        account.accountType &&
+        account.accountType === CONST_ACCOUNT_TYPES.HARDWARE,
+    );
+  }
+  return accounts;
+}
