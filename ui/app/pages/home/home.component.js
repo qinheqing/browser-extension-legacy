@@ -78,6 +78,7 @@ export default class Home extends PureComponent {
     setWeb3ShimUsageAlertDismissed: PropTypes.func.isRequired,
     originOfCurrentTab: PropTypes.string,
     disableWeb3ShimUsageAlert: PropTypes.func.isRequired,
+    pendingApprovals: PropTypes.array,
   };
 
   state = {

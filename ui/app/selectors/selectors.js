@@ -250,6 +250,12 @@ export function accountsWithSendEtherInfoSelector(state) {
     },
   );
 
+  // DO NOT filter hwOnly here, page code will be failed if no HD account founded!
+  // accountsWithSendEtherInfo = filterAccountsByHwOnly({
+  //   accounts: accountsWithSendEtherInfo,
+  //   hwOnlyMode,
+  // });
+
   return accountsWithSendEtherInfo;
 }
 

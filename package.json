@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "prepare": "husky install",
     "setup": "yarn install && yarn allow-scripts",
     "start": "yarn build dev",
     "dist": "yarn build prod",
@@ -219,6 +220,7 @@
     "cross-spawn": "^7.0.3",
     "css-loader": "^2.1.1",
     "del": "^3.0.0",
+    "dotenv-flow": "^3.2.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "eslint": "^7.7.0",
@@ -246,8 +248,10 @@
     "gulp-terser-js": "^5.2.2",
     "gulp-watch": "^5.0.1",
     "gulp-zip": "^4.0.0",
+    "husky": "^6.0.0",
     "jsdom": "^11.2.0",
     "koa": "^2.7.0",
+    "lint-staged": "^11.0.0",
     "lockfile-lint": "^4.0.0",
     "loose-envify": "^1.4.0",
     "mocha": "^7.2.0",
@@ -287,6 +291,15 @@
   "engines": {
     "node": "^14.15.1",
     "yarn": "^1.16.0"
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,vue,ts,tsx,scss,sass,css,less}": [
+      "yarn lint:changed:fix",
+      "git add"
+    ]
   },
   "lavamoat": {
     "allowScripts": {

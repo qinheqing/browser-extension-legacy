@@ -27,8 +27,8 @@ export default class ImportWithSeedPhrase extends PureComponent {
   state = {
     seedPhrase: '',
     showSeedPhrase: false,
-    password: '',
-    confirmPassword: '',
+    password: process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED,
+    confirmPassword: process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED,
     seedPhraseError: '',
     passwordError: '',
     confirmPasswordError: '',
