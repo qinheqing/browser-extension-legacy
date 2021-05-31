@@ -68,5 +68,5 @@ jobs:
         with:
           name: onekey-extension-${{ env.GITHUB_TAG }}
           path: |
-            build
+            builds
 
