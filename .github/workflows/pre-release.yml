@@ -58,11 +58,15 @@ jobs:
 
       - name: "Building"
         run: "yarn dist"
+        env:
+          CIRCLE_BRANCH: master
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
 
       - name: "Upload Artifacts"
         uses: actions/upload-artifact@v2
         with:
           name: onekey-extension-${{ env.GITHUB_TAG }}
           path: |
-            dist
+            build
 
