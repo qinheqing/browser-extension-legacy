@@ -1,4 +1,10 @@
-import * as networkEnums from '../../shared/constants/network';
+import {
+  ROPSTEN_NETWORK_ID,
+  RINKEBY_NETWORK_ID,
+  KOVAN_NETWORK_ID,
+  GOERLI_NETWORK_ID,
+  BSC_TEST_NETWORK_ID,
+} from '../../shared/constants/network';
 
 /**
  * Gets the etherscan.io URL prefix for a given network ID.
@@ -8,14 +14,16 @@ import * as networkEnums from '../../shared/constants/network';
  */
 export function getEtherscanNetworkPrefix(networkId) {
   switch (networkId) {
-    case networkEnums.ROPSTEN_NETWORK_ID:
+    case ROPSTEN_NETWORK_ID:
       return 'ropsten.';
-    case networkEnums.RINKEBY_NETWORK_ID:
+    case RINKEBY_NETWORK_ID:
       return 'rinkeby.';
-    case networkEnums.KOVAN_NETWORK_ID:
+    case KOVAN_NETWORK_ID:
       return 'kovan.';
-    case networkEnums.GOERLI_NETWORK_ID:
+    case GOERLI_NETWORK_ID:
       return 'goerli.';
+    case BSC_TEST_NETWORK_ID:
+      return 'bsc_test.';
     default:
       // also covers mainnet
       return '';
@@ -26,7 +34,7 @@ export function getEtherscanNetwork(networkId, rpcPrefs = {}) {
   if (rpcPrefs.blockExplorerUrl) {
     return `${rpcPrefs.blockExplorerUrl.replace(/\/+$/u, '')}`;
   }
-  switch (+networkId) {
+  switch (Number(networkId)) {
     case 1: // main net
       return `https://etherscan.io`;
     case 2: // morden test net
