@@ -5,4 +5,16 @@
       align-items: center;
     }
   }
+
+  &__top-info-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background: rgba(red, 0.7);
+    color: white;
+    font-size: 12px;
+    padding: 0 12px;
+  }
 }

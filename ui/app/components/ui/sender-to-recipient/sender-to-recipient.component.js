@@ -77,7 +77,7 @@ function SenderAddress({
         </div>
       </Tooltip>
       {warnUserOnAccountMismatch && (
-        <AccountMismatchWarning address={senderAddress} />
+        <AccountMismatchWarning address={senderAddress} showInfoBar />
       )}
     </div>
   );
