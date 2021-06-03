@@ -1,3 +1,6 @@
+export const IS_ENV_IN_TEST_OR_DEBUG =
+  process.env.IN_TEST === 'true' || process.env.METAMASK_DEBUG;
+
 export const ETH = 'ETH';
 export const GWEI = 'GWEI';
 export const WEI = 'WEI';

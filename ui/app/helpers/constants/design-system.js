@@ -32,12 +32,13 @@ export const COLORS = {
   RINKEBY: 'rinkeby',
   GOERLI: 'goerli',
   TRANSPARENT: 'transparent',
-  HECO: "heco",
-  BSC: "bsc",
-  MATIC: "matic",
-  XDAI: "xdai",
-  FANTOM: "fantom",
-  OKEX: "okex"
+  HECO: 'heco',
+  BSC: 'bsc',
+  BSC_TEST: 'bsc_test',
+  MATIC: 'matic',
+  XDAI: 'xdai',
+  FANTOM: 'fantom',
+  OKEX: 'okex',
 };
 
 export const TYPOGRAPHY = {

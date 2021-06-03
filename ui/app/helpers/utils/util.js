@@ -480,10 +480,6 @@ export function clearBackgroundLocalStore() {
   });
 }
 
-export function isInDebugTestEnv() {
-  return process.env.IN_TEST === 'true' || process.env.METAMASK_DEBUG;
-}
-
 export function delayTimeout(timeout) {
   return new Promise((resolve) => {
     setTimeout(resolve, timeout);

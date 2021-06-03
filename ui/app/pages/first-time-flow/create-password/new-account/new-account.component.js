@@ -6,7 +6,6 @@ import {
   INITIALIZE_WELCOME_ROUTE,
 } from '../../../../helpers/constants/routes';
 import TextField from '../../../../components/ui/text-field';
-import { isInDebugTestEnv } from '../../../../helpers/utils/util';
 
 export default class NewAccount extends PureComponent {
   static contextTypes = {

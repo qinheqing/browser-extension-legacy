@@ -248,6 +248,9 @@
   "bsc": {
     "message": "币安智能链 BSC 主网"
   },
+  "bsc_test": {
+    "message": "BSC 测试网络"
+  },
   "builtInCalifornia": {
     "message": "OneKey在中国设计和制造。"
   },

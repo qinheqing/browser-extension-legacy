@@ -248,6 +248,9 @@
   "bsc": {
     "message": "BSC Mainnet"
   },
+   "bsc_test": {
+    "message": "BSC Testnet"
+  },
   "builtInCalifornia": {
     "message": "OneKey is designed and built in Beijing."
   },
