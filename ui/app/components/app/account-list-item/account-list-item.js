@@ -29,7 +29,7 @@ export default function AccountListItem({
 
         {icon && <div className="account-list-item__icon">{icon}</div>}
 
-        <AccountMismatchWarning address={address} />
+        <AccountMismatchWarning address={address} showInfoBar />
       </div>
 
       {displayAddress && name && (

@@ -1,3 +1,20 @@
+import {
+  BSC_NETWORK_ID,
+  BSC_TEST,
+  BSC_TEST_NETWORK_ID,
+  FANTOM_NETWORK_ID,
+  GOERLI_NETWORK_ID,
+  HECO_NETWORK_ID,
+  KOVAN_NETWORK_ID,
+  MAINNET_NETWORK_ID,
+  MATIC_NETWORK_ID,
+  MORDEN_NETWORK_ID,
+  OKEX_NETWORK_ID,
+  RINKEBY_NETWORK_ID,
+  ROPSTEN_NETWORK_ID,
+  XDAI_NETWORK_ID,
+} from '../../shared/constants/network';
+
 export default function getAccountLink(address, network, rpcPrefs) {
   if (rpcPrefs && rpcPrefs.blockExplorerUrl) {
     return `${rpcPrefs.blockExplorerUrl.replace(
@@ -7,31 +24,33 @@ export default function getAccountLink(address, network, rpcPrefs) {
   }
 
   // eslint-disable-next-line radix
-  const net = parseInt(network);
+  const net = String(network);
   switch (net) {
-    case 1: // main net
+    case MAINNET_NETWORK_ID: // main net
       return `https://etherscan.io/address/${address}`;
-    case 2: // morden test net
+    case MORDEN_NETWORK_ID: // morden test net
       return `https://morden.etherscan.io/address/${address}`;
-    case 3: // ropsten test net
+    case ROPSTEN_NETWORK_ID: // ropsten test net
       return `https://ropsten.etherscan.io/address/${address}`;
-    case 4: // rinkeby test net
+    case RINKEBY_NETWORK_ID: // rinkeby test net
       return `https://rinkeby.etherscan.io/address/${address}`;
-    case 42: // kovan test net
-      return `https://kovan.etherscan.io/address/${address}`;
-    case 5: // goerli test net
+    case GOERLI_NETWORK_ID: // goerli test net
       return `https://goerli.etherscan.io/address/${address}`;
-    case 128:
+    case KOVAN_NETWORK_ID: // kovan test net
+      return `https://kovan.etherscan.io/address/${address}`;
+    case HECO_NETWORK_ID:
       return `https://hecoinfo.com/address/${address}`;
-    case 56:
+    case BSC_NETWORK_ID:
       return `https://bscscan.com/address/${address}`;
-    case 137:
+    case BSC_TEST_NETWORK_ID:
+      return `https://testnet.bscscan.com/address/${address}`;
+    case MATIC_NETWORK_ID:
       return `https://explorer-mainnet.maticvigil.com/address/${address}`;
-    case 100:
+    case XDAI_NETWORK_ID:
       return `https://blockscout.com/xdai/mainnet/address/${address}`;
-    case 250:
+    case FANTOM_NETWORK_ID:
       return `https://ftmscan.com/address/${address}`;
-    case 66:
+    case OKEX_NETWORK_ID:
       return `https://www.oklink.com/okexchain/address/${address}`;
     default:
       return `https://etherscan.io/address/${address}`;

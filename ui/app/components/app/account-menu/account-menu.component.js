@@ -11,6 +11,7 @@ import SiteIcon from '../../ui/site-icon';
 import UserPreferencedCurrencyDisplay from '../user-preferenced-currency-display';
 import {
   CONST_ACCOUNT_TYPES,
+  IS_ENV_IN_TEST_OR_DEBUG,
   PRIMARY,
 } from '../../../helpers/constants/common';
 import {
@@ -27,7 +28,6 @@ import {
   keyringTypeToAccountType,
   getAccountKeyring,
   clearBackgroundLocalStore,
-  isInDebugTestEnv,
   goToPageConnectHardware,
 } from '../../../helpers/utils/util';
 
@@ -324,6 +324,19 @@ export default class AccountMenu extends Component {
         <div className="account-menu__close-area" onClick={toggleAccountMenu} />
         <AccountMenuItem className="account-menu__header">
           {t('myAccounts')}
+
+          {IS_ENV_IN_TEST_OR_DEBUG && (
+            <button
+              className="account-menu__lock-button"
+              onClick={() => {
+                if (global.confirm('确认重置插件吗？插件数据将重新初始化')) {
+                  clearBackgroundLocalStore();
+                }
+              }}
+            >
+              重置插件
+            </button>
+          )}
           <button
             className="account-menu__lock-button"
             onClick={() => {
@@ -447,17 +460,6 @@ export default class AccountMenu extends Component {
           }
           text={t('settings')}
         />
-
-        {isInDebugTestEnv() && (
-          <AccountMenuItem
-            onClick={() => {
-              if (global.confirm('确认重置插件吗？插件数据将重新初始化')) {
-                clearBackgroundLocalStore();
-              }
-            }}
-            text="重置插件"
-          />
-        )}
       </div>
     );
   }

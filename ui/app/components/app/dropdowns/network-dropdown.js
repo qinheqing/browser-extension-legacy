@@ -16,6 +16,7 @@ import { getEnvironmentType } from '../../../../../app/scripts/lib/util';
 
 import ColorIndicator from '../../ui/color-indicator';
 import { COLORS, SIZES } from '../../../helpers/constants/design-system';
+import { IS_ENV_IN_TEST_OR_DEBUG } from '../../../helpers/constants/common';
 import { Dropdown, DropdownMenuItem } from './components/dropdown';
 
 // classes from nodes of the toggle element.
@@ -290,6 +291,7 @@ class NetworkDropdown extends Component {
         {this.renderNetworkEntry('ropsten')}
         {this.renderNetworkEntry('kovan')}
         {this.renderNetworkEntry('rinkeby')}
+        {IS_ENV_IN_TEST_OR_DEBUG && <>{this.renderNetworkEntry('bsc_test')}</>}
 
         {this.renderCustomRpcList(rpcListDetail, this.props.provider)}
         <DropdownMenuItem

@@ -18,7 +18,7 @@ export default class Welcome extends PureComponent {
     welcomeScreenSeen: PropTypes.bool,
     hwOnlyMode: PropTypes.bool,
     setFirstTimeFlowType: PropTypes.func,
-    setHwOnlyModeAsync: PropTypes.func,
+    actionSetHwOnlyModeAsync: PropTypes.func,
   };
 
   static contextTypes = {
@@ -42,12 +42,12 @@ export default class Welcome extends PureComponent {
   }
 
   handleContinue = async () => {
-    await this.props.setHwOnlyModeAsync(false);
+    await this.props.actionSetHwOnlyModeAsync(false);
     this.props.history.push(INITIALIZE_SELECT_ACTION_ROUTE);
   };
 
   handleContinueHwOnly = async () => {
-    await this.props.setHwOnlyModeAsync(true);
+    await this.props.actionSetHwOnlyModeAsync(true);
     this.props.setFirstTimeFlowType(CONST_FIRST_TIME_FLOW_TYPES.CONNECT_HW);
     this.props.history.push(INITIALIZE_METAMETRICS_OPT_IN_ROUTE);
   };

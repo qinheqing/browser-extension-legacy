@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import {
   closeWelcomeScreen,
   setFirstTimeFlowType,
-  setHwOnlyModeAsync,
+  actionSetHwOnlyModeAsync,
 } from '../../../store/actions';
 
 import Welcome from './welcome.component';
@@ -23,7 +23,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     closeWelcomeScreen: () => dispatch(closeWelcomeScreen()),
     setFirstTimeFlowType: (type) => dispatch(setFirstTimeFlowType(type)),
-    setHwOnlyModeAsync: (val) => dispatch(setHwOnlyModeAsync(val)),
+    actionSetHwOnlyModeAsync: (val) => dispatch(actionSetHwOnlyModeAsync(val)),
   };
 };
 

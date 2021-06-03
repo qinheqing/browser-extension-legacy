@@ -38,7 +38,7 @@ export default function ConfirmPageContainerHeader({
             <div className="confirm-page-container-header__address">
               {shortenAddress(accountAddress)}
             </div>
-            <AccountMismatchWarning address={accountAddress} />
+            <AccountMismatchWarning address={accountAddress} showInfoBar />
           </div>
         ) : (
           <div

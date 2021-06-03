@@ -1,5 +1,8 @@
 import { forOwn } from 'lodash';
+import { Object } from 'globalthis/implementation';
 import { CAVEAT_NAMES } from '../../../shared/constants/permissions';
+import { CONST_ACCOUNT_TYPES } from '../helpers/constants/common';
+import { getMetaMaskAccounts } from './selectors';
 import {
   getMetaMaskAccountsOrdered,
   getOriginOfCurrentTab,
@@ -84,6 +87,33 @@ export function getPermittedAccountsByOrigin(state) {
  */
 export function getConnectedDomainsForSelectedAddress(state) {
   const { selectedAddress } = state.metamask;
+
+  return getConnectedDomainsForAddress({
+    address: selectedAddress,
+    state,
+  });
+}
+
+export function getAllAccountsAsArray(state) {
+  const accounts = getMetaMaskAccounts(state);
+  return Object.values(accounts);
+}
+
+export function getNonHardwareAccounts(state) {
+  const accounts = getAllAccountsAsArray(state);
+  return accounts.filter(
+    (account) => account.accountType !== CONST_ACCOUNT_TYPES.HARDWARE,
+  );
+}
+
+export function getHardwareAccounts(state) {
+  const accounts = getAllAccountsAsArray(state);
+  return accounts.filter(
+    (account) => account.accountType === CONST_ACCOUNT_TYPES.HARDWARE,
+  );
+}
+
+export function getConnectedDomainsForAddress({ state, address }) {
   const domains = getPermissionDomains(state);
   const domainMetadata = getPermissionDomainsMetadata(state);
 
@@ -91,7 +121,7 @@ export function getConnectedDomainsForSelectedAddress(state) {
 
   forOwn(domains, (domainValue, domainKey) => {
     const exposedAccounts = getAccountsFromDomain(domainValue);
-    if (!exposedAccounts.includes(selectedAddress)) {
+    if (!exposedAccounts.includes(address)) {
       return;
     }
 

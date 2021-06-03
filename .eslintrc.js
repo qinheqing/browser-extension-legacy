@@ -107,8 +107,9 @@ module.exports = {
     'default-param-last': 'off',
     'require-atomic-updates': 'off',
     'import/no-unassigned-import': 'off',
+    'import/no-cycle': 'warn',
     'prefer-object-spread': 'error',
-    'react/no-unused-prop-types': 'error',
+    'react/no-unused-prop-types': 'warn',
     'react/no-unused-state': 'error',
     'react/jsx-boolean-value': 'error',
     'react/jsx-curly-brace-presence': [
