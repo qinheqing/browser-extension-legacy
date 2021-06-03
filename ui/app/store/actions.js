@@ -21,12 +21,17 @@ import {
   addHexPrefix,
 } from '../../../app/scripts/lib/util';
 import {
+  getHardwareAccounts,
+  getHwOnlyMode,
+  getNonHardwareAccounts,
   getPermittedAccountsForCurrentTab,
+  getSelectedAccount,
   getSelectedAddress,
 } from '../selectors';
 import { switchedToUnconnectedAccount } from '../ducks/alerts/unconnected-account';
 import { getUnconnectedAccountAlertEnabledness } from '../ducks/metamask/metamask';
 import { LISTED_CONTRACT_ADDRESSES } from '../../../shared/constants/tokens';
+import { CONST_ACCOUNT_TYPES } from '../helpers/constants/common';
 import * as actionConstants from './actionConstants';
 
 let background = null;
@@ -1399,6 +1404,50 @@ export function removePermittedAccount(origin, address) {
   };
 }
 
+export function actionAutoSelectHwAccountInHwOnlyModeAsync() {
+  return async (dispatch, getState) => {
+    const state = getState();
+    const hwOnlyMode = getHwOnlyMode(state);
+    if (!hwOnlyMode) {
+      return;
+    }
+
+    const nonHardwareAccounts = getNonHardwareAccounts(state);
+    const hardwareAccounts = getHardwareAccounts(state);
+    const selectedAccount = getSelectedAccount(state);
+
+    // * Disconnect all non-hardware accounts
+    for (let i = 0; i < nonHardwareAccounts.length; i++) {
+      const { address } = nonHardwareAccounts[i];
+      await dispatch(actionRemoveAccountAllPermissionsAsync(address));
+    }
+
+    // * Select first hardware account if current account is NOT hardware
+    if (
+      selectedAccount?.accountType !== CONST_ACCOUNT_TYPES.HARDWARE &&
+      hardwareAccounts[0]?.address
+    ) {
+      await dispatch(showAccountDetail(hardwareAccounts[0]?.address));
+      await dispatch(hideSidebar());
+    }
+  };
+}
+
+export function actionRemoveAccountAllPermissionsAsync(address) {
+  return async (dispatch) => {
+    await new Promise((resolve, reject) => {
+      background.removeAllAccountPermissions(address, (error) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        resolve();
+      });
+    });
+    await forceUpdateMetamaskState(dispatch);
+  };
+}
+
 export function showAccountsPage() {
   return {
     type: actionConstants.SHOW_ACCOUNTS_PAGE,
@@ -2122,13 +2171,17 @@ export function completeOnboarding() {
   };
 }
 
-export function setHwOnlyModeAsync(value = true) {
+export function actionSetHwOnlyModeAsync(value = true) {
   return async (dispatch) => {
-    await promisifiedBackground.setHwOnlyMode(value);
+    // * update redux state
     dispatch({
       type: actionConstants.SET_HW_ONLY_MODE,
       value,
     });
+    // * update extension localStore
+    await promisifiedBackground.setHwOnlyMode(value);
+    // * auto select hardware account
+    await dispatch(actionAutoSelectHwAccountInHwOnlyModeAsync());
   };
 }
 

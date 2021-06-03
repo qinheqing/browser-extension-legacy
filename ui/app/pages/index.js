@@ -12,6 +12,7 @@ import {
   MetaMetricsProvider as NewMetaMetricsProvider,
   LegacyMetaMetricsProvider as NewLegacyMetaMetricsProvider,
 } from '../contexts/metametrics.new';
+import ForceSelectHwAccountProvider from '../contexts/ForceSelectHwAccountProvider';
 import ErrorPage from './error';
 import Routes from './routes';
 
@@ -51,7 +52,9 @@ class Index extends PureComponent {
                 <NewLegacyMetaMetricsProvider>
                   <I18nProvider>
                     <LegacyI18nProvider>
-                      <Routes />
+                      <ForceSelectHwAccountProvider>
+                        <Routes />
+                      </ForceSelectHwAccountProvider>
                     </LegacyI18nProvider>
                   </I18nProvider>
                 </NewLegacyMetaMetricsProvider>

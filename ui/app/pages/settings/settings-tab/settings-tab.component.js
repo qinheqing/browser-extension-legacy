@@ -30,7 +30,7 @@ export default class SettingsTab extends PureComponent {
   };
 
   static propTypes = {
-    setHwOnlyModeAsync: PropTypes.func,
+    actionSetHwOnlyModeAsync: PropTypes.func,
     setUseBlockie: PropTypes.func,
     hwOnlyMode: PropTypes.bool,
     setUseAutoSwitchChain: PropTypes.func,
@@ -153,7 +153,7 @@ export default class SettingsTab extends PureComponent {
 
   renderHWOnlyOptIn() {
     const { t } = this.context;
-    const { setHwOnlyModeAsync, hwOnlyMode } = this.props;
+    const { actionSetHwOnlyModeAsync, hwOnlyMode } = this.props;
 
     return (
       <div className="settings-page__content-row">
@@ -164,7 +164,10 @@ export default class SettingsTab extends PureComponent {
           <div className="settings-page__content-item-col">
             <ToggleButton
               value={hwOnlyMode}
-              onToggle={(value) => setHwOnlyModeAsync(!value)}
+              onToggle={async (value) => {
+                const newVal = !value;
+                await actionSetHwOnlyModeAsync(newVal);
+              }}
               offLabel={t('off')}
               onLabel={t('on')}
             />

@@ -849,6 +849,10 @@ export default class MetamaskController extends EventEmitter {
         permissionsController.removePermittedAccount,
         permissionsController,
       ),
+      removeAllAccountPermissions: nodeify(
+        permissionsController.removeAllAccountPermissions,
+        permissionsController,
+      ),
       requestAccountsPermissionWithId: nodeify(
         permissionsController.requestAccountsPermissionWithId,
         permissionsController,

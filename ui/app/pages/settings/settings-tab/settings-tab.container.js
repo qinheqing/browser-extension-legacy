@@ -6,7 +6,7 @@ import {
   updateCurrentLocale,
   setUseNativeCurrencyAsPrimaryCurrencyPreference,
   setParticipateInMetaMetrics,
-  setHwOnlyModeAsync,
+  actionSetHwOnlyModeAsync,
 } from '../../../store/actions';
 import { getPreferences } from '../../../selectors';
 import SettingsTab from './settings-tab.component';
@@ -51,7 +51,7 @@ const mapDispatchToProps = (dispatch) => {
     },
     setParticipateInMetaMetrics: (val) =>
       dispatch(setParticipateInMetaMetrics(val)),
-    setHwOnlyModeAsync: (val) => dispatch(setHwOnlyModeAsync(val)),
+    actionSetHwOnlyModeAsync: (val) => dispatch(actionSetHwOnlyModeAsync(val)),
   };
 };
 
