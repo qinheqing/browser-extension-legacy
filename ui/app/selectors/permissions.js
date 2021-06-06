@@ -1,5 +1,4 @@
 import { forOwn } from 'lodash';
-import { Object } from 'globalthis/implementation';
 import { CAVEAT_NAMES } from '../../../shared/constants/permissions';
 import { CONST_ACCOUNT_TYPES } from '../helpers/constants/common';
 import { getMetaMaskAccounts } from './selectors';
@@ -95,8 +94,12 @@ export function getConnectedDomainsForSelectedAddress(state) {
 }
 
 export function getAllAccountsAsArray(state) {
-  const accounts = getMetaMaskAccounts(state);
-  return Object.values(accounts);
+  // getMetaMaskAccounts() will return all accounts
+  //    including ghost account added by /new-account/connect pagination view
+  let accounts = Object.values(getMetaMaskAccounts(state));
+  // so we should remove these ghost account which has NOT keyring
+  accounts = accounts.filter((account) => account && account.accountKeyring);
+  return accounts;
 }
 
 export function getNonHardwareAccounts(state) {
