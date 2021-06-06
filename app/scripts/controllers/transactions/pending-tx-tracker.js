@@ -91,7 +91,9 @@ export default class PendingTransactionTracker extends EventEmitter {
           errorMessage.includes('known transaction') ||
           // parity
           errorMessage.includes('gas price too low to replace') ||
-          errorMessage.includes('transaction with the same hash was already imported') ||
+          errorMessage.includes(
+            'transaction with the same hash was already imported',
+          ) ||
           // other
           errorMessage.includes('gateway timeout') ||
           errorMessage.includes('nonce too low');
@@ -165,15 +167,15 @@ export default class PendingTransactionTracker extends EventEmitter {
   async _checkPendingTx(txMeta) {
     const txHash = txMeta.hash;
     const txId = txMeta.id;
-    
+
     // if tx status is approved for 120 seconds, we think it has failed
     if (txMeta.status === TRANSACTION_STATUSES.APPROVED) {
-      if (new Date().getTime() > (txMeta.time + 180 * 1000)) {
+      if (new Date().getTime() > txMeta.time + 180 * 1000) {
         const timeoutTxErr = new Error('交易签名超时');
         timeoutTxErr.name = 'TranscationSignTimeoutError';
         this.emit('tx:failed', txId, timeoutTxErr);
       }
-      return
+      return;
     }
 
     // Only check submitted txs
@@ -210,9 +212,12 @@ export default class PendingTransactionTracker extends EventEmitter {
         message: 'There was a problem loading this transaction.',
       };
       this.emit('tx:warning', txMeta, err);
+      // keep this return, as we don't know whether this error is exception or tx dropped on chain
       return;
     }
 
+    // if this tx nonce is behind the network nonce,
+    //    and this check method has been called by 3 times, we think this tx is dropped.
     if (await this._checkIfTxWasDropped(txMeta)) {
       this.emit('tx:dropped', txId);
     }
