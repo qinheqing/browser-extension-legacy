@@ -212,12 +212,26 @@ export default class PendingTransactionTracker extends EventEmitter {
         message: 'There was a problem loading this transaction.',
       };
       this.emit('tx:warning', txMeta, err);
-      // keep this return, as we don't know whether this error is exception or tx dropped on chain
+
+      // if tx is submitted 3 days ago,
+      //    and chain network besides all fallback networks request still return null,
+      //    cause this exception as `[ethjs-query] while formatting outputs from RPC ...`
+      // try to mark this tx as dropped locally,
+      //    so that this tx polling chain request will be terminated forever.
+      const ms3days = 3 * 24 * 3600 * 1000;
+      if (
+        txMeta.submittedTime &&
+        txMeta.submittedTime < new Date().getTime() - ms3days
+      ) {
+        if (await this._checkIfTxWasDropped(txMeta)) {
+          this.emit('tx:dropped', txId);
+        }
+      }
       return;
     }
 
     // if this tx nonce is behind the network nonce,
-    //    and this check method has been called by 3 times, we think this tx is dropped.
+    //    and this check method has been called by 3 times (runtime counting only), we think this tx is dropped.
     if (await this._checkIfTxWasDropped(txMeta)) {
       this.emit('tx:dropped', txId);
     }
