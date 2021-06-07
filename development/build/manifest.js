@@ -28,6 +28,15 @@ function createManifestTasks({ browserPlatforms }) {
           ),
         );
         const result = merge(cloneDeep(baseManifest), platformModifications);
+        if (
+          process.env.GITHUB_TAG &&
+          // tag should like: v1.0.3-beta.1
+          /^v[0-9.]+-\w+/giu.test(process.env.GITHUB_TAG || '')
+        ) {
+          // add GITHUB_TAG in description
+          // convenience to identify different version for multiple extension testing
+          result.description = `${result.description} (${process.env.GITHUB_TAG})`;
+        }
         const dir = path.join('.', 'dist', platform);
         await fs.mkdir(dir, { recursive: true });
         await writeJson(result, path.join(dir, 'manifest.json'));
@@ -45,6 +54,7 @@ function createManifestTasks({ browserPlatforms }) {
       ...manifest.background,
       scripts,
     };
+    manifest.description = `${manifest.description} (## DEV_VERSION ##)`;
     manifest.permissions = [...manifest.permissions, 'webRequestBlocking'];
   });
 

@@ -892,7 +892,10 @@ export default class TransactionController extends EventEmitter {
     updateSubscription();
 
     function updateSubscription() {
-      const pendingTxs = [].concat(txStateManager.getPendingTransactions(), txStateManager.getApprovedTransactions());
+      const pendingTxs = [].concat(
+        txStateManager.getPendingTransactions(),
+        txStateManager.getApprovedTransactions(),
+      );
       if (!listenersAreActive && pendingTxs.length > 0) {
         blockTracker.on('latest', latestBlockHandler);
         listenersAreActive = true;

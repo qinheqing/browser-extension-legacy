@@ -91,7 +91,9 @@ export default class PendingTransactionTracker extends EventEmitter {
           errorMessage.includes('known transaction') ||
           // parity
           errorMessage.includes('gas price too low to replace') ||
-          errorMessage.includes('transaction with the same hash was already imported') ||
+          errorMessage.includes(
+            'transaction with the same hash was already imported',
+          ) ||
           // other
           errorMessage.includes('gateway timeout') ||
           errorMessage.includes('nonce too low');
@@ -165,15 +167,15 @@ export default class PendingTransactionTracker extends EventEmitter {
   async _checkPendingTx(txMeta) {
     const txHash = txMeta.hash;
     const txId = txMeta.id;
-    
+
     // if tx status is approved for 120 seconds, we think it has failed
     if (txMeta.status === TRANSACTION_STATUSES.APPROVED) {
-      if (new Date().getTime() > (txMeta.time + 180 * 1000)) {
+      if (new Date().getTime() > txMeta.time + 180 * 1000) {
         const timeoutTxErr = new Error('交易签名超时');
         timeoutTxErr.name = 'TranscationSignTimeoutError';
         this.emit('tx:failed', txId, timeoutTxErr);
       }
-      return
+      return;
     }
 
     // Only check submitted txs
@@ -210,9 +212,26 @@ export default class PendingTransactionTracker extends EventEmitter {
         message: 'There was a problem loading this transaction.',
       };
       this.emit('tx:warning', txMeta, err);
+
+      // if tx is submitted 3 days ago,
+      //    and chain network besides all fallback networks request still return null,
+      //    cause this exception as `[ethjs-query] while formatting outputs from RPC ...`
+      // try to mark this tx as dropped locally,
+      //    so that this tx polling chain request will be terminated forever.
+      const ms3days = 3 * 24 * 3600 * 1000;
+      if (
+        txMeta.submittedTime &&
+        txMeta.submittedTime < new Date().getTime() - ms3days
+      ) {
+        if (await this._checkIfTxWasDropped(txMeta)) {
+          this.emit('tx:dropped', txId);
+        }
+      }
       return;
     }
 
+    // if this tx nonce is behind the network nonce,
+    //    and this check method has been called by 3 times (runtime counting only), we think this tx is dropped.
     if (await this._checkIfTxWasDropped(txMeta)) {
       this.emit('tx:dropped', txId);
     }

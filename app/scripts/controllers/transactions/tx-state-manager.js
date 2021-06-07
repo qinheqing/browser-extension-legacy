@@ -222,6 +222,9 @@ export default class TransactionStateManager extends EventEmitter {
    * @param {string} [note] - a note about the update for history
    */
   updateTx(txMeta, note) {
+    const isErrorValueReplacedHistory = (item) =>
+      item && item.op === 'replace' && item.path === '/warning/error';
+
     // normalize and validate txParams if present
     if (txMeta.txParams) {
       txMeta.txParams = this.normalizeAndValidateTxParams(txMeta.txParams);
@@ -232,9 +235,26 @@ export default class TransactionStateManager extends EventEmitter {
     // recover previous tx state obj
     const previousState = replayHistory(txMeta.history);
     // generate history entry and add to history
-    const entry = generateHistoryEntry(previousState, currentState, note);
+    let entry = generateHistoryEntry(previousState, currentState, note);
+
     if (entry.length) {
-      txMeta.history.push(entry);
+      // do NOT save history changes that only update txMeta.warning.error field
+      entry = entry.filter(
+        (item) => item && !isErrorValueReplacedHistory(item),
+      );
+      if (entry.length) {
+        txMeta.history.push(entry);
+      }
+    }
+
+    if (txMeta.history.length > 100) {
+      // remove huge history data
+      txMeta.history = txMeta.history.filter((historyEntry) => {
+        return !(
+          historyEntry.length === 1 &&
+          isErrorValueReplacedHistory(historyEntry[0])
+        );
+      });
     }
 
     // commit txMeta to state

@@ -28,6 +28,7 @@ export function decimalToHex(decimal) {
 export function getEthConversionFromWeiHex({
   value,
   fromCurrency = ETH,
+  nativeCurrency = ETH,
   conversionRate,
   numberOfDecimals = 6,
 }) {
@@ -46,7 +47,11 @@ export function getEthConversionFromWeiHex({
     });
 
     if (convertedValue !== '0' || i === denominations.length - 1) {
-      nonZeroDenomination = `${convertedValue} ${denominations[i]}`;
+      let unitName = denominations[i];
+      if (unitName === ETH && nativeCurrency) {
+        unitName = nativeCurrency;
+      }
+      nonZeroDenomination = `${convertedValue} ${unitName}`;
       break;
     }
   }

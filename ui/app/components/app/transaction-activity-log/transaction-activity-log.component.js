@@ -7,6 +7,7 @@ import {
 } from '../../../helpers/utils/conversions.util';
 import { formatDate } from '../../../helpers/utils/util';
 import { getEtherscanNetwork } from '../../../../lib/etherscan-prefix-for-network';
+import { ETH } from '../../../helpers/constants/common';
 import TransactionActivityLogIcon from './transaction-activity-log-icon';
 import { CONFIRMED_STATUS } from './transaction-activity-log.constants';
 
@@ -26,11 +27,14 @@ export default class TransactionActivityLog extends PureComponent {
     onCancel: PropTypes.func,
     onRetry: PropTypes.func,
     primaryTransaction: PropTypes.object,
+    rpcPrefs: PropTypes.object,
     isEarliestNonce: PropTypes.bool,
   };
 
   handleActivityClick = (hash) => {
-    if (!hash) return;
+    if (!hash) {
+      return;
+    }
     const { primaryTransaction, rpcPrefs } = this.props;
     const { metamaskNetworkId } = primaryTransaction;
 
@@ -85,14 +89,15 @@ export default class TransactionActivityLog extends PureComponent {
       index === 0
         ? `${getValueFromWeiHex({
             value,
-            fromCurrency: 'ETH',
-            toCurrency: 'ETH',
+            fromCurrency: ETH,
+            toCurrency: ETH,
             conversionRate,
             numberOfDecimals: 6,
           })} ${nativeCurrency}`
         : getEthConversionFromWeiHex({
             value,
-            fromCurrency: 'ETH',
+            fromCurrency: ETH,
+            nativeCurrency,
             conversionRate,
             numberOfDecimals: 6,
           });
