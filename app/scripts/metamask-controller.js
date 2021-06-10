@@ -1468,6 +1468,10 @@ export default class MetamaskController extends EventEmitter {
   }
 
   async importWatchAccount(account) {
+    const oldAllAccounts = await this.keyringController.getAccounts();
+    if (oldAllAccounts.includes(account.toLowerCase())) {
+      throw new Error("The address is already in the wallet")
+    }
     let keyring = this.keyringController.getKeyringsByType('Watch Account')[0];
     if (!keyring) {
       keyring = await this.keyringController.addNewKeyring('Watch Account');
