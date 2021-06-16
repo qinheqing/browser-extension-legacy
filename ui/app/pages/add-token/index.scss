@@ -1,8 +1,13 @@
 @import 'token-list/index';
 
+@media screen and (min-width: 576px) {
+  .add-token  {
+    margin-top: 30px;
+  }
+}
+
 .add-token {
   width: 100%;
-  margin-top: 30px;
   & .page-container {
     box-shadow: none;
     border-radius: 0;
