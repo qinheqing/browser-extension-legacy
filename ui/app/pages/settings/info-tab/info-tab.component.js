@@ -105,7 +105,6 @@ export default class InfoTab extends PureComponent {
             </div>
             <div className="info-tab__item">
               <div className="info-tab__about">{t('builtInCalifornia')}</div>
-              <div className="info-tab__thank">{t('thankToMetaMask')}</div>
             </div>
           </div>
           {this.renderInfoLinks()}

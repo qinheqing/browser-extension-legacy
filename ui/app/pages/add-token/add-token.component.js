@@ -326,16 +326,18 @@ class AddToken extends Component {
     const { history, clearPendingTokens, mostRecentOverviewPage } = this.props;
 
     return (
-      <PageContainer
-        title={this.context.t('addTokens')}
-        tabsComponent={this.renderTabs()}
-        onSubmit={() => this.handleNext()}
-        disabled={Boolean(this.hasError()) || !this.hasSelected()}
-        onCancel={() => {
-          clearPendingTokens();
-          history.push(mostRecentOverviewPage);
-        }}
-      />
+      <div className="add-token">
+        <PageContainer
+          title={this.context.t('addTokens')}
+          tabsComponent={this.renderTabs()}
+          onSubmit={() => this.handleNext()}
+          disabled={Boolean(this.hasError()) || !this.hasSelected()}
+          onCancel={() => {
+            clearPendingTokens();
+            history.push(mostRecentOverviewPage);
+          }}
+        />
+      </div>
     );
   }
 }

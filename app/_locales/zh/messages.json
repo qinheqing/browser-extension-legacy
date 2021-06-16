@@ -300,7 +300,7 @@
     "message": "确认密码"
   },
   "confirmSecretBackupPhrase": {
-    "message": "请确认您的主钱包助记词"
+    "message": "请确认您的钱包助记词"
   },
   "confirmed": {
     "message": "确认"
@@ -434,7 +434,7 @@
     "message": "创建"
   },
   "createAWallet": {
-    "message": "创建主钱包"
+    "message": "创建钱包"
   },
   "createAccount": {
     "message": "添加账号"
@@ -562,7 +562,7 @@
     "message": "下载 Google Chrome 浏览器"
   },
   "downloadSecretBackup": {
-    "message": "下载主钱包助记词，并将其安全保存在外部加密硬盘或存储介质上。"
+    "message": "下载钱包助记词，并将其安全保存在外部加密硬盘或存储介质上。"
   },
   "downloadStateLogs": {
     "message": "下载状态日志"
@@ -587,7 +587,7 @@
     "message": "申请加密公钥"
   },
   "endOfFlowMessage1": {
-    "message": "您通过了测试—— 保管好您的主钱包助记词，这是您的责任!"
+    "message": "您通过了测试—— 保管好您的钱包助记词，这是您的责任!"
   },
   "endOfFlowMessage10": {
     "message": "全部完成"
@@ -602,16 +602,16 @@
     "message": "不向任何任何人分享该账户助记词。"
   },
   "endOfFlowMessage5": {
-    "message": "谨防网络钓鱼！OneKey 绝不会主动要求您提供个人主钱包助记词。"
+    "message": "谨防网络钓鱼！OneKey 绝不会主动要求您提供个人钱包助记词。"
   },
   "endOfFlowMessage6": {
-    "message": "如果您需要再次备份主钱包助记词，请通过设置 -> 安全选项完成该操作。"
+    "message": "如果您需要再次备份钱包助记词，请通过设置 -> 安全选项完成该操作。"
   },
   "endOfFlowMessage7": {
     "message": "如果您仍存有疑问或发现任何可疑的地方，请发送电子邮件至 hi@onekey.so 进行咨询。"
   },
   "endOfFlowMessage8": {
-    "message": "OneKey 无法恢复您的主钱包助记词。"
+    "message": "OneKey 无法恢复您的钱包助记词。"
   },
   "endOfFlowMessage9": {
     "message": "了解详情。"
@@ -861,16 +861,16 @@
     "message": "导入的账户将不会与最初创建的 OneKey 账户助记词相关联。了解更多有关导入账户的信息 。"
   },
   "importAccountSeedPhrase": {
-    "message": "导入主钱包的助记词"
+    "message": "导入钱包的助记词"
   },
   "importUsingSeed": {
-    "message": "使用主钱包助记词导入"
+    "message": "使用钱包助记词导入"
   },
   "importWallet": {
-    "message": "导入主钱包"
+    "message": "导入钱包"
   },
   "importYourExisting": {
-    "message": "使用 12 个单词的助记词导入您现有的主钱包。"
+    "message": "使用 12 个单词的助记词导入您现有的钱包。"
   },
   "imported": {
     "message": "已导入",
@@ -970,7 +970,7 @@
     "message": "在添加新的账户之前，需要使用您的最后一个账户。"
   },
   "letsGoSetUp": {
-    "message": "生成新的主钱包"
+    "message": "生成新钱包"
   },
   "likeToAddTokens": {
     "message": "您想添加这些代币吗？"
@@ -1009,7 +1009,7 @@
     "message": "备忘"
   },
   "memorizePhrase": {
-    "message": "记住该主钱包助记词。"
+    "message": "记住该钱包助记词。"
   },
   "message": {
     "message": "消息"
@@ -1160,7 +1160,7 @@
     "message": "这个名字还没有设置地址。"
   },
   "noAlreadyHaveSeed": {
-    "message": "导入现有的主钱包"
+    "message": "导入现有钱包"
   },
   "noConversionRateAvailable": {
     "message": "无可用转换率"
@@ -1408,7 +1408,7 @@
     "message": "如果您更换浏览器或计算机，则需要使用此账户助记词访问您的帐户。请将它们保存在安全秘密的地方。"
   },
   "revealSeedWordsTitle": {
-    "message": "主钱包助记词"
+    "message": "钱包助记词"
   },
   "revealSeedWordsWarning": {
     "message": "该账户助记词可以用来窃取您的所有帐户"
@@ -1453,16 +1453,16 @@
     "message": "搜索代币"
   },
   "secretBackupPhrase": {
-    "message": "主钱包助记词"
+    "message": "钱包助记词"
   },
   "secretBackupPhraseDescription": {
-    "message": "您的主钱包助记词可以帮助您轻松备份和恢复个人账户。"
+    "message": "您的钱包助记词可以帮助您轻松备份和恢复个人账户。"
   },
   "secretBackupPhraseWarning": {
-    "message": "警告：切勿向他人透露您的主钱包助记词。任何人一旦持有该主钱包助记词，即可控制您的 Ether。"
+    "message": "警告：切勿向他人透露您的钱包助记词。任何人一旦持有该钱包助记词，即可控制您的 Ether。"
   },
   "secretPhrase": {
-    "message": "目前支持使用12个单词的助记词来导入您的主钱包"
+    "message": "目前支持使用12个单词的助记词来导入您的钱包"
   },
   "securityAndPrivacy": {
     "message": "安全与隐私"
@@ -1474,7 +1474,7 @@
     "message": "用空格分隔每个单词"
   },
   "seedPhrasePlaceholderPaste": {
-    "message": "从剪贴板粘贴主钱包助记词"
+    "message": "从剪贴板粘贴钱包助记词"
   },
   "seedPhraseReq": {
     "message": "账户助记词由 12、15、18、21 或 24 个单词组成"
@@ -1568,7 +1568,7 @@
     "message": "显示私钥"
   },
   "showSeedPhrase": {
-    "message": "显示主钱包助记词"
+    "message": "显示钱包助记词"
   },
   "sigRequest": {
     "message": "请求签名"
@@ -1659,7 +1659,7 @@
     "message": "使用您的硬件设备，操作与以太坊账户制作相同。登录 dApps，发送 ETH ，购买和保存 ERC20 代币和诸如 CryptoKitties 等不可替代代币。"
   },
   "storePhrase": {
-    "message": "通过如 1Password 等密码管理工具保存该主钱包助记词。"
+    "message": "通过如 1Password 等密码管理工具保存该钱包助记词。"
   },
   "submit": {
     "message": "提交"
@@ -2017,7 +2017,7 @@
     "message": "由 MetaMask 提供源码支持"
   },
   "thisWillCreate": {
-    "message": "将为你生成新的助记词来创建主钱包"
+    "message": "将为你生成新的助记词来创建钱包"
   },
   "tips": {
     "message": "小贴士"
@@ -2193,7 +2193,7 @@
     "message": "我们的硬件钱包连接指南"
   },
   "walletSeed": {
-    "message": "主钱包助记词"
+    "message": "钱包助记词"
   },
   "web3ShimUsageNotification": {
     "message": "我们发现当前的网站尝试使用已经删除的 window.web3 API。如果这个网站网站已经无法正常使用，请点击 $1 获取更多信息。",
@@ -2209,7 +2209,7 @@
     "message": "这是什么？"
   },
   "writePhrase": {
-    "message": "请将该主钱包助记词记录在纸上，并保存在安全的地方。如果希望提升信息安全性，请将信息记录在多张纸上，并分别保存在 2 - 3 个不同的地方。"
+    "message": "请将该钱包助记词记录在纸上，并保存在安全的地方。如果希望提升信息安全性，请将信息记录在多张纸上，并分别保存在 2 - 3 个不同的地方。"
   },
   "xOfY": {
     "message": "$1 / $2",

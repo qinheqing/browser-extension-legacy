@@ -7,7 +7,7 @@
 
 .first-time-flow {
   width: 100%;
-  background-color: $white;
+  background-color: #f2f2f7;
   display: flex;
   justify-content: center;
 
@@ -27,6 +27,17 @@
         margin-bottom: 0;
       }
     }
+  }
+
+  &__group {
+    background-color: white;
+    padding: 20px 50px;
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 1px 20px rgba(0, 0, 0, 0.05);
   }
 
   &__form {

@@ -82,12 +82,26 @@
   }
 
   &__icon {
-    margin-left: 1rem;
+    margin-left: 8px;
     cursor: pointer;
+    height: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: white;
+    border-radius: 13px;
+    padding: 0px 10px;
 
     &--disabled {
       cursor: initial;
     }
+  }
+
+  &__address {
+    font-size: 12px;
+    font-weight: 500;
+    margin: 0 5px;
+    color: #1A1A1A;
   }
 
   &__header {

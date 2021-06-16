@@ -47,7 +47,7 @@ export default class PageContainerFooter extends Component {
               type={cancelButtonType || 'default'}
               large={buttonSizeLarge}
               className={classnames(
-                'page-container__footer-button',
+                'page-container__footer-button cancel-button',
                 footerButtonClassName,
               )}
               onClick={(e) => onCancel(e)}
@@ -61,7 +61,7 @@ export default class PageContainerFooter extends Component {
             type={submitButtonType || 'secondary'}
             large={buttonSizeLarge}
             className={classnames(
-              'page-container__footer-button',
+              'page-container__footer-button confirm-button',
               footerButtonClassName,
             )}
             disabled={disabled}

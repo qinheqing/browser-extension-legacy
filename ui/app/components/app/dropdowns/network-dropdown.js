@@ -214,7 +214,7 @@ class NetworkDropdown extends Component {
         style={DROP_DOWN_MENU_ITEM_STYLE}
       >
         {providerType === network ? (
-          <i className="fa fa-check" />
+          <i className="fa fa-check" style={{ color: '#00b812' }} />
         ) : (
           <div className="network-check__transparent">✓</div>
         )}
@@ -227,7 +227,7 @@ class NetworkDropdown extends Component {
         <span
           className="network-name-item"
           style={{
-            color: providerType === network ? '#ffffff' : '#9b9b9b',
+            color: providerType === network ? '#000' : '#9b9b9b',
           }}
         >
           {this.context.t(network)}

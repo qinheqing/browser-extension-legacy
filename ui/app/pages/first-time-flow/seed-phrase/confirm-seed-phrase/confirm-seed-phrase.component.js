@@ -140,7 +140,10 @@ export default class ConfirmSeedPhrase extends PureComponent {
             }}
             href="#"
           >
-            {`< Back`}
+            <span>
+              <span>&lt; </span>
+              <span>{t('back')}</span>
+            </span>
           </a>
         </div>
         <div className="first-time-flow__header">

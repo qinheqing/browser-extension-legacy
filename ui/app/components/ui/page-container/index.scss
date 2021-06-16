@@ -82,9 +82,19 @@
       }
     }
   }
-
+  
   &__footer-button {
     margin-right: 16px;
+    &.cancel-button {
+      background-color: rgba(0, 170, 17, 0.1);
+      color: rgba(0, 170, 17, 1);
+      border: none;
+    }
+    &.confirm-button {
+      background-color: rgba(0, 170, 17, 1);
+      color: white;
+      border: none;
+    }
 
     &:last-of-type {
       margin-right: 0;
@@ -189,7 +199,6 @@
     height: 100%;
     width: 100%;
     background-color: $white;
-    border-radius: 0;
     flex: 1;
     overflow-y: auto;
   }
