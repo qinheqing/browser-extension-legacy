@@ -17,7 +17,6 @@ import { useI18nContext } from '../../../hooks/useI18nContext';
 export default function NetworkDisplay({
   colored,
   outline,
-  iconClassName,
   indicatorSize,
   disabled,
   labelProps,
@@ -50,11 +49,11 @@ export default function NetworkDisplay({
           />
         </LoadingIndicator>
       }
-      rightIcon={
-        iconClassName && (
-          <i className={classnames('network-display__icon', iconClassName)} />
-        )
-      }
+      // rightIcon={
+      //   iconClassName && (
+      //     <i className={classnames('network-display__icon', iconClassName)} />
+      //   )
+      // }
       label={
         networkType === NETWORK_TYPE_RPC
           ? networkNickname ?? t('privateNetwork')

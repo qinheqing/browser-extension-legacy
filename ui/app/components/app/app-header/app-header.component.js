@@ -86,7 +86,11 @@ export default class AppHeader extends PureComponent {
             }
           }}
         >
-          <Identicon address={selectedAddress} diameter={32} addBorder />
+          <Identicon address={selectedAddress} diameter={20} addBorder />
+          <span className="account-menu__address">
+            {selectedAddress.slice(-4)}
+          </span>
+          <span className="app-header__network-down-arrow app-header__account-down-arrow"></span>
         </div>
       )
     );

@@ -1,6 +1,17 @@
 @import 'token-list/index';
 
 .add-token {
+  width: 100%;
+  & .page-container {
+    box-shadow: none;
+    border-radius: 0;
+  }
+  
+  & .page-container__footer {
+    border-top: none;
+    background-color: rgb(242, 243, 244)
+  }
+
   &__custom-token-form {
     padding: 8px 16px 16px;
 

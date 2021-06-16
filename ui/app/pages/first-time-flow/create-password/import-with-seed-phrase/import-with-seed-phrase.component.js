@@ -237,107 +237,116 @@ export default class ImportWithSeedPhrase extends PureComponent {
             <span>{t('back')}</span>
           </a>
         </div>
-        <div className="first-time-flow__header">
-          {t('importAccountSeedPhrase')}
-        </div>
-        <div className="first-time-flow__text-block">{t('secretPhrase')}</div>
-        <div className="first-time-flow__textarea-wrapper">
-          <label>{t('walletSeed')}</label>
-          {showSeedPhrase ? (
-            <textarea
-              className="first-time-flow__textarea"
-              onChange={(e) => this.handleSeedPhraseChange(e.target.value)}
-              value={this.state.seedPhrase}
-              placeholder={t('seedPhrasePlaceholder')}
-            />
-          ) : (
-            <TextField
-              className="first-time-flow__textarea first-time-flow__seedphrase"
-              type="password"
-              onChange={(e) => this.handleSeedPhraseChange(e.target.value)}
-              value={this.state.seedPhrase}
-              placeholder={t('seedPhrasePlaceholderPaste')}
-            />
-          )}
-          {seedPhraseError && <span className="error">{seedPhraseError}</span>}
+        <div className="first-time-flow__group">
+          <div className="first-time-flow__header">
+            {t('importAccountSeedPhrase')}
+          </div>
+          <div className="first-time-flow__text-block">{t('secretPhrase')}</div>
+          <div className="first-time-flow__textarea-wrapper">
+            <label>{t('walletSeed')}</label>
+            {showSeedPhrase ? (
+              <textarea
+                className="first-time-flow__textarea"
+                onChange={(e) => this.handleSeedPhraseChange(e.target.value)}
+                value={this.state.seedPhrase}
+                placeholder={t('seedPhrasePlaceholder')}
+              />
+            ) : (
+              <TextField
+                className="first-time-flow__textarea first-time-flow__seedphrase"
+                type="password"
+                onChange={(e) => this.handleSeedPhraseChange(e.target.value)}
+                value={this.state.seedPhrase}
+                placeholder={t('seedPhrasePlaceholderPaste')}
+              />
+            )}
+            {seedPhraseError && (
+              <span className="error">{seedPhraseError}</span>
+            )}
+            <div className="first-time-flow__checkbox-container">
+              <div
+                className="first-time-flow__checkbox"
+                tabIndex="0"
+                role="checkbox"
+                aria-checked={showSeedPhrase}
+                aria-labelledby="ftf-chk1-label"
+                onClick={this.toggleShowSeedPhrase}
+              >
+                {showSeedPhrase ? <i className="fa fa-check fa-2x" /> : null}
+              </div>
+              <span
+                id="ftf-chk1-label"
+                className="first-time-flow__checkbox-label"
+              >
+                {t('showSeedPhrase')}
+              </span>
+            </div>
+          </div>
+          <TextField
+            id="password"
+            label={t('newPassword')}
+            type="password"
+            className="first-time-flow__input"
+            value={this.state.password}
+            onChange={(event) => this.handlePasswordChange(event.target.value)}
+            error={passwordError}
+            autoComplete="new-password"
+            margin="normal"
+            largeLabel
+          />
+          <TextField
+            id="confirm-password"
+            label={t('confirmPassword')}
+            type="password"
+            className="first-time-flow__input"
+            value={this.state.confirmPassword}
+            onChange={(event) =>
+              this.handleConfirmPasswordChange(event.target.value)
+            }
+            error={confirmPasswordError}
+            autoComplete="confirm-password"
+            margin="normal"
+            largeLabel
+          />
           <div className="first-time-flow__checkbox-container">
             <div
-              className="first-time-flow__checkbox"
+              className="first-time-flow__checkbox first-time-flow__terms"
               tabIndex="0"
               role="checkbox"
-              aria-checked={showSeedPhrase}
+              onClick={this.toggleTermsCheck}
+              aria-checked={termsChecked}
               aria-labelledby="ftf-chk1-label"
-              onClick={this.toggleShowSeedPhrase}
             >
-              {showSeedPhrase ? <i className="fa fa-check fa-2x" /> : null}
+              {termsChecked ? <i className="fa fa-check fa-2x" /> : null}
             </div>
             <span
               id="ftf-chk1-label"
               className="first-time-flow__checkbox-label"
             >
-              {t('showSeedPhrase')}
+              {t('acceptTermsOfUse', [
+                <a
+                  onClick={(e) => e.stopPropagation()}
+                  key="first-time-flow__link-text"
+                  href="https://onekey.zendesk.com/hc/articles/360002003315"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="first-time-flow__link-text">
+                    {t('terms')}
+                  </span>
+                </a>,
+              ])}
             </span>
           </div>
-        </div>
-        <TextField
-          id="password"
-          label={t('newPassword')}
-          type="password"
-          className="first-time-flow__input"
-          value={this.state.password}
-          onChange={(event) => this.handlePasswordChange(event.target.value)}
-          error={passwordError}
-          autoComplete="new-password"
-          margin="normal"
-          largeLabel
-        />
-        <TextField
-          id="confirm-password"
-          label={t('confirmPassword')}
-          type="password"
-          className="first-time-flow__input"
-          value={this.state.confirmPassword}
-          onChange={(event) =>
-            this.handleConfirmPasswordChange(event.target.value)
-          }
-          error={confirmPasswordError}
-          autoComplete="confirm-password"
-          margin="normal"
-          largeLabel
-        />
-        <div className="first-time-flow__checkbox-container">
-          <div
-            className="first-time-flow__checkbox first-time-flow__terms"
-            tabIndex="0"
-            role="checkbox"
-            onClick={this.toggleTermsCheck}
-            aria-checked={termsChecked}
-            aria-labelledby="ftf-chk1-label"
+          <Button
+            type="primary"
+            submit
+            className="first-time-flow__button"
+            disabled={!this.isValid() || !termsChecked}
           >
-            {termsChecked ? <i className="fa fa-check fa-2x" /> : null}
-          </div>
-          <span id="ftf-chk1-label" className="first-time-flow__checkbox-label">
-            {t('acceptTermsOfUse', [
-              <a
-                onClick={(e) => e.stopPropagation()}
-                key="first-time-flow__link-text"
-                href="https://onekey.zendesk.com/hc/articles/360002003315"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span className="first-time-flow__link-text">{t('terms')}</span>
-              </a>,
-            ])}
-          </span>
+            {t('import')}
+          </Button>
         </div>
-        <Button
-          type="primary"
-          submit
-          className="first-time-flow__button"
-          disabled={!this.isValid() || !termsChecked}
-        >
-          {t('import')}
-        </Button>
       </form>
     );
   }

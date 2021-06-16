@@ -167,76 +167,80 @@ export default class NewAccount extends PureComponent {
             <span>{t('back')}</span>
           </a>
         </div>
-        <div className="first-time-flow__header">{t('createPassword')}</div>
-        <form className="first-time-flow__form" onSubmit={this.handleCreate}>
-          <TextField
-            id="create-password"
-            label={t('newPassword')}
-            type="password"
-            className="first-time-flow__input"
-            value={password}
-            onChange={(event) => this.handlePasswordChange(event.target.value)}
-            error={passwordError}
-            autoFocus
-            autoComplete="new-password"
-            margin="normal"
-            fullWidth
-            largeLabel
-          />
-          <TextField
-            id="confirm-password"
-            label={t('confirmPassword')}
-            type="password"
-            className="first-time-flow__input"
-            value={confirmPassword}
-            onChange={(event) =>
-              this.handleConfirmPasswordChange(event.target.value)
-            }
-            error={confirmPasswordError}
-            autoComplete="confirm-password"
-            margin="normal"
-            fullWidth
-            largeLabel
-          />
-          <div className="first-time-flow__checkbox-container">
-            <div
-              className="first-time-flow__checkbox"
-              tabIndex="0"
-              role="checkbox"
-              aria-checked={termsChecked}
-              aria-labelledby="ftf-chk1-label"
-              onClick={this.toggleTermsCheck}
-            >
-              {termsChecked ? <i className="fa fa-check fa-2x" /> : null}
+        <div className="first-time-flow__group">
+          <div className="first-time-flow__header">{t('createPassword')}</div>
+          <form className="first-time-flow__form" onSubmit={this.handleCreate}>
+            <TextField
+              id="create-password"
+              label={t('newPassword')}
+              type="password"
+              className="first-time-flow__input"
+              value={password}
+              onChange={(event) =>
+                this.handlePasswordChange(event.target.value)
+              }
+              error={passwordError}
+              autoFocus
+              autoComplete="new-password"
+              margin="normal"
+              fullWidth
+              largeLabel
+            />
+            <TextField
+              id="confirm-password"
+              label={t('confirmPassword')}
+              type="password"
+              className="first-time-flow__input"
+              value={confirmPassword}
+              onChange={(event) =>
+                this.handleConfirmPasswordChange(event.target.value)
+              }
+              error={confirmPasswordError}
+              autoComplete="confirm-password"
+              margin="normal"
+              fullWidth
+              largeLabel
+            />
+            <div className="first-time-flow__checkbox-container">
+              <div
+                className="first-time-flow__checkbox"
+                tabIndex="0"
+                role="checkbox"
+                aria-checked={termsChecked}
+                aria-labelledby="ftf-chk1-label"
+                onClick={this.toggleTermsCheck}
+              >
+                {termsChecked ? <i className="fa fa-check fa-2x" /> : null}
+              </div>
+              <span
+                id="ftf-chk1-label"
+                className="first-time-flow__checkbox-label"
+              >
+                {t('acceptTermsOfUse', [
+                  <a
+                    onClick={(e) => e.stopPropagation()}
+                    key="first-time-flow__link-text"
+                    href="https://onekey.zendesk.com/hc/articles/360002003315"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span className="first-time-flow__link-text">
+                      {t('terms')}
+                    </span>
+                  </a>,
+                ])}
+              </span>
             </div>
-            <span
-              id="ftf-chk1-label"
-              className="first-time-flow__checkbox-label"
+            <Button
+              type="primary"
+              className="first-time-flow__button"
+              disabled={!this.isValid() || !termsChecked}
+              onClick={this.handleCreate}
             >
-              {t('acceptTermsOfUse', [
-                <a
-                  onClick={(e) => e.stopPropagation()}
-                  key="first-time-flow__link-text"
-                  href="https://onekey.zendesk.com/hc/articles/360002003315"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <span className="first-time-flow__link-text">
-                    {t('terms')}
-                  </span>
-                </a>,
-              ])}
-            </span>
-          </div>
-          <Button
-            type="primary"
-            className="first-time-flow__button"
-            disabled={!this.isValid() || !termsChecked}
-            onClick={this.handleCreate}
-          >
-            {t('create')}
-          </Button>
-        </form>
+              {t('create')}
+            </Button>
+          </form>
+        </div>
       </div>
     );
   }

@@ -8,8 +8,20 @@
   width: 100%;
   flex: 0 0 auto;
 
+  // overwrite
+  .clip {
+    border-color: #000;
+  }
+  
+  .identicon__address-wrapper  {
+    border-radius: 0;
+    border: none;
+    width: 20px;
+    height: 20px;
+  }
+
   @media screen and (max-width: 575px) {
-    padding: 1rem;
+    padding: 1rem;   
     z-index: $mobile-header-z-index;
   }
 
@@ -102,5 +114,11 @@
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
+  }
+
+  &__account-down-arrow {
+    width: 6px;
+    height: 9px;
+    display: block;
   }
 }

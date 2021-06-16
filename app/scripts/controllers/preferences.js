@@ -41,7 +41,7 @@ export default class PreferencesController {
       tokensWithBalance: [],
       hiddenTokens: [],
       suggestedTokens: {},
-      useBlockie: false,
+      useBlockie: true,
       useAutoSwitchChain: false,
       useNonceField: false,
       usePhishDetect: true,

@@ -1,6 +1,20 @@
 @import './send-content/send-gas-row/send-gas-row';
 
 .send {
+  &.page-container {
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  & .page-container__content {
+    border-radius: 8px;
+  }
+
+  & .page-container__footer {
+    border-top: none;
+    background-color: rgb(242, 243, 244)
+  }
+
   &__header {
     position: relative;
     display: flex;
@@ -40,7 +54,7 @@
     padding: 0.5rem;
     flex: 0 0 auto;
     background-color: $Grey-000;
-    border-bottom: 1px solid $alto;
+    // border-bottom: 1px solid $alto;
   }
 
   &__select-recipient-wrapper {
