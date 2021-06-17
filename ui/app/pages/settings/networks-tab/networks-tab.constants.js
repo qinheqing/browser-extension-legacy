@@ -5,6 +5,7 @@ import {
   KOVAN_CHAIN_ID,
   MAINNET,
   MAINNET_CHAIN_ID,
+  ETH_RPC_URL,
   RINKEBY,
   RINKEBY_CHAIN_ID,
   ROPSTEN,
@@ -32,7 +33,7 @@ import {
   OKEX,
   OKEX_CHAIN_ID,
   OKEX_RPC_URL,
-  OKEX_TICKER
+  OKEX_TICKER,
 } from '../../../../../shared/constants/network';
 
 const defaultNetworksData = [
@@ -40,7 +41,7 @@ const defaultNetworksData = [
     labelKey: MAINNET,
     iconColor: '#29B6AF',
     providerType: MAINNET,
-    rpcUrl: `https://mainnet.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+    rpcUrl: ETH_RPC_URL,
     chainId: MAINNET_CHAIN_ID,
     ticker: 'ETH',
     blockExplorerUrl: 'https://etherscan.io',
@@ -70,7 +71,7 @@ const defaultNetworksData = [
     rpcUrl: MATIC_RPC_URL,
     chainId: MATIC_CHAIN_ID,
     ticker: MATIC_TICKER,
-    blockExplorerUrl: 'https://explorer-mainnet.maticvigil.com',
+    blockExplorerUrl: 'https://polygonscan.com',
   },
   {
     labelKey: XDAI,

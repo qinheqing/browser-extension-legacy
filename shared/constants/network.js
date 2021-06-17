@@ -132,6 +132,14 @@ export const NETWORK_FALLBACK_URL = {
     'https://http-mainnet-node.defibox.com',
     'https://http-mainnet.hecochain.com',
   ],
+  [MATIC]: [
+    'https://rpc-mainnet.matic.network',
+    'https://rpc-mainnet.maticvigil.com',
+    'https://rpc-mainnet.matic.quiknode.pro',
+    'https://matic-mainnet.chainstacklabs.com',
+    'https://matic-mainnet-full-rpc.bwarelabs.com',
+    'https://matic-mainnet-archive-rpc.bwarelabs.com',
+  ],
 };
 
 export const NETWORK_TYPE_TO_ID_MAP = {

@@ -1218,7 +1218,7 @@
     "message": "恶意的 Ethereum 以太坊网络提供商可以伪造区块链状态，并记录您的网络活动。只添加您信任的自定义网络。"
   },
   "onlyAvailableOnMainnet": {
-    "message": "仅在主网和币安智能链上提供"
+    "message": "不支持当前网络"
   },
   "onlyConnectTrust": {
     "message": "只连接您信任的网站。"

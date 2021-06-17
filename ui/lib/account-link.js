@@ -45,7 +45,7 @@ export default function getAccountLink(address, network, rpcPrefs) {
     case BSC_TEST_NETWORK_ID:
       return `https://testnet.bscscan.com/address/${address}`;
     case MATIC_NETWORK_ID:
-      return `https://explorer-mainnet.maticvigil.com/address/${address}`;
+      return `https://polygonscan.com/address/${address}`;
     case XDAI_NETWORK_ID:
       return `https://blockscout.com/xdai/mainnet/address/${address}`;
     case FANTOM_NETWORK_ID:

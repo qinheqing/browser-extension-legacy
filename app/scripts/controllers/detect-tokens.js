@@ -1,21 +1,23 @@
 import Web3 from 'web3';
 import { warn } from 'loglevel';
-import { cloneDeep } from "lodash"
+import { cloneDeep } from 'lodash';
 import SINGLE_CALL_BALANCES_ABI from 'single-call-balance-checker-abi';
 import {
   MAINNET_CHAIN_ID,
   BSC_CHAIN_ID,
   HECO_CHAIN_ID,
-  KOVAN_CHAIN_ID
+  KOVAN_CHAIN_ID,
+  MATIC_CHAIN_ID,
 } from '../../../shared/constants/network';
 import {
   SINGLE_CALL_BALANCES_ADDRESS,
   SINGLE_CALL_BALANCES_ADDRESS_BSC,
-  SINGLE_CALL_BALANCES_ADDRESS_KOVAN
+  SINGLE_CALL_BALANCES_ADDRESS_KOVAN,
+  SINGLE_CALL_BALANCES_ADDRESS_MATIC,
 } from '../constants/contracts';
 import { contractMap } from '../../../shared/tokens';
-import { NETWORK_EVENTS } from "./network";
 import { stringifyBalance } from '../lib/util';
+import { NETWORK_EVENTS } from './network';
 
 // By default, poll every 3 minutes
 const DEFAULT_INTERVAL = 180 * 1000;
@@ -45,13 +47,22 @@ export default class DetectTokensController {
   /**
    * For each token in @metamask/contract-metadata, find check selectedAddress balance.
    */
-   async detectNewTokens() {
+  async detectNewTokens() {
     if (!this.isActive) {
       return;
     }
+
     const { chainId, type } = this._network.store.getState().provider;
-    const supportedChainIds = [MAINNET_CHAIN_ID, BSC_CHAIN_ID, HECO_CHAIN_ID, KOVAN_CHAIN_ID]
-    if (!supportedChainIds.includes(chainId)) { return; }
+    const supportedChainIds = [
+      MAINNET_CHAIN_ID,
+      BSC_CHAIN_ID,
+      HECO_CHAIN_ID,
+      KOVAN_CHAIN_ID,
+      MATIC_CHAIN_ID,
+    ];
+    if (!supportedChainIds.includes(chainId)) {
+      return;
+    }
 
     const contracts = contractMap[type];
     if (!contracts) {
@@ -70,7 +81,6 @@ export default class DetectTokensController {
         tokensToDetect.push(contractAddress);
       }
     }
-
     let result;
     let abiAddress;
 
@@ -78,6 +88,8 @@ export default class DetectTokensController {
       abiAddress = SINGLE_CALL_BALANCES_ADDRESS;
     } else if (chainId === KOVAN_CHAIN_ID) {
       abiAddress = SINGLE_CALL_BALANCES_ADDRESS_KOVAN;
+    } else if (chainId === MATIC_CHAIN_ID) {
+      abiAddress = SINGLE_CALL_BALANCES_ADDRESS_MATIC;
     } else {
       abiAddress = SINGLE_CALL_BALANCES_ADDRESS_BSC;
     }
@@ -91,7 +103,6 @@ export default class DetectTokensController {
       );
       return;
     }
-
     tokensToDetect.forEach((tokenAddress, index) => {
       const balance = result[index];
       if (balance && !balance.isZero()) {
@@ -104,7 +115,6 @@ export default class DetectTokensController {
     });
   }
 
-
   /**
    * For each token in @metamask/contract-metadata, find check selectedAddress balance.
    */
@@ -113,8 +123,16 @@ export default class DetectTokensController {
       return;
     }
     const { chainId, type } = this._network.store.getState().provider;
-    const supportedChainIds = [MAINNET_CHAIN_ID, BSC_CHAIN_ID, HECO_CHAIN_ID, KOVAN_CHAIN_ID]
-    if (!supportedChainIds.includes(chainId)) { return; }
+    const supportedChainIds = [
+      MAINNET_CHAIN_ID,
+      BSC_CHAIN_ID,
+      HECO_CHAIN_ID,
+      KOVAN_CHAIN_ID,
+      MATIC_CHAIN_ID,
+    ];
+    if (!supportedChainIds.includes(chainId)) {
+      return;
+    }
 
     const contracts = contractMap[type];
     if (!contracts) {
@@ -138,7 +156,10 @@ export default class DetectTokensController {
 
     let balancesResult;
     try {
-      balancesResult = await this._getTokenBalances(currentTokens.map(e => e.address), abiAddress);
+      balancesResult = await this._getTokenBalances(
+        currentTokens.map((e) => e.address),
+        abiAddress,
+      );
     } catch (error) {
       warn(
         `MetaMask - DetectTokensController single call balance fetch failed`,
@@ -147,18 +168,24 @@ export default class DetectTokensController {
       return;
     }
 
-    if (Array.isArray(balancesResult) && balancesResult.length === currentTokens.length) {
+    if (
+      Array.isArray(balancesResult) &&
+      balancesResult.length === currentTokens.length
+    ) {
       const tokensWithBalance = currentTokens.map((tokenAddress, index) => {
-        const token = cloneDeep(currentTokens[index])
+        const token = cloneDeep(currentTokens[index]);
         const balance = balancesResult[index];
         if (balance && !balance.isZero()) {
-          token.string = stringifyBalance(balance, currentTokens[index].decimals)
-          token.balance = balance.toString() 
+          token.string = stringifyBalance(
+            balance,
+            currentTokens[index].decimals,
+          );
+          token.balance = balance.toString();
         } else {
-          token.string = "0"
-          token.balance = "0"
+          token.string = '0';
+          token.balance = '0';
         }
-        return token
+        return token;
       });
       this._preferences.updateTokensWithBalance(tokensWithBalance);
     }
@@ -250,7 +277,7 @@ export default class DetectTokensController {
     network.on(NETWORK_EVENTS.NETWORK_DID_CHANGE, () => {
       this.detectNewTokens();
       this.detectTokensBalance();
-    })
+    });
   }
 
   /**
