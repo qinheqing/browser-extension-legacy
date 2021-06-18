@@ -43,7 +43,7 @@ const EthOverview = ({ className }) => {
   const { balance } = selectedAccount;
   const chainId = useSelector(getCurrentChainId);
   const handleSwap = useCallback(() => openSwap(ticker), [ticker]);
-  const isSwapEnable = [1, 42, 56, 128, 137].includes(Number(chainId));
+  const isSwapEnable = [1, 42, 56, 137].includes(Number(chainId));
 
   return (
     <WalletOverview
