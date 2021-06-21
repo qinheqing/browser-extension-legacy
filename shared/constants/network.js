@@ -83,7 +83,7 @@ export const BSC_TEST_RPC_URL =
 export const BSC_TICKER = 'BNB';
 export const BSC_IMAGE = './images/bsc_logo.svg';
 
-export const MATIC_RPC_URL = 'https://rpc-mainnet.matic.network';
+export const MATIC_RPC_URL = 'https://rpc-mainnet.maticvigil.com';
 export const MATIC_TICKER = 'MATIC';
 export const MATIC_IMAGE = './images/matic_logo.svg';
 
@@ -133,7 +133,7 @@ export const NETWORK_FALLBACK_URL = {
     'https://http-mainnet.hecochain.com',
   ],
   [MATIC]: [
-    'https://rpc-mainnet.matic.network',
+    // 'https://rpc-mainnet.matic.network', don't support CORS, fail in firefox
     'https://rpc-mainnet.maticvigil.com',
     'https://rpc-mainnet.matic.quiknode.pro',
     'https://matic-mainnet.chainstacklabs.com',
