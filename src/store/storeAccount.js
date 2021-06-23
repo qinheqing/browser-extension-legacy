@@ -49,6 +49,7 @@ class StoreAccount extends BaseStore {
     path: '',
   };
 
+  // TODO rename to currentAccountInfo
   @computed
   get currentAccount() {
     const { chainKey, address } = this.currentAccountRaw;
@@ -62,10 +63,15 @@ class StoreAccount extends BaseStore {
     });
   }
 
+  @computed
+  get currentAccountAddress() {
+    return this.currentAccount?.address;
+  }
+
   @observable
   accountsGroupFilter = {
     type: CONST_ACCOUNTS_GROUP_FILTER_TYPES.chain,
-    chainKey: CONST_CHAIN_KEYS.ETH,
+    chainKey: CONST_CHAIN_KEYS.SOL_TEST_NET,
   };
 
   @computed

@@ -76,6 +76,7 @@ async function findAssociatedTokenAddress(
 }
 
 export default {
+  ASSOCIATED_TOKEN_PROGRAM_ID,
   SYSTEM_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
   WRAPPED_SOL_MINT,
