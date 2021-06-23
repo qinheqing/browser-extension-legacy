@@ -57,10 +57,11 @@ import { TRANSACTION_STATUSES } from '../../../../../../shared/constants/transac
 import GasModalPageContainer from './gas-modal-page-container.component';
 
 const mapStateToProps = (state, ownProps) => {
-  const { currentNetworkTxList, send } = state.metamask;
+  const { currentNetworkTxList, send, provider } = state.metamask;
   const { modalState: { props: modalProps } = {} } = state.appState.modal || {};
   const { txData = {} } = modalProps || {};
   const { transaction = {} } = ownProps;
+  const ticker = provider.ticker || 'ETH';
   const selectedTransaction = currentNetworkTxList.find(
     ({ id }) => id === (transaction.id || txData.id),
   );
@@ -114,13 +115,13 @@ const mapStateToProps = (state, ownProps) => {
 
   const newTotalEth =
     maxModeOn && !isSendTokenSet
-      ? sumHexWEIsToRenderableEth([balance, '0x0'])
-      : sumHexWEIsToRenderableEth([value, customGasTotal]);
+      ? sumHexWEIsToRenderableEth([balance, '0x0'], ticker)
+      : sumHexWEIsToRenderableEth([value, customGasTotal], ticker);
 
   const sendAmount =
     maxModeOn && !isSendTokenSet
-      ? subtractHexWEIsFromRenderableEth(balance, customGasTotal)
-      : sumHexWEIsToRenderableEth([value, '0x0']);
+      ? subtractHexWEIsFromRenderableEth(balance, customGasTotal, ticker)
+      : sumHexWEIsToRenderableEth([value, '0x0'], ticker);
 
   const insufficientBalance = maxModeOn
     ? false
@@ -156,10 +157,16 @@ const mapStateToProps = (state, ownProps) => {
         currentCurrency,
         conversionRate,
       ),
-      originalTotalEth: sumHexWEIsToRenderableEth([value, customGasTotal]),
+      originalTotalEth: sumHexWEIsToRenderableEth(
+        [value, customGasTotal],
+        ticker,
+      ),
       newTotalFiat: showFiat ? newTotalFiat : '',
       newTotalEth,
-      transactionFee: sumHexWEIsToRenderableEth(['0x0', customGasTotal]),
+      transactionFee: sumHexWEIsToRenderableEth(
+        ['0x0', customGasTotal],
+        ticker,
+      ),
       sendAmount,
     },
     transaction: txData || transaction,
@@ -320,7 +327,7 @@ function calcCustomGasLimit(customGasLimitInHex) {
   return parseInt(customGasLimitInHex, 16);
 }
 
-function sumHexWEIsToRenderableEth(hexWEIs) {
+function sumHexWEIsToRenderableEth(hexWEIs, ticker = 'ETH') {
   const hexWEIsSum = hexWEIs.filter(Boolean).reduce(addHexes);
   return formatETHFee(
     getValueFromWeiHex({
@@ -328,9 +335,10 @@ function sumHexWEIsToRenderableEth(hexWEIs) {
       toCurrency: 'ETH',
       numberOfDecimals: 6,
     }),
+    ticker,
   );
 }
 
-function subtractHexWEIsFromRenderableEth(aHexWEI, bHexWEI) {
-  return formatETHFee(subtractHexWEIsToDec(aHexWEI, bHexWEI));
+function subtractHexWEIsFromRenderableEth(aHexWEI, bHexWEI, ticker = 'ETH') {
+  return formatETHFee(subtractHexWEIsToDec(aHexWEI, bHexWEI), ticker);
 }

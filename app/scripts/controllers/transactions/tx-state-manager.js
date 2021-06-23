@@ -235,26 +235,10 @@ export default class TransactionStateManager extends EventEmitter {
     // recover previous tx state obj
     const previousState = replayHistory(txMeta.history);
     // generate history entry and add to history
-    let entry = generateHistoryEntry(previousState, currentState, note);
+    const entry = generateHistoryEntry(previousState, currentState, note);
 
     if (entry.length) {
-      // do NOT save history changes that only update txMeta.warning.error field
-      entry = entry.filter(
-        (item) => item && !isErrorValueReplacedHistory(item),
-      );
-      if (entry.length) {
-        txMeta.history.push(entry);
-      }
-    }
-
-    if (txMeta.history.length > 100) {
-      // remove huge history data
-      txMeta.history = txMeta.history.filter((historyEntry) => {
-        return !(
-          historyEntry.length === 1 &&
-          isErrorValueReplacedHistory(historyEntry[0])
-        );
-      });
+      txMeta.history.push(entry);
     }
 
     // commit txMeta to state

@@ -207,9 +207,17 @@ export default class PendingTransactionTracker extends EventEmitter {
         return;
       }
     } catch (err) {
+      if (
+        txMeta.warning &&
+        txMeta.warning.timestamp &&
+        txMeta.warning.timestamp < Date.now() - 60000
+      ) {
+        return;
+      }
       txMeta.warning = {
         error: err.message,
         message: 'There was a problem loading this transaction.',
+        timestamp: Date.now(),
       };
       this.emit('tx:warning', txMeta, err);
 
@@ -285,7 +293,8 @@ export default class PendingTransactionTracker extends EventEmitter {
       // and if that is the case, don't consider the transaction to have taken its own nonce
       (other) =>
         !(other.id === txMeta.id) &&
-        other.txParams.nonce === txMeta.txParams.nonce,
+        other.txParams.nonce >= txMeta.txParams.nonce,
+      // other.txParams.nonce === txMeta.txParams.nonce,
     );
   }
 }
