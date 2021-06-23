@@ -1,0 +1,10 @@
+@import "styles/imports";
+@import "../components/components";
+@import "../pages/pages";
+
+// utils
+.u-nowrap {
+  word-wrap: break-word;
+  word-break: break-all;
+  white-space: pre-wrap;
+}
