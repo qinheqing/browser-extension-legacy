@@ -210,7 +210,7 @@ export default class PendingTransactionTracker extends EventEmitter {
       if (
         txMeta.warning &&
         txMeta.warning.timestamp &&
-        txMeta.warning.timestamp < Date.now() - 60000
+        Date.now() - txMeta.warning.timestamp < 60000 // log error per 60 secords
       ) {
         return;
       }
