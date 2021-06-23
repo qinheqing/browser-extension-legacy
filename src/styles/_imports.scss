@@ -45,7 +45,7 @@ $font-family2: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microso
 $font-family-song: 'STSongti-SC', '宋体', serif;
 $font-family-number: sszy, $font-family-normal;
 
-@mixin bx-flex-center {
+@mixin one-flex-center {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -229,4 +229,10 @@ $dialog-btn-color: $color-primary;
 @mixin theme-box-field-item($bg-color: $color-bg-root, $radius: 4PX) {
   @include one-hairline-border(all, $radius);
   background: $bg-color;
+}
+
+@mixin one-circle($size) {
+  width: $size;
+  height: $size;
+  border-radius: $size;
 }

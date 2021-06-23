@@ -14,13 +14,14 @@ class OneAccountInfo {
   }) {
     this._raw = _raw;
     this.chainKey = chainKey;
-    this.type = type;
+    this.type = type; // accountType
     this.name = name;
     this.address = address;
     this.path = path;
     this.balance = balance;
     this.decimals = decimals;
     this.currency = currency;
+    // TODO  uniqKey:  this.key = key || this.generateKey();
   }
 
   _raw = {};

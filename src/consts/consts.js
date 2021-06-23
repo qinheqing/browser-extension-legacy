@@ -17,8 +17,10 @@ export const CONST_HARDWARE_MODELS = {
   Unknown: 'unknown',
 };
 export const CONST_TX_TYPES = {
-  Transfer: 'transfer',
-  Unknown: 'unknown',
+  Transfer: 'Transfer',
+  TokenTransfer: 'TokenTransfer',
+  TokenAssociateAdd: 'TokenAssociateAdd',
+  Unknown: 'Unknown',
 };
 export const CONSTS_ACCOUNT_TYPES = {
   SingleChain: 'SingleChain', // mnemonic、seed、private key、keyStore import single chain account

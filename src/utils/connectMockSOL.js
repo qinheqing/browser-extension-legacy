@@ -1,11 +1,13 @@
 import nacl from 'tweetnacl';
 import bs58 from 'bs58';
 import ethUtil from 'ethereumjs-util';
+import * as BufferLayout from 'buffer-layout';
 import { CONST_TX_TYPES } from '../consts/consts';
 import {
   HdKeyProviderEd25519,
   HdKeyProviderBip32,
 } from '../wallets/HdKeyProvider';
+import helpersSOL from '../wallets/SOL/modules/helpersSOL';
 import utilsApp from './utilsApp';
 
 const {
@@ -14,10 +16,130 @@ const {
   SystemProgram,
   PublicKey,
   Account,
+  SYSVAR_RENT_PUBKEY,
 } = global.solanaWeb3;
 
-function convertTxInstruction(payload) {
-  const { type, from, to, amount } = payload;
+const LAYOUT = BufferLayout.union(BufferLayout.u8('instruction'));
+LAYOUT.addVariant(
+  0,
+  BufferLayout.struct([
+    BufferLayout.u8('decimals'),
+    BufferLayout.blob(32, 'mintAuthority'),
+    BufferLayout.u8('freezeAuthorityOption'),
+    BufferLayout.blob(32, 'freezeAuthority'),
+  ]),
+  'initializeMint',
+);
+LAYOUT.addVariant(1, BufferLayout.struct([]), 'initializeAccount');
+LAYOUT.addVariant(
+  7,
+  BufferLayout.struct([BufferLayout.nu64('amount')]),
+  'mintTo',
+);
+LAYOUT.addVariant(
+  8,
+  BufferLayout.struct([BufferLayout.nu64('amount')]),
+  'burn',
+);
+LAYOUT.addVariant(9, BufferLayout.struct([]), 'closeAccount');
+LAYOUT.addVariant(
+  12,
+  BufferLayout.struct([
+    BufferLayout.nu64('amount'),
+    BufferLayout.u8('decimals'),
+  ]),
+  'transferChecked',
+);
+
+const instructionMaxSpan = Math.max(
+  ...Object.values(LAYOUT.registry).map((r) => r.span),
+);
+
+function encodeTokenInstructionData(instruction) {
+  const b = Buffer.alloc(instructionMaxSpan);
+  const span = LAYOUT.encode(instruction, b);
+  return b.slice(0, span);
+}
+
+function createTokenTransferIx({
+  from,
+  contract,
+  to,
+  amount,
+  decimals,
+  creator,
+}) {
+  const keys = [
+    { pubkey: from, isSigner: false, isWritable: true },
+    { pubkey: contract, isSigner: false, isWritable: false },
+    { pubkey: to, isSigner: false, isWritable: true },
+    { pubkey: creator, isSigner: true, isWritable: false },
+  ];
+  return new TransactionInstruction({
+    keys,
+    data: encodeTokenInstructionData({
+      transferChecked: { amount, decimals },
+    }),
+    programId: helpersSOL.TOKEN_PROGRAM_ID,
+  });
+}
+
+async function createAssociatedTokenIxAsync({
+  creator, // wallet.publicKey, owner.publicKey
+  contract,
+}) {
+  const associatedTokenAddress = await helpersSOL.findAssociatedTokenAddress(
+    creator,
+    contract,
+  );
+  const keys = [
+    {
+      pubkey: creator,
+      isSigner: true,
+      isWritable: true,
+    },
+    {
+      pubkey: associatedTokenAddress,
+      isSigner: false,
+      isWritable: true,
+    },
+    {
+      pubkey: creator,
+      isSigner: false,
+      isWritable: false,
+    },
+    {
+      pubkey: contract,
+      isSigner: false,
+      isWritable: false,
+    },
+    {
+      pubkey: helpersSOL.SYSTEM_PROGRAM_ID,
+      isSigner: false,
+      isWritable: false,
+    },
+    {
+      pubkey: helpersSOL.TOKEN_PROGRAM_ID,
+      isSigner: false,
+      isWritable: false,
+    },
+    {
+      pubkey: SYSVAR_RENT_PUBKEY,
+      isSigner: false,
+      isWritable: false,
+    },
+  ];
+  const ix = new TransactionInstruction({
+    keys,
+    programId: helpersSOL.ASSOCIATED_TOKEN_PROGRAM_ID,
+    data: Buffer.from([]),
+  });
+  // return [ix, associatedTokenAddress];
+  return ix;
+}
+
+async function convertTxInstructionAsync(payload) {
+  const { type, from, to, amount, decimals, contract, creator } = payload;
   switch (type) {
     case CONST_TX_TYPES.Transfer:
       // new TransactionInstruction
@@ -25,6 +147,20 @@ function convertTxInstruction(payload) {
         fromPubkey: new PublicKey(from),
         toPubkey: new PublicKey(to),
         lamports: amount,
+      });
+    case CONST_TX_TYPES.TokenTransfer:
+      return createTokenTransferIx({
+        from: new PublicKey(from),
+        to: new PublicKey(to),
+        amount,
+        decimals,
+        contract: new PublicKey(contract),
+        creator: new PublicKey(creator),
+      });
+    case CONST_TX_TYPES.TokenAssociateAdd:
+      return await createAssociatedTokenIxAsync({
+        contract: new PublicKey(contract),
+        creator: new PublicKey(creator),
       });
     default:
       throw new Error(`tx type not support:${type}`);
@@ -45,7 +181,9 @@ async function signTxInHardware(txPayloadStr) {
     feePayer: new PublicKey(creatorAddress),
     // bs58.encode(Buffer.from(lastHash));
     recentBlockhash,
-    instructions: instructions.map((item) => convertTxInstruction(item)),
+    instructions: await Promise.all(
+      instructions.map((item) => convertTxInstructionAsync(item)),
+    ),
   });
 
   // tx.recentBlockhash = bs58.encode(Buffer.from(lastHash));
@@ -53,6 +191,8 @@ async function signTxInHardware(txPayloadStr) {
 
   const account = await getAccountFromMnemonic({ hdPath: creatorHdPath });
   tx.partialSign(account);
+
+  console.log('signTxInHardware', tx);
 
   const rawTx = tx.serialize();
   return JSON.stringify({
