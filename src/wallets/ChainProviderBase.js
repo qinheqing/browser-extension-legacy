@@ -5,18 +5,18 @@ class ChainProviderBase {
     this.options = options;
   }
 
-  // chain rpc api
+  // chain rpc api, web3.js
   connection = null;
 
   // block browser api
   browser = null;
 
   // TODO change to addEventListener ？
-  addAccountChangeListener() {
+  addAccountChangeListener(address, handler) {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  removeAccountChangeListener() {
+  removeAccountChangeListener(id) {
     return utilsApp.throwToBeImplemented(this);
   }
 
@@ -43,7 +43,7 @@ class ChainProviderBase {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  getAccountTokens() {
+  getAccountTokens({ address } = {}) {
     return utilsApp.throwToBeImplemented(this);
   }
 }

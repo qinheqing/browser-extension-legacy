@@ -1,12 +1,16 @@
 class OneTransactionInfo {
-  constructor({ instructions = [], lastHash, creator, creatorHdPath }) {
+  constructor({
+    instructions = [],
+    recentBlockhash,
+    creatorAddress,
+    creatorHdPath,
+  }) {
     this.instructions = instructions;
     // ETH: nonce (getTransactionCount)
     // SOL: recentBlockhash (nonceInfo.nonce)
-    // TODO remove
-    this.lastHash = lastHash;
+    this.recentBlockhash = recentBlockhash;
     // TODO replace to accountInfo
-    this.creator = creator;
+    this.creatorAddress = creatorAddress;
     this.creatorHdPath = creatorHdPath;
   }
 }

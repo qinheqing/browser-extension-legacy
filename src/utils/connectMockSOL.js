@@ -39,15 +39,17 @@ async function signTx(txPayload) {
 }
 
 async function signTxInHardware(txPayloadStr) {
-  const { instructions, lastHash, creator, creatorHdPath } =
+  const { instructions, recentBlockhash, creatorAddress, creatorHdPath } =
     JSON.parse(txPayloadStr);
-  const tx = new Transaction();
-  instructions.forEach((item) => {
-    tx.add(convertTxInstruction(item));
+  const tx = new Transaction({
+    feePayer: new PublicKey(creatorAddress),
+    // bs58.encode(Buffer.from(lastHash));
+    recentBlockhash,
+    instructions: instructions.map((item) => convertTxInstruction(item)),
   });
+
   // tx.recentBlockhash = bs58.encode(Buffer.from(lastHash));
-  tx.recentBlockhash = lastHash;
-  tx.setSigners(new PublicKey(creator));
+  // tx.setSigners(new PublicKey(creatorAddress));
 
   const account = await getAccountFromMnemonic({ hdPath: creatorHdPath });
   tx.partialSign(account);
