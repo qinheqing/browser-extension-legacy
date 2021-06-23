@@ -7,20 +7,22 @@ import HardwareProviderBase from './HardwareProviderBase';
 import { HdKeyProviderBase } from './HdKeyProvider';
 
 class WalletBase {
-  constructor({
-    // TODO chainInfo, accountInfo
-    hardwareModel = CONST_HARDWARE_MODELS.Unknown,
-    hdPath,
-    ...others
-  } = {}) {
+  constructor(options = {}) {
+    const {
+      // TODO chainInfo, accountInfo
+      hardwareModel = CONST_HARDWARE_MODELS.Unknown,
+      hdPath,
+      accountInfo,
+      chainInfo,
+      ...others
+    } = options;
     // TODO merge to options
-    this.hdPathCustomTemplate = hdPath;
     this.hardwareModel = hardwareModel;
+    this.hdPathCustomTemplate = hdPath;
+    this.accountInfo = accountInfo;
     this.options = {
       ...this.optionsDefault,
-      hardwareModel,
-      hdPath,
-      ...others,
+      ...options,
     };
   }
 
@@ -180,7 +182,7 @@ class WalletBase {
     return [];
   }
 
-  async transfer({ hdPath, from, to, amount }) {
+  async transfer({ account, to, amount }) {
     return utilsApp.throwToBeImplemented(this);
   }
 

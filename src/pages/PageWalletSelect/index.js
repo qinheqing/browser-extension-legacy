@@ -50,6 +50,7 @@ function PageWalletSelect() {
           <AppFrame>
             <div className="PageWalletSelect">
               <div className="PageWalletSelect__header">
+                <button onClick={() => history.goBack()}> &lt; Back </button>
                 <AccountsGroupBar />
               </div>
               <AccountsList />

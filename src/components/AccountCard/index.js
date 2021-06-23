@@ -4,9 +4,10 @@ import storeChain from '../../store/storeChain';
 import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
 import utilsApp from '../../utils/utilsApp';
 import storeAccount from '../../store/storeAccount';
+import TokenBalance from '../TokenBalance';
 
 // eslint-disable-next-line react/prop-types
-export default function AccountCard({ account, ...others }) {
+export default function AccountCard({ account, showBalance, ...others }) {
   if (!account || !account.address) {
     return null;
   }
@@ -15,6 +16,7 @@ export default function AccountCard({ account, ...others }) {
       {() => {
         const chainInfo = storeChain.getChainInfoByKey(account.chainKey);
         const isActive =
+          storeAccount.currentAccount &&
           storeAccount.currentAccount.chainKey === account.chainKey &&
           storeAccount.currentAccount.address === account.address;
         return (
@@ -32,13 +34,22 @@ export default function AccountCard({ account, ...others }) {
               )}
             </header>
             <div className="AccountCard__address">
-              {utilsApp.shortenAddress(account.address)} [COPY]
+              {utilsApp.shortenAddress(account.address)}{' '}
+              <strong onClick={() => console.log(account.address)}>
+                [COPY]
+              </strong>
             </div>
             <div className="AccountCard__blank" />
-            <footer>
-              <div className="AccountCard__balance">Balance &gt;</div>
-              <div className="AccountCard__balanceFiat">balance fiat</div>
-            </footer>
+            {showBalance && (
+              <footer>
+                <div className="AccountCard__balance">
+                  {/* TODO get balance in cache if at wallet select page */}
+                  <TokenBalance address={account.address} />{' '}
+                  <span>{account.currency}</span> &gt;
+                </div>
+                <div className="AccountCard__balanceFiat">balance fiat</div>
+              </footer>
+            )}
           </div>
         );
       }}

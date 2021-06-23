@@ -18,11 +18,14 @@ class WalletSOL extends WalletBase {
 
   get optionsDefault() {
     return {
+      // https://solana-labs.github.io/solana-web3.js/modules.html#commitment
+      defaultCommitment: 'confirmed', // processed, confirmed, finalized
       balanceDecimals: 9,
       hdPathTemplate: `m/44'/501'/{{index}}'/0'`,
     };
   }
 
+  // TODO pass this (wallet instance) instead options to constructor
   hardwareProvider = new HardwareProvider(this.options);
 
   chainProvider = new ChainProvider(this.options);
@@ -48,24 +51,27 @@ class WalletSOL extends WalletBase {
     return `${solAddress.toString('hex')}`;
   }
 
-  async transfer({ hdPath, from, to, amount }) {
-    console.log('SOL transfer', { from, to, amount });
+  async transfer({ account, to, amount }) {
+    // TODO accountName: feePayer, signer, creator
+    const creatorAccount = account || this.accountInfo;
+    console.log('SOL transfer', { creatorAccount, to, amount });
     // const { decimals, mint } = balanceInfo;
-    const decimals = 9;
+    const decimals = this.options.balanceDecimals;
     // decimals convert
     const $amount = Math.round(parseFloat(amount) * 10 ** decimals);
 
     const transferTx = new OneTransactionInfo({
       // TODO creator,creatorHdPath change to account
-      creator: from,
-      creatorHdPath: hdPath,
+      creatorAddress: creatorAccount.address,
+      creatorHdPath: creatorAccount.path,
       // must be a recent hash e.g. 5min, otherwise throw error:
       //     failed to send transaction: Transaction simulation failed: Blockhash not found
-      // lastHash: 'EBqHQq1gHhem3Ruebu9TfbfmiWzifJ1d9YeAY3cyzt7Y',
-      lastHash: (await this.chainProvider.getRecentBlockHash()).blockhash,
+      // recentBlockhash: 'EBqHQq1gHhem3Ruebu9TfbfmiWzifJ1d9YeAY3cyzt7Y',
+      recentBlockhash: (await this.chainProvider.getRecentBlockHash())
+        .blockhash,
       instructions: [
         new OneTxInstructionInfo.Transfer({
-          from,
+          from: creatorAccount.address,
           to,
           amount: $amount,
         }),
@@ -77,7 +83,7 @@ class WalletSOL extends WalletBase {
     const txid = await this.sendTx(res.rawTx);
     console.log(
       `SOL Transfer success:
-      https://explorer.solana.com/address/${from}?cluster=testnet
+      https://explorer.solana.com/address/${creatorAccount.address}?cluster=testnet
       https://explorer.solana.com/tx/${txid}?cluster=testnet`,
     );
     return txid;
