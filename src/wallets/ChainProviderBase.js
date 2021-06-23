@@ -39,6 +39,7 @@ class ChainProviderBase {
     return utilsApp.throwToBeImplemented(this);
   }
 
+  // TODO 拆分为 getAccountInfo getTokenInfo getBalanceInfo
   getAccountInfo() {
     return utilsApp.throwToBeImplemented(this);
   }

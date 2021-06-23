@@ -14,6 +14,16 @@ import BaseStore from './BaseStore';
 function createBuiltInChains() {
   const chainsRaw = [
     {
+      key: CONST_CHAIN_KEYS.SOL_TEST_NET,
+      name: 'SOL testnet',
+      baseChain: CONST_CHAIN_KEYS.SOL,
+      currency: CONST_SOL,
+      etherChainId: null,
+      rpc: ['https://api.testnet.solana.com'],
+      browser: ['https://solanascan.io/?testnet'],
+      isTestNet: true,
+    },
+    {
       key: CONST_CHAIN_KEYS.BTC,
       name: 'BTC',
       baseChain: CONST_CHAIN_KEYS.BTC,
@@ -55,16 +65,6 @@ function createBuiltInChains() {
       rpc: ['https://solana-api.projectserum.com'],
       browser: ['https://solanascan.io/'],
       isTestNet: false,
-    },
-    {
-      key: CONST_CHAIN_KEYS.SOL_TEST_NET,
-      name: 'SOL testnet',
-      baseChain: CONST_CHAIN_KEYS.SOL,
-      currency: CONST_SOL,
-      etherChainId: null,
-      rpc: ['https://api.testnet.solana.com'],
-      browser: ['https://solanascan.io/?testnet'],
-      isTestNet: true,
     },
   ];
   return chainsRaw.reduce((prev, current) => {

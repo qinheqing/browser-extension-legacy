@@ -21,14 +21,22 @@ export default function AppRoutes() {
         component={PageConnectHardware}
         exact
         autoReturn
+        authDisabled
       />
       <Authenticated
         path={ROUTE_WALLET_SELECT}
         component={PageWalletSelect}
         exact
         autoReturn
+        authDisabled
       />
-      <Authenticated path={ROUTE_HOME} component={PageHome} exact autoReturn />
+      <Authenticated
+        path={ROUTE_HOME}
+        component={PageHome}
+        exact
+        autoReturn
+        authDisabled
+      />
     </Switch>
   );
 }
