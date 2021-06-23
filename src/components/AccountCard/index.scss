@@ -1,0 +1,62 @@
+@import "styles/imports";
+
+.AccountCard {
+  background: #333;
+  height: 180px;
+  border-radius: 20px;
+  color: white;
+  margin: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.AccountCard__header {
+  display: flex;
+  align-items: center;
+}
+
+.AccountCard__activeBadge {
+  background: #00b812;
+  border-radius: 10px;
+  width: 10px;
+  height: 10px;
+  border: 1px solid white;
+  margin-right: 8px;
+}
+
+.AccountCard__name {
+  flex: 1;
+  font-size: 16px;
+}
+
+.AccountCard__chainName {
+  font-size: 12px;
+  color: #aaa;
+  margin-left: 12px;
+}
+
+.AccountCard__typeTag {
+  padding: 3px 8px;
+  background: #eee;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #333;
+}
+
+.AccountCard__address {
+  font-size: 12px;
+}
+
+.AccountCard__blank {
+  flex: 1;
+}
+
+.AccountCard__balance {
+  font-size: 20px;
+}
+
+.AccountCard__balanceFiat {
+  font-size: 12px;
+  color: 888
+}
