@@ -7,7 +7,10 @@ import TokenCell from '../token-cell';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import { useTokenTracker } from '../../../hooks/useTokenTracker';
 import { getAssetImages, getContractMap } from '../../../selectors';
-import { getTokensWithBalance, getTokens } from '../../../ducks/metamask/metamask';
+import {
+  getTokensWithBalance,
+  getTokens,
+} from '../../../ducks/metamask/metamask';
 
 export default function TokenList({ onTokenClick }) {
   const t = useI18nContext();
@@ -18,7 +21,11 @@ export default function TokenList({ onTokenClick }) {
   // even if the tokens haven't changed
   const tokens = useSelector(getTokens, isEqual);
   const defaultTokensWithBalance = useSelector(getTokensWithBalance, isEqual);
-  const { loading, tokensWithBalances } = useTokenTracker(tokens, defaultTokensWithBalance, true);
+  const { loading, tokensWithBalances } = useTokenTracker(
+    tokens,
+    defaultTokensWithBalance,
+    true,
+  );
 
   if (loading) {
     return (
@@ -39,7 +46,10 @@ export default function TokenList({ onTokenClick }) {
   return (
     <div>
       {tokensWithBalances.map((tokenData, index) => {
-        tokenData.image = assetImages[tokenData.address] || contractMap[tokenData.address]?.logoURI;
+        const image =
+          assetImages[tokenData.address] ||
+          contractMap[tokenData.address]?.logoURI;
+        tokenData.image = image;
         return <TokenCell key={index} {...tokenData} onClick={onTokenClick} />;
       })}
     </div>

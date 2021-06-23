@@ -24,7 +24,8 @@ import {
   ROPSTEN_CHAIN_ID,
   TEST_CHAINS,
   HECO_CHAIN_ID,
-  BSC_CHAIN_ID
+  BSC_CHAIN_ID,
+  MATIC_CHAIN_ID,
 } from '../../../shared/constants/network';
 import { NETWORK_EVENTS } from './network';
 
@@ -44,7 +45,8 @@ const etherscanSupportedNetworks = [
   RINKEBY_CHAIN_ID,
   ROPSTEN_CHAIN_ID,
   BSC_CHAIN_ID,
-  HECO_CHAIN_ID
+  HECO_CHAIN_ID,
+  MATIC_CHAIN_ID,
 ];
 
 export default class IncomingTransactionsController {
@@ -221,15 +223,16 @@ export default class IncomingTransactionsController {
 
   getBlockApiUrl(chainId) {
     if (chainId === MAINNET_CHAIN_ID) {
-      return "https://api.etherscan.io"
+      return 'https://api.etherscan.io';
     } else if (chainId === HECO_CHAIN_ID) {
       return 'https://api.hecoinfo.com';
     } else if (chainId === BSC_CHAIN_ID) {
       return 'https://api.bscscan.com';
-    } else {
-      let etherscanSubdomain = `api-${CHAIN_ID_TO_TYPE_MAP[chainId]}`
-      return `https://${etherscanSubdomain}.etherscan.io`;
+    } else if (chainId === MATIC_CHAIN_ID) {
+      return 'https://api.polygonscan.com';
     }
+    const etherscanSubdomain = `api-${CHAIN_ID_TO_TYPE_MAP[chainId]}`;
+    return `https://${etherscanSubdomain}.etherscan.io`;
   }
 
   async _fetchTxs(address, fromBlock, chainId) {

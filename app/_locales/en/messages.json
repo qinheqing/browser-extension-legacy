@@ -1221,7 +1221,7 @@
     "message": "A malicious Ethereum network provider can lie about the state of the blockchain and record your network activity. Only add custom networks you trust."
   },
   "onlyAvailableOnMainnet": {
-    "message": "Only available on mainnet and bsc"
+    "message": "not available on current network"
   },
   "onlyConnectTrust": {
     "message": "Only connect with sites you trust."
