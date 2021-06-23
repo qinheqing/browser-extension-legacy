@@ -11,23 +11,20 @@ const { Connection, clusterApiUrl, PublicKey } = global.solanaWeb3;
 class ChainProvider extends ChainProviderBase {
   constructor(options) {
     super(options);
-
+    this.options = options;
     // const rpcUrl = clusterApiUrl('testnet');
     const rpcUrl = options?.chainInfo?.rpc?.[0];
 
     // https://solana-labs.github.io/solana-web3.js/classes/connection.html#constructor
-    this.connection = new Connection(rpcUrl, this.defaultCommitment);
+    this.connection = new Connection(rpcUrl, this.options.defaultCommitment);
 
     // TODO remove
     global.$$chainSOL = this;
   }
 
-  // https://solana-labs.github.io/solana-web3.js/modules.html#commitment
-  defaultCommitment = 'finalized';
-
   async getRecentBlockHash() {
     const { feeCalculator, blockhash } =
-      await this.connection.getRecentBlockhash(this.defaultCommitment);
+      await this.connection.getRecentBlockhash(this.options.defaultCommitment);
     return {
       feeCalculator,
       blockhash,
@@ -37,13 +34,15 @@ class ChainProvider extends ChainProviderBase {
   /**
    *
    * @param solAccountInfo
-   *      {data: Uint8Array(0), executable:false, lamports:48752, owner: PublicKey, rentEpoch: 201}
+   *      {address, data: Uint8Array(0), executable:false, lamports:48752, owner: PublicKey, rentEpoch: 201}
    * @return {OneAccountInfo}
    */
   normalizeAccountInfo(solAccountInfo) {
     const balance = solAccountInfo?.lamports;
     // { data: Uint8Array(0), executable: false, lamports: 2997561, owner: PublicKey, rentEpoch: 201 }
     return new OneAccountInfo({
+      _raw: solAccountInfo,
+      address: solAccountInfo.address,
       balance,
       decimals: this.options.balanceDecimals, // TODO token decimals should be read from chain
     });
@@ -64,7 +63,9 @@ class ChainProvider extends ChainProviderBase {
   addAccountChangeListener(address, handler) {
     // https://solana-labs.github.io/solana-web3.js/modules.html#accountchangecallback
     // TODO normalizeAccountInfo
-    return this.connection.onAccountChange(new PublicKey(address), handler);
+    return this.connection.onAccountChange(new PublicKey(address), (info) => {
+      handler(this.normalizeAccountInfo({ ...info, address }));
+    });
   }
 
   removeAccountChangeListener(id) {
@@ -81,11 +82,15 @@ class ChainProvider extends ChainProviderBase {
     const res = await this.connection.getParsedAccountInfo(
       new PublicKey(address),
     );
-    return this.normalizeAccountInfo(res.value);
+    return this.normalizeAccountInfo({
+      ...res.value,
+      address,
+    });
   }
 
-  async getAccountTokens({ address }) {
-    const accountPublicKey = new PublicKey(address);
+  async getAccountTokens({ address } = {}) {
+    const accountAddress = address || this.options.accountInfo.address;
+    const accountPublicKey = new PublicKey(accountAddress);
     const filters = helpersSOL.getOwnedAccountsFilters(accountPublicKey);
     const resp = await this.connection._rpcRequest('getProgramAccounts', [
       helpersSOL.TOKEN_PROGRAM_ID.toBase58(),
@@ -138,7 +143,7 @@ class ChainProvider extends ChainProviderBase {
           publicKey,
         );
         const depositAddress = associatedAddress.equals(publicKey)
-          ? address
+          ? accountAddress
           : publicKey.toString();
 
         return {
@@ -147,7 +152,7 @@ class ChainProvider extends ChainProviderBase {
           balance: parsed.amount, // Token balance
           address: publicKey.toString(), // Token address
           depositAddress, // Token deposit address
-          accountAddress: address, // account address that token belongs to
+          accountAddress, // account address that token belongs to
           contractAddress: parsed.mint.toString(), // token contract address
           programAddress: accountInfo.owner.toString(), // token program address
           associatedAddress: associatedAddress.toString(), // token  associated address
