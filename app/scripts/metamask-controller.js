@@ -13,7 +13,7 @@ import KeyringController from 'eth-keyring-controller';
 import { Mutex } from 'await-semaphore';
 import ethUtil from 'ethereumjs-util';
 import log from 'loglevel';
-import TrezorKeyring from '@onekeyhq/eth-trezor-keyring';
+import TrezorKeyring from '@onekeyhq/eth-onekey-keyring';
 import LedgerBridgeKeyring from '@metamask/eth-ledger-bridge-keyring';
 import EthQuery from 'eth-query';
 import nanoid from 'nanoid';
@@ -26,6 +26,7 @@ import {
 } from '@metamask/controllers';
 import { getBackgroundMetaMetricState } from '../../ui/app/selectors';
 import { TRANSACTION_STATUSES } from '../../shared/constants/transaction';
+import bgConnectProxy from '../../src/bg/bgConnectProxy';
 import AddressKeyring from './lib/eth-address-keyring';
 import ComposableObservableStore from './lib/ComposableObservableStore';
 import AccountTracker from './lib/account-tracker';
@@ -161,7 +162,8 @@ export default class MetamaskController extends EventEmitter {
       { includeUSDRate: true },
       initState.CurrencyController,
     );
-    this.currencyRateController.nativeCurrency = this.networkController.getNativeCurrency();
+    this.currencyRateController.nativeCurrency =
+      this.networkController.getNativeCurrency();
 
     this.phishingController = new PhishingController();
     this.detectChainController = new DetectChainController({
@@ -170,8 +172,10 @@ export default class MetamaskController extends EventEmitter {
 
     // now we can initialize the RPC provider, which other controllers require
     this.initializeProvider();
-    this.provider = this.networkController.getProviderAndBlockTracker().provider;
-    this.blockTracker = this.networkController.getProviderAndBlockTracker().blockTracker;
+    this.provider =
+      this.networkController.getProviderAndBlockTracker().provider;
+    this.blockTracker =
+      this.networkController.getProviderAndBlockTracker().blockTracker;
 
     // token exchange rate tracker
     this.tokenRatesController = new TokenRatesController({
@@ -464,7 +468,8 @@ export default class MetamaskController extends EventEmitter {
       // account mgmt
       getAccounts: async ({ origin }) => {
         if (origin === 'metamask') {
-          const selectedAddress = this.preferencesController.getSelectedAddress();
+          const selectedAddress =
+            this.preferencesController.getSelectedAddress();
           return selectedAddress ? [selectedAddress] : [];
         } else if (this.isUnlocked()) {
           return await this.permissionsController.getAccounts(origin);
@@ -488,9 +493,8 @@ export default class MetamaskController extends EventEmitter {
           status: TRANSACTION_STATUSES.SUBMITTED,
         })[0],
     };
-    const providerProxy = this.networkController.initializeProvider(
-      providerOpts,
-    );
+    const providerProxy =
+      this.networkController.initializeProvider(providerOpts);
     return providerProxy;
   }
 
@@ -630,6 +634,7 @@ export default class MetamaskController extends EventEmitter {
 
       // hardware wallets
       connectHardware: nodeify(this.connectHardware, this),
+      connectProxyCall: nodeify(this.connectProxyCall, this),
       forgetDevice: nodeify(this.forgetDevice, this),
       checkHardwareStatus: nodeify(this.checkHardwareStatus, this),
       unlockHardwareWalletAccount: nodeify(
@@ -1015,9 +1020,8 @@ export default class MetamaskController extends EventEmitter {
         ethQuery,
       );
 
-      const primaryKeyring = keyringController.getKeyringsByType(
-        'HD Key Tree',
-      )[0];
+      const primaryKeyring =
+        keyringController.getKeyringsByType('HD Key Tree')[0];
       if (!primaryKeyring) {
         throw new Error('MetamaskController - No HD Key Tree found');
       }
@@ -1095,9 +1099,8 @@ export default class MetamaskController extends EventEmitter {
           networkType === 'mainnet'
             ? accountTokens[address][networkType].filter(
                 ({ address: tokenAddress }) => {
-                  const checksumAddress = ethUtil.toChecksumAddress(
-                    tokenAddress,
-                  );
+                  const checksumAddress =
+                    ethUtil.toChecksumAddress(tokenAddress);
                   return contractMap[checksumAddress]
                     ? contractMap[checksumAddress].erc20
                     : true;
@@ -1117,15 +1120,12 @@ export default class MetamaskController extends EventEmitter {
     };
 
     // Accounts
-    const hdKeyring = this.keyringController.getKeyringsByType(
-      'HD Key Tree',
-    )[0];
-    const simpleKeyPairKeyrings = this.keyringController.getKeyringsByType(
-      'Simple Key Pair',
-    );
-    const addressKeyrings = this.keyringController.getKeyringsByType(
-      'Watch Mode',
-    );
+    const hdKeyring =
+      this.keyringController.getKeyringsByType('HD Key Tree')[0];
+    const simpleKeyPairKeyrings =
+      this.keyringController.getKeyringsByType('Simple Key Pair');
+    const addressKeyrings =
+      this.keyringController.getKeyringsByType('Watch Mode');
     const hdAccounts = await hdKeyring.getAccounts();
     const simpleKeyPairKeyringAccounts = await Promise.all(
       simpleKeyPairKeyrings.map((keyring) => keyring.getAccounts()),
@@ -1182,7 +1182,8 @@ export default class MetamaskController extends EventEmitter {
     }
 
     try {
-      const threeBoxSyncingAllowed = this.threeBoxController.getThreeBoxSyncingState();
+      const threeBoxSyncingAllowed =
+        this.threeBoxController.getThreeBoxSyncingState();
       if (threeBoxSyncingAllowed && !this.threeBoxController.box) {
         // 'await' intentionally omitted to avoid waiting for initialization
         this.threeBoxController.init();
@@ -1255,6 +1256,10 @@ export default class MetamaskController extends EventEmitter {
     keyring.network = this.networkController.getProviderConfig().type;
 
     return keyring;
+  }
+
+  async connectProxyCall(method, params) {
+    return await bgConnectProxy.callMethod(method, params);
   }
 
   /**
@@ -1352,9 +1357,8 @@ export default class MetamaskController extends EventEmitter {
    * @returns {} keyState
    */
   async addNewAccount() {
-    const primaryKeyring = this.keyringController.getKeyringsByType(
-      'HD Key Tree',
-    )[0];
+    const primaryKeyring =
+      this.keyringController.getKeyringsByType('HD Key Tree')[0];
     if (!primaryKeyring) {
       throw new Error('MetamaskController - No HD Key Tree found');
     }
@@ -1386,9 +1390,8 @@ export default class MetamaskController extends EventEmitter {
    * @returns {Promise<string>} Seed phrase to be confirmed by the user.
    */
   async verifySeedPhrase() {
-    const primaryKeyring = this.keyringController.getKeyringsByType(
-      'HD Key Tree',
-    )[0];
+    const primaryKeyring =
+      this.keyringController.getKeyringsByType('HD Key Tree')[0];
     if (!primaryKeyring) {
       throw new Error('MetamaskController - No HD Key Tree found');
     }
@@ -1752,10 +1755,11 @@ export default class MetamaskController extends EventEmitter {
       }
 
       default: {
-        const promise = this.encryptionPublicKeyManager.addUnapprovedMessageAsync(
-          msgParams,
-          req,
-        );
+        const promise =
+          this.encryptionPublicKeyManager.addUnapprovedMessageAsync(
+            msgParams,
+            req,
+          );
         this.sendUpdate();
         this.opts.showUserConfirmation();
         return promise;
@@ -1968,10 +1972,8 @@ export default class MetamaskController extends EventEmitter {
    * @param {MessageSender} sender - The sender of the messages on this stream
    */
   setupUntrustedCommunication(connectionStream, sender) {
-    const {
-      usePhishDetect,
-      useAutoSwitchChain,
-    } = this.preferencesController.store.getState();
+    const { usePhishDetect, useAutoSwitchChain } =
+      this.preferencesController.store.getState();
     const { hostname } = new URL(sender.url);
     // Check if new connection is blocked if phishing detection is on
     if (usePhishDetect && this.phishingController.test(hostname)) {
@@ -2171,22 +2173,25 @@ export default class MetamaskController extends EventEmitter {
         sendMetrics: this.metaMetricsController.trackEvent.bind(
           this.metaMetricsController,
         ),
-        handleWatchAssetRequest: this.preferencesController.requestWatchAsset.bind(
-          this.preferencesController,
-        ),
+        handleWatchAssetRequest:
+          this.preferencesController.requestWatchAsset.bind(
+            this.preferencesController,
+          ),
         getWeb3ShimUsageState: this.alertController.getWeb3ShimUsageState.bind(
           this.alertController,
         ),
-        setWeb3ShimUsageRecorded: this.alertController.setWeb3ShimUsageRecorded.bind(
-          this.alertController,
-        ),
+        setWeb3ShimUsageRecorded:
+          this.alertController.setWeb3ShimUsageRecorded.bind(
+            this.alertController,
+          ),
         findCustomRpcBy: this.findCustomRpcBy.bind(this),
         getCurrentChainId: this.networkController.getCurrentChainId.bind(
           this.networkController,
         ),
-        requestUserApproval: this.approvalController.addAndShowApprovalRequest.bind(
-          this.approvalController,
-        ),
+        requestUserApproval:
+          this.approvalController.addAndShowApprovalRequest.bind(
+            this.approvalController,
+          ),
         updateRpcTarget: ({ rpcUrl, chainId, ticker, nickname }) => {
           this.networkController.setRpcTarget(
             rpcUrl,
@@ -2445,10 +2450,8 @@ export default class MetamaskController extends EventEmitter {
    * @returns {Promise<number>}
    */
   async getPendingNonce(address) {
-    const {
-      nonceDetails,
-      releaseLock,
-    } = await this.txController.nonceTracker.getNonceLock(address);
+    const { nonceDetails, releaseLock } =
+      await this.txController.nonceTracker.getNonceLock(address);
     const pendingNonce = nonceDetails.params.highestSuggested;
 
     releaseLock();
@@ -2609,7 +2612,8 @@ export default class MetamaskController extends EventEmitter {
     nickname = '',
     rpcPrefs = {},
   ) {
-    const frequentRpcListDetail = this.preferencesController.getFrequentRpcListDetail();
+    const frequentRpcListDetail =
+      this.preferencesController.getFrequentRpcListDetail();
     const rpcSettings = frequentRpcListDetail.find(
       (rpc) => rpcUrl === rpc.rpcUrl,
     );
@@ -2657,7 +2661,8 @@ export default class MetamaskController extends EventEmitter {
    * @returns {Object} rpcInfo found in the frequentRpcList
    */
   findCustomRpcBy(rpcInfo) {
-    const frequentRpcListDetail = this.preferencesController.getFrequentRpcListDetail();
+    const frequentRpcListDetail =
+      this.preferencesController.getFrequentRpcListDetail();
     for (const existingRpcInfo of frequentRpcListDetail) {
       for (const key of Object.keys(rpcInfo)) {
         if (existingRpcInfo[key] === rpcInfo[key]) {
@@ -2765,9 +2770,8 @@ export default class MetamaskController extends EventEmitter {
    */
   setParticipateInMetaMetrics(bool, cb) {
     try {
-      const metaMetricsId = this.metaMetricsController.setParticipateInMetaMetrics(
-        bool,
-      );
+      const metaMetricsId =
+        this.metaMetricsController.setParticipateInMetaMetrics(bool);
       cb(null, metaMetricsId);
       return;
     } catch (err) {

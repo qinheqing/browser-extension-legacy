@@ -1,5 +1,11 @@
 module.exports = {
   root: true,
+  env: {
+    browser: true,
+    node: true,
+    es6: true,
+    es2017: true,
+  },
   parser: '@babel/eslint-parser',
   parserOptions: {
     sourceType: 'module',
@@ -28,6 +34,7 @@ module.exports = {
     'coverage/',
     'app/scripts/chromereload.js',
     'app/vendor/**',
+    'app/vendor-js/**',
     'test/e2e/send-eth-with-private-key-test/**',
     'nyc_output/**',
     '.vscode/**',
@@ -41,7 +48,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
   ],
 
-  plugins: ['@babel', 'react', 'import', 'prettier'],
+  plugins: ['@babel', 'react', 'import', 'prettier', 'react-flow'],
 
   globals: {
     document: 'readonly',
@@ -53,6 +60,9 @@ module.exports = {
 
     'prettier/prettier': 'error',
     'no-unused-vars': 'warn',
+    'no-debugger': 'warn',
+    'import/no-anonymous-default-export': 'off',
+    'react/prop-types': 'warn',
 
     // Our eslint config has the default setting for this as error. This
     // include beforeBlockComment: true, but in order to match the prettier
@@ -109,6 +119,7 @@ module.exports = {
     'import/no-unassigned-import': 'off',
     'import/no-cycle': 'warn',
     'prefer-object-spread': 'error',
+    'react/self-closing-comp': 'warn',
     'react/no-unused-prop-types': 'warn',
     'react/no-unused-state': 'error',
     'react/jsx-boolean-value': 'error',

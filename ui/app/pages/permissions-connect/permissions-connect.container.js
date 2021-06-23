@@ -22,7 +22,7 @@ import {
   CONNECT_ROUTE,
   CONNECT_CONFIRM_PERMISSIONS_ROUTE,
 } from '../../helpers/constants/routes';
-import { CONST_ACCOUNT_TYPES } from '../../helpers/constants/common';
+import { WALLET_ACCOUNT_TYPES } from '../../helpers/constants/common';
 import PermissionApproval from './permissions-connect.component';
 
 const mapStateToProps = (state, ownProps) => {
@@ -37,7 +37,7 @@ const mapStateToProps = (state, ownProps) => {
   let currentAddress = getSelectedAddress(state);
   const currentAccountType = getAccountType(state);
 
-  if (hwOnlyMode && currentAccountType !== CONST_ACCOUNT_TYPES.HARDWARE) {
+  if (hwOnlyMode && currentAccountType !== WALLET_ACCOUNT_TYPES.HARDWARE) {
     currentAddress = '';
   }
 

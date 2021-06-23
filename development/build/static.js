@@ -45,6 +45,11 @@ const copyTargets = [
     dest: ``,
   },
   {
+    src: `./app/vendor-js/`,
+    pattern: `*.js`,
+    dest: ``,
+  },
+  {
     src: `./node_modules/globalthis/dist/browser.js`,
     dest: `globalthis.js`,
   },

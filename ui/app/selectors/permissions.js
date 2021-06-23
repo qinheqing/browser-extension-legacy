@@ -1,6 +1,6 @@
 import { forOwn } from 'lodash';
 import { CAVEAT_NAMES } from '../../../shared/constants/permissions';
-import { CONST_ACCOUNT_TYPES } from '../helpers/constants/common';
+import { WALLET_ACCOUNT_TYPES } from '../helpers/constants/common';
 import { getMetaMaskAccounts } from './selectors';
 import {
   getMetaMaskAccountsOrdered,
@@ -105,14 +105,14 @@ export function getAllAccountsAsArray(state) {
 export function getNonHardwareAccounts(state) {
   const accounts = getAllAccountsAsArray(state);
   return accounts.filter(
-    (account) => account.accountType !== CONST_ACCOUNT_TYPES.HARDWARE,
+    (account) => account.accountType !== WALLET_ACCOUNT_TYPES.HARDWARE,
   );
 }
 
 export function getHardwareAccounts(state) {
   const accounts = getAllAccountsAsArray(state);
   return accounts.filter(
-    (account) => account.accountType === CONST_ACCOUNT_TYPES.HARDWARE,
+    (account) => account.accountType === WALLET_ACCOUNT_TYPES.HARDWARE,
   );
 }
 
