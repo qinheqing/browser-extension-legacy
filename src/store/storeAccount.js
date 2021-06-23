@@ -12,6 +12,7 @@ import {
   CONST_ACCOUNTS_GROUP_FILTER_TYPES,
   CONST_CHAIN_KEYS,
 } from '../consts/consts';
+import OneAccountInfo from '../classes/OneAccountInfo';
 import BaseStore from './BaseStore';
 import storeChain from './storeChain';
 
@@ -21,7 +22,7 @@ class StoreAccount extends BaseStore {
     makeObservable(this);
 
     this.autosave('allAccountsRaw');
-    this.autosave('currentAccount');
+    this.autosave('currentAccountRaw');
 
     autorun(() => {
       const { currentAccount } = this;
@@ -39,7 +40,7 @@ class StoreAccount extends BaseStore {
   ];
 
   @observable
-  currentAccount = {
+  currentAccountRaw = {
     chainKey: '',
     id: '',
     type: CONSTS_ACCOUNT_TYPES.Hardware,
@@ -47,6 +48,19 @@ class StoreAccount extends BaseStore {
     address: '',
     path: '',
   };
+
+  @computed
+  get currentAccount() {
+    const { chainKey, address } = this.currentAccountRaw;
+    if (!address || !chainKey) {
+      return null;
+    }
+    const chainInfo = storeChain.getChainInfoByKey(chainKey);
+    return new OneAccountInfo({
+      ...this.currentAccountRaw,
+      currency: chainInfo.currency,
+    });
+  }
 
   @observable
   accountsGroupFilter = {
@@ -81,7 +95,7 @@ class StoreAccount extends BaseStore {
   }
 
   setCurrentAccount({ account }) {
-    this.currentAccount = account;
+    this.currentAccountRaw = account;
   }
 }
 

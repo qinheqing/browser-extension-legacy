@@ -2,6 +2,7 @@ import { CONSTS_ACCOUNT_TYPES } from '../consts/consts';
 
 class OneAccountInfo {
   constructor({
+    _raw,
     chainKey,
     type,
     name,
@@ -11,6 +12,7 @@ class OneAccountInfo {
     decimals,
     currency,
   }) {
+    this._raw = _raw;
     this.chainKey = chainKey;
     this.type = type;
     this.name = name;
@@ -20,6 +22,8 @@ class OneAccountInfo {
     this.decimals = decimals;
     this.currency = currency;
   }
+
+  _raw = {};
 
   chainKey = '';
 
