@@ -9,6 +9,8 @@ class BaseStore {
   }
 
   // TODO move to extension local store, and save to single place
+  // TODO make autosave to decorator
+  // TODO data migrate implement
   autosave(storeProp) {
     // eslint-disable-next-line consistent-this
     const store = this;

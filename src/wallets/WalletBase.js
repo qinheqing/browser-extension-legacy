@@ -20,6 +20,7 @@ class WalletBase {
     this.hardwareModel = hardwareModel;
     this.hdPathCustomTemplate = hdPath;
     this.accountInfo = accountInfo;
+    this.chainInfo = chainInfo;
     this.options = {
       ...this.optionsDefault,
       ...options,
@@ -182,7 +183,11 @@ class WalletBase {
     return [];
   }
 
-  async transfer({ account, to, amount }) {
+  addAssociateToken({ account, contract }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  async transfer({ account, to, amount, decimals }) {
     return utilsApp.throwToBeImplemented(this);
   }
 

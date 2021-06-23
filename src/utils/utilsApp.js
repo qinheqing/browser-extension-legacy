@@ -42,6 +42,7 @@ function throwToBeImplemented(cls) {
 }
 
 function shortenAddress(address, { size = 6 } = {}) {
+  // TODO if size > address.length
   const head = address.substr(0, size);
   const tail = address.substr(address.length - size);
   return `${head}...${tail}`;

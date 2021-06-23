@@ -1,5 +1,6 @@
 import * as BufferLayout from 'buffer-layout';
 import bs58 from 'bs58';
+import { isBuffer } from 'lodash';
 import ChainProviderBase from '../../ChainProviderBase';
 import utilsApp from '../../../utils/utilsApp';
 import OneAccountInfo from '../../../classes/OneAccountInfo';
@@ -16,19 +17,27 @@ class ChainProvider extends ChainProviderBase {
     const rpcUrl = options?.chainInfo?.rpc?.[0];
 
     // https://solana-labs.github.io/solana-web3.js/classes/connection.html#constructor
-    this.connection = new Connection(rpcUrl, this.options.defaultCommitment);
+    this.connection = new Connection(rpcUrl, this.defaultCommitment);
 
     // TODO remove
     global.$$chainSOL = this;
   }
 
+  get defaultCommitment() {
+    return this.options.defaultCommitment;
+  }
+
   async getRecentBlockHash() {
     const { feeCalculator, blockhash } =
-      await this.connection.getRecentBlockhash(this.options.defaultCommitment);
+      await this.connection.getRecentBlockhash(this.defaultCommitment);
     return {
       feeCalculator,
       blockhash,
     };
+  }
+
+  isTokenAddress(owner) {
+    return owner && owner.equals(helpersSOL.TOKEN_PROGRAM_ID);
   }
 
   /**
@@ -38,13 +47,36 @@ class ChainProvider extends ChainProviderBase {
    * @return {OneAccountInfo}
    */
   normalizeAccountInfo(solAccountInfo) {
-    const balance = solAccountInfo?.lamports;
+    console.log(
+      'normalizeAccountInfo',
+      solAccountInfo,
+      solAccountInfo?.data?.parsed?.info,
+    );
+    const isToken = this.isTokenAddress(solAccountInfo.owner);
+    let balance = solAccountInfo?.lamports;
+    let decimals = 0;
+    if (isToken) {
+      const tokenAmountInfo = solAccountInfo?.data?.parsed?.info?.tokenAmount;
+      if (tokenAmountInfo) {
+        balance = tokenAmountInfo.amount;
+        decimals = tokenAmountInfo.decimals;
+      } else {
+        const tokenParsedInfo = helpersSOL.parseTokenAccountData(
+          solAccountInfo?.data,
+        );
+        balance = tokenParsedInfo.amount;
+        console.log('tokenParsedInfo', tokenParsedInfo);
+      }
+    } else {
+      decimals = this.options.balanceDecimals;
+    }
     // { data: Uint8Array(0), executable: false, lamports: 2997561, owner: PublicKey, rentEpoch: 201 }
     return new OneAccountInfo({
       _raw: solAccountInfo,
       address: solAccountInfo.address,
       balance,
-      decimals: this.options.balanceDecimals, // TODO token decimals should be read from chain
+      decimals,
+      isToken,
     });
   }
 
@@ -82,20 +114,31 @@ class ChainProvider extends ChainProviderBase {
     const res = await this.connection.getParsedAccountInfo(
       new PublicKey(address),
     );
+
+    /*
+    - getParsedAccountInfo:
+      const solAccountInfo = res.value
+    - getAccountInfo:
+      const solAccountInfo = res
+     */
+    const solAccountInfo = res.value;
+
     return this.normalizeAccountInfo({
-      ...res.value,
+      ...solAccountInfo,
       address,
     });
   }
 
   async getAccountTokens({ address } = {}) {
-    const accountAddress = address || this.options.accountInfo.address;
-    const accountPublicKey = new PublicKey(accountAddress);
+    const ownerAddress = address || this.options.accountInfo.address;
+    const accountPublicKey = new PublicKey(ownerAddress);
     const filters = helpersSOL.getOwnedAccountsFilters(accountPublicKey);
+    // TODO https://solana-labs.github.io/solana-web3.js/classes/connection.html#getparsedtokenaccountsbyowner
+    //    getParsedProgramAccounts, getParsedTokenAccountsByOwner
     const resp = await this.connection._rpcRequest('getProgramAccounts', [
       helpersSOL.TOKEN_PROGRAM_ID.toBase58(),
       {
-        commitment: this.connection.commitment,
+        commitment: this.defaultCommitment,
         filters,
       },
     ]);
@@ -133,32 +176,53 @@ class ChainProvider extends ChainProviderBase {
           return false;
         });
       });
-    return await Promise.all(
+    const tokens = await Promise.all(
       result.map(async (item) => {
         const { publicKey, accountInfo } = item;
+        // get balance, mint from accountInfo.data
         const parsed = helpersSOL.parseTokenAccountData(item.accountInfo.data);
         const associatedAddress = await helpersSOL.findAssociatedTokenAddress(
           accountPublicKey,
           parsed.mint,
           publicKey,
         );
-        const depositAddress = associatedAddress.equals(publicKey)
-          ? accountAddress
+
+        // DO NOT use ownerAddress as token deposit address, it should be support by the wallet sender code
+        //    the sender code will find token real address from owner address from chain
+        /*  const depositAddress = associatedAddress.equals(publicKey)
+          ? ownerAddress
           : publicKey.toString();
+        */
+        const depositAddress = publicKey.toString();
 
         return {
           ...item,
           parsed,
-          balance: parsed.amount, // Token balance
-          address: publicKey.toString(), // Token address
+          balance: parsed.amount, // Token account balance
+          address: publicKey.toString(), // Token account address
           depositAddress, // Token deposit address
-          accountAddress, // account address that token belongs to
-          contractAddress: parsed.mint.toString(), // token contract address
+          ownerAddress, // Owner account address which token belongs to
+          contractAddress: parsed.mint.toString(), // token contract address (mintAddress) / token real name
           programAddress: accountInfo.owner.toString(), // token program address
-          associatedAddress: associatedAddress.toString(), // token  associated address
+          associatedAddress: associatedAddress.toString(), // token associated address
         };
       }),
     );
+    return {
+      ownerAddress,
+      tokens,
+    };
+  }
+
+  // TODO add new token will cost SOL
+  async getAddTokenFee() {
+    // https://solana-labs.github.io/solana-web3.js/classes/connection.html#getminimumbalanceforrentexemption
+    // tokenAccountCost = async () => {
+    //   return this.connection.getMinimumBalanceForRentExemption(
+    //     ACCOUNT_LAYOUT.span,
+    //   );
+    // };
+    return 0;
   }
 }
 

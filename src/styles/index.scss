@@ -9,6 +9,19 @@
   white-space: pre-wrap;
 }
 
+.u-flex-child {
+  @include one-flex-item;
+}
+
 .u-flex-center {
-  @include bx-flex-center;
+  @include one-flex-center;
+}
+
+.u-whitespace {
+  height: 12px;
+}
+
+.u-padding-x {
+  padding-left: 16px;
+  padding-right: 16px;
 }

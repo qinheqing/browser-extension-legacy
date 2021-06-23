@@ -1,4 +1,5 @@
 import bs58 from 'bs58';
+import { isNil } from 'lodash';
 import WalletBase from '../WalletBase';
 import { CONST_CHAIN_KEYS, CONST_TX_TYPES } from '../../consts/consts';
 import OneTransactionInfo from '../../classes/OneTransactionInfo';
@@ -51,41 +52,101 @@ class WalletSOL extends WalletBase {
     return `${solAddress.toString('hex')}`;
   }
 
-  async transfer({ account, to, amount }) {
+  async addAssociateToken({ account, contract }) {
+    const creatorAccount = account || this.accountInfo;
+    const ix = OneTxInstructionInfo.createTokenAssociateAddIx({
+      creator: creatorAccount.address,
+      contract,
+    });
+    const tx = await this.createTx({
+      account: creatorAccount,
+      instructions: [ix],
+    });
+    const txid = await this.signAndSendTx(tx);
+    return txid;
+  }
+
+  async transfer({
+    account,
+    from,
+    to,
+    amount,
+    decimals,
+    contract,
+    isToken = false,
+  }) {
     // TODO accountName: feePayer, signer, creator
     const creatorAccount = account || this.accountInfo;
-    console.log('SOL transfer', { creatorAccount, to, amount });
     // const { decimals, mint } = balanceInfo;
-    const decimals = this.options.balanceDecimals;
+    const _decimals = isNil(decimals) ? this.options.balanceDecimals : decimals;
     // decimals convert
-    const $amount = Math.round(parseFloat(amount) * 10 ** decimals);
+    // TODO bignumber
+    const _amount = Math.round(parseFloat(amount) * 10 ** _decimals);
+    const _from = from || creatorAccount.address;
 
-    const transferTx = new OneTransactionInfo({
+    console.log('SOL transfer', {
+      creatorAccount,
+      _from,
+      to,
+      _amount,
+      _decimals,
+      contract,
+      isToken,
+    });
+
+    let ix = null;
+    if (isToken) {
+      ix = OneTxInstructionInfo.createTokenTransferIx({
+        from: _from,
+        to,
+        amount: _amount,
+        decimals: _decimals,
+        contract,
+        creator: creatorAccount.address,
+      });
+    } else {
+      ix = OneTxInstructionInfo.createTransferIx({
+        from: _from,
+        to,
+        amount: _amount,
+      });
+    }
+    const tx = await this.createTx({
+      account: creatorAccount,
+      instructions: [ix],
+    });
+
+    const txid = await this.signAndSendTx(tx);
+    return txid;
+  }
+
+  async createTx({ account, instructions = [] }) {
+    const _instructions = [].concat(instructions);
+    return new OneTransactionInfo({
       // TODO creator,creatorHdPath change to account
-      creatorAddress: creatorAccount.address,
-      creatorHdPath: creatorAccount.path,
+      creatorAddress: account.address,
+      creatorHdPath: account.path,
       // must be a recent hash e.g. 5min, otherwise throw error:
       //     failed to send transaction: Transaction simulation failed: Blockhash not found
       // recentBlockhash: 'EBqHQq1gHhem3Ruebu9TfbfmiWzifJ1d9YeAY3cyzt7Y',
       recentBlockhash: (await this.chainProvider.getRecentBlockHash())
         .blockhash,
-      instructions: [
-        new OneTxInstructionInfo.Transfer({
-          from: creatorAccount.address,
-          to,
-          amount: $amount,
-        }),
-      ],
+      instructions: _instructions,
     });
-    const res = await this.signTx(transferTx);
-    console.log('sign success', res.rawTx, transferTx);
+  }
+
+  async signAndSendTx(tx) {
+    const res = await this.signTx(tx);
+    console.log('sign success', res.rawTx, tx);
 
     const txid = await this.sendTx(res.rawTx);
+
     console.log(
       `SOL Transfer success:
-      https://explorer.solana.com/address/${creatorAccount.address}?cluster=testnet
+      https://explorer.solana.com/address/${tx.creatorAddress}?cluster=testnet
       https://explorer.solana.com/tx/${txid}?cluster=testnet`,
     );
+
     return txid;
   }
 
