@@ -1,0 +1,54 @@
+@import "styles/imports";
+
+.AccountsGroupBar {
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+}
+
+.AccountsGroupItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 12px;
+  cursor: pointer;
+  position: relative;
+
+  &.is-active {
+    .AccountsGroupItem__icon {
+      background: #00b812;
+    }
+  }
+
+  &.size-small {
+    .AccountsGroupItem__icon {
+      transform: scale(0.8);
+      transform-origin: center center;
+    }
+  }
+}
+
+.AccountsGroupItem__text {
+  text-align: center;
+  font-size: 12px;
+  white-space: nowrap;
+  margin-top: 8px;
+}
+
+.AccountsGroupItem__icon {
+  border-radius: 40px;
+  width: 40px;
+  height: 40px;
+  background: #eee;
+}
+
+.AccountsGroupItem__remove {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: red;
+  font-weight: bold;
+  padding: 0 3px;
+}
+
+
