@@ -85,6 +85,7 @@ export default function PageConnectHardware() {
         return {
           ...addr,
           address,
+          decimals: wallet1.options.balanceDecimals,
           name: chainInfo.generateAccountName({ index: accountIndex }),
         };
       }),

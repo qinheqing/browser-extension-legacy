@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Observer } from 'mobx-react-lite';
 import AppFrame from '../../components/AppFrame';
@@ -7,9 +7,14 @@ import TokenBalance from '../../components/TokenBalance';
 import AccountCard from '../../components/AccountCard';
 import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
 import storeWallet from '../../store/storeWallet';
+import storeToken from '../../store/storeToken';
+import TokenInfoCard from '../../components/TokenInfoCard';
 
 export default function PageHome() {
   const history = useHistory();
+  useEffect(() => {
+    storeWallet.getCurrentAccountTokens();
+  }, []);
 
   return (
     <Observer>
@@ -55,24 +60,30 @@ export default function PageHome() {
                   </button>{' '}
                   <button>Notice</button>
                 </div>
+                <hr />
                 <div>
-                  <div>
-                    Balance:
-                    <TokenBalance
-                      address={storeAccount.currentAccount.address}
-                    />{' '}
-                    {storeAccount.currentAccount.currency}
+                  <div className="u-padding-x">
+                    <button
+                      onClick={() => {
+                        storeWallet.currentWallet.addAssociateToken({
+                          contract:
+                            'H8SThNDAVecEutTHQr7EMwScfsTkTPrQmYaDGfcnhG7Y',
+                        });
+                      }}
+                    >
+                      + Add Token
+                    </button>
                   </div>
-                  <button
-                    onClick={async () => {
-                      // TODO get balance decimals; balance update listener; add custom token;
-                      const res =
-                        await storeWallet.currentWallet.chainProvider.getAccountTokens();
-                      console.log('Get Token List getAccountTokens', res);
-                    }}
-                  >
-                    Get Token List
-                  </button>
+                  <div>
+                    {storeToken.currentTokens.map((token) => {
+                      return (
+                        <TokenInfoCard
+                          key={token.contractAddress}
+                          token={token}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
               </>
             )}
