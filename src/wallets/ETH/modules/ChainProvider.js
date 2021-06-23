@@ -22,6 +22,14 @@ class ChainProvider extends ChainProviderBase {
     });
   }
 
+  addAccountChangeListener() {
+    console.log('ETH addAccountChangeListener');
+  }
+
+  removeAccountChangeListener(id) {
+    console.log('ETH removeAccountChangeListener');
+  }
+
   async getAccountInfo({ address }) {
     const balanceBigNumber = await this.connection.getBalance(address);
     return this.normalizeAccountInfo({ balance: balanceBigNumber.toString() });

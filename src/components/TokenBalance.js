@@ -10,10 +10,10 @@ export default function TokenBalance({ wallet, address, contractAddress }) {
 
   /*
   TODO balance tracker:
-    1. read from cache
-    2. update from chain
-    3. write back to cache with throttle
-    4. listener for balance auto update
+    - read from cache
+    - read from chain
+    - listener for balance auto update
+    - write back to cache with throttle
   */
   useEffect(() => {
     (async () => {
@@ -21,6 +21,19 @@ export default function TokenBalance({ wallet, address, contractAddress }) {
       const info = await _wallet.chainProvider.getAccountInfo({ address });
       setAccountInfo(info);
     })();
+    const listenerId = _wallet.chainProvider.addAccountChangeListener(
+      address,
+      (info) => {
+        // TODO update check which is fresh data (getAccountInfo/addAccountChangeListener)
+        setAccountInfo(info);
+        console.log('TokenBalance > balance updated!', info);
+      },
+    );
+    console.log('TokenBalance > addAccountChangeListener', listenerId);
+    return () => {
+      console.log('TokenBalance > removeAccountChangeListener', listenerId);
+      _wallet.chainProvider.removeAccountChangeListener(listenerId);
+    };
   }, [address, _wallet]);
 
   return (

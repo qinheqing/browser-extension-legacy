@@ -8,3 +8,7 @@
   word-break: break-all;
   white-space: pre-wrap;
 }
+
+.u-flex-center {
+  @include bx-flex-center;
+}
