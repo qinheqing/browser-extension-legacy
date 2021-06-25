@@ -4,6 +4,7 @@ import LocalMessageDuplexStream from 'post-message-stream';
 import ObjectMultiplex from 'obj-multiplex';
 import extension from 'extensionizer';
 import PortStream from 'extension-port-stream';
+import contentscriptSolana from '../../src/wallets/SOL/modules/dappProvider/contentscript';
 // import { obj as createThoughStream } from 'through2';
 
 // These require calls need to use require to be statically recognized by browserify
@@ -307,3 +308,5 @@ function redirectToPhishingWarning() {
     href: window.location.href,
   })}`;
 }
+
+contentscriptSolana.init();

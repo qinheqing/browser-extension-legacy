@@ -56,11 +56,6 @@ class WalletBase {
     return toLower(this.hdCoin);
   }
 
-  // TODO remove, use getAddresses directly
-  publicKeyToAddress({ publicKey }) {
-    return utilsApp.throwToBeImplemented(this);
-  }
-
   // TODO remove
   get hdPathUnlockTest() {
     return "m/44'/60'/0'/0/0";
