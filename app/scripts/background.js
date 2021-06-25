@@ -5,6 +5,7 @@
 /* eslint-disable import/first,import/order */
 import setupFetchDebugging from './lib/setupFetchDebugging';
 /* eslint-enable import/order */
+/* eslint-disable */
 
 setupFetchDebugging();
 
@@ -39,6 +40,7 @@ import rawFirstTimeState from './first-time-state';
 import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
+import backgroundSolana from '../../src/wallets/SOL/modules/dappProvider/background';
 /* eslint-enable import/first */
 
 const { sentry } = global;
@@ -538,3 +540,5 @@ extension.runtime.onInstalled.addListener(({ reason }) => {
     platform.openExtensionInBrowser();
   }
 });
+
+backgroundSolana.init();

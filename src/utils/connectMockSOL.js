@@ -2,7 +2,7 @@ import nacl from 'tweetnacl';
 import bs58 from 'bs58';
 import ethUtil from 'ethereumjs-util';
 import * as BufferLayout from 'buffer-layout';
-import { CONST_TX_TYPES } from '../consts/consts';
+import { CONST_TEST_MNEMONIC, CONST_TX_TYPES } from '../consts/consts';
 import {
   HdKeyProviderEd25519,
   HdKeyProviderBip32,
@@ -325,9 +325,7 @@ async function getAccountBase({ deriveFunc, seed, path }) {
 }
 
 async function getRootSeed() {
-  return await utilsApp.mnemonicToSeed(
-    'ankle trigger render gadget chicken rapid grunt execute taste culture image address tape fence wear increase saddle mansion lonely fox effort jacket romance glue',
-  );
+  return await utilsApp.mnemonicToSeed(CONST_TEST_MNEMONIC);
 }
 
 async function getAccountFromMnemonic({ hdPath }) {

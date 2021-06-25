@@ -46,7 +46,7 @@ class ChainProvider extends ChainProviderBase {
    *      {address, data: Uint8Array(0), executable:false, lamports:48752, owner: PublicKey, rentEpoch: 201}
    * @return {OneAccountInfo}
    */
-  normalizeAccountInfo(solAccountInfo) {
+  normalizeAccountUpdatesInfo(solAccountInfo) {
     console.log(
       'normalizeAccountInfo',
       solAccountInfo,
@@ -70,6 +70,7 @@ class ChainProvider extends ChainProviderBase {
     } else {
       decimals = this.options.balanceDecimals;
     }
+    // TODO rename to BalanceInfo or AccountUpdatesInfo
     // { data: Uint8Array(0), executable: false, lamports: 2997561, owner: PublicKey, rentEpoch: 201 }
     return new OneAccountInfo({
       _raw: solAccountInfo,
@@ -96,7 +97,7 @@ class ChainProvider extends ChainProviderBase {
     // https://solana-labs.github.io/solana-web3.js/modules.html#accountchangecallback
     // TODO normalizeAccountInfo
     return this.connection.onAccountChange(new PublicKey(address), (info) => {
-      handler(this.normalizeAccountInfo({ ...info, address }));
+      handler(this.normalizeAccountUpdatesInfo({ ...info, address }));
     });
   }
 
@@ -117,13 +118,13 @@ class ChainProvider extends ChainProviderBase {
 
     /*
     - getParsedAccountInfo:
-      const solAccountInfo = res.value
+        const solAccountInfo = res.value;
     - getAccountInfo:
-      const solAccountInfo = res
+        const solAccountInfo = res;
      */
     const solAccountInfo = res.value;
 
-    return this.normalizeAccountInfo({
+    return this.normalizeAccountUpdatesInfo({
       ...solAccountInfo,
       address,
     });
@@ -223,6 +224,11 @@ class ChainProvider extends ChainProviderBase {
     //   );
     // };
     return 0;
+  }
+
+  // getEpochInfo
+  async getLatestBlock() {
+    console.log('getEpochInfo');
   }
 }
 

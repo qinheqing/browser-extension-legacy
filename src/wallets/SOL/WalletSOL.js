@@ -33,25 +33,6 @@ class WalletSOL extends WalletBase {
 
   hdkeyProvider = new HdKeyProvider(this.options);
 
-  publicKeyToAddress({ publicKey }) {
-    const publicKeyBytes = Buffer.from(publicKey, 'hex');
-    const publicKeyBs58 = bs58.encode(publicKeyBytes);
-    console.log('WalletSol.publicKeyToAddress', {
-      publicKeyBytes,
-      publicKey,
-      publicKeyBs58,
-    });
-    const solAddress = new global.solanaWeb3.PublicKey(publicKeyBs58);
-    console.log({
-      publicKeyBs58,
-      solAddress,
-      solAddress1: solAddress.toString(),
-      solAddress2: solAddress.toString('hex'),
-      isSame: solAddress.toString() === publicKeyBs58,
-    });
-    return `${solAddress.toString('hex')}`;
-  }
-
   async addAssociateToken({ account, contract }) {
     const creatorAccount = account || this.accountInfo;
     const ix = OneTxInstructionInfo.createTokenAssociateAddIx({
