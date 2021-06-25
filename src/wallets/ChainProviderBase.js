@@ -30,6 +30,7 @@ class ChainProviderBase {
   }
 
   // https://www.npmjs.com/package/eth-block-tracker
+  // getConfirmedSignaturesForAddress2: https://solana-labs.github.io/solana-web3.js/classes/connection.html#getconfirmedsignaturesforaddress2
   fetchTransactions() {
     return utilsApp.throwToBeImplemented(this);
   }

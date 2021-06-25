@@ -6,9 +6,11 @@ import Initialized from '../../ui/app/helpers/higher-order-components/initialize
 import PageConnectHardware from '../pages/PageConnectHardware';
 import PageWalletSelect from '../pages/PageWalletSelect';
 import PageHome from '../pages/PageHome';
+import PagePopup from '../pages/PagePopup';
 import {
   ROUTE_CONNECT_HARDWARE,
   ROUTE_HOME,
+  ROUTE_POPUP,
   ROUTE_WALLET_SELECT,
 } from './routeUrls';
 
@@ -33,6 +35,13 @@ export default function AppRoutes() {
       <Authenticated
         path={ROUTE_HOME}
         component={PageHome}
+        exact
+        autoReturn
+        authDisabled
+      />
+      <Authenticated
+        path={ROUTE_POPUP}
+        component={PagePopup}
         exact
         autoReturn
         authDisabled

@@ -27,7 +27,9 @@ class StoreAccount extends BaseStore {
     autorun(() => {
       const { currentAccount } = this;
       untracked(() => {
-        storeChain.currentChainKey = currentAccount.chainKey;
+        if (currentAccount?.chainKey) {
+          storeChain.currentChainKey = currentAccount?.chainKey;
+        }
       });
     });
   }
