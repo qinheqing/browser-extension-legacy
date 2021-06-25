@@ -125,7 +125,7 @@ export default function PageConnectHardware() {
                 <button onClick={() => history.push(ROUTE_HOME)}>
                   [New Home]
                 </button>
-                <pre className="u-nowrap">
+                <pre className="u-wrap-text">
                   chainInfo: {JSON.stringify(chainInfo, null, 4)}
                 </pre>
               </h1>
@@ -148,7 +148,7 @@ export default function PageConnectHardware() {
                 </div>
               )}
 
-              <pre className="u-nowrap">
+              <pre className="u-wrap-text">
                 importedAddresses: {JSON.stringify(importedAddresses, null, 4)}
               </pre>
 

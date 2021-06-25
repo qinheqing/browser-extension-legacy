@@ -15,7 +15,7 @@ function createBuiltInChains() {
   const chainsRaw = [
     {
       key: CONST_CHAIN_KEYS.SOL_TEST_NET,
-      name: 'SOL testnet',
+      name: 'SOL Testnet',
       baseChain: CONST_CHAIN_KEYS.SOL,
       currency: CONST_SOL,
       etherChainId: null,
