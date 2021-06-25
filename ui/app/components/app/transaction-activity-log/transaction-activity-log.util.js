@@ -189,11 +189,14 @@ export function getActivities(transaction, isFirstTransaction = false) {
 
   // If txReceipt.status is '0x0', that means that an on-chain error occurred for the transaction,
   // so we add an error entry to the Activity Log.
+  const lastActivity = historyActivities[historyActivities.length - 1];
+  const lastTimestamp = (lastActivity && lastActivity.timestamp) || Date.now();
   return status === '0x0'
     ? historyActivities.concat({
         id,
         hash,
         eventKey: TRANSACTION_ERRORED_EVENT,
+        timestamp: lastTimestamp,
       })
     : historyActivities;
 }

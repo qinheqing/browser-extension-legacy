@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import AssetListItem from '../asset-list-item';
-import { getSelectedAddress } from '../../../selectors';
+import { getSelectedAddress, getCurrentChainId } from '../../../selectors';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import { useTokenFiatAmount } from '../../../hooks/useTokenFiatAmount';
+import { getEtherscanNetwork } from '../../../../lib/etherscan-prefix-for-network';
 
 export default function TokenCell({
   address,
@@ -17,7 +18,9 @@ export default function TokenCell({
   onClick,
 }) {
   const userAddress = useSelector(getSelectedAddress);
+  const chainId = useSelector(getCurrentChainId);
   const t = useI18nContext();
+  const prefix = getEtherscanNetwork(chainId) || 'https://ethplorer.io';
 
   const formattedFiat = useTokenFiatAmount(address, string, symbol);
 
@@ -25,7 +28,7 @@ export default function TokenCell({
     <span>
       {t('troubleTokenBalances')}
       <a
-        href={`https://ethplorer.io/address/${userAddress}`}
+        href={`${prefix}/address/${userAddress}`}
         rel="noopener noreferrer"
         target="_blank"
         onClick={(event) => event.stopPropagation()}

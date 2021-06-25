@@ -8,6 +8,7 @@ import {
   generateHistoryEntry,
   replayHistory,
   snapshotFromTxMeta,
+  safeState,
 } from './lib/tx-state-history-helpers';
 import { getFinalStates, normalizeTxParams } from './lib/util';
 
@@ -222,9 +223,6 @@ export default class TransactionStateManager extends EventEmitter {
    * @param {string} [note] - a note about the update for history
    */
   updateTx(txMeta, note) {
-    const isErrorValueReplacedHistory = (item) =>
-      item && item.op === 'replace' && item.path === '/warning/error';
-
     // normalize and validate txParams if present
     if (txMeta.txParams) {
       txMeta.txParams = this.normalizeAndValidateTxParams(txMeta.txParams);
@@ -235,7 +233,11 @@ export default class TransactionStateManager extends EventEmitter {
     // recover previous tx state obj
     const previousState = replayHistory(txMeta.history);
     // generate history entry and add to history
-    const entry = generateHistoryEntry(previousState, currentState, note);
+    const entry = generateHistoryEntry(
+      safeState(previousState),
+      safeState(currentState),
+      note,
+    );
 
     if (entry.length) {
       txMeta.history.push(entry);

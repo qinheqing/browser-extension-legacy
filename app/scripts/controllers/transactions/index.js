@@ -406,6 +406,7 @@ export default class TransactionController extends EventEmitter {
       },
       lastGasPrice,
       loadingDefaults: false,
+      transactionCategory: originalTxMeta.transactionCategory,
       status: TRANSACTION_STATUSES.APPROVED,
       type: TRANSACTION_TYPES.CANCEL,
     });
@@ -441,6 +442,7 @@ export default class TransactionController extends EventEmitter {
       },
       lastGasPrice,
       loadingDefaults: false,
+      transactionCategory: originalTxMeta.transactionCategory,
       status: TRANSACTION_STATUSES.APPROVED,
       type: TRANSACTION_TYPES.RETRY,
     });

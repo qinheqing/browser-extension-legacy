@@ -96,6 +96,7 @@ export default class PendingTransactionTracker extends EventEmitter {
           ) ||
           // other
           errorMessage.includes('gateway timeout') ||
+          errorMessage.includes('already known') ||
           errorMessage.includes('nonce too low');
         // ignore resubmit warnings, return early
         if (isKnownTx) {
@@ -106,6 +107,11 @@ export default class PendingTransactionTracker extends EventEmitter {
           error: errorMessage,
           message: 'There was an error when resubmitting this transaction.',
         };
+
+        const errors = (txMeta.errors || []).slice(-20);
+        errors.push({ message: err.message, timestamp: Date.now() });
+        txMeta.errors = errors;
+
         this.emit('tx:warning', txMeta, err);
       }
     }
@@ -207,29 +213,24 @@ export default class PendingTransactionTracker extends EventEmitter {
         return;
       }
     } catch (err) {
-      if (
-        txMeta.warning &&
-        txMeta.warning.timestamp &&
-        Date.now() - txMeta.warning.timestamp < 60000 // log error per 60 secords
-      ) {
-        return;
-      }
       txMeta.warning = {
         error: err.message,
         message: 'There was a problem loading this transaction.',
-        timestamp: Date.now(),
       };
-      this.emit('tx:warning', txMeta, err);
+      const errors = (txMeta.errors || []).slice(-20);
+      errors.push({ message: err.message, timestamp: Date.now() });
+      txMeta.errors = errors;
 
-      // if tx is submitted 3 days ago,
+      this.emit('tx:warning', txMeta, err);
+      //    if tx is submitted 3 days ago,
       //    and chain network besides all fallback networks request still return null,
       //    cause this exception as `[ethjs-query] while formatting outputs from RPC ...`
-      // try to mark this tx as dropped locally,
+      //    try to mark this tx as dropped locally,
       //    so that this tx polling chain request will be terminated forever.
-      const ms3days = 3 * 24 * 3600 * 1000;
+      const duration = 3 * 24 * 3600 * 1000;
       if (
         txMeta.submittedTime &&
-        txMeta.submittedTime < new Date().getTime() - ms3days
+        txMeta.submittedTime < new Date().getTime() - duration
       ) {
         if (await this._checkIfTxWasDropped(txMeta)) {
           this.emit('tx:dropped', txId);
@@ -293,7 +294,8 @@ export default class PendingTransactionTracker extends EventEmitter {
       // and if that is the case, don't consider the transaction to have taken its own nonce
       (other) =>
         !(other.id === txMeta.id) &&
-        other.txParams.nonce >= txMeta.txParams.nonce,
+        Number(other.txParams.nonce) >= Number(txMeta.txParams.nonce),
+      // nonce is string type; eg: '0xf' > '0x10'; we should tranform to integer
       // other.txParams.nonce === txMeta.txParams.nonce,
     );
   }

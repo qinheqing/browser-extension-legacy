@@ -65,3 +65,10 @@ export function snapshotFromTxMeta(txMeta) {
   delete shallow.history;
   return cloneDeep(shallow);
 }
+
+export function safeState(txMeta) {
+  const shallow = { ...txMeta };
+  delete shallow.warning; //
+  delete shallow.errors; //
+  return cloneDeep(shallow);
+}
