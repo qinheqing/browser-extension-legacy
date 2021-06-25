@@ -1,5 +1,7 @@
 import { CONSTS_ACCOUNT_TYPES } from '../consts/consts';
 
+// TODO rename folder to models
+
 class OneAccountInfo {
   constructor({
     _raw,

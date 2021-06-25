@@ -34,7 +34,8 @@ cleanContextForImports();
 import log from 'loglevel';
 import LocalMessageDuplexStream from 'post-message-stream';
 import { initializeProvider } from '@metamask/inpage-provider';
-import inpageOneKeyProvider from './inpageOneKeyProvider';
+import inpageSolana from '../../src/wallets/SOL/modules/dappProvider/inpage';
+import inpageSolanaLegacy from '../../src/wallets/SOL/modules/dappProvider/inpageSolanaLegacy';
 
 restoreContextAfterImports();
 
@@ -56,4 +57,6 @@ initializeProvider({
   logger: log,
   shouldShimWeb3: true,
 });
-inpageOneKeyProvider.init();
+
+inpageSolana.init();
+// inpageSolanaLegacy.init();

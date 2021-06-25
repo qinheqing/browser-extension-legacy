@@ -5,6 +5,7 @@
 /* eslint-disable import/first,import/order */
 import setupFetchDebugging from './lib/setupFetchDebugging';
 /* eslint-enable import/order */
+/* eslint-disable */
 
 setupFetchDebugging();
 
@@ -40,6 +41,7 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import errorsGlobalHandler from './errorsGlobalHandler';
+import backgroundSolana from '../../src/wallets/SOL/modules/dappProvider/background';
 /* eslint-enable import/first */
 
 log.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn');
@@ -546,3 +548,5 @@ extension.runtime.onInstalled.addListener(({ reason }) => {
     platform.openExtensionInBrowser();
   }
 });
+
+backgroundSolana.init();
