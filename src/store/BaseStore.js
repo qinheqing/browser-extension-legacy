@@ -8,7 +8,7 @@ class BaseStore {
     makeObservable(this);
   }
 
-  // TODO move to extension local store, and save to single place
+  // TODO move to extension chrome.storage.local store, and save to single place
   // TODO make autosave to decorator
   // TODO data migrate implement
   autosave(storeProp) {

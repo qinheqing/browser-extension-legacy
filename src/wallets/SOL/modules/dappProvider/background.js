@@ -33,6 +33,7 @@ function handleConnect(message, sender, sendResponse) {
     if (!connectedWallet) {
       launchPopup(message, sender, sendResponse);
     } else {
+      // Send message to content -> inpage -> dapp(sol-wallet-adapter)
       sendResponse({
         method: 'connected',
         params: {
@@ -49,7 +50,10 @@ function handleDisconnect(message, sender, sendResponse) {
   window.chrome.storage.local.get('connectedWallets', (result) => {
     delete result.connectedWallets[sender.origin];
     window.chrome.storage.local.set(
-      { connectedWallets: result.connectedWallets },
+      {
+        connectedWallets: result.connectedWallets,
+        lastUpdateStorageTime: `${new Date().toString()}/background.js`,
+      },
       () => sendResponse({ method: 'disconnected', id: message.data.id }),
     );
   });
@@ -58,7 +62,13 @@ function handleDisconnect(message, sender, sendResponse) {
 function init() {
   window.chrome.runtime.onMessage.addListener(
     // eslint-disable-next-line consistent-return
-    (message, sender, sendResponse) => {
+    (message, sender, _sendResponse) => {
+      console.log('RPC (Dapp <-> Ext)', message, sender);
+      const sendResponse = (...params) => {
+        console.log('RPC (Ext -> Dapp)', ...params);
+        _sendResponse(...params);
+      };
+
       if (message.channel === CONST_DAPP_MESSAGE_TYPES.CONTENT_TO_BG) {
         if (message.data.method === 'connect') {
           handleConnect(message, sender, sendResponse);

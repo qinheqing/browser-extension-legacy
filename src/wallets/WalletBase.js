@@ -63,47 +63,6 @@ class WalletBase {
 
   // ----------------------------------------------
 
-  // TODO remove
-  async unlockHardware() {
-    if (this.hdkey && this.hdkey.hdPath === this.hdPathUnlockTest) {
-      return true;
-    }
-
-    const connectPayload = {
-      coin: this.hdCoinLowerCase,
-      path: this.hdPathUnlockTest,
-    };
-    console.log('connect.getPublicKey', connectPayload);
-    try {
-      const { id, success, payload } = await this.hardwareProvider.getPublicKey(
-        connectPayload,
-      );
-      if (success) {
-        const { publicKey, chainCode } = payload;
-        this.hdkey = new HDKey();
-        this.hdkey.hdPath = this.hdPathUnlockTest;
-        this.hdkey.publicKey = Buffer.from(publicKey, 'hex');
-        this.hdkey.chainCode = Buffer.from(chainCode, 'hex');
-        // TODO remove
-        this.$publicKey = publicKey;
-        this.$chainCode = chainCode;
-        console.log('OneKey Hardware getPublicKey', {
-          pathTemplate: this.hdPathTemplate,
-          parentPublicKey: publicKey,
-        });
-        return true;
-      }
-      console.error(
-        `[Connect.error] connect.getPublicKey ${payload.code}: ${payload.error}`,
-        connectPayload,
-      );
-      return false;
-    } catch (e) {
-      console.error(e);
-      return false;
-    }
-  }
-
   /**
    *
    * @param index
@@ -197,6 +156,10 @@ class WalletBase {
 
   // TODO validate tx address and hdPath
   async signTx() {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  async signMultipleTx() {
     return utilsApp.throwToBeImplemented(this);
   }
 
