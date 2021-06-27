@@ -1,15 +1,16 @@
 import { CONST_DAPP_MESSAGE_TYPES } from '../../../../consts/consts';
+import OneDappMessage from '../../../../classes/OneDappMessage';
 
 function init() {
   window.addEventListener(
-    CONST_DAPP_MESSAGE_TYPES.INPAGE_TO_CONTENT,
+    CONST_DAPP_MESSAGE_TYPES.EVENT_INPAGE_TO_CONTENT,
     (event) => {
       // TODO only chrome
       window.chrome.runtime.sendMessage(
-        {
-          channel: CONST_DAPP_MESSAGE_TYPES.CONTENT_TO_BG,
+        OneDappMessage.extensionRuntimeMessage({
+          channel: CONST_DAPP_MESSAGE_TYPES.CHANNEL_CONTENT_TO_BG,
           data: event.detail,
-        },
+        }),
         // response message from bg to content
         // Send message to content -> inpage -> dapp(sol-wallet-adapter)
         (response) => {
@@ -19,7 +20,7 @@ function init() {
             return;
           }
           window.dispatchEvent(
-            new CustomEvent(CONST_DAPP_MESSAGE_TYPES.CONTENT_TO_INPAGE, {
+            new CustomEvent(CONST_DAPP_MESSAGE_TYPES.EVENT_CONTENT_TO_INPAGE, {
               detail: response,
             }),
           );

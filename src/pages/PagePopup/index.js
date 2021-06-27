@@ -10,6 +10,7 @@ import storeAccount from '../../store/storeAccount';
 import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
 import ReactJsonView from '../../components/ReactJsonView';
 import connectMockSOL from '../../utils/connectMockSOL';
+import OneDappMessage from '../../classes/OneDappMessage';
 
 const { Transaction, PublicKey } = global.solanaWeb3;
 
@@ -50,6 +51,7 @@ function ApproveTransaction({ onApprove }) {
 
 function PagePopup() {
   const query = useMemo(() => {
+    // check background.js > launchPopup()
     // "chrome-extension://lmabaafdmodflajjjldinacmfaacegkl/popup.html#app/popup/?origin=xx&network=xx&request=xx"
     const uri = new URI(window.location.hash.slice(1));
 
@@ -66,15 +68,18 @@ function PagePopup() {
     };
   }, [window.location.hash]);
 
-  // dapp requests
+  // dapp rpc requests queue
   const [requestsQueue, setRequestsQueue] = useState([query.request]);
 
+  // message from popup -> bg -> content -> inpage -> dapp
   const postMessageToBg = useCallback(
     (message) => {
-      global.chrome.runtime.sendMessage({
-        channel: CONST_DAPP_MESSAGE_TYPES.POPUP_TO_BG,
-        data: message,
-      });
+      global.chrome.runtime.sendMessage(
+        OneDappMessage.extensionRuntimeMessage({
+          channel: CONST_DAPP_MESSAGE_TYPES.CHANNEL_POPUP_TO_BG,
+          data: message,
+        }),
+      );
     },
     [query.origin],
   );
@@ -87,7 +92,12 @@ function PagePopup() {
           e.data.method !== 'signAllTransactions' &&
           e.data.method !== 'sign'
         ) {
-          postMessageToBg({ error: 'Unsupported method', id: e.data.id });
+          postMessageToBg(
+            OneDappMessage.errorMessage({
+              id: e.data.id,
+              error: 'Unsupported method',
+            }),
+          );
         }
 
         setRequestsQueue((requests) => [...requests, e.data]);
@@ -124,7 +134,7 @@ function PagePopup() {
           messageDisplay: request.params.display === 'utf8' ? 'utf8' : 'hex',
         };
       default:
-        throw new Error(`Unexpected method: ${request.method}`);
+        throw new Error(`Unexpected method > ${request.method}`);
     }
   }, [request]);
 
@@ -149,13 +159,18 @@ function PagePopup() {
         storeAccount.currentAccount.path,
       );
 
-      postMessageToBg({
-        result: {
-          signature,
-          publicKey: storeAccount.currentAccountAddress,
-        },
-        id: request.id,
-      });
+      // https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L187
+      // https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L49
+
+      postMessageToBg(
+        OneDappMessage.signedMessage({
+          result: {
+            signature,
+            publicKey: storeAccount.currentAccountAddress,
+          },
+          id: request.id,
+        }),
+      );
 
       popRequest();
     };
@@ -174,22 +189,25 @@ function PagePopup() {
           [query.origin]: {
             publicKey: storeAccount.currentAccountAddress,
             autoApprove,
-            hello: 'world',
           },
         };
         global.chrome.storage.local.set({
           connectedWallets,
-          lastUpdateStorageTime: `${new Date().toString()}/PagePopup.js`,
+          lastUpdateStorageTime: `${new Date().toString()} > PagePopup.js`,
         });
         global.chrome.storage.local.get('connectedWallets', console.log);
       });
 
       // * send publicKey to inpage provider
-      postMessageToBg({
-        method: 'connected',
-        params: { publicKey: storeAccount.currentAccountAddress, autoApprove },
-        id: request.id,
-      });
+      postMessageToBg(
+        OneDappMessage.connectedMessage({
+          id: request.id,
+          params: {
+            publicKey: storeAccount.currentAccountAddress,
+            autoApprove,
+          },
+        }),
+      );
       popRequest();
     };
 

@@ -37,9 +37,10 @@ export const CONST_ACCOUNTS_GROUP_FILTER_TYPES = {
 };
 
 export const CONST_DAPP_MESSAGE_TYPES = {
-  INPAGE_TO_CONTENT: 'sollet_injected_script_message',
-  CONTENT_TO_INPAGE: 'sollet_contentscript_message',
-  CONTENT_TO_BG: 'sollet_contentscript_background_channel',
-  POPUP_TO_BG: 'sollet_extension_background_channel',
-  POPUP_TO_BG_MNEMONIC: 'sollet_extension_mnemonic_channel',
+  EVENT_INPAGE_TO_CONTENT: 'ONEKEY_EXT_EVENT_INPAGE_TO_CONTENT',
+  EVENT_CONTENT_TO_INPAGE: 'ONEKEY_EXT_EVENT_CONTENT_TO_INPAGE',
+  CHANNEL_CONTENT_TO_BG: 'ONEKEY_EXT_CHANNEL_CONTENT_TO_BG',
+  CHANNEL_POPUP_TO_BG: 'ONEKEY_EXT_CHANNEL_POPUP_TO_BG',
+  // TODO remove
+  CHANNEL_POPUP_TO_BG_MNEMONIC: 'ONEKEY_EXT_CHANNEL_POPUP_TO_BG_MNEMONIC',
 };
