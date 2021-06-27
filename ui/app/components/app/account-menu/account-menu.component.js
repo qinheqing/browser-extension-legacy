@@ -30,10 +30,7 @@ import {
   clearBackgroundLocalStore,
   goToPageConnectHardware,
 } from '../../../helpers/utils/util';
-import {
-  ROUTE_CONNECT_HARDWARE,
-  ROUTE_HOME,
-} from '../../../../../src/routes/routeUrls';
+import { ROUTE_HOME } from '../../../../../src/routes/routeUrls';
 
 export function AccountMenuItem(props) {
   const { icon, children, text, subText, className, onClick } = props;
