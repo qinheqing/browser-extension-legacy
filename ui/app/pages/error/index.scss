@@ -4,11 +4,11 @@
   align-items: center;
   font-style: normal;
   font-weight: normal;
-  padding: 35px 10px 10px 10px;
+  padding: 10px;
   height: 100%;
 
   &__header {
-    @include H1;
+    @include H3;
 
     display: flex;
     justify-content: center;
@@ -17,7 +17,7 @@
   }
 
   &__subheader {
-    @include H4;
+    @include H6;
 
     padding: 10px 0;
     width: 100%;
@@ -26,16 +26,25 @@
   }
 
   &__details {
-    @include H4;
+    @include Paragraph;
 
     overflow-y: auto;
     width: 100%;
     max-width: 720px;
     padding-top: 10px;
+    color: #888;
+    font-size: 12px;
+
+    summary {
+      cursor: pointer;
+    }
   }
 
   &__stack {
     overflow-x: auto;
     background-color: #eee;
+    padding: 8px;
+    margin: 8px 0;
+    border-radius: 4px;
   }
 }
