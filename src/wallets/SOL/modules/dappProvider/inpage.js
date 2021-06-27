@@ -2,6 +2,7 @@
 // check usage: kermit.exchange/static/js/utils/wallet.tsx
 /*
 import SolWalletAdapter from '@project-serum/sol-wallet-adapter';
+// https://github.com/project-serum/sol-wallet-adapter
 
 const wallet = new SolWalletAdapter(window.sollet, network); // sollet injected: window.sollet
 const wallet = window.solana; // phantom injected: window.solana
@@ -38,12 +39,15 @@ function init() {
     hello: 'world',
 
     postMessage: (message) => {
+      console.log('RPC (Dapp -> Ext)', message);
       const listener = (event) => {
         if (event.detail.id === message.id) {
           window.removeEventListener(
             CONST_DAPP_MESSAGE_TYPES.CONTENT_TO_INPAGE,
             listener,
           );
+          // send message to dapp (sol-wallet-adapter)
+          // https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L65
           window.postMessage(event.detail);
         }
       };
