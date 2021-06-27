@@ -1,4 +1,5 @@
 import { CONST_DAPP_MESSAGE_TYPES } from '../../../../consts/consts';
+import OneDappMessage from '../../../../classes/OneDappMessage';
 
 const responseHandlers = new Map();
 let unlockedMnemonic = '';
@@ -34,14 +35,15 @@ function handleConnect(message, sender, sendResponse) {
       launchPopup(message, sender, sendResponse);
     } else {
       // Send message to content -> inpage -> dapp(sol-wallet-adapter)
-      sendResponse({
-        method: 'connected',
-        params: {
-          publicKey: connectedWallet.publicKey,
-          autoApprove: connectedWallet.autoApprove,
-        },
-        id: message.data.id,
-      });
+      sendResponse(
+        OneDappMessage.connectedMessage({
+          id: message.data.id,
+          params: {
+            publicKey: connectedWallet.publicKey,
+            autoApprove: connectedWallet.autoApprove,
+          },
+        }),
+      );
     }
   });
 }
@@ -54,7 +56,12 @@ function handleDisconnect(message, sender, sendResponse) {
         connectedWallets: result.connectedWallets,
         lastUpdateStorageTime: `${new Date().toString()}/background.js`,
       },
-      () => sendResponse({ method: 'disconnected', id: message.data.id }),
+      () =>
+        sendResponse(
+          OneDappMessage.disconnectedMessage({
+            id: message.data.id,
+          }),
+        ),
     );
   });
 }
@@ -69,7 +76,7 @@ function init() {
         _sendResponse(...params);
       };
 
-      if (message.channel === CONST_DAPP_MESSAGE_TYPES.CONTENT_TO_BG) {
+      if (message.channel === CONST_DAPP_MESSAGE_TYPES.CHANNEL_CONTENT_TO_BG) {
         if (message.data.method === 'connect') {
           handleConnect(message, sender, sendResponse);
         } else if (message.data.method === 'disconnect') {
@@ -79,12 +86,15 @@ function init() {
         }
         // keeps response channel open
         return true;
-      } else if (message.channel === CONST_DAPP_MESSAGE_TYPES.POPUP_TO_BG) {
+      } else if (
+        message.channel === CONST_DAPP_MESSAGE_TYPES.CHANNEL_POPUP_TO_BG
+      ) {
         const responseHandler = responseHandlers.get(message.data.id);
         responseHandlers.delete(message.data.id);
         responseHandler(message.data);
       } else if (
-        message.channel === CONST_DAPP_MESSAGE_TYPES.POPUP_TO_BG_MNEMONIC
+        message.channel ===
+        CONST_DAPP_MESSAGE_TYPES.CHANNEL_POPUP_TO_BG_MNEMONIC
       ) {
         if (message.method === 'set') {
           unlockedMnemonic = message.data;
