@@ -10,7 +10,10 @@ function init() {
           channel: CONST_DAPP_MESSAGE_TYPES.CONTENT_TO_BG,
           data: event.detail,
         },
+        // response message from bg to content
+        // Send message to content -> inpage -> dapp(sol-wallet-adapter)
         (response) => {
+          console.log('RPC (Ext -> Dapp)', response);
           // Can return null response if window is killed
           if (!response) {
             return;

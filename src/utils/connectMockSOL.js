@@ -174,6 +174,14 @@ async function signTx(txPayload) {
   return JSON.parse(res);
 }
 
+async function signTxMessageInHardware(txSerializeMessage, hdPath) {
+  const account = await getAccountFromMnemonic({ hdPath });
+
+  // txSerializeMessage = bs58.encode(web3.Transaction.serializeMessage())
+  // const buffer = bs58.decode(txSerializeMessage);
+  return bs58.encode(nacl.sign.detached(txSerializeMessage, account.secretKey));
+}
+
 async function signTxInHardware(txPayloadStr) {
   const { instructions, recentBlockhash, creatorAddress, creatorHdPath } =
     JSON.parse(txPayloadStr);
@@ -404,4 +412,5 @@ export default {
   getAccountFromMnemonicTest,
   getAccountFromMnemonic,
   signTx,
+  signTxMessageInHardware,
 };

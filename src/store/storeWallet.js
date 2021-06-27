@@ -30,6 +30,9 @@ class StoreWallet extends BaseStore {
   currentWallet = new WalletBase();
 
   async getCurrentAccountTokens() {
+    if (!storeAccount.currentAccount) {
+      return;
+    }
     const tokensRes = await this.currentWallet.chainProvider.getAccountTokens();
     console.log('getCurrentAccountTokens', tokensRes);
     storeToken.setCurrentTokens(tokensRes);

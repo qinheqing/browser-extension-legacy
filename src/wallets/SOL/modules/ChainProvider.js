@@ -131,7 +131,13 @@ class ChainProvider extends ChainProviderBase {
   }
 
   async getAccountTokens({ address } = {}) {
-    const ownerAddress = address || this.options.accountInfo.address;
+    const ownerAddress = address || this.options?.accountInfo?.address;
+    if (!ownerAddress) {
+      return {
+        ownerAddress,
+        tokens: [],
+      };
+    }
     const accountPublicKey = new PublicKey(ownerAddress);
     const filters = helpersSOL.getOwnedAccountsFilters(accountPublicKey);
     // TODO https://solana-labs.github.io/solana-web3.js/classes/connection.html#getparsedtokenaccountsbyowner

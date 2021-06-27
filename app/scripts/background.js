@@ -67,6 +67,7 @@ let versionedData;
 if (inTest || process.env.METAMASK_DEBUG) {
   // set global localStore for debug
   global.onekeyLocalStore = localStore;
+  global.onekeyLocalStore_ENV_IN_TEST = process.env.IN_TEST;
   global.onekeyLocalStore.clear = async (callback) => {
     await localStore.set({ data: {}, meta: {} });
     console.log(JSON.stringify(await localStore.get(), null, 4));
@@ -211,7 +212,9 @@ async function loadStateFromPersistence() {
 
   // write to disk
   if (localStore.isSupported) {
-    localStore.set(versionedData);
+    // MUST only update {data,meta} field defined by MM, Otherwise it will overwrite fields defined elsewhere
+    const { data, meta } = versionedData;
+    localStore.set({ data, meta });
   } else {
     // throw in setTimeout so as to not block boot
     setTimeout(() => {
@@ -300,7 +303,9 @@ function setupController(initState, initLangCode) {
     }
     if (localStore.isSupported) {
       try {
-        await localStore.set(state);
+        // MUST only update {data,meta} field defined by MM, Otherwise it will overwrite fields defined elsewhere
+        const { data, meta } = state;
+        await localStore.set({ data, meta });
         if (dataPersistenceFailing) {
           dataPersistenceFailing = false;
         }

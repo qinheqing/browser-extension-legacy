@@ -68,13 +68,24 @@ export default function PageConnectHardware() {
       chainInfo,
     });
     setWallet(wallet1);
-    let addrs = await wallet1.getAddresses({ indexes: range(0, 10) });
+
+    const isSolWallet = wallet1.hdCoin === CONST_CHAIN_KEYS.SOL;
+
+    let addrs = [];
+    if (isSolWallet) {
+      addrs = range(0, 10).map((index) => ({
+        address: index,
+        hdPath: wallet1.hdkeyProvider.createHdPath({ index }),
+      }));
+    } else {
+      addrs = await wallet1.getAddresses({ indexes: range(0, 10) });
+    }
     const chainAccounts = storeAccount.getAccountsByChainKey(chainInfo.key);
     let accountIndex = chainAccounts.length;
     addrs = await Promise.all(
       addrs.map(async (addr) => {
         let { address } = addr;
-        if (wallet1.hdCoin === CONST_CHAIN_KEYS.SOL) {
+        if (isSolWallet) {
           // mock SOL address as hardware not ready yet
           const account = await connectMockSOL.getAccountFromMnemonic({
             hdPath: addr.hdPath,
@@ -117,7 +128,7 @@ export default function PageConnectHardware() {
         return (
           <AppFrame>
             <div className="PageConnectHardware">
-              <h1>
+              <div>
                 Connect Hardware
                 <button onClick={() => history.push(DEFAULT_ROUTE)}>
                   [Old Home]
@@ -128,7 +139,7 @@ export default function PageConnectHardware() {
                 <pre className="u-wrap-text">
                   chainInfo: {JSON.stringify(chainInfo, null, 4)}
                 </pre>
-              </h1>
+              </div>
 
               {importedAddresses && importedAddresses.length && (
                 <div style={{ background: '#eee' }}>
