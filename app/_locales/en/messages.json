@@ -203,7 +203,7 @@
     "message": "Set the idle time in minutes before OneKey will become locked."
   },
   "average": {
-    "message": "Average"
+    "message": "Fast"
   },
   "back": {
     "message": "Back"
@@ -712,7 +712,7 @@
     "message": "Something went wrong, and we were unable to complete the action"
   },
   "fast": {
-    "message": "Fast"
+    "message": "Rapid"
   },
   "fastest": {
     "message": "Fastest"
@@ -1592,7 +1592,7 @@
     "message": "Signed"
   },
   "slow": {
-    "message": "Slow"
+    "message": "Average"
   },
   "somethingWentWrong": {
     "message": "Oops! Something went wrong."
