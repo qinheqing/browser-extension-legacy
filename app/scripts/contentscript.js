@@ -86,44 +86,6 @@ async function setupStreams() {
   // connect "phishing" channel to warning system
   const phishingStream = extensionMux.createStream('phishing');
   phishingStream.once('data', redirectToPhishingWarning);
-
-  // TODO:LegacyProvider: Delete
-  // handle legacy provider
-  // const legacyPageStream = new LocalMessageDuplexStream({
-  //   name: LEGACY_CONTENT_SCRIPT,
-  //   target: LEGACY_INPAGE,
-  // });
-
-  // const legacyPageMux = new ObjectMultiplex();
-  // legacyPageMux.setMaxListeners(25);
-  // const legacyExtensionMux = new ObjectMultiplex();
-  // legacyExtensionMux.setMaxListeners(25);
-
-  // pump(legacyPageMux, legacyPageStream, legacyPageMux, (err) =>
-  //   logStreamDisconnectWarning('MetaMask Legacy Inpage Multiplex', err),
-  // );
-  // pump(
-  //   legacyExtensionMux,
-  //   extensionStream,
-  //   getNotificationTransformStream(),
-  //   legacyExtensionMux,
-  //   (err) => {
-  //     logStreamDisconnectWarning('MetaMask Background Legacy Multiplex', err);
-  //     notifyInpageOfStreamFailure();
-  //   },
-  // );
-
-  // forwardNamedTrafficBetweenMuxes(
-  //   LEGACY_PROVIDER,
-  //   PROVIDER,
-  //   legacyPageMux,
-  //   legacyExtensionMux,
-  // );
-  // forwardTrafficBetweenMuxes(
-  //   LEGACY_PUBLIC_CONFIG,
-  //   legacyPageMux,
-  //   legacyExtensionMux,
-  // );
 }
 
 function forwardTrafficBetweenMuxes(channelName, muxA, muxB) {
@@ -136,37 +98,6 @@ function forwardTrafficBetweenMuxes(channelName, muxA, muxB) {
     ),
   );
 }
-
-// TODO:LegacyProvider: Delete
-// function forwardNamedTrafficBetweenMuxes(
-//   channelAName,
-//   channelBName,
-//   muxA,
-//   muxB,
-// ) {
-//   const channelA = muxA.createStream(channelAName);
-//   const channelB = muxB.createStream(channelBName);
-//   pump(channelA, channelB, channelA, (error) =>
-//     console.debug(
-//       `MetaMask: Muxed traffic between channels "${channelAName}" and "${channelBName}" failed.`,
-//       error,
-//     ),
-//   );
-// }
-
-// TODO:LegacyProvider: Delete
-// function getNotificationTransformStream() {
-//   return createThoughStream((chunk, _, cb) => {
-//     if (chunk?.name === PROVIDER) {
-//       if (chunk.data?.method === 'metamask_accountsChanged') {
-//         chunk.data.method = 'wallet_accountsChanged';
-//         chunk.data.result = chunk.data.params;
-//         delete chunk.data.params;
-//       }
-//     }
-//     cb(null, chunk);
-//   });
-// }
 
 /**
  * Error handler for page to extension stream disconnections
@@ -299,9 +230,12 @@ function blockedDomainCheck() {
 /**
  * Redirects the current page to a phishing information page
  */
-function redirectToPhishingWarning() {
+function redirectToPhishingWarning({ currentLocale = 'zh' }) {
   console.debug('MetaMask: Routing to Phishing Warning component.');
-  const extensionURL = extension.runtime.getURL('phishing.html');
+  const filename = currentLocale.includes('en')
+    ? 'phishing_en.html'
+    : 'phishing.html';
+  const extensionURL = extension.runtime.getURL(filename);
   window.location.href = `${extensionURL}#${querystring.stringify({
     hostname: window.location.hostname,
     href: window.location.href,
