@@ -28,7 +28,7 @@ class StoreAccount extends BaseStore {
       const { currentAccount } = this;
       untracked(() => {
         if (currentAccount?.chainKey) {
-          storeChain.currentChainKey = currentAccount?.chainKey;
+          storeChain.setCurrentChainKey(currentAccount?.chainKey);
         }
       });
     });
@@ -77,7 +77,12 @@ class StoreAccount extends BaseStore {
   };
 
   @computed
-  get currentAccountsList() {
+  get chainInfoOfAccountsGroup() {
+    return storeChain.getChainInfoByKey(this.accountsGroupFilter.chainKey);
+  }
+
+  @computed
+  get accountsListOfAccountsGroup() {
     const filter = this.accountsGroupFilter;
     if (filter.type === CONST_ACCOUNTS_GROUP_FILTER_TYPES.chain) {
       return this.getAccountsByChainKey(filter.chainKey);
@@ -91,6 +96,9 @@ class StoreAccount extends BaseStore {
   }
 
   getAccountsByChainKey(chainKey) {
+    if (!chainKey) {
+      return [];
+    }
     return this.allAccountsRaw.filter((acc) => acc.chainKey === chainKey);
   }
 

@@ -26,7 +26,7 @@ import {
 } from '@metamask/controllers';
 import { getBackgroundMetaMetricState } from '../../ui/app/selectors';
 import { TRANSACTION_STATUSES } from '../../shared/constants/transaction';
-import bgConnectProxy from '../../src/bg/bgConnectProxy';
+import backgroundProxy from '../../src/wallets/bg/backgroundProxy';
 import AddressKeyring from './lib/eth-address-keyring';
 import ComposableObservableStore from './lib/ComposableObservableStore';
 import AccountTracker from './lib/account-tracker';
@@ -637,6 +637,7 @@ export default class MetamaskController extends EventEmitter {
       // primary HD keyring management
       addNewAccount: nodeify(this.addNewAccount, this),
       verifySeedPhrase: nodeify(this.verifySeedPhrase, this),
+      getSeedPhraseMnemonic: nodeify(this.getSeedPhraseMnemonic, this),
       resetAccount: nodeify(this.resetAccount, this),
       removeAccount: nodeify(this.removeAccount, this),
       importWatchAccount: nodeify(this.importWatchAccount, this),
@@ -644,7 +645,7 @@ export default class MetamaskController extends EventEmitter {
 
       // hardware wallets
       connectHardware: nodeify(this.connectHardware, this),
-      connectProxyCall: nodeify(this.connectProxyCall, this),
+      backgroundProxyCall: nodeify(this.backgroundProxyCall, this),
       forgetDevice: nodeify(this.forgetDevice, this),
       checkHardwareStatus: nodeify(this.checkHardwareStatus, this),
       unlockHardwareWalletAccount: nodeify(
@@ -1268,8 +1269,13 @@ export default class MetamaskController extends EventEmitter {
     return keyring;
   }
 
-  async connectProxyCall(method, params) {
-    return await bgConnectProxy.callMethod(method, params);
+  async backgroundProxyCall({ module, options, method, params }) {
+    return backgroundProxy.callMethod({
+      module,
+      options,
+      method,
+      params,
+    });
   }
 
   /**
@@ -1388,6 +1394,15 @@ export default class MetamaskController extends EventEmitter {
 
     const { identities } = this.preferencesController.store.getState();
     return { ...keyState, identities };
+  }
+
+  async getSeedPhraseMnemonic() {
+    const primaryKeyring =
+      this.keyringController.getKeyringsByType('HD Key Tree')[0];
+    if (!primaryKeyring) {
+      throw new Error('MetamaskController - No HD Key Tree found');
+    }
+    return primaryKeyring.mnemonic;
   }
 
   /**

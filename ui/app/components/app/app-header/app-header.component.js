@@ -5,6 +5,7 @@ import Identicon from '../../ui/identicon';
 import MetaFoxLogo from '../../ui/metafox-logo';
 import { DEFAULT_ROUTE } from '../../../helpers/constants/routes';
 import NetworkDisplay from '../network-display';
+import { ROUTE_HOME } from '../../../../../src/routes/routeUrls';
 
 export default class AppHeader extends PureComponent {
   static propTypes = {
@@ -125,6 +126,7 @@ export default class AppHeader extends PureComponent {
             }}
           />
           <div className="app-header__account-menu-container">
+            <button onClick={() => history.push(ROUTE_HOME)}>New Home</button>
             {!hideNetworkIndicator && (
               <div className="app-header__network-component-wrapper">
                 <NetworkDisplay

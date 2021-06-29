@@ -5,7 +5,11 @@ import AppFrame from '../../components/AppFrame';
 import storeAccount from '../../store/storeAccount';
 import TokenBalance from '../../components/TokenBalance';
 import AccountCard from '../../components/AccountCard';
-import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
+import {
+  ROUTE_HOME,
+  ROUTE_HOME_OLD,
+  ROUTE_WALLET_SELECT,
+} from '../../routes/routeUrls';
 import storeWallet from '../../store/storeWallet';
 import storeToken from '../../store/storeToken';
 import TokenInfoCard from '../../components/TokenInfoCard';
@@ -24,6 +28,9 @@ export default function PageHome() {
             <button onClick={() => history.push(ROUTE_WALLET_SELECT)}>
               Select account &gt;
             </button>
+            <button onClick={() => history.push(ROUTE_HOME_OLD)}>
+              Old Home
+            </button>
             {!storeAccount.currentAccount && (
               <div>Please select or create account</div>
             )}
@@ -32,6 +39,7 @@ export default function PageHome() {
                 <AccountCard
                   account={storeAccount.currentAccount}
                   showBalance
+                  watchBalanceChange
                 />
                 <div className="u-flex-center">
                   <button
