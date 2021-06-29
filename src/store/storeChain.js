@@ -1,4 +1,4 @@
-import { observable, computed, makeObservable } from 'mobx';
+import { observable, computed, makeObservable, action } from 'mobx';
 import { toPlainObject, sortBy } from 'lodash';
 import OneChainInfo from '../classes/OneChainInfo';
 import {
@@ -150,6 +150,13 @@ class StoreChain extends BaseStore {
 
   @observable
   currentChainKey = this.chainsKeys[0];
+
+  @action.bound
+  setCurrentChainKey(key) {
+    if (key) {
+      this.currentChainKey = key;
+    }
+  }
 
   getChainInfoByKey(key) {
     return this.chains[key];

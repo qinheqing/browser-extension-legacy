@@ -7,8 +7,10 @@ import PageConnectHardware from '../pages/PageConnectHardware';
 import PageWalletSelect from '../pages/PageWalletSelect';
 import PageHome from '../pages/PageHome';
 import PagePopup from '../pages/PagePopup';
+import PageCreateAccount from '../pages/PageCreateAccount';
 import {
   ROUTE_CONNECT_HARDWARE,
+  ROUTE_CREATE_ACCOUNT,
   ROUTE_HOME,
   ROUTE_POPUP,
   ROUTE_WALLET_SELECT,
@@ -42,6 +44,13 @@ export default function AppRoutes() {
       <Authenticated
         path={ROUTE_POPUP}
         component={PagePopup}
+        exact
+        autoReturn
+        authDisabled
+      />
+      <Authenticated
+        path={ROUTE_CREATE_ACCOUNT}
+        component={PageCreateAccount}
         exact
         autoReturn
         authDisabled

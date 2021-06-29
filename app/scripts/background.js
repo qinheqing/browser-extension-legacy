@@ -41,6 +41,7 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import backgroundSolana from '../../src/wallets/SOL/modules/dappProvider/background';
+import backgroundContainer from './backgroundContainer';
 /* eslint-enable import/first */
 
 const { sentry } = global;
@@ -76,7 +77,7 @@ if (inTest || process.env.METAMASK_DEBUG) {
       // eslint-disable-next-line node/callback-return
       callback && callback();
       setTimeout(() => {
-        window.location.reload();
+        global.location.reload();
       }, 500);
     }, 2000);
   };
@@ -260,6 +261,12 @@ function setupController(initState, initLangCode) {
       return openMetamaskTabsIDs;
     },
   });
+
+  backgroundContainer.setRootController(controller);
+
+  if (inTest || process.env.METAMASK_DEBUG) {
+    global.$$metamaskController = controller;
+  }
 
   setupEnsIpfsResolver({
     getCurrentChainId: controller.networkController.getCurrentChainId.bind(

@@ -5,6 +5,11 @@ function init() {
   window.addEventListener(
     CONST_DAPP_MESSAGE_TYPES.EVENT_INPAGE_TO_CONTENT,
     (event) => {
+      // check event from origin, source, target for safety
+      if (event.target !== window) {
+        return;
+      }
+
       // TODO only chrome
       window.chrome.runtime.sendMessage(
         OneDappMessage.extensionRuntimeMessage({

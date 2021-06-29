@@ -1,30 +1,43 @@
 import React from 'react';
 import { Observer, observer } from 'mobx-react-lite';
 import { useHistory } from 'react-router-dom';
+import { sampleSize, range } from 'lodash';
 import storeAccount from '../../store/storeAccount';
 import AppFrame from '../../components/AppFrame';
 import AccountsGroupBar from '../../components/AccountsGroupBar';
 import AccountCard from '../../components/AccountCard';
-import { ROUTE_CONNECT_HARDWARE, ROUTE_HOME } from '../../routes/routeUrls';
+import {
+  ROUTE_CONNECT_HARDWARE,
+  ROUTE_CREATE_ACCOUNT,
+  ROUTE_HOME,
+} from '../../routes/routeUrls';
+import walletFactory from '../../wallets/walletFactory';
 
 function AccountsList() {
   const history = useHistory();
   return (
     <Observer>
       {() => {
-        const accounts = storeAccount.currentAccountsList;
-
+        const accounts = storeAccount.accountsListOfAccountsGroup;
+        const chainInfo = storeAccount.chainInfoOfAccountsGroup;
+        const wallet = chainInfo
+          ? walletFactory.createWallet({
+              chainInfo,
+            })
+          : null;
         return (
           <div>
-            {accounts.map((acc) => {
+            {accounts.map((account) => {
               return (
                 <AccountCard
-                  key={acc.chainKey + acc.address}
+                  key={account.chainKey + account.address}
+                  wallet={wallet}
                   onClick={() => {
-                    storeAccount.setCurrentAccount({ account: acc });
+                    storeAccount.setCurrentAccount({ account });
                     history.replace(ROUTE_HOME);
                   }}
-                  account={acc}
+                  showBalance
+                  account={account}
                 />
               );
             })}
@@ -42,7 +55,6 @@ function AccountsList() {
 
 function PageWalletSelect() {
   const history = useHistory();
-
   return (
     <Observer>
       {() => {
@@ -55,7 +67,9 @@ function PageWalletSelect() {
               </div>
               <AccountsList />
               <footer className="PageWalletSelect__footerActions">
-                <button>Add accounts</button>{' '}
+                <button onClick={() => history.push(ROUTE_CREATE_ACCOUNT)}>
+                  + Add accounts
+                </button>{' '}
                 <button onClick={() => history.push(ROUTE_CONNECT_HARDWARE)}>
                   Connect hardware
                 </button>

@@ -2,6 +2,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { composeWithDevTools } from 'remote-redux-devtools';
 import rootReducer from '../ducks';
+import syncToMobxMiddleware from './syncToMobxMiddleware';
 
 export default function configureStore(initialState) {
   const composeEnhancers = process.env.ENV_REDUX_DEVTOOLS_ON
@@ -15,6 +16,6 @@ export default function configureStore(initialState) {
   return createStore(
     rootReducer,
     initialState,
-    composeEnhancers(applyMiddleware(thunkMiddleware)),
+    composeEnhancers(applyMiddleware(thunkMiddleware, syncToMobxMiddleware)),
   );
 }
