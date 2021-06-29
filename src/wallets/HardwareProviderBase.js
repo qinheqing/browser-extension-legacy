@@ -3,48 +3,15 @@
 import OneKeyConnect from '@onekeyhq/connect';
 import { toLower } from 'lodash';
 import utilsApp from '../utils/utilsApp';
-import { getBackgroundInstance } from '../../ui/app/store/actions';
-
-// Why use proxy, not use connect directly:
-//     old ui and new ui should call connect at the same bg process,
-//     otherwise the second ui connect hardware will not work
-class OneKeyConnectProxy {
-  async bgProxyCall(method, params) {
-    console.log('OnekeyConnect hardware call: ', method, params);
-    const bg = await getBackgroundInstance();
-    const response = await bg.connectProxyCall(method, params);
-    console.log('OnekeyConnect hardware response: ', {
-      method,
-      params,
-      response,
-    });
-    return response;
-  }
-
-  // TODO use Proxy to auto bind
-  ethereumGetAddress(params) {
-    return this.bgProxyCall('ethereumGetAddress', params);
-  }
-
-  stellarGetAddress(params) {
-    return this.bgProxyCall('stellarGetAddress', params);
-  }
-
-  getAddress(params) {
-    return this.bgProxyCall('getAddress', params);
-  }
-
-  getPublicKey(params) {
-    return this.bgProxyCall('getPublicKey', params);
-  }
-}
+import { UiBackgroundProxy } from './bg/UiBackgroundProxy';
 
 class HardwareProviderBase {
-  constructor(props) {
-    this.connect = new OneKeyConnectProxy();
-  }
+  // Why use proxy, not use connect directly:
+  //     old ui and new ui should call connect at the same bg process,
+  //     otherwise the second ui connect hardware will not work
+  connect = new UiBackgroundProxy();
 
-  connect = OneKeyConnect;
+  _connectInternal = OneKeyConnect; // DO NOT use this, use OneKeyBackgroundProxy to invoke connect functions
 
   isCoinMatch(coin1 = '', coin2 = '') {
     return toLower(coin1) === toLower(coin2);
@@ -52,7 +19,7 @@ class HardwareProviderBase {
 
   // TODO batch get
   async getPublicKey({ coin, path }) {
-    return this.connect.getPublicKey({
+    return this.connect.hardwareGetPublicKey({
       path,
       coin,
     });

@@ -16,13 +16,15 @@ const { Transaction, PublicKey } = global.solanaWeb3;
 
 // const PageSample = observer(PageSamplePure);
 
-function ApproveConnection({ onApprove }) {
+function ApproveConnection({ onApprove, query }) {
   const history = useHistory();
   return (
     <Observer>
       {() => {
         return (
           <AppFrame>
+            <ReactJsonView collapsed src={query} />
+
             <div className="u-wrap-text">
               {storeAccount.currentAccountAddress}
               <button onClick={() => history.push(ROUTE_WALLET_SELECT)}>
@@ -41,9 +43,11 @@ function ApproveConnection({ onApprove }) {
   );
 }
 
-function ApproveTransaction({ onApprove }) {
+function ApproveTransaction({ onApprove, query }) {
   return (
     <AppFrame>
+      <ReactJsonView collapsed src={query} />
+
       <button onClick={() => onApprove(false)}>Approve tx</button>
     </AppFrame>
   );
@@ -84,8 +88,11 @@ function PagePopup() {
     [query.origin],
   );
 
+  // Push requests from the parent window (opener) postMessage into a queue.
+  //    TODO requestsQueue may only works at sollet Web Wallet
   useEffect(() => {
     function messageHandler(e) {
+      // check event origin, source, target for safety
       if (e.origin === query.origin && e.source === window.opener) {
         if (
           e.data.method !== 'signTransaction' &&
@@ -175,7 +182,7 @@ function PagePopup() {
       popRequest();
     };
 
-    return <ApproveTransaction onApprove={onApprove} />;
+    return <ApproveTransaction query={query} onApprove={onApprove} />;
   }
 
   if (request.method === 'connect') {
@@ -211,7 +218,13 @@ function PagePopup() {
       popRequest();
     };
 
-    return <ApproveConnection origin={query.origin} onApprove={connect} />;
+    return (
+      <ApproveConnection
+        origin={query.origin}
+        query={query}
+        onApprove={connect}
+      />
+    );
   }
 
   return (

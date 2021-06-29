@@ -48,6 +48,11 @@ function init() {
        */
       console.log('RPC (Dapp -> Ext)', message);
       const listener = (event) => {
+        // check event from origin, source, target for safety
+        if (event.target !== window) {
+          return;
+        }
+
         if (event.detail.id === message.id) {
           window.removeEventListener(
             CONST_DAPP_MESSAGE_TYPES.EVENT_CONTENT_TO_INPAGE,

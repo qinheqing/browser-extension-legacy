@@ -48,6 +48,11 @@
   font-size: 12px;
 }
 
+.AccountCard__path{
+  font-size: 10px;
+  color: #aaa;
+}
+
 .AccountCard__blank {
   flex: 1;
 }
@@ -58,5 +63,5 @@
 
 .AccountCard__balanceFiat {
   font-size: 12px;
-  color: 888
+  color: #888;
 }

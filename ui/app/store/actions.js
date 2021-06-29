@@ -2969,6 +2969,12 @@ export function trackMetaMetricsPage(payload, options) {
   return promisifiedBackground.trackMetaMetricsPage(payload, options);
 }
 
-export function getBackgroundInstance() {
+// If you need the return value of a background method call
+export async function getBackgroundInstanceAsync() {
   return promisifiedBackground;
+}
+
+// background method call will be always undefined
+export function getBackgroundInstance() {
+  return background;
 }
