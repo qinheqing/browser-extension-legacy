@@ -15,29 +15,34 @@ class StoreBalance extends BaseStore {
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
 
+    // TODO rename allBalanceRaw
     this.autosave('currentBalanceRaw');
   }
 
   @observable
   currentBalanceRaw = {
-    // key: { balance, decimals }
+    // key: { balance, decimals, lastUpdate }
   };
 
-  // TODO throttle
-  updateTokenBalance(key, { balance, decimals } = {}) {
+  // TODO throttle, auto remove some very old records
+  @action.bound
+  updateTokenBalance(key, { balance, decimals, ...others } = {}) {
     if (key) {
       // use merge() DO NOT handle undefined value
       const newInfo = merge({}, this.currentBalanceRaw[key], {
         balance,
         decimals,
+        ...others,
+        lastUpdate: new Date().getTime(),
       });
       this.currentBalanceRaw[key] = newInfo;
     }
   }
 
   getBalanceInfoByKey(key) {
-    const { balance, decimals } = this.currentBalanceRaw[key] || {};
-    return { balance, decimals };
+    const { balance, decimals, lastUpdate, ...others } =
+      this.currentBalanceRaw[key] || {};
+    return { balance, decimals, lastUpdate, ...others };
   }
 }
 

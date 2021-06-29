@@ -336,8 +336,10 @@ async function getRootSeed() {
   return await utilsApp.mnemonicToSeed(CONST_TEST_MNEMONIC);
 }
 
-async function getAccountFromMnemonic({ hdPath }) {
-  const rootSeed = await getRootSeed();
+async function getAccountFromMnemonic({ mnemonic, hdPath }) {
+  const rootSeed = mnemonic
+    ? await utilsApp.mnemonicToSeed(mnemonic)
+    : await getRootSeed();
 
   // ----------------------------------------------
   const acc1 = getAccountBase({

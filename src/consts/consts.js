@@ -16,7 +16,7 @@ export const CONST_HARDWARE_MODELS = {
   OneKeyClassic: 'onekey',
   OneKeyMini: 'onekey_mini',
   OneKeyPro: 'onekey_pro',
-  Unknown: 'unknown',
+  Unknown: '',
 };
 export const CONST_TX_TYPES = {
   Transfer: 'Transfer',
@@ -43,4 +43,9 @@ export const CONST_DAPP_MESSAGE_TYPES = {
   CHANNEL_POPUP_TO_BG: 'ONEKEY_EXT_CHANNEL_POPUP_TO_BG',
   // TODO remove
   CHANNEL_POPUP_TO_BG_MNEMONIC: 'ONEKEY_EXT_CHANNEL_POPUP_TO_BG_MNEMONIC',
+};
+
+export const BACKGROUND_PROXY_MODULE_NAMES = {
+  hardware: 'hardware',
+  keyring: 'keyring',
 };

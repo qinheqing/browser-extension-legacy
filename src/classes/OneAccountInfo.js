@@ -13,6 +13,7 @@ class OneAccountInfo {
     balance = 0,
     decimals,
     currency,
+    hardwareModel,
   }) {
     this._raw = _raw;
     this.chainKey = chainKey;
@@ -23,6 +24,7 @@ class OneAccountInfo {
     this.balance = balance;
     this.decimals = decimals;
     this.currency = currency;
+    this.hardwareModel = hardwareModel;
     // TODO  uniqKey:  this.key = key || this.generateKey();
   }
 

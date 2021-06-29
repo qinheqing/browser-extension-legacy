@@ -11,7 +11,7 @@ function ReactJsonView({ src, ...others }) {
       >
         print json
       </button>
-      <ReactJson src={src} {...others} />
+      <ReactJson src={src} collapsed {...others} />
     </div>
   );
 }

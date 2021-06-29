@@ -16,6 +16,8 @@ import connectMockSOL from '../../utils/connectMockSOL';
 import storeAccount from '../../store/storeAccount';
 import AppFrame from '../../components/AppFrame';
 import { ROUTE_HOME, ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
+import ReactJsonView from '../../components/ReactJsonView';
+import OneAccountInfo from '../../classes/OneAccountInfo';
 
 function OneAmount({ value, decimals = 0, precision = 8, round }) {
   const value1 = value || '0';
@@ -49,9 +51,7 @@ export default function PageConnectHardware() {
   const [browserSupported, setBrowserSupported] = useState(true);
   const [importedAddresses, setImportedAddresses] = useState([]);
   const [wallet, setWallet] = useState(null);
-  const chainInfo = storeChain.getChainInfoByKey(
-    storeAccount.accountsGroupFilter.chainKey,
-  );
+  const chainInfo = storeAccount.chainInfoOfAccountsGroup;
 
   useEffect(() => {
     if (!chainInfo) {
@@ -63,9 +63,14 @@ export default function PageConnectHardware() {
   const connectToHardwareWallet = async (
     device = CONST_HARDWARE_MODELS.OneKeyClassic,
   ) => {
+    const accountInfo = new OneAccountInfo({
+      type: CONSTS_ACCOUNT_TYPES.Hardware,
+      hardwareModel: device,
+    });
     const wallet1 = walletFactory.createWallet({
       hardwareModel: device,
       chainInfo,
+      accountInfo,
     });
     setWallet(wallet1);
 
@@ -96,7 +101,6 @@ export default function PageConnectHardware() {
         return {
           ...addr,
           address,
-          decimals: wallet1.options.balanceDecimals,
           name: chainInfo.generateAccountName({ index: accountIndex }),
         };
       }),
@@ -109,12 +113,12 @@ export default function PageConnectHardware() {
   const confirmImport = () => {
     storeAccount.addAccounts(
       importedAddresses.map((addr) => {
-        const { address, hdPath, name } = addr;
+        const { address, path, name } = addr;
         return {
           name,
           chainKey: chainInfo.key,
           address,
-          path: hdPath,
+          path,
           type: CONSTS_ACCOUNT_TYPES.Hardware,
         };
       }),
@@ -136,9 +140,7 @@ export default function PageConnectHardware() {
                 <button onClick={() => history.push(ROUTE_HOME)}>
                   [New Home]
                 </button>
-                <pre className="u-wrap-text">
-                  chainInfo: {JSON.stringify(chainInfo, null, 4)}
-                </pre>
+                <ReactJsonView src={chainInfo} />
               </div>
 
               {importedAddresses && importedAddresses.length && (
@@ -164,10 +166,12 @@ export default function PageConnectHardware() {
               </pre>
 
               {!importedAddresses?.length && (
-                <SelectHardware
-                  connectToHardwareWallet={connectToHardwareWallet}
-                  browserSupported={browserSupported}
-                />
+                <>
+                  <SelectHardware
+                    connectToHardwareWallet={connectToHardwareWallet}
+                    browserSupported={browserSupported}
+                  />
+                </>
               )}
             </div>
           </AppFrame>

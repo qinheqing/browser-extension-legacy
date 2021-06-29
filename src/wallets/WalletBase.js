@@ -5,6 +5,8 @@ import utilsApp from '../utils/utilsApp';
 import ChainProviderBase from './ChainProviderBase';
 import HardwareProviderBase from './HardwareProviderBase';
 import { HdKeyProviderBase } from './HdKeyProvider';
+import { UiBackgroundProxy } from './bg/UiBackgroundProxy';
+import KeyringBase from './KeyringBase';
 
 class WalletBase {
   constructor(options = {}) {
@@ -16,7 +18,7 @@ class WalletBase {
       chainInfo,
       ...others
     } = options;
-    // TODO merge to options
+    // TODO merge to options, remove
     this.hardwareModel = hardwareModel;
     this.hdPathCustomTemplate = hdPath;
     this.accountInfo = accountInfo;
@@ -44,10 +46,14 @@ class WalletBase {
 
   hdkeyProvider = new HdKeyProviderBase(this.options);
 
+  keyring = new KeyringBase(this.options);
+
+  bgProxy = new UiBackgroundProxy();
+
   // TODO rename to hdkeyProvider
   hdkey = null; // new HDKey()
 
-  // TODO rename to baseChain
+  // TODO rename to accountInfo.baseChain
   get hdCoin() {
     return utilsApp.throwToBeImplemented(this);
   }
@@ -56,12 +62,15 @@ class WalletBase {
     return toLower(this.hdCoin);
   }
 
-  // TODO remove
-  get hdPathUnlockTest() {
-    return "m/44'/60'/0'/0/0";
-  }
-
   // ----------------------------------------------
+
+  keyringProxyCall({ method, params }) {
+    return this.bgProxy.keyringProxyCall({
+      options: { ...this.options, isAtBackground: true },
+      method,
+      params,
+    });
+  }
 
   /**
    *
@@ -73,30 +82,8 @@ class WalletBase {
        "hdPathTemplate": "m/44'/60'/0'/0/{{index}}",
        "hdPath": "m/44'/60'/0'/0/0",
    */
-  buildAddressMeta({ index }) {
-    return {
-      hardwareModel: this.hardwareModel,
-      hdCoin: this.hdCoin,
-      hdPathIndex: index,
-      hdPathTemplate: this.hdkeyProvider.hdPathTemplate,
-      hdPath: this.hdkeyProvider.createHdPath({ index }),
-      hdPathUnlockTest: this.hdPathUnlockTest, // TODO remove
-    };
-  }
-
-  getAddress({ index = 0 }) {
-    const hkey = this.deriveHdKey({ index });
-    const publicKeyBytes = hkey.publicKey;
-    const publicKey = publicKeyBytes.toString('hex');
-    const address = this.publicKeyToAddress({
-      publicKeyBytes,
-      publicKey,
-    });
-    console.log(this.buildAddressMeta({ index }));
-    return {
-      address,
-      ...this.buildAddressMeta({ index }),
-    };
+  buildAddressMeta({ index, hdPath, ...others }) {
+    return this.keyring.buildAddressMeta({ index, hdPath, ...others });
   }
 
   async getAddresses({ indexes = [0] }) {
@@ -123,14 +110,18 @@ class WalletBase {
     });
     if (success) {
       return payload.map((data, i) => {
+        /*
+          "path": [1,2,3,4,5]
+          "serializedPath": "m/44'/60'/0'/0/0",
+          "address": "0x99F825D80cADd21D77D13B7e13D25960B40a6299",
+         */
+        const { serializedPath, address } = data;
         return {
-          /*
-            "path": [1,2,3,4,5]
-            "serializedPath": "m/44'/60'/0'/0/0",
-            "address": "0x99F825D80cADd21D77D13B7e13D25960B40a6299",
-           */
-          ...data,
-          ...this.buildAddressMeta({ index: indexes[i] }),
+          address,
+          ...this.buildAddressMeta({
+            index: indexes[i],
+            hdPath: serializedPath,
+          }),
         };
       });
     }
