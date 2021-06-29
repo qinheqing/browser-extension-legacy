@@ -9,6 +9,9 @@ class OneDappMessage {
     this.channel = channel;
     this.data = data;
     this.__messageTime__ = new Date().toString();
+    // need determine messageType here:
+    //    https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L37
+    this.__messageType__ = 'ONEKEY_EXT';
   }
 
   static connectedMessage({ id, params: { publicKey, autoApprove } }) {

@@ -9,6 +9,10 @@
   white-space: pre-wrap;
 }
 
+.u-flex {
+  display: flex;
+}
+
 .u-flex-child {
   @include one-flex-item;
 }

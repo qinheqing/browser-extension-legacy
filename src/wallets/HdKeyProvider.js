@@ -84,9 +84,9 @@ class HdKeyProviderEd25519 extends HdKeyProviderBase {
     const publicKey = hdkey.getPublicKey(key);
     return {
       hdkey,
+      chainCode,
       publicKey,
       privateKey: key,
-      chainCode,
     };
   }
 

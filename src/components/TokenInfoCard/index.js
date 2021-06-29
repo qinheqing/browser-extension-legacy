@@ -25,7 +25,7 @@ function TokenInfoCard({ token }) {
                 <strong onClick={() => console.log(token)}> [INFO]</strong>
               </div>
               <div className="u-flex-child" />
-              <TokenBalance tokenKey={token.key} address={token.address} />
+              <TokenBalance tokenInfo={token} watchBalanceChange />
             </div>
             <div className="u-whitespace" />
             <div className="TokenInfoCard__footer">

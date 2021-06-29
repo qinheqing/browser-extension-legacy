@@ -1,4 +1,3 @@
-import bs58 from 'bs58';
 import { isNil } from 'lodash';
 import WalletBase from '../WalletBase';
 import { CONST_CHAIN_KEYS, CONST_TX_TYPES } from '../../consts/consts';
@@ -8,6 +7,7 @@ import OneTxInstructionInfo from '../../classes/OneTxInstructionInfo';
 import ChainProvider from './modules/ChainProvider';
 import HardwareProvider from './modules/HardwareProvider';
 import HdKeyProvider from './modules/HdKeyProvider';
+import KeyringSOL from './KeyringSOL';
 
 // TODO remove
 global.$$connectMockSOL = connectMockSOL;
@@ -32,6 +32,8 @@ class WalletSOL extends WalletBase {
   chainProvider = new ChainProvider(this.options);
 
   hdkeyProvider = new HdKeyProvider(this.options);
+
+  keyring = new KeyringSOL(this.options);
 
   async addAssociateToken({ account, contract }) {
     const creatorAccount = account || this.accountInfo;
@@ -141,6 +143,13 @@ class WalletSOL extends WalletBase {
       rawTransaction: txSigned,
     });
     return txid;
+  }
+
+  async getAddressesHdWallet({ indexes = [0], ...others }) {
+    return this.keyringProxyCall({
+      method: 'getAddressesHdWallet',
+      params: { indexes, ...others },
+    });
   }
 }
 
