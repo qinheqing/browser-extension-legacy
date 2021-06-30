@@ -14,6 +14,8 @@ const browserify = require('browserify');
 const envify = require('loose-envify/custom');
 const sourcemaps = require('gulp-sourcemaps');
 const terser = require('gulp-terser-js');
+const scssify = require('scssify2');
+const modulesify = require('css-modulesify');
 
 const conf = require('rc')('metamask', {
   INFURA_PROJECT_ID: process.env.INFURA_PROJECT_ID,
@@ -27,6 +29,7 @@ const conf = require('rc')('metamask', {
 const baseManifest = require('../../app/manifest/_base.json');
 
 const packageJSON = require('../../package.json');
+const configs = require('./configs');
 const {
   createTask,
   composeParallel,
@@ -72,6 +75,40 @@ const externalDependenciesMap = {
     ...reactDepenendencies,
     ...metamaskDepenendencies,
   ],
+};
+
+const sassConfig = {
+  autoInject: false,
+  autoInject000: {
+    // Useful for debugging; adds data-href="src/foo.scss" to <style> tags
+    verbose: true,
+    // If true the <style> tag will be prepended to the <head>
+    prepend: false,
+  },
+  sass000: {},
+
+  // require('./MyComponent.scss') === '.MyComponent{color:red;background:blue}'
+  // autoInject: false, will also enable this
+  // pre 1.x.x, this is enabled by default
+  export: true,
+
+  // Pass options to the compiler, check the node-sass project for more details
+  sass: {
+    ...configs.sassConfig,
+  },
+
+  // Configure postcss plugins too!
+  // postcss is a "soft" dependency so you may need to install it yourself
+  postcss: {
+    autoprefixer: {
+      browsers: ['last 2 versions'],
+    },
+  },
+
+  postProcess(css) {
+    // allows for processing the generated CSS
+    return css;
+  },
 };
 
 function createScriptTasks({ browserPlatforms, livereload }) {
@@ -334,6 +371,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
      */
     // https://stackoverflow.com/questions/40029113/syntaxerror-import-and-export-may-appear-only-with-sourcetype-module-g
     let bundler = browserify(browserifyOpts)
+      .transform(scssify, sassConfig)
       .transform(unflowify)
       .transform(babelify)
       // .transform(

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
 
-// const ComponentSample = observer(ComponentSamplePure);
+// const ObservedComponent = observer(ComponentSample);
 
 function ComponentSample({ children }) {
   return (
