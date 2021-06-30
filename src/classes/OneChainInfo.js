@@ -9,6 +9,7 @@ class OneChainInfo {
     description = '',
     etherChainId = -1, //
     rpc = [],
+    scan = [],
     currency = '', // BNB
     browser = [],
     isCustom = false, // is built-in or user custom Chain

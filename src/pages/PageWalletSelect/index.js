@@ -12,6 +12,7 @@ import {
   ROUTE_HOME,
 } from '../../routes/routeUrls';
 import walletFactory from '../../wallets/walletFactory';
+import utilsApp from '../../utils/utilsApp';
 
 function AccountsList() {
   const history = useHistory();
@@ -67,10 +68,18 @@ function PageWalletSelect() {
               </div>
               <AccountsList />
               <footer className="PageWalletSelect__footerActions">
-                <button onClick={() => history.push(ROUTE_CREATE_ACCOUNT)}>
+                <button
+                  disabled={!storeAccount.accountsGroupFilter.chainKey}
+                  onClick={() => history.push(ROUTE_CREATE_ACCOUNT)}
+                >
                   + Add accounts
                 </button>{' '}
-                <button onClick={() => history.push(ROUTE_CONNECT_HARDWARE)}>
+                <button
+                  disabled={!storeAccount.accountsGroupFilter.chainKey}
+                  onClick={() =>
+                    utilsApp.openStandalonePage(ROUTE_CONNECT_HARDWARE)
+                  }
+                >
                   Connect hardware
                 </button>
               </footer>

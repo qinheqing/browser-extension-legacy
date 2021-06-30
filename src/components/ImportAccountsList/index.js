@@ -15,6 +15,7 @@ import OneTokenInfo from '../../classes/OneTokenInfo';
 import ReactJsonView from '../ReactJsonView';
 import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
 import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
+import styles from './index.module.scss';
 
 // const ComponentSample = observer(ComponentSamplePure);
 
@@ -25,7 +26,7 @@ function ImportAccountItem({ account, wallet, disabled = false, onChange }) {
     chainKey: account.chainKey,
   });
   return (
-    <div className="u-padding-x" key={account.address}>
+    <div className="" key={account.address}>
       <hr />
       <input
         type="checkbox"
@@ -103,7 +104,7 @@ function ImportAccountsList({ wallet, onLoadMore }) {
     <Observer>
       {() => {
         return (
-          <div>
+          <div className="u-padding-x">
             <div className="u-flex">
               <button
                 disabled={page <= 1}

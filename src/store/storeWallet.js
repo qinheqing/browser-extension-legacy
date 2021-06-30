@@ -26,7 +26,7 @@ class StoreWallet extends BaseStore {
     });
   }
 
-  @observable
+  @observable.ref
   currentWallet = new WalletBase();
 
   async getCurrentAccountTokens() {
