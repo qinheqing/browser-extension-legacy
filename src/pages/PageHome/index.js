@@ -13,9 +13,13 @@ import {
 import storeWallet from '../../store/storeWallet';
 import storeToken from '../../store/storeToken';
 import TokenInfoCard from '../../components/TokenInfoCard';
+import utilsToast from '../../utils/utilsToast';
+import { useCopyToClipboard } from '../../../ui/app/hooks/useCopyToClipboard';
 
 export default function PageHome() {
   const history = useHistory();
+  const [copied, handleCopy] = useCopyToClipboard();
+
   useEffect(() => {
     storeWallet.getCurrentAccountTokens();
   }, []);
@@ -60,23 +64,43 @@ export default function PageHome() {
                   </button>{' '}
                   <button
                     onClick={() => {
-                      global.alert('View address in the console');
+                      handleCopy(storeAccount.currentAccount.address);
+                      utilsToast.toast(
+                        <div>
+                          <div>Copied address</div>
+                          <strong style={{ fontWeight: 'bold' }}>
+                            {storeAccount.currentAccount.address}
+                          </strong>
+                        </div>,
+                      );
                       console.log(storeAccount.currentAccount.address);
                     }}
                   >
                     Deposit
                   </button>{' '}
-                  <button>Notice</button>
+                  <button
+                    onClick={() => {
+                      console.log('Notice button click');
+                      global.testGlobalError.testGlobalErrorField = 1;
+                    }}
+                  >
+                    Notice
+                  </button>
                 </div>
                 <hr />
                 <div>
                   <div className="u-padding-x">
                     <button
                       onClick={() => {
-                        storeWallet.currentWallet.addAssociateToken({
-                          contract:
-                            'H8SThNDAVecEutTHQr7EMwScfsTkTPrQmYaDGfcnhG7Y',
-                        });
+                        const address = global.prompt(
+                          'Token mint address',
+                          'H8SThNDAVecEutTHQr7EMwScfsTkTPrQmYaDGfcnhG7Y',
+                        );
+                        if (address) {
+                          storeWallet.currentWallet.addAssociateToken({
+                            contract: address,
+                          });
+                        }
                       }}
                     >
                       + Add Token
