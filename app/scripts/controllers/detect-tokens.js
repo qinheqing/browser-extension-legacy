@@ -103,6 +103,15 @@ export default class DetectTokensController {
       );
       return;
     }
+
+    const {
+      chainId: chainId0,
+      type: type0,
+    } = this._network.store.getState().provider;
+    if (chainId !== chainId0 || type !== type0) {
+      return;
+    }
+
     tokensToDetect.forEach((tokenAddress, index) => {
       const balance = result[index];
       if (balance && !balance.isZero()) {
@@ -147,6 +156,8 @@ export default class DetectTokensController {
       abiAddress = SINGLE_CALL_BALANCES_ADDRESS;
     } else if (chainId === KOVAN_CHAIN_ID) {
       abiAddress = SINGLE_CALL_BALANCES_ADDRESS_KOVAN;
+    } else if (chainId === MATIC_CHAIN_ID) {
+      abiAddress = SINGLE_CALL_BALANCES_ADDRESS_MATIC;
     } else {
       abiAddress = SINGLE_CALL_BALANCES_ADDRESS_BSC;
     }
@@ -165,6 +176,14 @@ export default class DetectTokensController {
         `MetaMask - DetectTokensController single call balance fetch failed`,
         error,
       );
+      return;
+    }
+
+    const {
+      chainId: chainId0,
+      type: type0,
+    } = this._network.store.getState().provider;
+    if (chainId !== chainId0 || type !== type0) {
       return;
     }
 

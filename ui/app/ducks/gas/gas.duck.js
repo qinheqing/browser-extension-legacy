@@ -102,29 +102,29 @@ export function basicGasEstimatesLoadingFinished() {
 }
 
 async function basicGasPriceQuery() {
-  const url = `https://www.gasnow.org/api/v3/gas/price`;
-    return fetchWithTimeout(url, {
-      headers: {},
-      referrer: 'https://www.gasnow.org',
-      referrerPolicy: 'no-referrer-when-downgrade',
-      body: null,
-      method: 'GET',
-      mode: 'cors',
-    })
-    .then(res => res.json())
-    .then(json => {
+  const url0 = `https://www.gasnow.org/api/v3/gas/price`;
+  return fetchWithTimeout(url0, {
+    headers: {},
+    referrer: 'https://www.gasnow.org',
+    referrerPolicy: 'no-referrer-when-downgrade',
+    body: null,
+    method: 'GET',
+    mode: 'cors',
+  })
+    .then((res) => res.json())
+    .then((json) => {
       if (json.code === 200) {
-        const data = json.data;
+        const { data } = json;
         const result = {
-          FastGasPrice : Math.floor(data.fast / (10 ** 9)) + "",
-          ProposeGasPrice: Math.floor(data.standard / (10 ** 9)) + "",
-          SafeGasPrice: Math.floor(data.slow / (10 ** 9)) + ""
-        }
-        return result
-      } else {
-        throw new Error(json);
+          FastGasPrice: `${Math.floor(data.rapid / 10 ** 9)}`,
+          ProposeGasPrice: `${Math.floor(data.fast / 10 ** 9)}`,
+          SafeGasPrice: `${Math.floor(data.standard / 10 ** 9)}`,
+        };
+        return result;
       }
-    }).catch(async () => {
+      throw new Error(json);
+    })
+    .catch(async () => {
       const url = `https://api.metaswap.codefi.network/gasPrices`;
       return await fetchWithTimeout(url, {
         headers: {},
@@ -133,8 +133,8 @@ async function basicGasPriceQuery() {
         body: null,
         method: 'GET',
         mode: 'cors',
-      }).then(metaRes => metaRes.json());
-    })
+      }).then((metaRes) => metaRes.json());
+    });
 }
 
 export function fetchBasicGasEstimates() {
@@ -173,7 +173,11 @@ export function fetchBasicGasEstimates() {
 }
 
 async function fetchExternalBasicGasEstimates(dispatch) {
-  const { SafeGasPrice, ProposeGasPrice, FastGasPrice } = await basicGasPriceQuery();
+  const {
+    SafeGasPrice,
+    ProposeGasPrice,
+    FastGasPrice,
+  } = await basicGasPriceQuery();
 
   const [safeLow, average, fast] = [
     SafeGasPrice,
@@ -215,7 +219,7 @@ async function fetchEthGasPriceEstimates(state) {
   const basicEstimates = {
     safeLow: Number(averageGasPriceInDecGWEI),
     average: Number(averageGasPriceInDecGWEI),
-    fast: Number(averageGasPriceInDecGWEI)
+    fast: Number(averageGasPriceInDecGWEI),
   };
   const timeRetrieved = Date.now();
 

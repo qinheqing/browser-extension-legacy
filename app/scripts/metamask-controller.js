@@ -1470,7 +1470,7 @@ export default class MetamaskController extends EventEmitter {
   async importWatchAccount(account) {
     const oldAllAccounts = await this.keyringController.getAccounts();
     if (oldAllAccounts.includes(account.toLowerCase())) {
-      throw new Error("The address is already in the wallet")
+      throw new Error('The address is already in the wallet');
     }
     let keyring = this.keyringController.getKeyringsByType('Watch Account')[0];
     if (!keyring) {
@@ -2041,7 +2041,8 @@ export default class MetamaskController extends EventEmitter {
   sendPhishingWarning(connectionStream, hostname) {
     const mux = setupMultiplex(connectionStream);
     const phishingStream = mux.createStream('phishing');
-    phishingStream.write({ hostname });
+    const { currentLocale } = this.preferencesController.store.getState();
+    phishingStream.write({ hostname, currentLocale });
   }
 
   /**

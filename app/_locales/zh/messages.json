@@ -203,7 +203,7 @@
     "message": "请设置 OneKey 自动锁定前的空闲时间（单位：分钟）"
   },
   "average": {
-    "message": "平均值"
+    "message": "快"
   },
   "back": {
     "message": "返回"
@@ -709,7 +709,7 @@
     "message": "出了点问题，我们无法完成这个操作。"
   },
   "fast": {
-    "message": "快"
+    "message": "极快"
   },
   "fastest": {
     "message": "最快"
@@ -1589,7 +1589,7 @@
     "message": "已签名"
   },
   "slow": {
-    "message": "慢"
+    "message": "一般"
   },
   "somethingWentWrong": {
     "message": "糟糕！出问题了。"
