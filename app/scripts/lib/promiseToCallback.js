@@ -27,12 +27,16 @@ export default function promiseToCallback(promise) {
         setImmediateShim(cb, null, data);
       },
       function (err) {
-        // append callStack to error message, so that we can check it at ui console
-        err.message = `${err.message}\n\n${err.stack}`;
-        // also, print the error object at bg console
+        // print the error object at bg console
         console.error(err);
 
-        setImmediateShim(cb, err);
+        // create plain error object, so that ui console can view the stack detail
+        const errObj = {
+          message: err.message,
+          stack: err.stack,
+        };
+
+        setImmediateShim(cb, errObj);
       },
     );
   };

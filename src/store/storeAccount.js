@@ -92,6 +92,11 @@ class StoreAccount extends BaseStore {
         (acc) => acc.type === CONSTS_ACCOUNT_TYPES.Hardware,
       );
     }
+    if (filter.type === CONST_ACCOUNTS_GROUP_FILTER_TYPES.wallet) {
+      return this.allAccountsRaw.filter(
+        (acc) => acc.type === CONSTS_ACCOUNT_TYPES.Wallet,
+      );
+    }
     return [];
   }
 

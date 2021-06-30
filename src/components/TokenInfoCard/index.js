@@ -5,10 +5,14 @@ import TokenBalance from '../TokenBalance';
 import utilsApp from '../../utils/utilsApp';
 import storeBalance from '../../store/storeBalance';
 import storeWallet from '../../store/storeWallet';
+import storeAccount from '../../store/storeAccount';
+import utilsToast from '../../utils/utilsToast';
+import { useCopyToClipboard } from '../../../ui/app/hooks/useCopyToClipboard';
 
 // const ComponentSample = observer(ComponentSamplePure);
 
 function TokenInfoCard({ token }) {
+  const [copied, handleCopy] = useCopyToClipboard();
   return (
     <Observer>
       {() => {
@@ -54,6 +58,15 @@ function TokenInfoCard({ token }) {
               </button>
               <button
                 onClick={() => {
+                  handleCopy(token.depositAddress);
+                  utilsToast.toast(
+                    <div>
+                      <div>Copied address</div>
+                      <strong style={{ fontWeight: 'bold' }}>
+                        {token.depositAddress}
+                      </strong>
+                    </div>,
+                  );
                   console.log(token.depositAddress);
                 }}
               >

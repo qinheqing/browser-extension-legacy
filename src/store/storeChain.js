@@ -89,7 +89,9 @@ class StoreChain extends BaseStore {
   }
 
   @observable
-  chainsCustomRaw = {};
+  chainsCustomRaw = {
+    // chainKey: { ...OneChainInfo }
+  };
 
   @computed
   get chains() {

@@ -1,5 +1,9 @@
 import { isString, isNumber } from 'lodash';
 import * as uuidMaker from 'uuid';
+import copyToClipboard from 'copy-to-clipboard';
+import { getEnvironmentType } from '../../app/scripts/lib/util';
+import { ENVIRONMENT_TYPE_POPUP } from '../../shared/constants/app';
+import { CONNECT_HARDWARE_ROUTE } from '../../ui/app/helpers/constants/routes';
 
 function uuid() {
   return uuidMaker.v4().replace(/-/giu, '');
@@ -48,6 +52,14 @@ function shortenAddress(address, { size = 6 } = {}) {
   return `${head}...${tail}`;
 }
 
+function openStandalonePage(routeUrl) {
+  if (getEnvironmentType() === ENVIRONMENT_TYPE_POPUP) {
+    global.platform.openExtensionInBrowser(routeUrl);
+  } else {
+    global.onekeyHistory.push(routeUrl);
+  }
+}
+
 export default {
   uuid,
   formatTemplate,
@@ -55,4 +67,5 @@ export default {
   mnemonicToSeed,
   throwToBeImplemented,
   shortenAddress,
+  openStandalonePage,
 };
