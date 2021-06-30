@@ -86,7 +86,22 @@ function AccountsGroupItemHardware() {
 }
 
 function AccountsGroupItemWallet() {
-  return <AccountsGroupItem icon="">Wallet</AccountsGroupItem>;
+  return (
+    <AccountsGroupItem
+      onClick={() => {
+        storeAccount.accountsGroupFilter = {
+          type: CONST_ACCOUNTS_GROUP_FILTER_TYPES.wallet,
+        };
+      }}
+      isActive={
+        storeAccount.accountsGroupFilter?.type ===
+        CONST_ACCOUNTS_GROUP_FILTER_TYPES.wallet
+      }
+      icon=""
+    >
+      Wallet
+    </AccountsGroupItem>
+  );
 }
 
 function AccountsGroupItemSort() {

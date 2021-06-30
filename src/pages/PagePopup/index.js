@@ -25,13 +25,16 @@ function ApproveConnection({ onApprove, query }) {
           <AppFrame>
             <ReactJsonView collapsed src={query} />
 
+            <hr />
+
             <div className="u-wrap-text">
               {storeAccount.currentAccountAddress}
               <button onClick={() => history.push(ROUTE_WALLET_SELECT)}>
-                change
+                Change account
               </button>
             </div>
             <div className="u-whitespace" />
+            <hr />
             <div>
               <button>Cancel</button>
               <button onClick={() => onApprove(false)}>Connect</button>
@@ -48,7 +51,12 @@ function ApproveTransaction({ onApprove, query }) {
     <AppFrame>
       <ReactJsonView collapsed src={query} />
 
-      <button onClick={() => onApprove(false)}>Approve tx</button>
+      <hr />
+
+      <div>
+        <button>Cancel</button>
+        <button onClick={() => onApprove(false)}>Approve</button>
+      </div>
     </AppFrame>
   );
 }
@@ -146,7 +154,8 @@ function PagePopup() {
   }, [request]);
 
   if (!request) {
-    // window.close();
+    window.close();
+    return null;
   }
 
   if (request.method === 'signTransaction') {

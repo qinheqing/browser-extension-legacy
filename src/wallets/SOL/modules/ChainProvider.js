@@ -141,7 +141,7 @@ class ChainProvider extends ChainProviderBase {
     const accountPublicKey = new PublicKey(ownerAddress);
     const filters = helpersSOL.getOwnedAccountsFilters(accountPublicKey);
     // TODO https://solana-labs.github.io/solana-web3.js/classes/connection.html#getparsedtokenaccountsbyowner
-    //    getParsedProgramAccounts, getParsedTokenAccountsByOwner
+    //    getParsedProgramAccounts, getParsedTokenAccountsByOwner, getTokenAccountsByOwner(Phantom used)
     const resp = await this.connection._rpcRequest('getProgramAccounts', [
       helpersSOL.TOKEN_PROGRAM_ID.toBase58(),
       {

@@ -10,6 +10,7 @@ const rtlcss = require('gulp-rtlcss');
 const rename = require('gulp-rename');
 const pump = pify(require('pump'));
 const { createTask } = require('./task');
+const configs = require('./configs');
 
 // scss compilation and autoprefixing tasks
 module.exports = createStyleTasks;
@@ -71,9 +72,7 @@ async function buildScssPipeline(src, dest, devMode, rtl) {
       // pre-process
       gulp.src(src),
       devMode && sourcemaps.init(),
-      sass({
-        includePaths: ['src'],
-      }).on('error', sass.logError),
+      sass(configs.sassConfig).on('error', sass.logError),
       autoprefixer(),
       rtl && rtlcss(),
       rtl && rename({ suffix: '-rtl' }),

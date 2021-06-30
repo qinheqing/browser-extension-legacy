@@ -1,5 +1,5 @@
-// import promiseToCallback from 'promise-to-callback';
-import promiseToCallback from './promiseToCallback';
+import promiseToCallback from 'promise-to-callback';
+import promiseToCallbackCustom from './promiseToCallback';
 
 const callbackNoop = function (err) {
   if (err) {
@@ -34,6 +34,7 @@ export default function nodeify(fn, context) {
       result = Promise.reject(err);
     }
     // wire up promise resolution to callback
-    promiseToCallback(result)(callback);
+    // promiseToCallback(result)(callback);
+    promiseToCallbackCustom(result)(callback);
   };
 }
