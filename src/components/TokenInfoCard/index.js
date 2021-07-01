@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
+import { useHistory } from 'react-router-dom';
 import TokenBalance from '../TokenBalance';
 import utilsApp from '../../utils/utilsApp';
 import storeBalance from '../../store/storeBalance';
@@ -8,10 +9,13 @@ import storeWallet from '../../store/storeWallet';
 import storeAccount from '../../store/storeAccount';
 import utilsToast from '../../utils/utilsToast';
 import { useCopyToClipboard } from '../../../ui/app/hooks/useCopyToClipboard';
+import storeTransfer from '../../store/storeTransfer';
+import { ROUTE_TRANSFER } from '../../routes/routeUrls';
 
 // const ComponentSample = observer(ComponentSamplePure);
 
 function TokenInfoCard({ token }) {
+  const history = useHistory();
   const [copied, handleCopy] = useCopyToClipboard();
   return (
     <Observer>
@@ -35,23 +39,8 @@ function TokenInfoCard({ token }) {
             <div className="TokenInfoCard__footer">
               <button
                 onClick={() => {
-                  const { decimals } = storeBalance.getBalanceInfoByKey(
-                    token.key,
-                  );
-                  const to = global.prompt(
-                    'transfer 0.01 to',
-                    '6NuMY8tuAEbaysLbf2DX2Atuw24a5dpFvBJUu9Tundek',
-                  );
-                  if (to) {
-                    storeWallet.currentWallet.transfer({
-                      amount: '0.01',
-                      decimals,
-                      from: token.address,
-                      to,
-                      contract: token.contractAddress,
-                      isToken: !token.isNative,
-                    });
-                  }
+                  storeTransfer.fromToken = token;
+                  history.push(ROUTE_TRANSFER);
                 }}
               >
                 Transfer

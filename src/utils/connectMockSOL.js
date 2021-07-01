@@ -179,7 +179,8 @@ async function signTxMessageInHardware(txSerializeMessage, hdPath) {
 
   // txSerializeMessage = bs58.encode(web3.Transaction.serializeMessage())
   // const buffer = bs58.decode(txSerializeMessage);
-  return bs58.encode(nacl.sign.detached(txSerializeMessage, account.secretKey));
+  const txBytes = bs58.decode(txSerializeMessage);
+  return bs58.encode(nacl.sign.detached(txBytes, account.secretKey));
 }
 
 async function signTxInHardware(txPayloadStr) {

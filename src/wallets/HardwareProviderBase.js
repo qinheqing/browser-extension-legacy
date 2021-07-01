@@ -9,7 +9,7 @@ class HardwareProviderBase {
   // Why use proxy, not use connect directly:
   //     old ui and new ui should call connect at the same bg process,
   //     otherwise the second ui connect hardware will not work
-  connect = new UiBackgroundProxy();
+  bgProxy = new UiBackgroundProxy();
 
   _connectInternal = OneKeyConnect; // DO NOT use this, use OneKeyBackgroundProxy to invoke connect functions
 
@@ -19,7 +19,7 @@ class HardwareProviderBase {
 
   // TODO batch get
   async getPublicKey({ coin, path }) {
-    return this.connect.hardwareGetPublicKey({
+    return this.bgProxy.hardwareGetPublicKey({
       path,
       coin,
     });
@@ -32,6 +32,10 @@ class HardwareProviderBase {
    * @return {*}
    */
   async getAddress({ coin, bundle }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  async signTransaction({ tx, hdPath }) {
     return utilsApp.throwToBeImplemented(this);
   }
 }

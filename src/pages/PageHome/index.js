@@ -8,6 +8,7 @@ import AccountCard from '../../components/AccountCard';
 import {
   ROUTE_HOME,
   ROUTE_HOME_OLD,
+  ROUTE_TRANSFER,
   ROUTE_WALLET_SELECT,
 } from '../../routes/routeUrls';
 import storeWallet from '../../store/storeWallet';
@@ -15,6 +16,10 @@ import storeToken from '../../store/storeToken';
 import TokenInfoCard from '../../components/TokenInfoCard';
 import utilsToast from '../../utils/utilsToast';
 import { useCopyToClipboard } from '../../../ui/app/hooks/useCopyToClipboard';
+import utilsApp from '../../utils/utilsApp';
+import storeTransfer from '../../store/storeTransfer';
+import storeApp from '../../store/storeApp';
+import TxSubmitSuccessView from '../../components/TxSubmitSuccessView';
 
 export default function PageHome() {
   const history = useHistory();
@@ -28,12 +33,20 @@ export default function PageHome() {
     <Observer>
       {() => {
         return (
-          <AppFrame>
+          <AppFrame showBack={false}>
             <button onClick={() => history.push(ROUTE_WALLET_SELECT)}>
               Select account &gt;
             </button>
-            <button onClick={() => history.push(ROUTE_HOME_OLD)}>
+            <button
+              onClick={() => {
+                storeApp.homeType = 'OLD';
+                history.push(ROUTE_HOME_OLD);
+              }}
+            >
               Old Home
+            </button>
+            <button onClick={() => utilsApp.openStandalonePage(ROUTE_HOME)}>
+              Expand to full page
             </button>
             {!storeAccount.currentAccount && (
               <div>Please select or create account</div>
@@ -48,16 +61,8 @@ export default function PageHome() {
                 <div className="u-flex-center">
                   <button
                     onClick={() => {
-                      if (
-                        global.confirm(
-                          'confirm to transfer? see log in the console',
-                        )
-                      ) {
-                        storeWallet.currentWallet.transfer({
-                          amount: '0.007',
-                          to: '6NuMY8tuAEbaysLbf2DX2Atuw24a5dpFvBJUu9Tundek',
-                        });
-                      }
+                      storeTransfer.fromToken = storeToken.currentNativeToken;
+                      history.push(ROUTE_TRANSFER);
                     }}
                   >
                     Transfer
@@ -91,19 +96,32 @@ export default function PageHome() {
                 <div>
                   <div className="u-padding-x">
                     <button
-                      onClick={() => {
-                        const address = global.prompt(
-                          'Token mint address',
-                          'H8SThNDAVecEutTHQr7EMwScfsTkTPrQmYaDGfcnhG7Y',
-                        );
-                        if (address) {
-                          storeWallet.currentWallet.addAssociateToken({
-                            contract: address,
-                          });
-                        }
+                      onClick={async () => {
+                        storeTransfer.fromToken = storeToken.currentNativeToken;
+                        history.push(ROUTE_TRANSFER);
                       }}
                     >
                       + Add Token
+                    </button>
+                    <button
+                      onClick={() =>
+                        storeWallet.currentWallet
+                          .requestAirdrop()
+                          .then((txid) => {
+                            utilsToast.toast.success(
+                              <TxSubmitSuccessView txid={txid}>
+                                Done! Airdrop request submitted
+                              </TxSubmitSuccessView>,
+                            );
+                          })
+                      }
+                    >
+                      Request airdrop
+                    </button>
+                    <button
+                      onClick={() => storeWallet.getCurrentAccountTokens()}
+                    >
+                      Refresh
                     </button>
                   </div>
                   <div>
