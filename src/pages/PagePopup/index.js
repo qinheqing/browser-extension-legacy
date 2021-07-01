@@ -19,6 +19,9 @@ const { Transaction, PublicKey } = global.solanaWeb3;
 // const PageSample = observer(PageSamplePure);
 
 const CurrentBalanceView = observer(function () {
+  if (!storeAccount.currentAccountAddress) {
+    return null;
+  }
   return (
     <div>
       Address:
