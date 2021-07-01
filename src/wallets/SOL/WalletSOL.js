@@ -1,16 +1,22 @@
-import { isNil } from 'lodash';
+import bs58 from 'bs58';
 import WalletBase from '../WalletBase';
-import { CONST_CHAIN_KEYS, CONST_TX_TYPES } from '../../consts/consts';
-import OneTransactionInfo from '../../classes/OneTransactionInfo';
+import { CONST_CHAIN_KEYS } from '../../consts/consts';
 import connectMockSOL from '../../utils/connectMockSOL';
-import OneTxInstructionInfo from '../../classes/OneTxInstructionInfo';
 import ChainProvider from './modules/ChainProvider';
 import HardwareProvider from './modules/HardwareProvider';
 import HdKeyProvider from './modules/HdKeyProvider';
 import KeyringSOL from './KeyringSOL';
+import helpersSOL from './modules/helpersSOL';
 
 // TODO remove
 global.$$connectMockSOL = connectMockSOL;
+const {
+  Transaction,
+  PublicKey,
+  SystemProgram,
+  TransactionInstruction,
+  LAMPORTS_PER_SOL,
+} = global.solanaWeb3;
 
 class WalletSOL extends WalletBase {
   get hdCoin() {
@@ -35,121 +41,97 @@ class WalletSOL extends WalletBase {
 
   keyring = new KeyringSOL(this.options);
 
-  async addAssociateToken({ account, contract }) {
-    const creatorAccount = account || this.accountInfo;
-    const ix = OneTxInstructionInfo.createTokenAssociateAddIx({
-      creator: creatorAccount.address,
-      contract,
+  async createAddAssociateTokenTxObject({ accountInfo, contract }) {
+    const ix = await helpersSOL.createAssociatedTokenIxAsync({
+      creator: new PublicKey(accountInfo.address),
+      contract: new PublicKey(contract),
     });
-    const tx = await this.createTx({
-      account: creatorAccount,
+    return this._createTxObject({
+      accountInfo,
       instructions: [ix],
     });
-    const txid = await this.signAndSendTx(tx);
-    return txid;
   }
 
-  async transfer({
-    account,
+  async createTransferTokenTxObject({
+    accountInfo,
     from,
     to,
     amount,
     decimals,
     contract,
-    isToken = false,
   }) {
-    // TODO accountName: feePayer, signer, creator
-    const creatorAccount = account || this.accountInfo;
-    // const { decimals, mint } = balanceInfo;
-    const _decimals = isNil(decimals) ? this.options.balanceDecimals : decimals;
-    // decimals convert
-    // TODO bignumber
-    const _amount = Math.round(parseFloat(amount) * 10 ** _decimals);
-    const _from = from || creatorAccount.address;
-
-    console.log('SOL transfer', {
-      creatorAccount,
-      _from,
-      to,
-      _amount,
-      _decimals,
-      contract,
-      isToken,
+    const keys = [
+      { pubkey: new PublicKey(from), isSigner: false, isWritable: true },
+      { pubkey: new PublicKey(contract), isSigner: false, isWritable: false },
+      { pubkey: new PublicKey(to), isSigner: false, isWritable: true },
+      {
+        pubkey: new PublicKey(accountInfo.address),
+        isSigner: true,
+        isWritable: false,
+      },
+    ];
+    const ix = new TransactionInstruction({
+      keys,
+      data: helpersSOL.encodeTokenInstructionData({
+        transferChecked: { amount, decimals },
+      }),
+      programId: helpersSOL.TOKEN_PROGRAM_ID,
     });
-
-    let ix = null;
-    if (isToken) {
-      ix = OneTxInstructionInfo.createTokenTransferIx({
-        from: _from,
-        to,
-        amount: _amount,
-        decimals: _decimals,
-        contract,
-        creator: creatorAccount.address,
-      });
-    } else {
-      ix = OneTxInstructionInfo.createTransferIx({
-        from: _from,
-        to,
-        amount: _amount,
-      });
-    }
-    const tx = await this.createTx({
-      account: creatorAccount,
+    return this._createTxObject({
+      accountInfo,
       instructions: [ix],
     });
-
-    const txid = await this.signAndSendTx(tx);
-    return txid;
   }
 
-  async createTx({ account, instructions = [] }) {
-    const _instructions = [].concat(instructions);
-    return new OneTransactionInfo({
-      // TODO creator,creatorHdPath change to account
-      creatorAddress: account.address,
-      creatorHdPath: account.path,
-      // must be a recent hash e.g. 5min, otherwise throw error:
-      //     failed to send transaction: Transaction simulation failed: Blockhash not found
-      // recentBlockhash: 'EBqHQq1gHhem3Ruebu9TfbfmiWzifJ1d9YeAY3cyzt7Y',
-      recentBlockhash: (await this.chainProvider.getRecentBlockHash())
-        .blockhash,
-      instructions: _instructions,
+  async createTransferTxObject({ accountInfo, to, amount }) {
+    const ix = SystemProgram.transfer({
+      fromPubkey: new PublicKey(accountInfo.address),
+      toPubkey: new PublicKey(to),
+      lamports: amount,
+    });
+
+    return this._createTxObject({
+      accountInfo,
+      instructions: [ix],
     });
   }
 
-  async signAndSendTx(tx) {
-    const res = await this.signTx(tx);
-    console.log('sign success', res.rawTx, tx);
+  async _createTxObject({ accountInfo, instructions = [] }) {
+    const tx = new Transaction({
+      feePayer: new PublicKey(accountInfo.address),
+      recentBlockhash: (await this.chainProvider.getRecentBlockHash())
+        .blockhash,
+      instructions,
+    });
+    return tx;
+  }
 
-    const txid = await this.sendTx(res.rawTx);
+  async signAndSendTxObject({ accountInfo, tx }) {
+    const txStr = bs58.encode(tx.serializeMessage());
+    const signStr = await this.signTx(txStr);
 
+    const signBytes = bs58.decode(signStr);
+    const publicKey = new PublicKey(accountInfo.address);
+
+    tx.addSignature(publicKey, signBytes);
+
+    const rawTx = tx.serialize();
+    const txid = await this.sendTx(rawTx);
     console.log(
       `SOL Transfer success:
-      https://explorer.solana.com/address/${tx.creatorAddress}?cluster=testnet
+      https://explorer.solana.com/address/${accountInfo.address}?cluster=testnet
       https://explorer.solana.com/tx/${txid}?cluster=testnet`,
     );
 
     return txid;
   }
 
-  async signTx(tx) {
-    // if account type is hardware, sign by hardware
-    return await connectMockSOL.signTx(tx);
-  }
-
-  async sendTx(txSigned) {
-    const txid = await this.chainProvider.sendTransaction({
-      rawTransaction: txSigned,
-    });
-    return txid;
-  }
-
-  async getAddressesHdWallet({ indexes = [0], ...others }) {
-    return this.keyringProxyCall({
-      method: 'getAddressesHdWallet',
-      params: { indexes, ...others },
-    });
+  async requestAirdrop() {
+    const address = new PublicKey(this.accountInfo.address);
+    return this.chainProvider.connection.requestAirdrop(
+      address,
+      LAMPORTS_PER_SOL,
+    );
   }
 }
 

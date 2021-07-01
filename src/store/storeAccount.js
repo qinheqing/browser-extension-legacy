@@ -41,7 +41,7 @@ class StoreAccount extends BaseStore {
     // { chainKey, id, type, name, address, path }
   ];
 
-  @observable
+  @observable.ref
   currentAccountRaw = {
     chainKey: '',
     id: '',

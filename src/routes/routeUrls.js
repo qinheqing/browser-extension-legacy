@@ -11,3 +11,5 @@ export const ROUTE_CONNECT_HARDWARE = `${ROUTE_PREFIX}/connect-hardware`;
 export const ROUTE_WALLET_SELECT = `${ROUTE_PREFIX}/wallet-select`;
 // /app/create-account
 export const ROUTE_CREATE_ACCOUNT = `${ROUTE_PREFIX}/create-account`;
+// /app/transfer
+export const ROUTE_TRANSFER = `${ROUTE_PREFIX}/transfer`;

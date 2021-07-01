@@ -8,26 +8,18 @@ import {
 } from 'mobx';
 import BaseStore from './BaseStore';
 
-class StoreSample extends BaseStore {
+class StoreApp extends BaseStore {
   constructor(props) {
     super(props);
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
+
+    this.autosave('homeType');
   }
 
   @observable
-  hello = 'world';
-
-  @computed
-  get helloComputed() {
-    return this.hello;
-  }
-
-  @action.bound
-  setHello() {
-    this.hello = 'world';
-  }
+  homeType = 'NEW'; // NEW, OLD
 }
 
-global._storeSample = new StoreSample();
+global._storeApp = new StoreApp();
 export default global._storeApp;

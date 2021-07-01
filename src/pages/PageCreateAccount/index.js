@@ -13,7 +13,7 @@ import ImportAccountsList from '../../components/ImportAccountsList';
 // const PageSample = observer(PageSamplePure);
 
 function PageCreateAccount() {
-  const wallet1 = useMemo(() => {
+  const _wallet = useMemo(() => {
     const chainInfo = storeAccount.chainInfoOfAccountsGroup;
     return walletFactory.createWallet({
       chainInfo,
@@ -24,7 +24,7 @@ function PageCreateAccount() {
   }, []);
 
   const generateAccounts = useCallback(async ({ start, limit }) => {
-    const addresses = await wallet1.getAddressesHdWallet({
+    const addresses = await _wallet.getAddresses({
       indexes: range(start, start + limit),
     });
     console.log('Generate accounts by hdPath', addresses);
@@ -37,7 +37,7 @@ function PageCreateAccount() {
         return (
           <AppFrame>
             <ImportAccountsList
-              wallet={wallet1}
+              wallet={_wallet}
               onLoadMore={generateAccounts}
             />
           </AppFrame>
