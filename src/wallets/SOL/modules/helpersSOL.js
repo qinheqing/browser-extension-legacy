@@ -1,6 +1,13 @@
 import * as BufferLayout from 'buffer-layout';
 
 const { Connection, clusterApiUrl, PublicKey } = global.solanaWeb3;
+const {
+  Transaction,
+  TransactionInstruction,
+  SystemProgram,
+  Account,
+  SYSVAR_RENT_PUBKEY,
+} = global.solanaWeb3;
 
 const SYSTEM_PROGRAM_ID = new PublicKey('11111111111111111111111111111111');
 
@@ -32,6 +39,43 @@ const MINT_LAYOUT = BufferLayout.struct([
   BufferLayout.u8('decimals'),
   BufferLayout.blob(37),
 ]);
+
+const LAYOUT = BufferLayout.union(BufferLayout.u8('instruction'));
+
+LAYOUT.addVariant(
+  0,
+  BufferLayout.struct([
+    BufferLayout.u8('decimals'),
+    BufferLayout.blob(32, 'mintAuthority'),
+    BufferLayout.u8('freezeAuthorityOption'),
+    BufferLayout.blob(32, 'freezeAuthority'),
+  ]),
+  'initializeMint',
+);
+LAYOUT.addVariant(1, BufferLayout.struct([]), 'initializeAccount');
+LAYOUT.addVariant(
+  7,
+  BufferLayout.struct([BufferLayout.nu64('amount')]),
+  'mintTo',
+);
+LAYOUT.addVariant(
+  8,
+  BufferLayout.struct([BufferLayout.nu64('amount')]),
+  'burn',
+);
+LAYOUT.addVariant(9, BufferLayout.struct([]), 'closeAccount');
+LAYOUT.addVariant(
+  12,
+  BufferLayout.struct([
+    BufferLayout.nu64('amount'),
+    BufferLayout.u8('decimals'),
+  ]),
+  'transferChecked',
+);
+
+const instructionMaxSpan = Math.max(
+  ...Object.values(LAYOUT.registry).map((r) => r.span),
+);
 
 function getOwnedAccountsFilters(publicKey) {
   return [
@@ -75,6 +119,66 @@ async function findAssociatedTokenAddress(
   return associatedAddress;
 }
 
+function encodeTokenInstructionData(instruction) {
+  const b = Buffer.alloc(instructionMaxSpan);
+  const span = LAYOUT.encode(instruction, b);
+  return b.slice(0, span);
+}
+
+async function createAssociatedTokenIxAsync({
+  creator, // Bytes: wallet.publicKey, owner.publicKey
+  contract, // Bytes
+}) {
+  const associatedTokenAddress = await findAssociatedTokenAddress(
+    creator,
+    contract,
+  );
+  const keys = [
+    {
+      pubkey: creator,
+      isSigner: true,
+      isWritable: true,
+    },
+    {
+      pubkey: associatedTokenAddress,
+      isSigner: false,
+      isWritable: true,
+    },
+    {
+      pubkey: creator,
+      isSigner: false,
+      isWritable: false,
+    },
+    {
+      pubkey: contract,
+      isSigner: false,
+      isWritable: false,
+    },
+    {
+      pubkey: SYSTEM_PROGRAM_ID,
+      isSigner: false,
+      isWritable: false,
+    },
+    {
+      pubkey: TOKEN_PROGRAM_ID,
+      isSigner: false,
+      isWritable: false,
+    },
+    {
+      pubkey: SYSVAR_RENT_PUBKEY,
+      isSigner: false,
+      isWritable: false,
+    },
+  ];
+  const ix = new TransactionInstruction({
+    keys,
+    programId: ASSOCIATED_TOKEN_PROGRAM_ID,
+    data: Buffer.from([]),
+  });
+  // return [ix, associatedTokenAddress];
+  return ix;
+}
+
 export default {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   SYSTEM_PROGRAM_ID,
@@ -84,4 +188,6 @@ export default {
   getOwnedAccountsFilters,
   parseTokenAccountData,
   findAssociatedTokenAddress,
+  encodeTokenInstructionData,
+  createAssociatedTokenIxAsync,
 };

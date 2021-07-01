@@ -9,12 +9,32 @@ import { CONST_DAPP_MESSAGE_TYPES } from '../../consts/consts';
 import storeAccount from '../../store/storeAccount';
 import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
 import ReactJsonView from '../../components/ReactJsonView';
-import connectMockSOL from '../../utils/connectMockSOL';
 import OneDappMessage from '../../classes/OneDappMessage';
+import storeWallet from '../../store/storeWallet';
+import TokenBalance from '../../components/TokenBalance';
+import storeToken from '../../store/storeToken';
 
 const { Transaction, PublicKey } = global.solanaWeb3;
 
 // const PageSample = observer(PageSamplePure);
+
+const CurrentBalanceView = observer(function () {
+  return (
+    <div>
+      Address:
+      <div>{storeAccount.currentAccountAddress}</div>
+      <hr />
+      Current balance:
+      <div>
+        <TokenBalance
+          watchBalanceChange
+          showUnit
+          tokenInfo={storeToken.currentNativeToken}
+        />
+      </div>
+    </div>
+  );
+});
 
 function ApproveConnection({ onApprove, query }) {
   const history = useHistory();
@@ -23,22 +43,26 @@ function ApproveConnection({ onApprove, query }) {
       {() => {
         return (
           <AppFrame>
-            <ReactJsonView collapsed src={query} />
-
-            <hr />
-
-            <div className="u-wrap-text">
-              {storeAccount.currentAccountAddress}
-              <button onClick={() => history.push(ROUTE_WALLET_SELECT)}>
-                Change account
-              </button>
+            <div className="u-padding-x">
+              <div className="u-wrap-text">
+                {storeAccount.currentAccountAddress ||
+                  'You should select a account first'}
+                <button onClick={() => history.push(ROUTE_WALLET_SELECT)}>
+                  Change account
+                </button>
+                <CurrentBalanceView />
+              </div>
+              <div className="u-whitespace" />
+              <hr />
+              {storeAccount.currentAccountAddress && (
+                <div className="u-flex-center">
+                  <button>Cancel</button>
+                  <button onClick={() => onApprove(false)}>Connect</button>
+                </div>
+              )}
             </div>
-            <div className="u-whitespace" />
             <hr />
-            <div>
-              <button>Cancel</button>
-              <button onClick={() => onApprove(false)}>Connect</button>
-            </div>
+            <ReactJsonView collapsed={false} src={query} />
           </AppFrame>
         );
       }}
@@ -49,13 +73,15 @@ function ApproveConnection({ onApprove, query }) {
 function ApproveTransaction({ onApprove, query }) {
   return (
     <AppFrame>
-      <ReactJsonView collapsed src={query} />
+      <div className="u-padding-x">
+        <CurrentBalanceView />
+        <div className="u-flex-center">
+          <button>Cancel</button>
+          <button onClick={() => onApprove(false)}>Approve</button>
+        </div>
 
-      <hr />
-
-      <div>
-        <button>Cancel</button>
-        <button onClick={() => onApprove(false)}>Approve</button>
+        <hr />
+        <ReactJsonView collapsed={false} src={query} />
       </div>
     </AppFrame>
   );
@@ -132,12 +158,12 @@ function PagePopup() {
     switch (request.method) {
       case 'signTransaction':
         return {
-          messages: [bs58.decode(request.params.message)],
+          messages: [request.params.message],
           messageDisplay: 'tx',
         };
       case 'signAllTransactions':
         return {
-          messages: request.params.messages.map((m) => bs58.decode(m)),
+          messages: request.params.messages.map((m) => m),
           messageDisplay: 'tx',
         };
       case 'sign':
@@ -165,15 +191,9 @@ function PagePopup() {
     const onApprove = async () => {
       const txMessage = messages[0];
 
-      // * ledger
-      // var num_paths = Buffer.alloc(1);
-      // num_paths.writeUInt8(1);
-      // const payload = Buffer.concat([num_paths, derivation_path, msg_bytes]);
+      // TODO check connectedWallets of this origin is matched with current selected Account
 
-      const signature = await connectMockSOL.signTxMessageInHardware(
-        txMessage,
-        storeAccount.currentAccount.path,
-      );
+      const signature = await storeWallet.currentWallet.signTx(txMessage);
 
       // https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L187
       // https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L49
@@ -241,7 +261,7 @@ function PagePopup() {
       {() => {
         return (
           <AppFrame>
-            <ReactJsonView collapsed src={query} />
+            <ReactJsonView collapsed={false} src={query} />
           </AppFrame>
         );
       }}

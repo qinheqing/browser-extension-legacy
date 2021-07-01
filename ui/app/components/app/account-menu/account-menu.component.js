@@ -432,20 +432,6 @@ export default class AccountMenu extends Component {
           }
           text={t('connectHardwareWallet')}
         />
-        <AccountMenuItem
-          onClick={() => {
-            toggleAccountMenu();
-            history.push(ROUTE_HOME);
-          }}
-          icon={
-            <img
-              className="account-menu__item-icon h76362893745234"
-              src="images/connect-icon.svg"
-              alt={t('connectHardwareWallet')}
-            />
-          }
-          text="New Home"
-        />
         <div className="account-menu__divider" />
         <AccountMenuItem
           onClick={() => {

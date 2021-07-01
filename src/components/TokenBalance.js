@@ -7,18 +7,18 @@ import AmountText from './AmountText';
 // eslint-disable-next-line react/prop-types
 export default function TokenBalance({
   wallet,
-  tokenInfo, // { key, address },
+  tokenInfo, // { key, address, name },
   showUnit = false,
   watchBalanceChange = false,
-  updateBalanceThrottle = 0,
+  updateBalanceThrottle = 3 * 1000,
 }) {
   const tokenKey = tokenInfo.key;
   const { address } = tokenInfo;
-  const cacheBalanceInfo = storeBalance.getBalanceInfoByKey(tokenKey);
+  const cacheBalanceInfo = storeBalance.getBalanceInfoCacheByKey(tokenKey);
   const [balance, setBalance] = useState(cacheBalanceInfo.balance);
   const [decimals, setDecimals] = useState(cacheBalanceInfo.decimals);
   const _wallet = wallet || storeWallet.currentWallet;
-  const { currency } = _wallet.chainInfo;
+  const currency = tokenInfo.name || _wallet.chainInfo.currency;
 
   const shouldUpdateRecord = useMemo(() => {
     if (
@@ -47,7 +47,10 @@ export default function TokenBalance({
     }
     const updateByRpc = async () => {
       // eslint-disable-next-line react/prop-types
-      const info = await _wallet.chainProvider.getAccountInfo({ address });
+      const info = await storeBalance.fetchBalanceInfo({
+        wallet: _wallet,
+        address,
+      });
       setBalance(info.balance);
       setDecimals(info.decimals);
       storeBalance.updateTokenBalance(tokenKey, {
