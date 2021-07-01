@@ -709,7 +709,7 @@
     "message": "出了点问题，我们无法完成这个操作。"
   },
   "fast": {
-    "message": "极快"
+    "message": "很快"
   },
   "fastest": {
     "message": "最快"
@@ -1589,7 +1589,7 @@
     "message": "已签名"
   },
   "slow": {
-    "message": "一般"
+    "message": "普通"
   },
   "somethingWentWrong": {
     "message": "糟糕！出问题了。"

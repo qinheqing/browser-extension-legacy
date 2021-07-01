@@ -1553,6 +1553,12 @@ export default class MetamaskController extends EventEmitter {
         // and can be returned to the dapp
         this.messageManager.setMsgStatusSigned(msgId, rawSig);
         return this.getState();
+      })
+      .catch((err) => {
+        const title = 'Failed Sign Message';
+        const errMsg = `Reason: ${err.message || 'Unknown Error'}`;
+        this.appStateController.setWarning(`${title}/${errMsg}`);
+        this.platform._showNotification(title, errMsg, String(msgId));
       });
   }
 
@@ -1616,6 +1622,12 @@ export default class MetamaskController extends EventEmitter {
         // and can be returned to the dapp
         this.personalMessageManager.setMsgStatusSigned(msgId, rawSig);
         return this.getState();
+      })
+      .catch((err) => {
+        const title = 'Failed Sign Message';
+        const errMsg = `Reason: ${err.message || 'Unknown Error'}`;
+        this.appStateController.setWarning(`${title}/${errMsg}`);
+        this.platform._showNotification(title, errMsg, String(msgId));
       });
   }
 
@@ -1978,11 +1990,13 @@ export default class MetamaskController extends EventEmitter {
     } = this.preferencesController.store.getState();
     const { hostname } = new URL(sender.url);
     // Check if new connection is blocked if phishing detection is on
-    if (usePhishDetect && this.phishingController.test(hostname)) {
-      log.debug('MetaMask - sending phishing warning for', hostname);
-      this.sendPhishingWarning(connectionStream, hostname);
-      return;
-    }
+
+    // turn off phishing https://github.com/OneKeyHQ/TaskHub/issues/1943
+    // if (usePhishDetect && this.phishingController.test(hostname)) {
+    //   log.debug('MetaMask - sending phishing warning for', hostname);
+    //   this.sendPhishingWarning(connectionStream, hostname);
+    //   return;
+    // }
 
     // setup multiplexing
     const mux = setupMultiplex(connectionStream);

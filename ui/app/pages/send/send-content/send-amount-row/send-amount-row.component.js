@@ -29,10 +29,14 @@ export default class SendAmountRow extends Component {
   };
 
   componentDidUpdate(prevProps) {
-    const { maxModeOn: prevMaxModeOn, gasTotal: prevGasTotal } = prevProps;
+    const {
+      maxModeOn: prevMaxModeOn,
+      gasTotal: prevGasTotal,
+      sendToken: prevSendToken,
+    } = prevProps;
     const { maxModeOn, amount, gasTotal, sendToken } = this.props;
 
-    if (maxModeOn && sendToken && !prevMaxModeOn) {
+    if (maxModeOn !== prevMaxModeOn || sendToken !== prevSendToken) {
       this.updateGas(amount);
     }
 
@@ -85,11 +89,8 @@ export default class SendAmountRow extends Component {
   }
 
   updateGas(amount) {
-    const { sendToken, updateGas } = this.props;
-
-    if (sendToken) {
-      updateGas({ amount });
-    }
+    const { updateGas } = this.props;
+    updateGas({ amount });
   }
 
   handleChange = (newAmount) => {

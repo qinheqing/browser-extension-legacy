@@ -24,6 +24,7 @@ export default class AppStateController extends EventEmitter {
       connectedStatusPopoverHasBeenShown: true,
       swapsWelcomeMessageHasBeenShown: false,
       defaultHomeActiveTabName: null,
+      appWarning: null,
       ...initState,
     });
     this.timer = null;
@@ -127,6 +128,10 @@ export default class AppStateController extends EventEmitter {
    */
   setLastActiveTime() {
     this._resetTimer();
+  }
+
+  setWarning(warning) {
+    this.store.updateState({ appWarning: warning });
   }
 
   /**
