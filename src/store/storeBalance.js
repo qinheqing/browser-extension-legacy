@@ -7,6 +7,7 @@ import {
   makeObservable,
 } from 'mobx';
 import { merge } from 'lodash';
+import { Semaphore } from 'async-mutex';
 import BaseStore from './BaseStore';
 
 class StoreBalance extends BaseStore {
@@ -18,6 +19,8 @@ class StoreBalance extends BaseStore {
     // TODO rename allBalanceRaw
     this.autosave('currentBalanceRaw');
   }
+
+  balanceFetchSemaphore = new Semaphore(1);
 
   @observable
   currentBalanceRaw = {
@@ -39,10 +42,20 @@ class StoreBalance extends BaseStore {
     }
   }
 
-  getBalanceInfoByKey(key) {
+  getBalanceInfoCacheByKey(key) {
     const { balance, decimals, lastUpdate, ...others } =
       this.currentBalanceRaw[key] || {};
     return { balance, decimals, lastUpdate, ...others };
+  }
+
+  async fetchBalanceInfo({ wallet, address }) {
+    const { balance, decimals, ...others } =
+      // TODO cancel pending balance request if component destroy
+      await this.balanceFetchSemaphore.runExclusive(async (semaphoreValue) => {
+        return await wallet.chainProvider.getAccountInfo({ address });
+      });
+    // TODO update cache balance here
+    return { balance, decimals, ...others };
   }
 }
 

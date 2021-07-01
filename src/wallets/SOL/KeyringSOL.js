@@ -1,4 +1,5 @@
 import nacl from 'tweetnacl';
+import bs58 from 'bs58';
 import KeyringBase from '../KeyringBase';
 import HdKeyProvider from './modules/HdKeyProvider';
 
@@ -8,29 +9,24 @@ class KeyringSOL extends KeyringBase {
     this.hdkeyProvider = new HdKeyProvider(this.options);
   }
 
-  async getAddressesHdWallet({ indexes = [0], ...others }) {
-    const hdPathList = indexes.map((index) =>
-      this.hdkeyProvider.createHdPath({ index }),
+  _solAccountFromPrivateKey({ privateKey }) {
+    return new global.solanaWeb3.Account(
+      nacl.sign.keyPair.fromSeed(privateKey).secretKey,
     );
-    const seed = await this.getRootSeed();
-    const addresses = await Promise.all(
-      hdPathList.map(async (path, i) => {
-        const dpath = await this.hdkeyProvider.derivePath({ seed, path });
-        const account = new global.solanaWeb3.Account(
-          nacl.sign.keyPair.fromSeed(dpath.privateKey).secretKey,
-        );
-        const address = new global.solanaWeb3.PublicKey(
-          account.publicKey,
-        ).toString();
+  }
 
-        return {
-          address,
-          ...this.buildAddressMeta({ index: indexes[i] }),
-        };
-      }),
-    );
+  privateKeyToAddress({ privateKey }) {
+    const account = this._solAccountFromPrivateKey({ privateKey });
+    const address = new global.solanaWeb3.PublicKey(
+      account.publicKey,
+    ).toString();
+    return address;
+  }
 
-    return addresses;
+  privateKeySign({ privateKey, tx }) {
+    const account = this._solAccountFromPrivateKey({ privateKey });
+    const txBytes = bs58.decode(tx);
+    return bs58.encode(nacl.sign.detached(txBytes, account.secretKey));
   }
 }
 

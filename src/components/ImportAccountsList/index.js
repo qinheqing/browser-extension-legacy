@@ -15,35 +15,44 @@ import OneTokenInfo from '../../classes/OneTokenInfo';
 import ReactJsonView from '../ReactJsonView';
 import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
 import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
-import styles from './index.module.scss';
 
 // const ComponentSample = observer(ComponentSamplePure);
 
-function ImportAccountItem({ account, wallet, disabled = false, onChange }) {
+function ImportAccountItem({
+  account,
+  wallet,
+  disabled = false,
+  onChange,
+  defaultChecked,
+}) {
   const tokenInfo = new OneTokenInfo({
     isNative: true,
     address: account.address,
     chainKey: account.chainKey,
   });
   return (
-    <div className="" key={account.address}>
-      <hr />
+    <div className="ImportAccountsList_item" key={account.address}>
       <input
+        defaultChecked={defaultChecked}
         type="checkbox"
         disabled={disabled}
         checked={disabled ? true : undefined}
         onChange={onChange}
       />
-      <div>{account.address}</div>
-      <div>
-        {account.path} ({account.hdPathIndex})
+      <div className="ImportAccountsList_itemContent">
+        <div className="u-wrap-text">{account.address}</div>
+        <small>
+          {account.path} (index={account.hdPathIndex})
+        </small>
+        <div className="u-color-primary">
+          <TokenBalance
+            tokenInfo={tokenInfo}
+            wallet={wallet}
+            showUnit
+            updateBalanceThrottle={60 * 1000}
+          />
+        </div>
       </div>
-      <TokenBalance
-        tokenInfo={tokenInfo}
-        wallet={wallet}
-        showUnit
-        updateBalanceThrottle={60 * 1000}
-      />
     </div>
   );
 }
@@ -74,6 +83,7 @@ function ImportAccountsList({ wallet, onLoadMore }) {
   const confirmImport = useCallback(() => {
     let accountNameIndex = existsAccounts.length;
     storeAccount.addAccounts(
+      // TODO sort by hdIndex first, and update name
       Object.values(selectedAccounts).map((addr) => {
         const { address, path, name, chainKey, type } = addr;
         accountNameIndex += 1;
@@ -140,12 +150,14 @@ function ImportAccountsList({ wallet, onLoadMore }) {
                 //    item.address === account.address && item.type === account.type
                 return item.address === account.address;
               });
+              const defaultChecked = Boolean(selectedAccounts[account.address]);
               return (
                 <ImportAccountItem
                   disabled={isExists}
                   key={account.address}
                   account={account}
                   wallet={wallet}
+                  defaultChecked={defaultChecked}
                   onChange={(event) => {
                     const { checked } = event.target;
                     if (checked) {

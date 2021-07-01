@@ -35,7 +35,7 @@ function AccountsList() {
                   wallet={wallet}
                   onClick={() => {
                     storeAccount.setCurrentAccount({ account });
-                    history.replace(ROUTE_HOME);
+                    history.goBack();
                   }}
                   showBalance
                   account={account}

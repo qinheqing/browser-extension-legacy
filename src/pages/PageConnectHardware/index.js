@@ -19,6 +19,7 @@ import { ROUTE_HOME, ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
 import ReactJsonView from '../../components/ReactJsonView';
 import OneAccountInfo from '../../classes/OneAccountInfo';
 import ImportAccountsList from '../../components/ImportAccountsList';
+import BackButton from '../../components/BackButton';
 
 export default observer(function PageConnectHardware() {
   const [browserSupported, setBrowserSupported] = useState(true);
@@ -79,10 +80,13 @@ export default observer(function PageConnectHardware() {
 
   if (!wallet) {
     return (
-      <SelectHardware
-        connectToHardwareWallet={connectToHardwareWallet}
-        browserSupported={browserSupported}
-      />
+      <div>
+        <BackButton />
+        <SelectHardware
+          connectToHardwareWallet={connectToHardwareWallet}
+          browserSupported={browserSupported}
+        />
+      </div>
     );
   }
 
