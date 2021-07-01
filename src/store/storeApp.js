@@ -18,7 +18,7 @@ class StoreApp extends BaseStore {
   }
 
   @observable
-  homeType = 'NEW'; // NEW, OLD
+  homeType = 'OLD'; // NEW, OLD
 }
 
 global._storeApp = new StoreApp();
