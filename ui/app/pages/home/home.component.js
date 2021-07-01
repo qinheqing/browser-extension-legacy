@@ -28,10 +28,13 @@ import {
   VIEW_QUOTE_ROUTE,
   CONFIRMATION_V_NEXT_ROUTE,
   CONNECT_HARDWARE_ROUTE,
+  DEFAULT_ROUTE,
 } from '../../helpers/constants/routes';
 import { WALLET_ACCOUNT_TYPES } from '../../helpers/constants/common';
 import { getEnvironmentType } from '../../../../app/scripts/lib/util';
 import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
+import storeApp from '../../../../src/store/storeApp';
+import { ROUTE_HOME } from '../../../../src/routes/routeUrls';
 
 const LEARN_MORE_URL =
   'https://metamask.zendesk.com/hc/en-us/articles/360045129011-Intro-to-MetaMask-v8-extension';
@@ -98,6 +101,11 @@ export default class Home extends PureComponent {
       swapsFetchParams,
       pendingApprovals,
     } = this.props;
+
+    if (storeApp.homeType === 'NEW') {
+      history.replace(ROUTE_HOME);
+      return;
+    }
 
     this.setState({ mounted: true });
     if (isNotification && totalUnapprovedCount === 0) {

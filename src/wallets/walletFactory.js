@@ -1,3 +1,4 @@
+import assert from 'assert';
 import {
   CONST_CHAIN_KEYS,
   CONST_ETH,
@@ -12,6 +13,10 @@ import WalletBTC from './BTC/WalletBTC';
 const walletsCacheMap = {};
 
 function createWallet(options) {
+  assert(
+    options?.chainInfo,
+    'Wallet init needs options.chainInfo that includes baseChain',
+  );
   const baseChain = options?.chainInfo?.baseChain;
   let wallet = null;
   switch (baseChain) {

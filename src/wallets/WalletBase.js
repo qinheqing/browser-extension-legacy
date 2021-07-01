@@ -1,6 +1,6 @@
-import HDKey from 'hdkey';
-import { toLower } from 'lodash';
-import { CONST_HARDWARE_MODELS } from '../consts/consts';
+import assert from 'assert';
+import { isNil, toLower } from 'lodash';
+import { CONST_HARDWARE_MODELS, CONSTS_ACCOUNT_TYPES } from '../consts/consts';
 import utilsApp from '../utils/utilsApp';
 import ChainProviderBase from './ChainProviderBase';
 import HardwareProviderBase from './HardwareProviderBase';
@@ -21,8 +21,8 @@ class WalletBase {
     // TODO merge to options, remove
     this.hardwareModel = hardwareModel;
     this.hdPathCustomTemplate = hdPath;
+    this.chainInfo = chainInfo; // required
     this.accountInfo = accountInfo;
-    this.chainInfo = chainInfo;
     this.options = {
       ...this.optionsDefault,
       ...options,
@@ -62,7 +62,15 @@ class WalletBase {
     return toLower(this.hdCoin);
   }
 
-  // ----------------------------------------------
+  get accountType() {
+    return this.accountInfo?.type;
+  }
+
+  get accountHdPath() {
+    return this.accountInfo?.path;
+  }
+
+  // utils ----------------------------------------------
 
   keyringProxyCall({ method, params }) {
     return this.bgProxy.keyringProxyCall({
@@ -72,21 +80,42 @@ class WalletBase {
     });
   }
 
+  // address ----------------------------------------------
+
   /**
    *
    * @param index
    * @return
-       "hardwareModel": "onekey",
-       "hdCoin": "ETH",
-       "hdPathIndex": 0,
-       "hdPathTemplate": "m/44'/60'/0'/0/{{index}}",
-       "hdPath": "m/44'/60'/0'/0/0",
+    "hardwareModel": "onekey",
+   "hdCoin": "ETH",
+   "hdPathIndex": 0,
+   "hdPathTemplate": "m/44'/60'/0'/0/{{index}}",
+   "hdPath": "m/44'/60'/0'/0/0",
    */
   buildAddressMeta({ index, hdPath, ...others }) {
     return this.keyring.buildAddressMeta({ index, hdPath, ...others });
   }
 
-  async getAddresses({ indexes = [0] }) {
+  async getAddresses({ indexes = [0], ...others }) {
+    if (this.accountType === CONSTS_ACCOUNT_TYPES.Wallet) {
+      return this.getAddressesByHdWallet({ indexes, ...others });
+    }
+    if (this.accountType === CONSTS_ACCOUNT_TYPES.Hardware) {
+      return this.getAddressesByHardware({ indexes, ...others });
+    }
+    throw new Error(
+      `getAddresses of accountType ${this.accountType} is not supported`,
+    );
+  }
+
+  async getAddressesByHdWallet({ indexes = [0], ...others }) {
+    return this.keyringProxyCall({
+      method: 'getAddressesByHdWallet',
+      params: { indexes, ...others },
+    });
+  }
+
+  async getAddressesByHardware({ indexes = [0] }) {
     const bundle = indexes.map((index) => ({
       path: this.hdkeyProvider.createHdPath({ index }),
       showOnTrezor: false,
@@ -128,39 +157,152 @@ class WalletBase {
     return [];
   }
 
-  addAssociateToken({ account, contract }) {
+  // transaction ----------------------------------------------
+
+  // tx is String
+  async signTx(txStr) {
+    const hdPath = this.accountHdPath;
+    if (this.accountType === CONSTS_ACCOUNT_TYPES.Wallet) {
+      return this.signTxByHdWallet({ tx: txStr, hdPath });
+    }
+    if (this.accountType === CONSTS_ACCOUNT_TYPES.Hardware) {
+      return this.signTxByHardware({ tx: txStr, hdPath });
+    }
+    throw new Error(
+      `signTx of accountType ${this.accountType} is not supported`,
+    );
+  }
+
+  // tx is String
+  async signTxByHardware({ tx, hdPath, ...others }) {
+    return this.hardwareProvider.signTransaction({
+      tx,
+      hdPath,
+      ...others,
+    });
+  }
+
+  // tx is String
+  async signTxByHdWallet({ tx, hdPath, ...others }) {
+    return this.keyringProxyCall({
+      method: 'signTxByHdWallet',
+      params: { tx, hdPath, ...others },
+    });
+  }
+
+  // tx is String
+  async sendTx(txStr) {
+    const txid = await this.chainProvider.sendTransaction({
+      rawTransaction: txStr,
+    });
+    return txid;
+  }
+
+  // tx is object, return txid
+  async signAndSendTxObject({ accountInfo, tx }) {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  async transfer({ account, to, amount, decimals }) {
+  // return tx object
+  async createTransferTokenTxObject({
+    accountInfo,
+    from,
+    to,
+    amount,
+    decimals,
+    contract,
+  }) {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  async getLatestNonce() {
+  // return tx object
+  async createTransferTxObject({ accountInfo, to, amount }) {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  // get fee from gasnow
-  async fetchGasFee() {
+  // return tx object
+  async createAddAssociateTokenTxObject({ accountInfo, contract }) {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  // TODO validate tx address and hdPath
-  async signTx() {
+  // transfer ----------------------------------------------
+
+  async transfer({
+    account,
+    from,
+    to,
+    amount,
+    decimals,
+    contract,
+    isToken = false,
+  }) {
+    // TODO accountName: feePayer, signer, creator
+    const accountInfo = account || this.accountInfo;
+
+    assert(accountInfo, 'transfer tx need account to sign');
+
+    // const { decimals, mint } = balanceInfo;
+    const _decimals = isNil(decimals) ? this.options.balanceDecimals : decimals;
+    // decimals convert
+    // TODO bignumber
+    const _amount = Math.round(parseFloat(amount) * 10 ** _decimals);
+    const _from = from || accountInfo.address;
+
+    console.log('transfer', {
+      accountInfo,
+      _from,
+      to,
+      _amount,
+      _decimals,
+      contract,
+      isToken,
+    });
+
+    let tx = null;
+    if (isToken) {
+      tx = await this.createTransferTokenTxObject({
+        accountInfo,
+        from: _from,
+        to,
+        amount: _amount,
+        decimals: _decimals,
+        contract,
+      });
+    } else {
+      tx = await this.createTransferTxObject({
+        accountInfo,
+        to,
+        amount: _amount,
+      });
+    }
+    const txid = await this.signAndSendTxObject({ accountInfo, tx });
+    return txid;
+  }
+
+  // token ----------------------------------------------
+
+  // TODO if account create this token, then it can add it too,
+  //      so we can see two Token with the same mint address, may be a bug
+  async addAssociateToken({ account, contract }) {
+    const accountInfo = account || this.accountInfo;
+    const tx = await this.createAddAssociateTokenTxObject({
+      accountInfo,
+      contract,
+    });
+    const txid = await this.signAndSendTxObject({ accountInfo, tx });
+    return txid;
+  }
+
+  // ----------------------------------------------
+
+  async requestAirdrop() {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  async signMultipleTx() {
-    return utilsApp.throwToBeImplemented(this);
-  }
-
-  isValidAddress(address) {
-    return utilsApp.throwToBeImplemented(this);
-  }
-
-  connectDapp(url) {
-    return utilsApp.throwToBeImplemented(this);
-  }
+  // getLatestNonce
+  // get fee from gasNow
+  // signMultipleTx
+  // isValidAddress
 }
 
 export default WalletBase;

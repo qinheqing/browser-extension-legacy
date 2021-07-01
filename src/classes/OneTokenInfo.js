@@ -15,7 +15,7 @@ class OneTokenInfo {
     contractAddress = '', // token contract address, mintAddress in SOL
     associatedAddress = '',
   }) {
-    this.name = name || utilsApp.shortenAddress(contractAddress);
+    this.name = name || (!isNative && utilsApp.shortenAddress(contractAddress));
     this.icon = icon;
     this.isNative = isNative;
     this.address = address;
