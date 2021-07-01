@@ -1,4 +1,4 @@
-name: "release"
+name: "pre-release"
 
 on:
   push:
