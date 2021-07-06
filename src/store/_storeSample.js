@@ -30,4 +30,4 @@ class StoreSample extends BaseStore {
 }
 
 global._storeSample = new StoreSample();
-export default global._storeApp;
+export default global._storeSample;

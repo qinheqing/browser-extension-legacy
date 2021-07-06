@@ -1,22 +1,16 @@
 import React from 'react';
 import { Observer, observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
-import AppFrame from '../../components/AppFrame';
-
-// const PageSample = observer(PageSamplePure);
+import classnames from 'classnames';
+import AppPageLayout from '../../components/AppPageLayout';
+import styles from './index.css';
 
 function PageSample() {
-  return (
-    <Observer>
-      {() => {
-        return <AppFrame>Hello PageSample</AppFrame>;
-      }}
-    </Observer>
-  );
+  return <AppPageLayout>Hello PageSample</AppPageLayout>;
 }
 
 PageSample.propTypes = {
   // children: PropTypes.any,
 };
 
-export default PageSample;
+export default observer(PageSample);

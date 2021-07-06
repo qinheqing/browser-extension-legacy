@@ -14,12 +14,12 @@ import storeChain from '../../store/storeChain';
 import walletFactory from '../../wallets/walletFactory';
 import connectMockSOL from '../../utils/connectMockSOL';
 import storeAccount from '../../store/storeAccount';
-import AppFrame from '../../components/AppFrame';
+import AppPageLayout from '../../components/AppPageLayout';
 import { ROUTE_HOME, ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
 import ReactJsonView from '../../components/ReactJsonView';
 import OneAccountInfo from '../../classes/OneAccountInfo';
 import ImportAccountsList from '../../components/ImportAccountsList';
-import BackButton from '../../components/BackButton';
+import NavBackButton from '../../components/NavBackButton';
 
 export default observer(function PageConnectHardware() {
   const [browserSupported, setBrowserSupported] = useState(true);
@@ -31,14 +31,20 @@ export default observer(function PageConnectHardware() {
       const isSolWallet = chainInfo.baseChain === CONST_CHAIN_KEYS.SOL;
 
       const indexesRange = range(start, start + limit);
-      let addrs = await wallet.getAddresses({ indexes: indexesRange });
 
-      // if (isSolWallet) {
-      //   addrs = indexesRange.map((index) => ({
-      //     address: index,
-      //     hdPath: wallet.hdkeyProvider.createHdPath({ index }),
-      //   }));
-      // }
+      let addrs = [];
+
+      if (isSolWallet) {
+        addrs = indexesRange.map((index) => ({
+          address: index,
+          path: wallet.hdkeyProvider.createHdPath({ index }),
+          hdPathIndex: index,
+          chainKey: chainInfo.key,
+          type: CONSTS_ACCOUNT_TYPES.Hardware,
+        }));
+      } else {
+        addrs = await wallet.getAddresses({ indexes: indexesRange });
+      }
 
       addrs = await Promise.all(
         addrs.map(async (addr) => {
@@ -80,19 +86,18 @@ export default observer(function PageConnectHardware() {
 
   if (!wallet) {
     return (
-      <div>
-        <BackButton />
+      <AppPageLayout>
         <SelectHardware
           connectToHardwareWallet={connectToHardwareWallet}
           browserSupported={browserSupported}
         />
-      </div>
+      </AppPageLayout>
     );
   }
 
   return (
-    <AppFrame>
+    <AppPageLayout>
       <ImportAccountsList wallet={wallet} onLoadMore={generateAccounts} />
-    </AppFrame>
+    </AppPageLayout>
   );
 });

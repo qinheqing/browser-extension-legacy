@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import URI from 'urijs';
 import bs58 from 'bs58';
 import { useHistory } from 'react-router-dom';
-import AppFrame from '../../components/AppFrame';
+import AppPageLayout from '../../components/AppPageLayout';
 import { CONST_DAPP_MESSAGE_TYPES } from '../../consts/consts';
 import storeAccount from '../../store/storeAccount';
 import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
@@ -45,7 +45,7 @@ function ApproveConnection({ onApprove, query }) {
     <Observer>
       {() => {
         return (
-          <AppFrame>
+          <AppPageLayout>
             <div className="u-padding-x">
               <div className="u-wrap-text">
                 {storeAccount.currentAccountAddress ||
@@ -66,7 +66,7 @@ function ApproveConnection({ onApprove, query }) {
             </div>
             <hr />
             <ReactJsonView collapsed={false} src={query} />
-          </AppFrame>
+          </AppPageLayout>
         );
       }}
     </Observer>
@@ -75,7 +75,7 @@ function ApproveConnection({ onApprove, query }) {
 
 function ApproveTransaction({ onApprove, query }) {
   return (
-    <AppFrame>
+    <AppPageLayout>
       <div className="u-padding-x">
         <CurrentBalanceView />
         <div className="u-flex-center">
@@ -86,7 +86,7 @@ function ApproveTransaction({ onApprove, query }) {
         <hr />
         <ReactJsonView collapsed={false} src={query} />
       </div>
-    </AppFrame>
+    </AppPageLayout>
   );
 }
 
@@ -263,9 +263,9 @@ function PagePopup() {
     <Observer>
       {() => {
         return (
-          <AppFrame>
+          <AppPageLayout>
             <ReactJsonView collapsed={false} src={query} />
-          </AppFrame>
+          </AppPageLayout>
         );
       }}
     </Observer>

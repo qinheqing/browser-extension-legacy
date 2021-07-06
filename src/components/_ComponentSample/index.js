@@ -1,21 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
-
-// const ObservedComponent = observer(ComponentSample);
+import classnames from 'classnames';
+import styles from './index.css';
 
 function ComponentSample({ children }) {
-  return (
-    <Observer>
-      {() => {
-        return <div>{children}</div>;
-      }}
-    </Observer>
-  );
+  return <div>{children}</div>;
 }
 
 ComponentSample.propTypes = {
   children: PropTypes.any,
 };
 
-export default ComponentSample;
+export default observer(ComponentSample);
