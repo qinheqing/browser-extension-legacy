@@ -1,7 +1,6 @@
-@import "styles/imports";
 
 .AccountCard {
-  background: #333;
+  background: #8125f2;
   height: 180px;
   border-radius: 20px;
   color: white;
@@ -26,32 +25,29 @@
 }
 
 .AccountCard__name {
-  flex: 1;
   font-size: 16px;
+
+  @apply flex items-center flex-1;
 }
 
-.AccountCard__chainName {
-  font-size: 12px;
-  color: #aaa;
-  margin-left: 12px;
-}
 
 .AccountCard__typeTag {
-  padding: 3px 8px;
-  background: #eee;
-  border-radius: 4px;
+  padding: 2px 6px 2px 4px;
+  border-radius: 99999px;
   font-size: 12px;
   color: #333;
+  background: rgba(255, 255, 255, 0.15);
+
+  @apply flex items-center text-white text-opacity-60;
 }
 
 .AccountCard__address {
   font-size: 12px;
+
+
+  @apply text-gray-400 flex items-center;
 }
 
-.AccountCard__path{
-  font-size: 10px;
-  color: #aaa;
-}
 
 .AccountCard__blank {
   flex: 1;

@@ -10,6 +10,7 @@ class OneAccountInfo {
     name,
     address,
     path,
+    hdPathIndex,
     balance = 0,
     decimals,
     currency,
@@ -21,6 +22,7 @@ class OneAccountInfo {
     this.name = name;
     this.address = address;
     this.path = path;
+    this.hdPathIndex = hdPathIndex;
     this.balance = balance;
     this.decimals = decimals;
     this.currency = currency;

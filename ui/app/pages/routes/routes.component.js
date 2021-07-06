@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { matchPath, Route, Switch } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 
+import { Helmet } from 'react-helmet';
 import FirstTimeFlow from '../first-time-flow';
 import SendTransactionScreen from '../send';
 import Swaps from '../swaps';
@@ -125,57 +126,83 @@ export default class Routes extends Component {
         <Route path={ROUTE_PREFIX}>
           <AppRoutes />
         </Route>
-        <Route path={LOCK_ROUTE} component={Lock} exact />
-        <Route path={INITIALIZE_ROUTE} component={FirstTimeFlow} />
-        <Initialized path={UNLOCK_ROUTE} component={UnlockPage} exact />
-        <Initialized
-          path={RESTORE_VAULT_ROUTE}
-          component={RestoreVaultPage}
-          exact
-        />
-        <Authenticated
-          path={REVEAL_SEED_ROUTE}
-          component={RevealSeedConfirmation}
-          exact
-        />
-        <Authenticated
-          path={MOBILE_SYNC_ROUTE}
-          component={MobileSyncPage}
-          exact
-        />
-        <Authenticated path={SETTINGS_ROUTE} component={Settings} />
-        <Authenticated
-          path={`${CONFIRM_TRANSACTION_ROUTE}/:id?`}
-          component={ConfirmTransaction}
-        />
-        <Authenticated
-          path={SEND_ROUTE}
-          component={SendTransactionScreen}
-          exact
-        />
-        <Authenticated path={SWAPS_ROUTE} component={Swaps} />
-        <Authenticated path={ADD_TOKEN_ROUTE} component={AddTokenPage} exact />
-        <Authenticated
-          path={CONFIRM_ADD_TOKEN_ROUTE}
-          component={ConfirmAddTokenPage}
-          exact
-        />
-        <Authenticated
-          path={CONFIRM_ADD_SUGGESTED_TOKEN_ROUTE}
-          component={ConfirmAddSuggestedTokenPage}
-          exact
-        />
-        <Authenticated
-          path={CONFIRMATION_V_NEXT_ROUTE}
-          component={ConfirmationPage}
-        />
-        <Authenticated path={NEW_ACCOUNT_ROUTE} component={CreateAccountPage} />
-        <Authenticated
-          path={`${CONNECT_ROUTE}/:id`}
-          component={PermissionsConnect}
-        />
-        <Authenticated path={`${ASSET_ROUTE}/:asset`} component={Asset} />
-        <Authenticated path={DEFAULT_ROUTE} component={Home} />
+        <Route path={DEFAULT_ROUTE}>
+          <Helmet>
+            <link
+              rel="stylesheet"
+              type="text/css"
+              href="./index.css"
+              title="ltr"
+            />
+            <link
+              rel="stylesheet"
+              type="text/css"
+              href="./index-rtl.css"
+              title="rtl"
+              disabled
+            />
+          </Helmet>
+          <Switch>
+            <Route path={LOCK_ROUTE} component={Lock} exact />
+            <Route path={INITIALIZE_ROUTE} component={FirstTimeFlow} />
+            <Initialized path={UNLOCK_ROUTE} component={UnlockPage} exact />
+            <Initialized
+              path={RESTORE_VAULT_ROUTE}
+              component={RestoreVaultPage}
+              exact
+            />
+            <Authenticated
+              path={REVEAL_SEED_ROUTE}
+              component={RevealSeedConfirmation}
+              exact
+            />
+            <Authenticated
+              path={MOBILE_SYNC_ROUTE}
+              component={MobileSyncPage}
+              exact
+            />
+            <Authenticated path={SETTINGS_ROUTE} component={Settings} />
+            <Authenticated
+              path={`${CONFIRM_TRANSACTION_ROUTE}/:id?`}
+              component={ConfirmTransaction}
+            />
+            <Authenticated
+              path={SEND_ROUTE}
+              component={SendTransactionScreen}
+              exact
+            />
+            <Authenticated path={SWAPS_ROUTE} component={Swaps} />
+            <Authenticated
+              path={ADD_TOKEN_ROUTE}
+              component={AddTokenPage}
+              exact
+            />
+            <Authenticated
+              path={CONFIRM_ADD_TOKEN_ROUTE}
+              component={ConfirmAddTokenPage}
+              exact
+            />
+            <Authenticated
+              path={CONFIRM_ADD_SUGGESTED_TOKEN_ROUTE}
+              component={ConfirmAddSuggestedTokenPage}
+              exact
+            />
+            <Authenticated
+              path={CONFIRMATION_V_NEXT_ROUTE}
+              component={ConfirmationPage}
+            />
+            <Authenticated
+              path={NEW_ACCOUNT_ROUTE}
+              component={CreateAccountPage}
+            />
+            <Authenticated
+              path={`${CONNECT_ROUTE}/:id`}
+              component={PermissionsConnect}
+            />
+            <Authenticated path={`${ASSET_ROUTE}/:asset`} component={Asset} />
+            <Authenticated path={DEFAULT_ROUTE} component={Home} />
+          </Switch>
+        </Route>
       </Switch>
     );
 

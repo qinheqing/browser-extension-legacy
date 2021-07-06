@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Observer, observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
-import AppFrame from '../../components/AppFrame';
+import AppPageLayout from '../../components/AppPageLayout';
 import storeTransfer from '../../store/storeTransfer';
 import TokenBalance from '../../components/TokenBalance';
-import BackButton from '../../components/BackButton';
+import NavBackButton from '../../components/NavBackButton';
 import storeWallet from '../../store/storeWallet';
 import utilsToast from '../../utils/utilsToast';
 import TxSubmitSuccessView from '../../components/TxSubmitSuccessView';
@@ -33,10 +33,12 @@ function PageTransfer() {
     <Observer>
       {() => {
         if (!storeTransfer.fromToken) {
-          return <AppFrame>You need select a token to transfer</AppFrame>;
+          return (
+            <AppPageLayout>You need select a token to transfer</AppPageLayout>
+          );
         }
         return (
-          <AppFrame>
+          <AppPageLayout>
             <div className="u-padding-x">
               <div className="u-whitespace" />
               <div>
@@ -115,7 +117,7 @@ function PageTransfer() {
                 + Add new token
               </button>
             </div>
-          </AppFrame>
+          </AppPageLayout>
         );
       }}
     </Observer>
