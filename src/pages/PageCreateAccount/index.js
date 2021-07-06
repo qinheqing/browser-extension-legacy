@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Observer, observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
 import { range, sampleSize } from 'lodash';
-import AppFrame from '../../components/AppFrame';
+import AppPageLayout from '../../components/AppPageLayout';
 import storeAccount from '../../store/storeAccount';
 import walletFactory from '../../wallets/walletFactory';
 import OneAccountInfo from '../../classes/OneAccountInfo';
@@ -35,12 +35,12 @@ function PageCreateAccount() {
     <Observer>
       {() => {
         return (
-          <AppFrame>
+          <AppPageLayout>
             <ImportAccountsList
               wallet={_wallet}
               onLoadMore={generateAccounts}
             />
-          </AppFrame>
+          </AppPageLayout>
         );
       }}
     </Observer>

@@ -50,3 +50,6 @@ notes.txt
 # dotenv
 .env.local
 .env.*.local
+
+# auto-gen module css
+src/styles/tailwind.module.css

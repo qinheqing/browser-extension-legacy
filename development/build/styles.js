@@ -1,3 +1,4 @@
+const childProcess = require('child_process');
 const pify = require('pify');
 const gulp = require('gulp');
 const sass = require('gulp-sass');
@@ -11,6 +12,8 @@ const rename = require('gulp-rename');
 const pump = pify(require('pump'));
 const { createTask } = require('./task');
 const configs = require('./configs');
+
+const exec = pify(childProcess.exec, { multiArgs: true });
 
 // scss compilation and autoprefixing tasks
 module.exports = createStyleTasks;
@@ -31,7 +34,16 @@ function createStyleTasks({ livereload }) {
       src: 'ui/app/css/index.scss',
       dest: 'ui/app/css/output',
       devMode: true,
-      pattern: ['ui/app/**/*.scss', 'src/**/*.scss'],
+      pattern: [
+        '!src/styles/tailwind.output.css',
+        'ui/app/**/*.scss',
+        'src/**/*.scss',
+      ],
+      tailWindPattern: [
+        '!src/styles/tailwind.output.css',
+        'src/**/*.css',
+        'tailwind.config.js',
+      ],
     }),
   );
 
@@ -46,16 +58,41 @@ function createStyleTasks({ livereload }) {
 
   return { prod, dev, lint };
 
-  function createScssBuildTask({ src, dest, devMode, pattern }) {
+  function createScssBuildTask({
+    src,
+    dest,
+    devMode,
+    pattern,
+    tailWindPattern,
+  }) {
     return async function () {
       if (devMode) {
         watch(pattern, async (event) => {
           await buildScss();
           livereload.changed(event.path);
         });
+        watch(
+          tailWindPattern,
+          {
+            events: ['add', 'change'],
+            ignoreInitial: true,
+            readDelay: 10,
+            atomic: 1500,
+            interval: 1500,
+          },
+          async (event) => {
+            await buildTailwind();
+            livereload.changed(event.path);
+          },
+        );
       }
       await buildScss();
+      await buildTailwind();
     };
+
+    async function buildTailwind() {
+      exec('set -x && yarn tailwind', (err) => err && console.error(err));
+    }
 
     async function buildScss() {
       await Promise.all([

@@ -39,6 +39,9 @@ class StoreToken extends BaseStore {
     tokens: [],
   };
 
+  @observable
+  currentDetailToken = null;
+
   @computed
   get currentTokens() {
     return [
@@ -59,6 +62,7 @@ class StoreToken extends BaseStore {
     return new OneTokenInfo({
       chainKey: storeChain.currentChainKey,
       name: currency,
+      symbol: currency,
       address,
       isNative: true,
     });
@@ -66,6 +70,7 @@ class StoreToken extends BaseStore {
 
   setCurrentTokens({ ownerAddress, tokens }) {
     if (ownerAddress === storeAccount.currentAccount.address) {
+      // TODO update token balance to storeBalance
       this.currentTokensRaw = {
         ownerAddress,
         tokens,

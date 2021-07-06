@@ -1,6 +1,6 @@
 import * as BufferLayout from 'buffer-layout';
 import bs58 from 'bs58';
-import { isBuffer } from 'lodash';
+import { isBuffer, uniqBy } from 'lodash';
 import ChainProviderBase from '../../ChainProviderBase';
 import utilsApp from '../../../utils/utilsApp';
 import OneAccountInfo from '../../../classes/OneAccountInfo';
@@ -183,7 +183,7 @@ class ChainProvider extends ChainProviderBase {
           return false;
         });
       });
-    const tokens = await Promise.all(
+    let tokens = await Promise.all(
       result.map(async (item) => {
         const { publicKey, accountInfo } = item;
         // get balance, mint from accountInfo.data
@@ -203,8 +203,6 @@ class ChainProvider extends ChainProviderBase {
         const depositAddress = publicKey.toString();
 
         return {
-          ...item,
-          parsed,
           balance: parsed.amount, // Token account balance
           address: publicKey.toString(), // Token account address
           depositAddress, // Token deposit address
@@ -212,9 +210,25 @@ class ChainProvider extends ChainProviderBase {
           contractAddress: parsed.mint.toString(), // token contract address (mintAddress) / token real name
           programAddress: accountInfo.owner.toString(), // token program address
           associatedAddress: associatedAddress.toString(), // token associated address
+          isAssociatedToken: publicKey.equals(associatedAddress),
         };
       }),
     );
+
+    // only display created token account (if associate token includes)
+    const createdTokenContractAddress = tokens
+      .filter((t) => !t.isAssociatedToken)
+      .map((t) => t.contractAddress);
+    if (createdTokenContractAddress.length) {
+      tokens = tokens.filter(
+        (t) =>
+          !(
+            t.isAssociatedToken &&
+            createdTokenContractAddress.includes(t.contractAddress)
+          ),
+      );
+    }
+
     return {
       ownerAddress,
       tokens,

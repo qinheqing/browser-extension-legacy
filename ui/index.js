@@ -7,6 +7,7 @@ import { getEnvironmentType } from '../app/scripts/lib/util';
 import { ALERT_TYPES } from '../shared/constants/alerts';
 import { SENTRY_STATE } from '../app/scripts/lib/setupSentry';
 import { ENVIRONMENT_TYPE_POPUP } from '../shared/constants/app';
+import appBootstrap from '../src/appBootstrap';
 import Root from './app/pages';
 import * as actions from './app/store/actions';
 import configureStore from './app/store/store';
@@ -141,6 +142,8 @@ async function startApp(metamaskState, backgroundConnection, opts) {
       store.dispatch(actions.setFeatureFlag(key, value));
     },
   };
+
+  appBootstrap();
 
   // start app
   render(<Root store={store} />, opts.container);

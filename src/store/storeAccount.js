@@ -23,6 +23,7 @@ class StoreAccount extends BaseStore {
 
     this.autosave('allAccountsRaw');
     this.autosave('currentAccountRaw');
+    this.autosave('accountsGroupFilter');
 
     autorun(() => {
       const { currentAccount } = this;
@@ -70,6 +71,7 @@ class StoreAccount extends BaseStore {
     return this.currentAccount?.address;
   }
 
+  // TODO add this to url query, because popup open new window will lost this params
   @observable
   accountsGroupFilter = {
     type: CONST_ACCOUNTS_GROUP_FILTER_TYPES.chain,

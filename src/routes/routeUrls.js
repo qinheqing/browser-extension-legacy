@@ -13,3 +13,5 @@ export const ROUTE_WALLET_SELECT = `${ROUTE_PREFIX}/wallet-select`;
 export const ROUTE_CREATE_ACCOUNT = `${ROUTE_PREFIX}/create-account`;
 // /app/transfer
 export const ROUTE_TRANSFER = `${ROUTE_PREFIX}/transfer`;
+// /app/token-detail
+export const ROUTE_TOKEN_DETAIL = `${ROUTE_PREFIX}/token-detail`;

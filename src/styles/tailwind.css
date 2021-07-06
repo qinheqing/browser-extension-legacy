@@ -1,0 +1,32 @@
+@import 'tailwindcss/base';
+
+/*----------------------------------------------*/
+@import 'tailwindcss/components';
+@import './ReactToastify.css';
+
+/*----------------------------------------------*/
+@import 'tailwindcss/utilities';
+
+/*----------------------------------------------*/
+@import './tailwind.module.css';
+
+/* TODO gulp compress all output css ----------------------------------------------*/
+@layer components {
+  .btn-test-hahah {
+    @apply px-4 py-2 bg-blue-600 text-white rounded;
+  }
+}
+
+@layer base {
+  #app-content,
+  html {
+    @apply bg-root-html;
+  }
+
+  body {
+    font-size: 100%;
+
+    @apply bg-root-body text-root-body;
+  }
+}
+
