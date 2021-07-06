@@ -2,6 +2,7 @@ import utilsApp from '../utils/utilsApp';
 import bgGetRootController from './bg/bgGetRootController';
 import { HdKeyProviderBase } from './HdKeyProvider';
 
+// TODO merge KeyringBase: HardwareKeyring、SingleChainKeyring、HdWalletKeyring
 class KeyringBase {
   constructor(options) {
     this.options = options;

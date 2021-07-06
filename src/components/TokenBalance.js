@@ -6,6 +6,7 @@ import AmountText from './AmountText';
 
 // eslint-disable-next-line react/prop-types
 export default function TokenBalance({
+  className,
   wallet,
   tokenInfo, // { key, address, name },
   showUnit = false,
@@ -13,12 +14,12 @@ export default function TokenBalance({
   updateBalanceThrottle = 3 * 1000,
 }) {
   const tokenKey = tokenInfo.key;
-  const { address } = tokenInfo;
+  const { address, symbol } = tokenInfo;
   const cacheBalanceInfo = storeBalance.getBalanceInfoCacheByKey(tokenKey);
   const [balance, setBalance] = useState(cacheBalanceInfo.balance);
   const [decimals, setDecimals] = useState(cacheBalanceInfo.decimals);
   const _wallet = wallet || storeWallet.currentWallet;
-  const currency = tokenInfo.name || _wallet.chainInfo.currency;
+  const currency = symbol;
 
   const shouldUpdateRecord = useMemo(() => {
     if (
@@ -51,16 +52,19 @@ export default function TokenBalance({
         wallet: _wallet,
         address,
       });
-      setBalance(info.balance);
-      setDecimals(info.decimals);
-      storeBalance.updateTokenBalance(tokenKey, {
-        balance: info.balance,
-        decimals: info.decimals,
-      });
+      if (info) {
+        setBalance(info.balance);
+        setDecimals(info.decimals);
+        storeBalance.updateTokenBalance(tokenKey, {
+          balance: info.balance,
+          decimals: info.decimals,
+        });
+      }
     };
     const timerId = setTimeout(updateByRpc, 600);
 
     return () => {
+      delete storeBalance.fetchBalancePendingQueue[address];
       clearTimeout(timerId);
     };
   }, [address]);
@@ -90,9 +94,9 @@ export default function TokenBalance({
   }, [address]);
 
   return (
-    <>
+    <span className={className}>
       <AmountText value={balance} decimals={decimals} />
       {showUnit && <span>&nbsp;{currency}</span>}
-    </>
+    </span>
   );
 }

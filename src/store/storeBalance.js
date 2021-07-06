@@ -24,6 +24,7 @@ class StoreBalance extends BaseStore {
 
   @observable
   currentBalanceRaw = {
+    // TODO move decimals to AccountInfo and TokenInfo
     // key: { balance, decimals, lastUpdate }
   };
 
@@ -48,14 +49,26 @@ class StoreBalance extends BaseStore {
     return { balance, decimals, lastUpdate, ...others };
   }
 
+  fetchBalancePendingQueue = {};
+
   async fetchBalanceInfo({ wallet, address }) {
-    const { balance, decimals, ...others } =
+    if (this.fetchBalancePendingQueue[address]) {
+      return null;
+    }
+    this.fetchBalancePendingQueue[address] = true;
+    const balanceInfo =
       // TODO cancel pending balance request if component destroy
       await this.balanceFetchSemaphore.runExclusive(async (semaphoreValue) => {
-        return await wallet.chainProvider.getAccountInfo({ address });
+        if (!this.fetchBalancePendingQueue[address]) {
+          return null;
+        }
+        const result = await wallet.chainProvider.getAccountInfo({ address });
+        delete this.fetchBalancePendingQueue[address];
+        return result;
       });
     // TODO update cache balance here
-    return { balance, decimals, ...others };
+    // { balance, decimals, ...others };
+    return balanceInfo;
   }
 }
 

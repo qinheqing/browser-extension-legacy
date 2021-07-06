@@ -97,6 +97,10 @@ class WalletBase {
   }
 
   async getAddresses({ indexes = [0], ...others }) {
+    // TODO refactor to keyringController.getAddresses
+    //    - HdWalletKeyring.getAddresses
+    //    - HardwareKeyring.getAddresses
+    //    - SingleChainKeyring.getAddresses
     if (this.accountType === CONSTS_ACCOUNT_TYPES.Wallet) {
       return this.getAddressesByHdWallet({ indexes, ...others });
     }

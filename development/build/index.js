@@ -3,6 +3,7 @@
 //
 // run any task with "yarn build ${taskName}"
 //
+const childProcess = require('child_process');
 require('../dotEnvLoad');
 const livereload = require('gulp-livereload');
 const {
@@ -18,6 +19,9 @@ const createStaticAssetTasks = require('./static');
 const createEtcTasks = require('./etc');
 
 const browserPlatforms = ['firefox', 'chrome', 'brave', 'opera'];
+
+const moduleCssFile = 'src/styles/tailwind.module.css';
+childProcess.exec(`touch ${moduleCssFile}`);
 
 defineAllTasks();
 detectAndRunEntryTask();
