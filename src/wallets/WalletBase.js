@@ -40,6 +40,7 @@ class WalletBase {
 
   hardwareModel = CONST_HARDWARE_MODELS.Unknown;
 
+  // TODO rename controller、service、manager
   hardwareProvider = new HardwareProviderBase(this.options); // OneKeyConnect
 
   chainProvider = new ChainProviderBase(this.options);
@@ -229,6 +230,14 @@ class WalletBase {
     return utilsApp.throwToBeImplemented(this);
   }
 
+  getTransactionFee() {
+    return this.chainProvider.getTransactionFee();
+  }
+
+  async getTxHistory({ ...others }) {
+    return this.chainProvider.getTxHistory({ ...others });
+  }
+
   // transfer ----------------------------------------------
 
   async transfer({
@@ -306,7 +315,13 @@ class WalletBase {
   // getLatestNonce
   // get fee from gasNow
   // signMultipleTx
-  // isValidAddress
+  isValidAddress({ address }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  getBrowserLink({ tx, account, token, block }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
 }
 
 export default WalletBase;

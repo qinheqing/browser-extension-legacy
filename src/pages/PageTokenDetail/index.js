@@ -38,7 +38,7 @@ function PageTokenDetail() {
     >
       <div className="flex items-center flex-col py-8">
         <div className="text-xl">
-          <TokenBalance tokenInfo={token} showUnit />
+          <TokenBalance tokenInfo={token} showUnit watchBalanceChange />
         </div>
         <div className="text-gray-400 text-sm">≈ 0.00 CNY</div>
       </div>

@@ -9,6 +9,7 @@ import {
   ROUTE_HOME_OLD,
   ROUTE_TOKEN_DETAIL,
   ROUTE_TRANSFER,
+  ROUTE_TX_HISTORY,
   ROUTE_WALLET_SELECT,
 } from '../../routes/routeUrls';
 import storeWallet from '../../store/storeWallet';
@@ -42,16 +43,9 @@ const HomeTopActionsBar = observer(function () {
         text="收款"
         icon={AppIcons.ArrowDownIcon}
         onClick={() => {
-          handleCopy(storeAccount.currentAccount.address);
-          utilsToast.toast(
-            <div>
-              <div>Copied address</div>
-              <strong style={{ fontWeight: 'bold' }}>
-                {storeAccount.currentAccount.address}
-              </strong>
-            </div>,
-          );
-          console.log(storeAccount.currentAccount.address);
+          storeHistory.goToPageTokenDetail({
+            token: storeToken.currentNativeToken,
+          });
         }}
       />
 
@@ -99,7 +93,16 @@ const HomeAssetsHeader = observer(function () {
         type="white"
         size="xs"
         rounded
-        onClick={() => storeWallet.getCurrentAccountTokens()}
+        onClick={() => storeHistory.push(ROUTE_TX_HISTORY)}
+      >
+        <AppIcons.ClipboardListIcon className="w-5" />
+      </OneButton>
+      <div className="w-2" />
+      <OneButton
+        type="white"
+        size="xs"
+        rounded
+        onClick={() => storeToken.getCurrentAccountTokens()}
       >
         <AppIcons.RefreshIcon className="w-5" />
       </OneButton>
@@ -125,7 +128,7 @@ const HomeAssetsHeader = observer(function () {
         type="white"
         size="xs"
         rounded
-        onClick={() => storeHistory.goToPageAddToken()}
+        onClick={() => storeHistory.goToPageTokenAdd()}
       >
         <AppIcons.PlusIcon className="w-5" />
       </OneButton>
@@ -135,7 +138,7 @@ const HomeAssetsHeader = observer(function () {
 
 const HomeAssetsList = observer(function () {
   return (
-    <div className="py-3">
+    <div className="py-3 -mx-4 ">
       {storeToken.currentTokens.map((token, index) => {
         return (
           <TokenInfoCard
@@ -158,17 +161,19 @@ function PageHome() {
   const [copied, handleCopy] = useCopyToClipboard();
 
   useEffect(() => {
-    storeWallet.getCurrentAccountTokens();
+    storeToken.getCurrentAccountTokens();
   }, []);
 
   return (
     <AppPageLayout
       navLeft={
-        <AppIcons.ArrowsExpandIcon
-          role="button"
-          className="w-6"
-          onClick={() => utilsApp.openStandalonePage(ROUTE_HOME)}
-        />
+        utilsApp.isExtensionTypePopup() && (
+          <AppIcons.ArrowsExpandIcon
+            role="button"
+            className="w-6"
+            onClick={() => utilsApp.openStandalonePage(ROUTE_HOME)}
+          />
+        )
       }
       navRight={
         <AppIcons.CollectionIcon

@@ -29,6 +29,7 @@ export function useTimeout(cb, delay, immediate = true) {
     setTimeoutId(id);
 
     return () => {
+      clearTimeout(id);
       clearTimeout(timeoutId);
     };
   }, [delay, timeoutId]);

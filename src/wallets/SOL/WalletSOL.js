@@ -2,11 +2,13 @@ import bs58 from 'bs58';
 import WalletBase from '../WalletBase';
 import { CONST_CHAIN_KEYS } from '../../consts/consts';
 import connectMockSOL from '../../utils/connectMockSOL';
+import utilsApp from '../../utils/utilsApp';
 import ChainProvider from './modules/ChainProvider';
 import HardwareProvider from './modules/HardwareProvider';
 import HdKeyProvider from './modules/HdKeyProvider';
 import KeyringSOL from './KeyringSOL';
 import helpersSOL from './modules/helpersSOL';
+import TokenController from './modules/TokenController';
 
 // TODO remove
 global.$$connectMockSOL = connectMockSOL;
@@ -25,8 +27,9 @@ class WalletSOL extends WalletBase {
 
   get optionsDefault() {
     return {
+      // TODO move to chainInfo
       // https://solana-labs.github.io/solana-web3.js/modules.html#commitment
-      defaultCommitment: 'confirmed', // processed, confirmed, finalized
+      defaultCommitment: helpersSOL.COMMITMENT_TYPES.processed, // processed, confirmed, finalized
       balanceDecimals: 9,
       hdPathTemplate: `m/44'/501'/{{index}}'/0'`,
     };
@@ -41,10 +44,13 @@ class WalletSOL extends WalletBase {
 
   keyring = new KeyringSOL(this.options);
 
+  tokenController = new TokenController(this.options);
+
   async createAddAssociateTokenTxObject({ accountInfo, contract }) {
     const ix = await helpersSOL.createAssociatedTokenIxAsync({
-      creator: new PublicKey(accountInfo.address),
-      contract: new PublicKey(contract),
+      creatorAddress: new PublicKey(accountInfo.address),
+      accountAddress: new PublicKey(accountInfo.address),
+      mintAddress: new PublicKey(contract),
     });
     return this._createTxObject({
       accountInfo,
@@ -128,10 +134,32 @@ class WalletSOL extends WalletBase {
 
   async requestAirdrop() {
     const address = new PublicKey(this.accountInfo.address);
-    return this.chainProvider.connection.requestAirdrop(
-      address,
-      LAMPORTS_PER_SOL,
-    );
+    return this.chainProvider.solWeb3.requestAirdrop(address, LAMPORTS_PER_SOL);
+  }
+
+  isValidAddress({ address }) {
+    try {
+      const pubKey = new PublicKey(address);
+      return true;
+    } catch (ex) {
+      return false;
+    }
+  }
+
+  getBrowserLink({ tx, account, token, block }) {
+    if (tx) {
+      return `https://explorer.solana.com/tx/${tx}?cluster=testnet`;
+    }
+    if (account) {
+      return `https://explorer.solana.com/address/${account}?cluster=testnet`;
+    }
+    if (token) {
+      return `https://explorer.solana.com/address/${token}?cluster=testnet`;
+    }
+    if (block) {
+      return `https://explorer.solana.com/block/${block}?cluster=testnet`;
+    }
+    return utilsApp.throwToBeImplemented(this);
   }
 }
 

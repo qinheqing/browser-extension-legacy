@@ -16,6 +16,7 @@ class OneTokenInfo {
     ownerAddress = '', // account address to which token belongs
     contractAddress = '', // token contract address, mintAddress in SOL
     associatedAddress = '',
+    ...others
   }) {
     this.name = name || (!isNative && '未知资产');
     this.symbol = symbol;
@@ -27,8 +28,15 @@ class OneTokenInfo {
     this.ownerAddress = ownerAddress || (isNative && address);
     this.contractAddress = contractAddress;
     this.contractAddressShort = utilsApp.shortenAddress(contractAddress);
+    this.symbolDisplay =
+      this.symbol ||
+      utilsApp.shortenAddress(contractAddress, {
+        size: 4,
+        head: false,
+      });
     this.associatedAddress = associatedAddress;
     this.chainKey = chainKey;
+    Object.assign(this, others);
     this.key = key || this.generateKey();
   }
 

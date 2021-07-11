@@ -35,7 +35,7 @@ function PageCreateAccount() {
     <Observer>
       {() => {
         return (
-          <AppPageLayout>
+          <AppPageLayout title="创建账户">
             <ImportAccountsList
               wallet={_wallet}
               onLoadMore={generateAccounts}
