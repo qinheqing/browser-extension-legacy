@@ -19,6 +19,12 @@ const WRAPPED_SOL_MINT = new PublicKey(
   'So11111111111111111111111111111111111111112',
 );
 
+const COMMITMENT_TYPES = {
+  processed: 'processed',
+  confirmed: 'confirmed',
+  finalized: 'finalized',
+};
+
 const MEMO_PROGRAM_ID = new PublicKey(
   'Memo1UhkJRfHyvLMcVucJwxXeuD728EqVDDwQDxFMNo',
 );
@@ -100,15 +106,14 @@ function parseTokenAccountData(accountInfoData) {
   };
 }
 
-async function findAssociatedTokenAddress(
-  walletAddress,
+async function generateAssociatedTokenAddress(
+  accountAddress,
   tokenMintAddress,
-  tokenAddress,
 ) {
   const associatedAddress = (
     await PublicKey.findProgramAddress(
       [
-        walletAddress.toBuffer(),
+        accountAddress.toBuffer(),
         TOKEN_PROGRAM_ID.toBuffer(),
         tokenMintAddress.toBuffer(),
       ],
@@ -126,16 +131,17 @@ function encodeTokenInstructionData(instruction) {
 }
 
 async function createAssociatedTokenIxAsync({
-  creator, // Bytes: wallet.publicKey, owner.publicKey
-  contract, // Bytes
+  creatorAddress, // creator can add associate token for another account
+  accountAddress,
+  mintAddress,
 }) {
-  const associatedTokenAddress = await findAssociatedTokenAddress(
-    creator,
-    contract,
+  const associatedTokenAddress = await generateAssociatedTokenAddress(
+    accountAddress,
+    mintAddress,
   );
   const keys = [
     {
-      pubkey: creator,
+      pubkey: creatorAddress,
       isSigner: true,
       isWritable: true,
     },
@@ -145,12 +151,12 @@ async function createAssociatedTokenIxAsync({
       isWritable: true,
     },
     {
-      pubkey: creator,
+      pubkey: accountAddress,
       isSigner: false,
       isWritable: false,
     },
     {
-      pubkey: contract,
+      pubkey: mintAddress,
       isSigner: false,
       isWritable: false,
     },
@@ -180,6 +186,8 @@ async function createAssociatedTokenIxAsync({
 }
 
 export default {
+  COMMITMENT_TYPES,
+  ACCOUNT_LAYOUT,
   ASSOCIATED_TOKEN_PROGRAM_ID,
   SYSTEM_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
@@ -187,7 +195,7 @@ export default {
   MEMO_PROGRAM_ID,
   getOwnedAccountsFilters,
   parseTokenAccountData,
-  findAssociatedTokenAddress,
+  generateAssociatedTokenAddress,
   encodeTokenInstructionData,
   createAssociatedTokenIxAsync,
 };

@@ -88,10 +88,8 @@ async function createAssociatedTokenIxAsync({
   creator, // wallet.publicKey, owner.publicKey
   contract,
 }) {
-  const associatedTokenAddress = await helpersSOL.findAssociatedTokenAddress(
-    creator,
-    contract,
-  );
+  const associatedTokenAddress =
+    await helpersSOL.generateAssociatedTokenAddress(creator, contract);
   const keys = [
     {
       pubkey: creator,

@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import qrCode from 'qrcode-generator';
 import TokenIcon from '../TokenIcon';
 import AppIcons from '../AppIcons';
+import CopyHandle from '../CopyHandle';
 import styles from './index.css';
 
 function TokenDepositQrcode({ tokenInfo, children }) {
@@ -25,9 +26,9 @@ function TokenDepositQrcode({ tokenInfo, children }) {
   return (
     <div className="bg-white p-8 flex flex-col items-center mx-4 rounded-2xl">
       <div className="flex items-center text-xs text-gray-400">
-        <TokenIcon />
+        <TokenIcon tokenInfo={tokenInfo} size="sm" />
         <div className="w-2" />
-        <span>扫一扫转入 {tokenInfo.symbol}</span>
+        <span>扫一扫转入 {tokenInfo.symbolDisplay}</span>
       </div>
       <div
         dangerouslySetInnerHTML={{
@@ -36,8 +37,9 @@ function TokenDepositQrcode({ tokenInfo, children }) {
       />
       <div className="text-xs text-gray-400 mb-2">钱包地址</div>
       <div className="text-xs break-all text-center">
-        {tokenInfo.depositAddress}{' '}
-        <AppIcons.DuplicateIcon role="button" className="w-4 inline ml-1" />
+        <CopyHandle text={tokenInfo.depositAddress}>
+          {tokenInfo.depositAddress}
+        </CopyHandle>
       </div>
     </div>
   );

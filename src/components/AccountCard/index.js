@@ -8,6 +8,7 @@ import TokenBalance from '../TokenBalance';
 import OneTokenInfo from '../../classes/OneTokenInfo';
 import AppIcons from '../AppIcons';
 import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
+import CopyHandle from '../CopyHandle';
 import styles from './index.css';
 
 function HardwareTypeTag() {
@@ -37,6 +38,7 @@ function AccountCard({
     storeAccount.currentAccount.address === account.address;
   const tokenInfo = new OneTokenInfo({
     isNative: true,
+    symbol: chainInfo.currency,
     address: account.address,
     chainKey: account.chainKey,
   });
@@ -53,8 +55,9 @@ function AccountCard({
         {account.type === CONSTS_ACCOUNT_TYPES.Hardware && <HardwareTypeTag />}
       </header>
       <div className={classnames(styles.AccountCard__address)}>
-        {utilsApp.shortenAddress(account.address)}{' '}
-        <AppIcons.DuplicateIcon role="button" className="w-4 inline ml-1" />
+        <CopyHandle text={account.address}>
+          {utilsApp.shortenAddress(account.address)}
+        </CopyHandle>
       </div>
 
       <div className={classnames(styles.AccountCard__blank)} />
@@ -70,7 +73,7 @@ function AccountCard({
             />{' '}
           </div>
           <div className={classnames(styles.AccountCard__balanceFiat)}>
-            balance fiat
+            $ 0.0000
           </div>
         </footer>
       )}

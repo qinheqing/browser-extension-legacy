@@ -13,8 +13,11 @@ import {
   CONST_CHAIN_KEYS,
 } from '../consts/consts';
 import OneAccountInfo from '../classes/OneAccountInfo';
+import walletFactory from '../wallets/walletFactory';
 import BaseStore from './BaseStore';
 import storeChain from './storeChain';
+import storeWallet from './storeWallet';
+import storeTx from './storeTx';
 
 class StoreAccount extends BaseStore {
   constructor(props) {
@@ -26,13 +29,34 @@ class StoreAccount extends BaseStore {
     this.autosave('accountsGroupFilter');
 
     autorun(() => {
-      const { currentAccount } = this;
+      const { currentAccountRaw } = this;
       untracked(() => {
+        const { currentAccount } = this;
         if (currentAccount?.chainKey) {
           storeChain.setCurrentChainKey(currentAccount?.chainKey);
         }
+        storeTx.clearPendingTx();
       });
     });
+
+    // TODO do not use auto run to new Wallet, as currentAccount balance change will trigger this callback
+    autorun(() => {
+      const { currentAccountRaw } = this;
+      const { currentBaseChain } = storeChain;
+      untracked(() => {
+        this.updateCurrentWallet();
+      });
+    });
+  }
+
+  updateCurrentWallet() {
+    console.log('Create wallet instance');
+    // TODO debounce
+    const wallet = walletFactory.createWallet({
+      chainInfo: storeChain.currentChainInfo,
+      accountInfo: this.currentAccount,
+    });
+    storeWallet.setCurrentWallet(wallet);
   }
 
   // allAccounts
@@ -63,6 +87,7 @@ class StoreAccount extends BaseStore {
     return new OneAccountInfo({
       ...this.currentAccountRaw,
       currency: chainInfo.currency,
+      decimals: storeWallet.currentWallet.options.balanceDecimals, // TODO move to chainInfo
     });
   }
 

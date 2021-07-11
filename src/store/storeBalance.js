@@ -51,22 +51,22 @@ class StoreBalance extends BaseStore {
 
   fetchBalancePendingQueue = {};
 
-  async fetchBalanceInfo({ wallet, address }) {
+  async fetchBalanceInfo({ wallet, address, tokenKey }) {
     if (this.fetchBalancePendingQueue[address]) {
-      return null;
+      return this.currentBalanceRaw[tokenKey];
     }
     this.fetchBalancePendingQueue[address] = true;
     const balanceInfo =
       // TODO cancel pending balance request if component destroy
       await this.balanceFetchSemaphore.runExclusive(async (semaphoreValue) => {
         if (!this.fetchBalancePendingQueue[address]) {
-          return null;
+          return this.currentBalanceRaw[tokenKey];
         }
         const result = await wallet.chainProvider.getAccountInfo({ address });
         delete this.fetchBalancePendingQueue[address];
         return result;
       });
-    // TODO update cache balance here
+    // TODO update cache balance here, and View only read balance from cache, not from api
     // { balance, decimals, ...others };
     return balanceInfo;
   }

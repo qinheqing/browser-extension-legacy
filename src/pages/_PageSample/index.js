@@ -6,7 +6,7 @@ import AppPageLayout from '../../components/AppPageLayout';
 import styles from './index.css';
 
 function PageSample() {
-  return <AppPageLayout>Hello PageSample</AppPageLayout>;
+  return <AppPageLayout title="OneKey">Hello PageSample</AppPageLayout>;
 }
 
 PageSample.propTypes = {

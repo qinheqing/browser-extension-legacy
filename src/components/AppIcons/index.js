@@ -9,6 +9,8 @@ import {
   ArrowLeftIcon,
   ArrowDownIcon,
   ArrowUpIcon,
+  ArrowRightIcon,
+  ChevronRightIcon,
   ArrowsExpandIcon,
   DuplicateIcon,
   CollectionIcon,
@@ -20,13 +22,22 @@ import {
   SearchIcon,
   PaperAirplaneIcon,
   RefreshIcon,
+  XIcon,
+  ExclamationIcon,
+  ClipboardListIcon,
+  CheckIcon,
+  ExternalLinkIcon,
 } from '@heroicons/react/outline';
+import { SpinnerIcon } from './icons';
 
-export default {
+// https://heroicons.com/
+
+const AppIcons = {
   CollectionIcon,
   CollectionIconSolid,
   ArrowLeftIcon,
   ArrowLeftIconSolid,
+  ArrowRightIcon,
   ArrowsExpandIcon,
   ArrowsExpandIconSolid,
   DuplicateIcon,
@@ -42,4 +53,13 @@ export default {
   SearchIcon,
   PaperAirplaneIcon,
   RefreshIcon,
+  ChevronRightIcon,
+  XIcon,
+  ExclamationIcon,
+  ClipboardListIcon,
+  CheckIcon,
+  SpinnerIcon,
+  ExternalLinkIcon,
 };
+
+export default AppIcons;

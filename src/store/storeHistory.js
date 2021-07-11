@@ -9,10 +9,12 @@ import {
 import { cloneDeep } from 'lodash';
 import {
   ROUTE_HOME,
+  ROUTE_TOKEN_ADD,
   ROUTE_TOKEN_DETAIL,
   ROUTE_TRANSFER,
 } from '../routes/routeUrls';
 import BaseStore from './BaseStore';
+import storeWallet from './storeWallet';
 
 class StoreHistory extends BaseStore {
   constructor(props) {
@@ -24,6 +26,7 @@ class StoreHistory extends BaseStore {
   @observable
   testField = '';
 
+  // Route history
   get history() {
     return global.onekeyHistory;
   }
@@ -52,11 +55,9 @@ class StoreHistory extends BaseStore {
     this.replace(ROUTE_HOME);
   }
 
-  async goToPageAddToken() {
+  async goToPageTokenAdd() {
     const storeToken = (await import('./storeToken')).default;
-    this.goToPageTransfer({
-      token: storeToken.currentNativeToken,
-    });
+    this.push(ROUTE_TOKEN_ADD);
   }
 
   async goToPageTransfer({ token }) {
@@ -65,10 +66,21 @@ class StoreHistory extends BaseStore {
     this.push(ROUTE_TRANSFER);
   }
 
-  async goToPageTokenDetail({ token }) {
+  async goToPageTokenDetail({ token, replace = false }) {
     const storeToken = (await import('./storeToken')).default;
     storeToken.currentDetailToken = cloneDeep(token);
-    this.push(ROUTE_TOKEN_DETAIL);
+    replace ? this.replace(ROUTE_TOKEN_DETAIL) : this.push(ROUTE_TOKEN_DETAIL);
+  }
+
+  openBrowserLink({ tx, account, token, block, ...others }) {
+    const link = storeWallet.currentWallet.getBrowserLink({
+      tx,
+      account,
+      token,
+      block,
+      ...others,
+    });
+    window.open(link);
   }
 }
 
