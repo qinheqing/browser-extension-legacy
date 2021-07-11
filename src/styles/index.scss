@@ -2,36 +2,3 @@
 //@import "../components/components";
 //@import "../pages/pages";
 //@import "ReactToastify";
-
-
-// utils
-.u-wrap-text {
-  word-wrap: break-word;
-  word-break: break-all;
-  white-space: pre-wrap;
-}
-
-.u-flex {
-  display: flex;
-}
-
-.u-flex-child {
-  @include one-flex-item;
-}
-
-.u-flex-center {
-  @include one-flex-center;
-}
-
-.u-whitespace {
-  height: 12px;
-}
-
-.u-padding-x {
-  padding-left: 16px;
-  padding-right: 16px;
-}
-
-.u-color-primary {
-  color: #00b812;
-}

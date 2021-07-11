@@ -6,10 +6,10 @@ class ChainProviderBase {
   }
 
   // chain rpc api, web3.js
-  connection = null;
+  // connection = null;
 
   // block browser api
-  browser = null;
+  // browser = null;
 
   // TODO change to addEventListener ？
   addAccountChangeListener(address, handler) {
@@ -32,6 +32,14 @@ class ChainProviderBase {
   // https://www.npmjs.com/package/eth-block-tracker
   // getConfirmedSignaturesForAddress2: https://solana-labs.github.io/solana-web3.js/classes/connection.html#getconfirmedsignaturesforaddress2
   fetchTransactions() {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  getTransactionFee() {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  async getTxHistory() {
     return utilsApp.throwToBeImplemented(this);
   }
 

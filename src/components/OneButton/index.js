@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
-import styles from './index.css';
 
 function OneButton({
   size = 'md',
@@ -35,10 +34,10 @@ function OneButton({
           'hover:bg-green-one-200': !disabled,
         },
       ),
-      white: classnames('border-gray-300 bg-white', {
+      white: classnames('border-gray-300 text-gray-900 bg-white ', {
         'hover:bg-gray-50': !disabled,
       }),
-      gray: classnames('border-gray-300 bg-gray-100', {
+      gray: classnames('border-gray-300 text-gray-900 bg-gray-100 ', {
         'hover:bg-gray-200': !disabled,
       }),
     }[type],
@@ -52,6 +51,10 @@ function OneButton({
   );
   cls.push(
     {
+      '2xs': classnames('text-xs font-medium rounded', {
+        'p-0.5': rounded,
+        'px-1.5 py-1 ': !rounded,
+      }),
       xs: classnames('text-xs font-medium rounded', {
         'p-1': rounded,
         'px-2.5 py-1.5 ': !rounded,
@@ -69,8 +72,8 @@ function OneButton({
         'px-4 py-2': !rounded,
       }),
       xl: classnames(' text-base font-medium rounded-md', {
-        'p-3': rounded,
-        'px-6 py-3': !rounded,
+        'p-2.5': rounded,
+        'px-4.5 py-2.5': !rounded,
       }),
     }[size],
   );
@@ -78,7 +81,7 @@ function OneButton({
   return (
     <button
       disabled={disabled}
-      className={classnames(cls, {})}
+      className={classnames(cls, {}, className)}
       onClick={onClick}
       {...others}
     >

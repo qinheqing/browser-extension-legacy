@@ -11,6 +11,7 @@ import {
 import utilsApp from '../utils/utilsApp';
 import BaseStore from './BaseStore';
 
+// TODO use https://github.com/OneKeyHQ/remote-config
 function createBuiltInChains() {
   const chainsRaw = [
     {
@@ -18,7 +19,10 @@ function createBuiltInChains() {
       name: 'SOL Testnet',
       baseChain: CONST_CHAIN_KEYS.SOL,
       currency: CONST_SOL,
-      etherChainId: null,
+      currencyIcon:
+        'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
+      // https://github.com/solana-labs/token-list/blob/main/src/lib/tokenlist.ts#L5
+      internalChainId: 102,
       rpc: ['https://api.testnet.solana.com'],
       browser: ['https://solanascan.io/?testnet'],
       isTestNet: true,
@@ -28,7 +32,7 @@ function createBuiltInChains() {
       name: 'BTC',
       baseChain: CONST_CHAIN_KEYS.BTC,
       currency: CONST_BTC,
-      etherChainId: null,
+      internalChainId: null,
       rpc: ['https://btc.com/'],
       browser: ['https://btc.com/'],
       isTestNet: false,
@@ -38,7 +42,7 @@ function createBuiltInChains() {
       name: 'BSC',
       baseChain: CONST_CHAIN_KEYS.ETH,
       currency: CONST_BNB,
-      etherChainId: 56,
+      internalChainId: 56,
       rpc: [
         'https://bsc-dataseed.binance.org/',
         'https://bsc-dataseed1.defibit.io/',
@@ -51,7 +55,7 @@ function createBuiltInChains() {
       name: 'BSC Testnet',
       baseChain: CONST_CHAIN_KEYS.ETH,
       currency: CONST_BNB,
-      etherChainId: 97,
+      internalChainId: 97,
       rpc: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
       browser: ['https://testnet.bscscan.com/'],
       isTestNet: true,
@@ -61,7 +65,7 @@ function createBuiltInChains() {
       name: 'SOL',
       baseChain: CONST_CHAIN_KEYS.SOL,
       currency: CONST_SOL,
-      etherChainId: null,
+      internalChainId: null,
       rpc: ['https://solana-api.projectserum.com'],
       browser: ['https://solanascan.io/'],
       isTestNet: false,
@@ -129,7 +133,7 @@ class StoreChain extends BaseStore {
       baseChain: CONST_CHAIN_KEYS.ETH,
       key: `Ropsten@${utilsApp.uuid()}`,
       name: 'Ropsten Testnet',
-      etherChainId: 3,
+      internalChainId: 3,
       rpc: [`https://ropsten.infura.io/v3/${infura}`],
       currency: CONST_ETH,
       browser: ['https://ropsten.etherscan.io/'],

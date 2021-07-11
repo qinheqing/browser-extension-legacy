@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet';
 import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import classnames from 'classnames';
+import { Portal } from '@headlessui/react';
 import styles from './index.css';
 
 export default function AppRootView({ children }) {
@@ -16,7 +17,9 @@ export default function AppRootView({ children }) {
         />
       </Helmet>
       <div className={styles.content}>
-        <ToastContainer />
+        <Portal>
+          <ToastContainer />
+        </Portal>
         {children}
       </div>
     </div>
