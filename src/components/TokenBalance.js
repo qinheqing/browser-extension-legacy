@@ -14,12 +14,12 @@ export default function TokenBalance({
   updateBalanceThrottle = 3 * 1000,
 }) {
   const tokenKey = tokenInfo.key;
-  const { address, symbol } = tokenInfo;
+  const { address, symbol, symbolDisplay } = tokenInfo;
   const cacheBalanceInfo = storeBalance.getBalanceInfoCacheByKey(tokenKey);
   const [balance, setBalance] = useState(cacheBalanceInfo.balance);
   const [decimals, setDecimals] = useState(cacheBalanceInfo.decimals);
   const _wallet = wallet || storeWallet.currentWallet;
-  const currency = symbol;
+  const currency = symbol || symbolDisplay;
 
   const shouldUpdateRecord = useMemo(() => {
     if (
@@ -51,6 +51,7 @@ export default function TokenBalance({
       const info = await storeBalance.fetchBalanceInfo({
         wallet: _wallet,
         address,
+        tokenKey,
       });
       if (info) {
         setBalance(info.balance);
@@ -96,7 +97,7 @@ export default function TokenBalance({
   return (
     <span className={className}>
       <AmountText value={balance} decimals={decimals} />
-      {showUnit && <span>&nbsp;{currency}</span>}
+      {showUnit && <span className="ml-1">{currency}</span>}
     </span>
   );
 }

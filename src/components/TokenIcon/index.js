@@ -4,15 +4,21 @@ import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import styles from './index.css';
 
-function TokenIcon({ tokenInfo, className, children }) {
+function TokenIcon({ tokenInfo, size = 'md', className, children }) {
   return (
     <div
       className={classnames(
-        'inline-block w-7 h-7 rounded-full bg-gray-50 border',
-        className,
+        ' rounded-full overflow-hidden bg-gray-50 border border-gray-100',
+        {
+          'w-8 h-8': size === 'md',
+          'w-6 h-6': size === 'sm',
+        },
       )}
     >
-      {children}
+      <img
+        className="max-h-full max-w-full"
+        src={tokenInfo?.logoURI || tokenInfo?.icon}
+      />
     </div>
   );
 }

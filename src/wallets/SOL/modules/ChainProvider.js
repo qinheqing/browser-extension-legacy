@@ -17,7 +17,7 @@ class ChainProvider extends ChainProviderBase {
     const rpcUrl = options?.chainInfo?.rpc?.[0];
 
     // https://solana-labs.github.io/solana-web3.js/classes/connection.html#constructor
-    this.connection = new Connection(rpcUrl, this.defaultCommitment);
+    this.solWeb3 = new Connection(rpcUrl, this.defaultCommitment);
 
     // TODO remove
     global.$$chainSOL = this;
@@ -28,8 +28,9 @@ class ChainProvider extends ChainProviderBase {
   }
 
   async getRecentBlockHash() {
-    const { feeCalculator, blockhash } =
-      await this.connection.getRecentBlockhash(this.defaultCommitment);
+    const { feeCalculator, blockhash } = await this.solWeb3.getRecentBlockhash(
+      this.defaultCommitment,
+    );
     return {
       feeCalculator,
       blockhash,
@@ -86,7 +87,7 @@ class ChainProvider extends ChainProviderBase {
     skipPreflight = false,
     preflightCommitment = 'single',
   }) {
-    return await this.connection.sendRawTransaction(rawTransaction, {
+    return await this.solWeb3.sendRawTransaction(rawTransaction, {
       skipPreflight,
       preflightCommitment,
     });
@@ -96,13 +97,13 @@ class ChainProvider extends ChainProviderBase {
   addAccountChangeListener(address, handler) {
     // https://solana-labs.github.io/solana-web3.js/modules.html#accountchangecallback
     // TODO normalizeAccountInfo
-    return this.connection.onAccountChange(new PublicKey(address), (info) => {
+    return this.solWeb3.onAccountChange(new PublicKey(address), (info) => {
       handler(this.normalizeAccountUpdatesInfo({ ...info, address }));
     });
   }
 
   removeAccountChangeListener(id) {
-    return this.connection.removeAccountChangeListener(id);
+    return this.solWeb3.removeAccountChangeListener(id);
   }
 
   async getAccountInfo({ address }) {
@@ -112,9 +113,7 @@ class ChainProvider extends ChainProviderBase {
      *    value: {data: Uint8Array(0), executable:false, lamports:48752, owner: PublicKey, rentEpoch: 201}
      *  }
      */
-    const res = await this.connection.getParsedAccountInfo(
-      new PublicKey(address),
-    );
+    const res = await this.solWeb3.getParsedAccountInfo(new PublicKey(address));
 
     /*
     - getParsedAccountInfo:
@@ -130,6 +129,7 @@ class ChainProvider extends ChainProviderBase {
     });
   }
 
+  // TODO change to web3.getTokenAccountsByOwner
   async getAccountTokens({ address } = {}) {
     const ownerAddress = address || this.options?.accountInfo?.address;
     if (!ownerAddress) {
@@ -142,7 +142,7 @@ class ChainProvider extends ChainProviderBase {
     const filters = helpersSOL.getOwnedAccountsFilters(accountPublicKey);
     // TODO https://solana-labs.github.io/solana-web3.js/classes/connection.html#getparsedtokenaccountsbyowner
     //    getParsedProgramAccounts, getParsedTokenAccountsByOwner, getTokenAccountsByOwner(Phantom used)
-    const resp = await this.connection._rpcRequest('getProgramAccounts', [
+    const resp = await this.solWeb3._rpcRequest('getProgramAccounts', [
       helpersSOL.TOKEN_PROGRAM_ID.toBase58(),
       {
         commitment: this.defaultCommitment,
@@ -188,11 +188,12 @@ class ChainProvider extends ChainProviderBase {
         const { publicKey, accountInfo } = item;
         // get balance, mint from accountInfo.data
         const parsed = helpersSOL.parseTokenAccountData(item.accountInfo.data);
-        const associatedAddress = await helpersSOL.findAssociatedTokenAddress(
-          accountPublicKey,
-          parsed.mint,
-          publicKey,
-        );
+        const associatedAddress =
+          await helpersSOL.generateAssociatedTokenAddress(
+            accountPublicKey,
+            parsed.mint,
+            publicKey,
+          );
 
         // DO NOT use ownerAddress as token deposit address, it should be support by the wallet sender code
         //    the sender code will find token real address from owner address from chain
@@ -203,6 +204,7 @@ class ChainProvider extends ChainProviderBase {
         const depositAddress = publicKey.toString();
 
         return {
+          chainKey: this.options.chainInfo.key,
           balance: parsed.amount, // Token account balance
           address: publicKey.toString(), // Token account address
           depositAddress, // Token deposit address
@@ -235,20 +237,72 @@ class ChainProvider extends ChainProviderBase {
     };
   }
 
-  // TODO add new token will cost SOL
-  async getAddTokenFee() {
+  async getTokenAssociateFee() {
     // https://solana-labs.github.io/solana-web3.js/classes/connection.html#getminimumbalanceforrentexemption
-    // tokenAccountCost = async () => {
-    //   return this.connection.getMinimumBalanceForRentExemption(
-    //     ACCOUNT_LAYOUT.span,
-    //   );
-    // };
-    return 0;
+    const fee = await this.solWeb3.getMinimumBalanceForRentExemption(
+      helpersSOL.ACCOUNT_LAYOUT.span,
+    );
+    return fee;
+  }
+
+  async getTransactionFee() {
+    // { blockhash,feeCalculator }
+    const res = await this.solWeb3.getRecentBlockhash();
+    return res?.feeCalculator?.lamportsPerSignature;
+  }
+
+  async getTxHistory({ address }) {
+    const pubKey = new PublicKey(address);
+    const commitment = helpersSOL.COMMITMENT_TYPES.confirmed;
+
+    const res = await this.solWeb3.getConfirmedSignaturesForAddress2(
+      pubKey,
+      {
+        before: undefined,
+        until: undefined,
+        limit: 15,
+      },
+      commitment,
+    );
+
+    /*
+     [
+        {
+          blockTime: 1625274700
+          confirmationStatus: "finalized"
+          err: null
+          memo: null
+          signature: "JFu6bBKtDkc68yHa5TQkbGVWW4EDMnJ8tXLEp1mMaShdfuUj1365bRw46A8auejikpALj3WEE18nhDGrT5ubCQw"
+          slot: 84065904
+        }
+      ]
+     */
+    const signatures = res.map((sig) => sig.signature);
+    return this.getTransactions({ ids: signatures });
+  }
+
+  async getTransactions({ ids = [] }) {
+    const commitment = helpersSOL.COMMITMENT_TYPES.confirmed;
+
+    const items = await this.solWeb3.getParsedConfirmedTransactions(
+      ids,
+      commitment,
+    );
+    return {
+      items,
+    };
   }
 
   // getEpochInfo
   async getLatestBlock() {
     console.log('getEpochInfo');
+  }
+
+  async confirmTransaction({ txid }) {
+    const commitment = helpersSOL.COMMITMENT_TYPES.confirmed;
+
+    const res = await this.solWeb3.confirmTransaction(txid, commitment);
+    return res;
   }
 }
 

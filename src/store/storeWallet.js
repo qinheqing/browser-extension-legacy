@@ -1,41 +1,26 @@
-import { observable, autorun, untracked, makeObservable } from 'mobx';
+import { observable, autorun, untracked, makeObservable, action } from 'mobx';
 import WalletBase from '../wallets/WalletBase';
-import walletFactory from '../wallets/walletFactory';
 import BaseStore from './BaseStore';
-import storeAccount from './storeAccount';
-import storeChain from './storeChain';
-import storeToken from './storeToken';
 
 class StoreWallet extends BaseStore {
   constructor(props) {
     super(props);
     makeObservable(this);
-
-    // TODO do not use auto run to new Wallet, as currentAccount balance change will trigger this callback
-    autorun(() => {
-      const { currentAccount } = storeAccount;
-      const { currentChainInfo } = storeChain;
-      untracked(() => {
-        console.log('Create wallet instance');
-        // TODO debounce
-        this.currentWallet = walletFactory.createWallet({
-          chainInfo: currentChainInfo,
-          accountInfo: currentAccount,
-        });
-      });
-    });
+    this.initWallet();
   }
 
   @observable.ref
   currentWallet = new WalletBase();
 
-  async getCurrentAccountTokens() {
-    if (!storeAccount.currentAccount) {
-      return;
-    }
-    const tokensRes = await this.currentWallet.chainProvider.getAccountTokens();
-    console.log('getCurrentAccountTokens', tokensRes);
-    storeToken.setCurrentTokens(tokensRes);
+  @action.bound
+  setCurrentWallet(wallet) {
+    this.currentWallet = wallet;
+  }
+
+  async initWallet() {
+    const storeAccount = (await import('./storeAccount')).default;
+    // only import this module is OK, autorun will handle update
+    // storeAccount.updateCurrentWallet();
   }
 }
 

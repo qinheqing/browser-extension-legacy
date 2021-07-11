@@ -9,7 +9,8 @@
 .content {
   position: relative;
   transform: scale(1);
-  width: 357px;
+  width: 100%;
+  max-width: 365px;
   height: 600px;
 
   @apply bg-root-body;
