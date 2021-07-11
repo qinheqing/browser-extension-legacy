@@ -45,15 +45,22 @@ function throwToBeImplemented(cls) {
   throw new Error(`method need to be implemented at [${cls.constructor.name}]`);
 }
 
-function shortenAddress(address, { size = 6 } = {}) {
+function shortenAddress(
+  address = '',
+  { size = 6, head = true, tail = true } = {},
+) {
   // TODO if size > address.length
-  const head = address.substr(0, size);
-  const tail = address.substr(address.length - size);
-  return `${head}...${tail}`;
+  const headStr = head ? address.substr(0, size) : '';
+  const tailStr = tail ? address.substr(address.length - size) : '';
+  return `${headStr}...${tailStr}`;
+}
+
+function isExtensionTypePopup() {
+  return getEnvironmentType() === ENVIRONMENT_TYPE_POPUP;
 }
 
 function openStandalonePage(routeUrl) {
-  if (getEnvironmentType() === ENVIRONMENT_TYPE_POPUP) {
+  if (isExtensionTypePopup()) {
     global.platform.openExtensionInBrowser(routeUrl);
   } else {
     global.onekeyHistory.push(routeUrl);
@@ -68,4 +75,5 @@ export default {
   throwToBeImplemented,
   shortenAddress,
   openStandalonePage,
+  isExtensionTypePopup,
 };

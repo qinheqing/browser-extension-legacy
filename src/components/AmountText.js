@@ -1,16 +1,19 @@
 import React from 'react';
 import BigNumber from 'bignumber.js';
+import utilsNumber from '../utils/utilsNumber';
 // import styles from './AmountText.css';
 
 // eslint-disable-next-line react/prop-types
 export default function AmountText({
   value,
   decimals = 0,
-  precision = 8,
-  round = 'round', // floor,ceil,round
+  precision = 8, // TODO read from chainInfo config
+  roundMode = 'round', // floor,ceil,round
 }) {
-  const value1 = value || '0';
-  const num = new BigNumber(value1).div(new BigNumber(10).pow(decimals));
-  // console.log(styles.container);
-  return num.toFixed(precision);
+  return utilsNumber.toNormalNumber({
+    value,
+    decimals,
+    precision,
+    roundMode,
+  });
 }

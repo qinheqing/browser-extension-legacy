@@ -7,7 +7,7 @@ class OneChainInfo {
     name = '', // display name: BSC
     fullName = '', // full display name: Binance Smart Chain
     description = '',
-    etherChainId = -1, //
+    internalChainId = -1, //
     rpc = [],
     scan = [],
     currency = '', // BNB
@@ -15,6 +15,7 @@ class OneChainInfo {
     isCustom = false, // is built-in or user custom Chain
     isTestNet = false,
     accountNamePrefix = '',
+    ...others
   }) {
     this.baseChain = baseChain;
     this.name = name;
@@ -22,12 +23,13 @@ class OneChainInfo {
     this.description = description;
     this.rpc = rpc;
     // https://chainid.network/
-    this.etherChainId = etherChainId; // etherChainId or chainId
+    this.internalChainId = internalChainId; // internalChainId or chainId
     this.currency = currency;
     this.browser = browser;
     this.isCustom = isCustom;
     this.isTestNet = isTestNet;
     this.accountNamePrefix = accountNamePrefix;
+    Object.assign(this, others);
     // uniq key
     this.key = key || this.generateKey();
   }

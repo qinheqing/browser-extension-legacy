@@ -7,10 +7,10 @@ export const CONST_BNB = 'BNB';
 export const CONST_CHAIN_KEYS = {
   BTC: 'BTC',
   BSC: 'BSC',
-  BSC_TEST_NET: 'BSC_TEST_NET',
+  BSC_TEST_NET: 'BSC_T',
   ETH: 'ETH',
   SOL: 'SOL',
-  SOL_TEST_NET: 'SOL_TEST_NET',
+  SOL_TEST_NET: 'SOL_T',
 };
 export const CONST_HARDWARE_MODELS = {
   OneKeyClassic: 'onekey',

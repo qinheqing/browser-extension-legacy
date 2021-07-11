@@ -15,6 +15,8 @@ import OneTokenInfo from '../../classes/OneTokenInfo';
 import ReactJsonView from '../ReactJsonView';
 import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
 import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
+import OneButton from '../OneButton';
+import storeChain from '../../store/storeChain';
 
 // const ComponentSample = observer(ComponentSamplePure);
 
@@ -29,10 +31,15 @@ function ImportAccountItem({
     isNative: true,
     address: account.address,
     chainKey: account.chainKey,
+    symbol: storeChain.currentChainInfo?.currency,
   });
   return (
-    <div className="ImportAccountsList_item" key={account.address}>
+    <div
+      className="bg-white py-2 px-4 -mx-4 border-b flex items-center"
+      key={account.address}
+    >
       <input
+        className="transform scale-150 mr-4"
         defaultChecked={defaultChecked}
         type="checkbox"
         disabled={disabled}
@@ -40,11 +47,9 @@ function ImportAccountItem({
         onChange={onChange}
       />
       <div className="ImportAccountsList_itemContent">
-        <div className="u-wrap-text">{account.address}</div>
-        <small>
-          {account.path} (index={account.hdPathIndex})
-        </small>
-        <div className="u-color-primary">
+        <div className="break-all text-sm leading-none">{account.address}</div>
+        <small className="text-gray-300 text-xs">{account.path}</small>
+        <div className="flex items-center justify-between">
           <TokenBalance
             tokenInfo={tokenInfo}
             wallet={wallet}
@@ -111,72 +116,68 @@ function ImportAccountsList({ wallet, onLoadMore }) {
   }, []);
 
   return (
-    <Observer>
-      {() => {
+    <div className="p-4">
+      <div className="flex items-center">
+        <OneButton
+          type="secondary"
+          disabled={page <= 1}
+          onClick={() => setPage((p) => p - 1)}
+        >
+          上一页
+        </OneButton>
+        <div className="w-2" />
+        <OneButton
+          type="secondary"
+          disabled={!accountsPaged.length}
+          onClick={() => {
+            const newPage = page + 1;
+            if (newPage * PAGE_SIZE > accounts.length) {
+              doLoadMore({ start: accounts.length });
+            }
+            setPage(newPage);
+          }}
+        >
+          下一页
+        </OneButton>
+        <div className="flex-1" />
+        <OneButton
+          type="primary"
+          disabled={!selectedAccountsLength}
+          onClick={confirmImport}
+        >
+          确认导入 ({selectedAccountsLength})
+        </OneButton>
+      </div>
+      <div className="h-4" />
+      {!accountsPaged.length && (
+        <div className="text-center py-40">请稍后...</div>
+      )}
+      {accountsPaged.map((account) => {
+        const isExists = existsAccounts.find((item) => {
+          // TODO same address, but type different, can we import it?
+          //      item.address === account.address && item.type === account.type
+          return item.address === account.address;
+        });
+        const defaultChecked = Boolean(selectedAccounts[account.address]);
         return (
-          <div className="u-padding-x">
-            <div className="u-flex">
-              <button
-                disabled={page <= 1}
-                onClick={() => setPage((p) => p - 1)}
-              >
-                Prev
-              </button>
-              <button
-                disabled={!accountsPaged.length}
-                onClick={() => {
-                  const newPage = page + 1;
-                  if (newPage * PAGE_SIZE > accounts.length) {
-                    doLoadMore({ start: accounts.length });
-                  }
-                  setPage(newPage);
-                }}
-              >
-                Next
-              </button>
-              <div className="u-flex-child" />
-              <button
-                disabled={!selectedAccountsLength}
-                onClick={confirmImport}
-              >
-                Confirm Import ({selectedAccountsLength})
-              </button>
-            </div>
-            <hr />
-            {!accountsPaged.length && <div>loading...</div>}
-            {accountsPaged.map((account) => {
-              const isExists = existsAccounts.find((item) => {
-                // TODO same address, but type different, can we import it?
-                //    item.address === account.address && item.type === account.type
-                return item.address === account.address;
-              });
-              const defaultChecked = Boolean(selectedAccounts[account.address]);
-              return (
-                <ImportAccountItem
-                  disabled={isExists}
-                  key={account.address}
-                  account={account}
-                  wallet={wallet}
-                  defaultChecked={defaultChecked}
-                  onChange={(event) => {
-                    const { checked } = event.target;
-                    if (checked) {
-                      selectedAccounts[account.address] = account;
-                    } else {
-                      delete selectedAccounts[account.address];
-                    }
-                  }}
-                />
-              );
-            })}
-            <hr />
-
-            <ReactJsonView src={selectedAccounts} />
-            <ReactJsonView src={existsAccounts} />
-          </div>
+          <ImportAccountItem
+            disabled={isExists}
+            key={account.address}
+            account={account}
+            wallet={wallet}
+            defaultChecked={defaultChecked}
+            onChange={(event) => {
+              const { checked } = event.target;
+              if (checked) {
+                selectedAccounts[account.address] = account;
+              } else {
+                delete selectedAccounts[account.address];
+              }
+            }}
+          />
         );
-      }}
-    </Observer>
+      })}
+    </div>
   );
 }
 
@@ -184,4 +185,4 @@ ImportAccountsList.propTypes = {
   children: PropTypes.any,
 };
 
-export default ImportAccountsList;
+export default observer(ImportAccountsList);
