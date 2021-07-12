@@ -9,67 +9,17 @@ import {
   CONST_BTC,
 } from '../consts/consts';
 import utilsApp from '../utils/utilsApp';
+import chainsConfig from '../config/chainsConfig';
 import BaseStore from './BaseStore';
 
 // TODO use https://github.com/OneKeyHQ/remote-config
 function createBuiltInChains() {
   const chainsRaw = [
-    {
-      key: CONST_CHAIN_KEYS.SOL_TEST_NET,
-      name: 'SOL Testnet',
-      baseChain: CONST_CHAIN_KEYS.SOL,
-      currency: CONST_SOL,
-      currencyIcon:
-        'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
-      // https://github.com/solana-labs/token-list/blob/main/src/lib/tokenlist.ts#L5
-      internalChainId: 102,
-      rpc: ['https://api.testnet.solana.com'],
-      browser: ['https://solanascan.io/?testnet'],
-      isTestNet: true,
-    },
-    {
-      key: CONST_CHAIN_KEYS.BTC,
-      name: 'BTC',
-      baseChain: CONST_CHAIN_KEYS.BTC,
-      currency: CONST_BTC,
-      internalChainId: null,
-      rpc: ['https://btc.com/'],
-      browser: ['https://btc.com/'],
-      isTestNet: false,
-    },
-    {
-      key: CONST_CHAIN_KEYS.BSC,
-      name: 'BSC',
-      baseChain: CONST_CHAIN_KEYS.ETH,
-      currency: CONST_BNB,
-      internalChainId: 56,
-      rpc: [
-        'https://bsc-dataseed.binance.org/',
-        'https://bsc-dataseed1.defibit.io/',
-      ],
-      browser: ['https://bscscan.com/'],
-      isTestNet: false,
-    },
-    {
-      key: CONST_CHAIN_KEYS.BSC_TEST_NET,
-      name: 'BSC Testnet',
-      baseChain: CONST_CHAIN_KEYS.ETH,
-      currency: CONST_BNB,
-      internalChainId: 97,
-      rpc: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
-      browser: ['https://testnet.bscscan.com/'],
-      isTestNet: true,
-    },
-    {
-      key: CONST_CHAIN_KEYS.SOL,
-      name: 'SOL',
-      baseChain: CONST_CHAIN_KEYS.SOL,
-      currency: CONST_SOL,
-      internalChainId: null,
-      rpc: ['https://solana-api.projectserum.com'],
-      browser: ['https://solanascan.io/'],
-      isTestNet: false,
-    },
+    chainsConfig.SOL,
+    chainsConfig.SOL_TEST,
+    // chainsConfig.BTC,
+    // chainsConfig.BSC,
+    // chainsConfig.BSC_TEST,
   ];
   return chainsRaw.reduce((prev, current) => {
     const info = new OneChainInfo(current);

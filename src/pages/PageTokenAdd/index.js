@@ -12,6 +12,9 @@ import storeToken from '../../store/storeToken';
 import NoDataView from '../../components/NoDataView';
 import OneDialog from '../../components/OneDialog';
 import TokenIcon from '../../components/TokenIcon';
+import TokenBalance from '../../components/TokenBalance';
+import AmountText from '../../components/AmountText';
+import storeAccount from '../../store/storeAccount';
 import styles from './index.css';
 
 function TokenAddItem({ token, onAddClick }) {
@@ -47,8 +50,12 @@ function TokenAddItem({ token, onAddClick }) {
 function PageTokenAdd() {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [tokenToAdd, setTokenToAdd] = useState({});
+  const [fee, setFee] = useState(null);
   useEffect(() => {
     storeToken.fetchAllTokenList();
+    storeWallet.currentWallet.chainProvider
+      .getAddAssociateTokenFee()
+      .then((_fee) => setFee(_fee));
     return () => {
       storeToken.tokenListFiltered = null;
     };
@@ -70,6 +77,7 @@ function PageTokenAdd() {
       </div>
       <div>
         {tokenListFiltered && !tokenListFiltered.length && <NoDataView />}
+        {/* TODO lazy load or pagination, fixed px height, title overflow ellipse */}
         {tokens.map((token) => (
           <TokenAddItem
             key={token.address}
@@ -92,7 +100,17 @@ function PageTokenAdd() {
             </div>
           </div>
         }
-        content={<div>需要支付 0.0000 SOL 添加代币</div>}
+        // TODO token fee display
+        content={
+          <div>
+            需要支付 {/* TODO to TokenAmountText*/}
+            <AmountText
+              value={fee}
+              decimals={storeAccount.currentAccount.decimals}
+            />{' '}
+            {storeAccount.currentAccount.currency} 添加代币
+          </div>
+        }
         confirmText="确认添加"
         onConfirm={async () => {
           return storeToken.addAssociateToken({ contract: tokenToAdd.address });

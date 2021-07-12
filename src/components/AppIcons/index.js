@@ -28,7 +28,7 @@ import {
   CheckIcon,
   ExternalLinkIcon,
 } from '@heroicons/react/outline';
-import { SpinnerIcon } from './icons';
+import { SpinnerIcon, QuestionIcon } from './icons';
 
 // https://heroicons.com/
 
@@ -60,6 +60,7 @@ const AppIcons = {
   CheckIcon,
   SpinnerIcon,
   ExternalLinkIcon,
+  QuestionIcon,
 };
 
 export default AppIcons;

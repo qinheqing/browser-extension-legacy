@@ -102,7 +102,7 @@ export default class Home extends PureComponent {
       pendingApprovals,
     } = this.props;
 
-    if (storeApp.homeType === 'NEW') {
+    if (!isNotification && storeApp.homeType === 'NEW') {
       history.replace(ROUTE_HOME);
       return;
     }

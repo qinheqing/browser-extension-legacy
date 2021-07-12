@@ -17,6 +17,7 @@ import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
 import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
 import OneButton from '../OneButton';
 import storeChain from '../../store/storeChain';
+import AppIcons from '../AppIcons';
 
 // const ComponentSample = observer(ComponentSamplePure);
 
@@ -35,7 +36,7 @@ function ImportAccountItem({
   });
   return (
     <div
-      className="bg-white py-2 px-4 -mx-4 border-b flex items-center"
+      className="bg-white py-3 px-4 -mx-4 border-b flex items-center"
       key={account.address}
     >
       <input
@@ -49,13 +50,14 @@ function ImportAccountItem({
       <div className="ImportAccountsList_itemContent">
         <div className="break-all text-sm leading-none">{account.address}</div>
         <small className="text-gray-300 text-xs">{account.path}</small>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between text-sm leading-none">
           <TokenBalance
             tokenInfo={tokenInfo}
             wallet={wallet}
             showUnit
             updateBalanceThrottle={60 * 1000}
           />
+          <AppIcons.ExternalLinkIcon role="button" className="w-4" />
         </div>
       </div>
     </div>

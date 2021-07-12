@@ -146,7 +146,7 @@ class WalletSOL extends WalletBase {
     }
   }
 
-  getBrowserLink({ tx, account, token, block }) {
+  getBlockBrowserLink({ tx, account, token, block }) {
     if (tx) {
       return `https://explorer.solana.com/tx/${tx}?cluster=testnet`;
     }

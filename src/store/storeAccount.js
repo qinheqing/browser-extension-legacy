@@ -100,7 +100,7 @@ class StoreAccount extends BaseStore {
   @observable
   accountsGroupFilter = {
     type: CONST_ACCOUNTS_GROUP_FILTER_TYPES.chain,
-    chainKey: CONST_CHAIN_KEYS.SOL_TEST_NET,
+    chainKey: storeChain.currentChainKey,
   };
 
   @computed

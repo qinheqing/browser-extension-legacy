@@ -7,6 +7,7 @@ import { ethErrors } from 'eth-rpc-errors';
 import { cloneDeep } from 'lodash';
 
 import { CAVEAT_NAMES } from '../../../../shared/constants/permissions';
+import bgHelpers from '../../../../src/wallets/bg/bgHelpers';
 import {
   APPROVAL_TYPE,
   SAFE_METHODS, // methods that do not require any permissions to use
@@ -157,6 +158,8 @@ export class PermissionsController {
       function _end() {
         if (res.error || !Array.isArray(res.result)) {
           resolve([]);
+        } else if (bgHelpers.isAtNewApp()) {
+          resolve(['0x00000000000000000000000']);
         } else {
           resolve(res.result);
         }
@@ -617,8 +620,9 @@ export class PermissionsController {
   _getPermittedAccounts(origin) {
     const permittedAccounts = this.permissions
       .getPermission(origin, 'eth_accounts')
-      ?.caveats?.find((caveat) => caveat.name === CAVEAT_NAMES.exposedAccounts)
-      ?.value;
+      ?.caveats?.find(
+        (caveat) => caveat.name === CAVEAT_NAMES.exposedAccounts,
+      )?.value;
 
     return permittedAccounts || null;
   }
@@ -654,6 +658,14 @@ export class PermissionsController {
       connectedDomains.map((origin) =>
         this._handleConnectedAccountSelected(origin),
       ),
+    );
+  }
+
+  disconnectAllDomainAccounts() {
+    const domains = this.permissions.getDomains() || {};
+    const connectedDomains = Object.entries(domains).map(([domain]) => domain);
+    connectedDomains.forEach((origin) =>
+      this.notifyAccountsChanged(origin, []),
     );
   }
 
