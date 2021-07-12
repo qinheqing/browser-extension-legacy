@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { isString, isNumber } from 'lodash';
+import { isString, isNumber, isBoolean } from 'lodash';
 
 // like: Math.round     1.1->1, 1.9->2, -1.1->-1, -1.9->-2
 export const { ROUND_HALF_UP } = BigNumber;
@@ -37,11 +37,23 @@ function toBnRoundMode(round) {
 }
 
 function toNormalNumber({ value, decimals, precision, roundMode = 'round' }) {
-  if (isNaN(value) || value === '') {
+  if (
+    isNaN(value) ||
+    value === '' ||
+    value === null ||
+    value === undefined ||
+    isBoolean(value)
+  ) {
     return NaN;
   }
-  const num = new BigNumber(value).div(new BigNumber(10).pow(decimals));
-  return num.toFixed(precision, toBnRoundMode(roundMode));
+  // we can not update bignumber.js@4.1.0 to 9.0.0, as MM will throw error
+  try {
+    const num = bigNum(value).div(bigNum(10).pow(decimals));
+    return num.toFixed(precision, toBnRoundMode(roundMode));
+  } catch (ex) {
+    console.error(ex);
+    return NaN;
+  }
 }
 
 export default {

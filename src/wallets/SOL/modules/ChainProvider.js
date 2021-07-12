@@ -130,7 +130,7 @@ class ChainProvider extends ChainProviderBase {
   }
 
   // TODO change to web3.getTokenAccountsByOwner
-  async getAccountTokens({ address } = {}) {
+  async getAccountTokensLegacy({ address } = {}) {
     const ownerAddress = address || this.options?.accountInfo?.address;
     if (!ownerAddress) {
       return {
@@ -237,7 +237,81 @@ class ChainProvider extends ChainProviderBase {
     };
   }
 
-  async getTokenAssociateFee() {
+  async getAccountTokens({ address } = {}) {
+    const chainKey = this.options.chainInfo.key;
+    const ownerAddress = address || this.options?.accountInfo?.address;
+    if (!ownerAddress) {
+      return {
+        chainKey,
+        ownerAddress,
+        tokens: [],
+      };
+    }
+    const accountPublicKey = new PublicKey(ownerAddress);
+
+    const programId = helpersSOL.TOKEN_PROGRAM_ID;
+    const resp = await this.solWeb3.getParsedTokenAccountsByOwner(
+      accountPublicKey,
+      {
+        programId,
+      },
+    );
+    const results = resp.value || [];
+
+    let tokens = await Promise.all(
+      results.map(async (item) => {
+        const publicKey = item.pubkey;
+        // get balance, mint from accountInfo.data
+        const parsedInfo = item?.account?.data?.parsed?.info;
+        const { tokenAmount } = parsedInfo;
+        const mint = new PublicKey(parsedInfo.mint);
+        const associatedAddress =
+          await helpersSOL.generateAssociatedTokenAddress(
+            accountPublicKey,
+            mint,
+            publicKey,
+          );
+
+        const depositAddress = publicKey.toString();
+
+        return {
+          chainKey,
+          ownerAddress, // Owner account address which token belongs to
+          balance: tokenAmount.amount, // Token account balance
+          decimals: tokenAmount.decimals,
+          address: publicKey.toString(), // Token account address
+          depositAddress, // Token deposit address
+          contractAddress: mint.toString(), // token contract address (mintAddress) / token real name
+          programAddress: programId.toString(), // token program address
+          associatedAddress: associatedAddress.toString(), // token associated address
+          isAssociatedToken: publicKey.equals(associatedAddress),
+        };
+      }),
+    );
+
+    // only display created token account (if associate token includes)
+    const createdTokenContractAddress = tokens
+      .filter((t) => !t.isAssociatedToken)
+      .map((t) => t.contractAddress);
+
+    if (createdTokenContractAddress.length) {
+      tokens = tokens.filter(
+        (t) =>
+          !(
+            t.isAssociatedToken &&
+            createdTokenContractAddress.includes(t.contractAddress)
+          ),
+      );
+    }
+
+    return {
+      chainKey,
+      ownerAddress,
+      tokens,
+    };
+  }
+
+  async getAddAssociateTokenFee() {
     // https://solana-labs.github.io/solana-web3.js/classes/connection.html#getminimumbalanceforrentexemption
     const fee = await this.solWeb3.getMinimumBalanceForRentExemption(
       helpersSOL.ACCOUNT_LAYOUT.span,

@@ -29,11 +29,13 @@ const AccountsGroupItem = observer(function ({
         </div>
       )}
       <div
-        className={classnames(styles.AccountsGroupItem__icon, {
+        className={classnames('u-flex-center', styles.AccountsGroupItem__icon, {
           [styles.AccountsGroupItem__icon_active]: isActive,
           [styles.AccountsGroupItem__icon_small]: size === 'small',
         })}
-      />
+      >
+        {icon && <img className="max-w-full max-h-full" src={icon} />}
+      </div>
       {expand && (
         <div
           className={classnames(styles.AccountsGroupItem__text, {
@@ -51,7 +53,7 @@ const AccountsGroupItemChain = observer(function ({ chainKey, ...others }) {
   const chainInfo = storeChain.getChainInfoByKey(chainKey);
   return (
     <AccountsGroupItem
-      icon={chainInfo.icon}
+      icon={chainInfo.logo}
       onClick={() => {
         storeAccount.accountsGroupFilter = {
           type: CONST_ACCOUNTS_GROUP_FILTER_TYPES.chain,
@@ -119,7 +121,7 @@ const AccountsGroupItemWallet = observer(function ({ ...others }) {
 const AccountsGroupItemSort = observer(function ({ ...others }) {
   return (
     <AccountsGroupItem
-      icon=""
+      icon="images/chains/ethereum.svg"
       size="small"
       onClick={() => {
         storeApp.homeType = 'OLD';
@@ -127,7 +129,7 @@ const AccountsGroupItemSort = observer(function ({ ...others }) {
       }}
       {...others}
     >
-      Other
+      选择更多网络
     </AccountsGroupItem>
   );
 });
@@ -165,14 +167,14 @@ function AccountsGroupBar() {
         onMouseLeave={() => setExpand(false)}
       >
         <AccountsGroupItemSort {...childProps} />
-        <AccountsGroupItemWallet {...childProps} />
-        <AccountsGroupItemHardware {...childProps} />
+        {/* <AccountsGroupItemWallet {...childProps} />*/}
+        {/* <AccountsGroupItemHardware {...childProps} />*/}
         {storeChain.chainsKeys.map((key) => {
           return (
             <AccountsGroupItemChain {...childProps} key={key} chainKey={key} />
           );
         })}
-        <AccountsGroupItemCustomCreate {...childProps} />
+        {/* <AccountsGroupItemCustomCreate {...childProps} />*/}
       </div>
     </div>
   );
