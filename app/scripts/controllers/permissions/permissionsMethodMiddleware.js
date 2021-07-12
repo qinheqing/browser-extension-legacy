@@ -1,5 +1,6 @@
 import { createAsyncMiddleware } from 'json-rpc-engine';
 import { ethErrors } from 'eth-rpc-errors';
+import bgHelpers from '../../../../src/wallets/bg/bgHelpers';
 
 /**
  * Create middleware for handling certain methods and preprocessing permissions requests.
@@ -16,6 +17,13 @@ export default function createPermissionsMethodMiddleware({
 
   return createAsyncMiddleware(async (req, res, next) => {
     let responseHandler;
+
+    if (bgHelpers.isAtNewApp()) {
+      res.error = ethErrors.rpc.internal(
+        `Your current wallet is not supported. (method=${req.method})`,
+      );
+      return;
+    }
 
     switch (req.method) {
       // Intercepting eth_accounts requests for backwards compatibility:

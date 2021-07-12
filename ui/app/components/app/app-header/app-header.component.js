@@ -127,14 +127,6 @@ export default class AppHeader extends PureComponent {
             }}
           />
           <div className="app-header__account-menu-container">
-            <button
-              onClick={() => {
-                storeApp.homeType = 'NEW';
-                history.push(ROUTE_HOME);
-              }}
-            >
-              Solana
-            </button>
             {!hideNetworkIndicator && (
               <div className="app-header__network-component-wrapper">
                 <NetworkDisplay
