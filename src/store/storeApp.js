@@ -34,6 +34,12 @@ class StoreApp extends BaseStore {
   //      check homeType and return mock chainId=-1 address='1111'
   @observable
   homeType = 'OLD'; // NEW, OLD
+
+  @observable
+  legacyState = {
+    isUnlocked: false,
+    selectedAddress: '',
+  };
 }
 
 global._storeApp = new StoreApp();
