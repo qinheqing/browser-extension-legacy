@@ -7,6 +7,7 @@ import { CONST_ACCOUNTS_GROUP_FILTER_TYPES } from '../../consts/consts';
 import storeApp from '../../store/storeApp';
 import { ROUTE_HOME_OLD } from '../../routes/routeUrls';
 import storeHistory from '../../store/storeHistory';
+import uiGetBgControllerAsync from '../../wallets/bg/uiGetBgControllerAsync';
 import styles from './index.css';
 
 const AccountsGroupItem = observer(function ({
@@ -124,6 +125,11 @@ const AccountsGroupItemSort = observer(function ({ ...others }) {
       icon="images/chains/ethereum.svg"
       size="small"
       onClick={() => {
+        uiGetBgControllerAsync().then((bg) =>
+          bg.emitAccountChangedToConnectedDomain(
+            storeApp.legacyState.selectedAddress,
+          ),
+        );
         storeApp.homeType = 'OLD';
         storeHistory.push(ROUTE_HOME_OLD);
       }}

@@ -1,5 +1,5 @@
-
 .AccountCard {
+  /* #dc1fff */
   background: #8125f2;
   height: 180px;
   border-radius: 20px;
@@ -30,7 +30,6 @@
   @apply flex items-center flex-1;
 }
 
-
 .AccountCard__typeTag {
   padding: 2px 6px 2px 4px;
   border-radius: 99999px;
@@ -44,10 +43,8 @@
 .AccountCard__address {
   font-size: 12px;
 
-
   @apply text-gray-400 flex items-center;
 }
-
 
 .AccountCard__blank {
   flex: 1;

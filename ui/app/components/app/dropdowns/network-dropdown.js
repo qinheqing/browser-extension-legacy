@@ -17,6 +17,8 @@ import { getEnvironmentType } from '../../../../../app/scripts/lib/util';
 import ColorIndicator from '../../ui/color-indicator';
 import { COLORS, SIZES } from '../../../helpers/constants/design-system';
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../../helpers/constants/common';
+import storeApp from '../../../../../src/store/storeApp';
+import { ROUTE_HOME } from '../../../../../src/routes/routeUrls';
 import { Dropdown, DropdownMenuItem } from './components/dropdown';
 
 // classes from nodes of the toggle element.
@@ -202,6 +204,37 @@ class NetworkDropdown extends Component {
     return name;
   }
 
+  renderNewAppEntry() {
+    const { history } = this.props;
+    return (
+      <DropdownMenuItem
+        closeMenu={this.props.hideNetworkDropdown}
+        onClick={() => {
+          storeApp.homeType = 'NEW';
+          history.push(ROUTE_HOME);
+        }}
+        style={DROP_DOWN_MENU_ITEM_STYLE}
+      >
+        <div className="network-check__transparent" />
+        <ColorIndicator
+          color="sol"
+          size={SIZES.LG}
+          type={ColorIndicator.TYPES.FILLED}
+          backgroundColor="#dc1fff"
+          borderColor={COLORS.TRANSPARENT}
+        />
+        <span
+          className="network-name-item"
+          style={{
+            color: '#9b9b9b',
+          }}
+        >
+          Solana
+        </span>
+      </DropdownMenuItem>
+    );
+  }
+
   renderNetworkEntry(network) {
     const {
       provider: { type: providerType },
@@ -251,9 +284,8 @@ class NetworkDropdown extends Component {
         onClickOutside={(event) => {
           const { classList } = event.target;
           const isInClassList = (className) => classList.contains(className);
-          const notToggleElementIndex = notToggleElementClassnames.findIndex(
-            isInClassList,
-          );
+          const notToggleElementIndex =
+            notToggleElementClassnames.findIndex(isInClassList);
 
           if (notToggleElementIndex === -1) {
             event.stopPropagation();
@@ -281,6 +313,7 @@ class NetworkDropdown extends Component {
             {this.context.t('defaultNetwork')}
           </div>
         </div>
+        {this.renderNewAppEntry()}
         {this.renderNetworkEntry('mainnet')}
         {this.renderNetworkEntry('bsc')}
         {this.renderNetworkEntry('heco')}
