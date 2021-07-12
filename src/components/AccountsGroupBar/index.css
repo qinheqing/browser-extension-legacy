@@ -35,7 +35,7 @@
 }
 
 .AccountsGroupItem__icon_active {
-  background: #00b812;
+  @apply bg-green-one-100;
 }
 
 .AccountsGroupItem__icon_small {

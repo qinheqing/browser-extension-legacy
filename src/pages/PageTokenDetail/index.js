@@ -17,7 +17,9 @@ function PageTokenDetail() {
   }
   return (
     <AppPageLayout
-      title={<span onClick={() => console.log(token)}>{token.name}</span>}
+      title={
+        <span onClick={() => console.log(token)}>{token.symbolOrName}</span>
+      }
       whiteBg={false}
       navRight={<TokenIcon tokenInfo={token} />}
       footer={

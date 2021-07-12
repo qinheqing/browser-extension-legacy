@@ -32,6 +32,7 @@ import { switchedToUnconnectedAccount } from '../ducks/alerts/unconnected-accoun
 import { getUnconnectedAccountAlertEnabledness } from '../ducks/metamask/metamask';
 import { LISTED_CONTRACT_ADDRESSES } from '../../../shared/constants/tokens';
 import { WALLET_ACCOUNT_TYPES } from '../helpers/constants/common';
+import utilsApp from '../../../src/utils/utilsApp';
 import * as actionConstants from './actionConstants';
 
 let background = null;
@@ -2971,6 +2972,9 @@ export function trackMetaMetricsPage(payload, options) {
 
 // If you need the return value of a background method call
 export async function getBackgroundInstanceAsync() {
+  await utilsApp.waitForDataLoaded({
+    data: () => Boolean(promisifiedBackground),
+  });
   return promisifiedBackground;
 }
 

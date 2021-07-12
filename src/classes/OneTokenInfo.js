@@ -18,8 +18,11 @@ class OneTokenInfo {
     associatedAddress = '',
     ...others
   }) {
-    this.name = name || (!isNative && '未知资产');
+    Object.assign(this, others);
+
+    this.name = name;
     this.symbol = symbol;
+    this.symbolOrName = this.symbol || this.name || '未知资产';
     this.icon = icon;
     this.decimals = decimals;
     this.isNative = isNative;
@@ -36,7 +39,6 @@ class OneTokenInfo {
       });
     this.associatedAddress = associatedAddress;
     this.chainKey = chainKey;
-    Object.assign(this, others);
     this.key = key || this.generateKey();
   }
 

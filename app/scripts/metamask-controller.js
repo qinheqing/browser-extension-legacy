@@ -27,6 +27,7 @@ import {
 import { getBackgroundMetaMetricState } from '../../ui/app/selectors';
 import { TRANSACTION_STATUSES } from '../../shared/constants/transaction';
 import backgroundProxy from '../../src/wallets/bg/backgroundProxy';
+import bgHelpers from '../../src/wallets/bg/bgHelpers';
 import AddressKeyring from './lib/eth-address-keyring';
 import ComposableObservableStore from './lib/ComposableObservableStore';
 import AccountTracker from './lib/account-tracker';
@@ -636,6 +637,12 @@ export default class MetamaskController extends EventEmitter {
       // hardware wallets
       connectHardware: nodeify(this.connectHardware, this),
       backgroundProxyCall: nodeify(this.backgroundProxyCall, this),
+      pingPong: nodeify(this.pingPong, this),
+      disconnectAllDomainAccounts: nodeify(
+        this.disconnectAllDomainAccounts,
+        this,
+      ),
+      notifyAllConnections: nodeify(this.notifyAllConnections, this),
       forgetDevice: nodeify(this.forgetDevice, this),
       checkHardwareStatus: nodeify(this.checkHardwareStatus, this),
       unlockHardwareWalletAccount: nodeify(
@@ -1266,6 +1273,14 @@ export default class MetamaskController extends EventEmitter {
       method,
       params,
     });
+  }
+
+  async pingPong() {
+    return 'pong';
+  }
+
+  async disconnectAllDomainAccounts() {
+    return this.permissionsController.disconnectAllDomainAccounts();
   }
 
   /**
@@ -2363,7 +2378,22 @@ export default class MetamaskController extends EventEmitter {
     Object.values(this.connections).forEach((origin) => {
       Object.values(origin).forEach((conn) => {
         if (conn.engine) {
-          conn.engine.emit('notification', getPayload(origin));
+          let _payload = getPayload(origin);
+          if (
+            bgHelpers.isAtNewApp() &&
+            _payload.method === NOTIFICATION_NAMES.chainChanged
+          ) {
+            _payload = {
+              method: NOTIFICATION_NAMES.chainChanged,
+              params: {
+                // chainId: "0x61"
+                // networkVersion: "97"
+                chainId: '0xEEEEEEEE',
+                networkVersion: '4008636142',
+              },
+            };
+          }
+          conn.engine.emit('notification', _payload);
         }
       });
     });

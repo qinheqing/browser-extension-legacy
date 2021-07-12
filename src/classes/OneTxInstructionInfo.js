@@ -9,12 +9,12 @@ class OneTxInstructionInfo {
     creator,
     ...others
   }) {
+    Object.assign(this, others);
     this.type = type;
     this.from = from;
     this.to = to;
     this.amount = amount;
     this.creator = creator;
-    Object.assign(this, others);
   }
 }
 

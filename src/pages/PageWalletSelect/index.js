@@ -26,6 +26,9 @@ const AccountsList = observer(function () {
     : null;
   return (
     <div className="overflow-y-auto flex-1">
+      <h3 className="text-center text-sm py-2 px-4 shadow-sm bg-white ">
+        {chainInfo.name}
+      </h3>
       {accounts.map((account) => {
         return (
           <AccountCard
@@ -42,8 +45,8 @@ const AccountsList = observer(function () {
         );
       })}
       {!accounts.length && (
-        <div className="PageWalletSelect__noAccounts">
-          Click buttons below to add accounts or connect hardware
+        <div className="py-10 px-4 text-gray-600 text-lg text-center">
+          点击下方按钮添加账户
         </div>
       )}
     </div>
@@ -52,6 +55,17 @@ const AccountsList = observer(function () {
 
 function PageWalletSelect() {
   const history = useHistory();
+  const connectHardwareButton = (
+    <OneButton
+      block
+      type="primary"
+      disabled000={!storeAccount.accountsGroupFilter.chainKey}
+      disabled
+      onClick={() => utilsApp.openStandalonePage(ROUTE_CONNECT_HARDWARE)}
+    >
+      Connect hardware
+    </OneButton>
+  );
   return (
     <AppPageLayout
       title="切换账户"
@@ -62,17 +76,10 @@ function PageWalletSelect() {
             disabled={!storeAccount.accountsGroupFilter.chainKey}
             onClick={() => history.push(ROUTE_CREATE_ACCOUNT)}
           >
-            + Add accounts
+            + 添加钱包账户
           </OneButton>
-          <div className="w-6" />
-          <OneButton
-            block
-            type="primary"
-            disabled={!storeAccount.accountsGroupFilter.chainKey}
-            onClick={() => utilsApp.openStandalonePage(ROUTE_CONNECT_HARDWARE)}
-          >
-            Connect hardware
-          </OneButton>
+          {/* <div className="w-6" />*/}
+          {/* {connectHardwareButton}*/}
         </footer>
       }
     >
