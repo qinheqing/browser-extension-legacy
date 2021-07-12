@@ -319,7 +319,7 @@ class WalletBase {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  getBrowserLink({ tx, account, token, block }) {
+  getBlockBrowserLink({ tx, account, token, block }) {
     return utilsApp.throwToBeImplemented(this);
   }
 }

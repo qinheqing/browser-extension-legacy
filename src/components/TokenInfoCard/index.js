@@ -16,7 +16,7 @@ import storeToken from '../../store/storeToken';
 function TokenInfoCard({ token, onClick }) {
   const { symbol } = token;
   const { name, icon } = token;
-  const tokenName = symbol || name || token.contractAddressShort;
+  const tokenName = token.symbolOrName || token.contractAddressShort;
 
   return (
     <OneCellItem
@@ -30,7 +30,12 @@ function TokenInfoCard({ token, onClick }) {
             tokenInfo={token}
             watchBalanceChange
           />
-          <div className="text-xs text-gray-400">$ 0.0000</div>
+          <div
+            onMouseEnter={() => console.log(token)}
+            className="text-xs text-gray-400"
+          >
+            $ 0.0000
+          </div>
         </div>
       }
       title={

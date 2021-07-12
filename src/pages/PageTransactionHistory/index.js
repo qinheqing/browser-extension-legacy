@@ -214,11 +214,9 @@ function PageTransactionHistory() {
         <AppIcons.ExternalLinkIcon
           className="w-6 cursor-pointer"
           onClick={() =>
-            window.open(
-              storeWallet.currentWallet.getBrowserLink({
-                account: storeAccount.currentAccountAddress,
-              }),
-            )
+            storeHistory.openBlockBrowserLink({
+              account: storeAccount.currentAccountAddress,
+            })
           }
         />
       }
@@ -237,7 +235,7 @@ function PageTransactionHistory() {
               txid={txid}
               account={storeAccount.currentAccount}
               onClick={() => {
-                storeHistory.openBrowserLink({ tx: txid });
+                storeHistory.openBlockBrowserLink({ tx: txid });
               }}
             />
           ))}
@@ -250,7 +248,7 @@ function PageTransactionHistory() {
                 tx={tx}
                 account={storeAccount.currentAccount}
                 onClick={() => {
-                  storeHistory.openBrowserLink({ tx: txid });
+                  storeHistory.openBlockBrowserLink({ tx: txid });
                 }}
               />
             );

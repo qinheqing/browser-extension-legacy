@@ -2,6 +2,15 @@ import { autorun, makeObservable, toJS } from 'mobx';
 import { isFunction, isNil } from 'lodash';
 import utilsStorage from '../utils/utilsStorage';
 
+export function getAutoSaveStorageItem({ name, field }) {
+  const storageKey = buildAutoSaveStorageKey({ name, field });
+  return utilsStorage.getItem(storageKey);
+}
+
+export function buildAutoSaveStorageKey({ name, field }) {
+  return `mobx:${name}.${field}`;
+}
+
 class BaseStore {
   constructor(props) {
     // auto detect fields decorators, and make them reactive
@@ -15,8 +24,10 @@ class BaseStore {
     // eslint-disable-next-line consistent-this
     const store = this;
     // TODO  this will have some problem, when code change, save key will change
-    const storageKey = `mobx:${store.constructor.name}.${storeProp}`;
-
+    const storageKey = buildAutoSaveStorageKey({
+      name: store.constructor.name,
+      field: storeProp,
+    });
     // * init from localStorage
     const value = utilsStorage.getItem(storageKey);
     if (!isNil(value)) {

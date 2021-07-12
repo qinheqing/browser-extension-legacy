@@ -185,7 +185,9 @@ function PageHome() {
       title="钱包"
     >
       {!storeAccount.currentAccount && (
-        <div>Please select or create account</div>
+        <div className="h-full u-flex-center px-4">
+          点击右上角按钮选择或创建账户
+        </div>
       )}
       {storeAccount.currentAccount && (
         <>

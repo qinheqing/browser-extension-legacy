@@ -1,5 +1,6 @@
 import React from 'react';
 import utilsApp from '../utils/utilsApp';
+import storeHistory from '../store/storeHistory';
 import OneButton from './OneButton';
 
 function TxSubmitSuccessView({ txid, children }) {
@@ -9,12 +10,7 @@ function TxSubmitSuccessView({ txid, children }) {
       <div>
         <OneButton
           size="2xs"
-          onClick={() =>
-            // TODO use browser template in chainInfo
-            window.open(
-              `https://explorer.solana.com/tx/${txid}?cluster=testnet`,
-            )
-          }
+          onClick={() => storeHistory.openBlockBrowserLink({ tx: txid })}
         >
           在区块浏览器查看
         </OneButton>
