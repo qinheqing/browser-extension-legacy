@@ -7,6 +7,7 @@ export default function ColorIndicator({
   size = SIZES.SM,
   type = 'outlined',
   color = COLORS.UI4,
+  backgroundColor = undefined,
   borderColor,
   iconClassName,
 }) {
@@ -19,7 +20,7 @@ export default function ColorIndicator({
   });
 
   return (
-    <div className={colorIndicatorClassName}>
+    <div className={colorIndicatorClassName} style={{ backgroundColor }}>
       {iconClassName ? (
         <i className={classnames('color-indicator__icon', iconClassName)} />
       ) : (

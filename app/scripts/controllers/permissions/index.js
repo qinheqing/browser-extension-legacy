@@ -159,6 +159,7 @@ export class PermissionsController {
         if (res.error || !Array.isArray(res.result)) {
           resolve([]);
         } else if (bgHelpers.isAtNewApp()) {
+          // pass getAccounts() to permissionsMethodMiddleware, can not be [], will cause UI ask to approve many times
           resolve(['0x00000000000000000000000']);
         } else {
           resolve(res.result);
@@ -661,6 +662,7 @@ export class PermissionsController {
     );
   }
 
+  // just disconnect site, NOT remove connection permission of site
   disconnectAllDomainAccounts() {
     const domains = this.permissions.getDomains() || {};
     const connectedDomains = Object.entries(domains).map(([domain]) => domain);

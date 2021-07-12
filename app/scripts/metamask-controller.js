@@ -642,6 +642,10 @@ export default class MetamaskController extends EventEmitter {
         this.disconnectAllDomainAccounts,
         this,
       ),
+      emitAccountChangedToConnectedDomain: nodeify(
+        this.emitAccountChangedToConnectedDomain,
+        this,
+      ),
       notifyAllConnections: nodeify(this.notifyAllConnections, this),
       forgetDevice: nodeify(this.forgetDevice, this),
       checkHardwareStatus: nodeify(this.checkHardwareStatus, this),
@@ -1281,6 +1285,10 @@ export default class MetamaskController extends EventEmitter {
 
   async disconnectAllDomainAccounts() {
     return this.permissionsController.disconnectAllDomainAccounts();
+  }
+
+  async emitAccountChangedToConnectedDomain(address) {
+    return this.permissionsController._handleAccountSelected(address);
   }
 
   /**
