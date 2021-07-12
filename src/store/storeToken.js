@@ -6,7 +6,7 @@ import {
   action,
   makeObservable,
 } from 'mobx';
-import { toLower, debounce, cloneDeep } from 'lodash';
+import { toLower, debounce, cloneDeep, merge } from 'lodash';
 import OneTokenInfo from '../classes/OneTokenInfo';
 import { ROUTE_TX_HISTORY } from '../routes/routeUrls';
 import BaseStore from './BaseStore';
@@ -27,6 +27,7 @@ class StoreToken extends BaseStore {
     this.autosave('tokenMetas');
 
     autorun(() => {
+      // TODO same address but different chainKey
       const address = storeAccount.currentAccountAddress;
       untracked(() => {
         if (
@@ -35,6 +36,14 @@ class StoreToken extends BaseStore {
         ) {
           this.currentTokensRaw.tokens = [];
         }
+      });
+    });
+
+    autorun(() => {
+      const chainKey = storeChain.currentChainKey;
+      untracked(() => {
+        this.allTokenList = [];
+        this.tokenListFiltered = null;
       });
     });
   }
@@ -53,17 +62,18 @@ class StoreToken extends BaseStore {
   get currentTokens() {
     return [
       this.currentNativeToken,
-      ...this.currentTokensRaw.tokens.map((options) => {
-        const tokenRaw = {
-          ...options,
-          chainKey: storeChain.currentChainKey,
-        };
+      ...this.currentTokensRaw.tokens.map((tokenRaw) => {
         const tokenMeta = this.getTokenMeta({ token: tokenRaw });
+        const { decimals, name, symbol, logoURI } = tokenMeta || {};
 
-        const tokenInfo = new OneTokenInfo({
-          ...tokenRaw,
-          ...tokenMeta,
-        });
+        const tokenInfo = new OneTokenInfo(
+          merge({}, tokenRaw, {
+            decimals,
+            name,
+            symbol,
+            logoURI,
+          }),
+        );
 
         return tokenInfo;
       }),
@@ -112,7 +122,7 @@ class StoreToken extends BaseStore {
 
   getTokenMeta({ token }) {
     const key = `${token.chainKey}-${token.contractAddress}`;
-    return this.tokenMetas[key];
+    return cloneDeep(this.tokenMetas[key]);
   }
 
   async updateTokensMeta(tokens) {

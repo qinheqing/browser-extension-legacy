@@ -1,4 +1,11 @@
-import { isString, isNumber } from 'lodash';
+import {
+  isString,
+  isNumber,
+  isNil,
+  isEmpty,
+  isArray,
+  isPlainObject,
+} from 'lodash';
 import * as uuidMaker from 'uuid';
 import copyToClipboard from 'copy-to-clipboard';
 import { getEnvironmentType } from '../../app/scripts/lib/util';
@@ -67,6 +74,46 @@ function openStandalonePage(routeUrl) {
   }
 }
 
+function delay(timeout) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, timeout);
+  });
+}
+
+async function waitForDataLoaded({ data, log }) {
+  const getDataArrFunc = [].concat(data);
+  // TODO timeout break
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    let isAllLoaded = true;
+
+    if (log) {
+      console.log(`waitForDataLoaded: ${log}`);
+    } else {
+      console.log('waitForDataLoaded');
+    }
+    getDataArrFunc.forEach((getData) => {
+      const d = getData();
+      if (d === false) {
+        isAllLoaded = false;
+      }
+      if (isNil(d)) {
+        isAllLoaded = false;
+      }
+      if (isEmpty(d)) {
+        if (isPlainObject(d) || isArray(d)) {
+          isAllLoaded = false;
+        }
+      }
+    });
+
+    if (isAllLoaded) {
+      break;
+    }
+    await delay(600);
+  }
+}
+
 export default {
   uuid,
   formatTemplate,
@@ -76,4 +123,6 @@ export default {
   shortenAddress,
   openStandalonePage,
   isExtensionTypePopup,
+  waitForDataLoaded,
+  delay,
 };

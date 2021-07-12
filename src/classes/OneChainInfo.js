@@ -17,6 +17,7 @@ class OneChainInfo {
     accountNamePrefix = '',
     ...others
   }) {
+    Object.assign(this, others);
     this.baseChain = baseChain;
     this.name = name;
     this.fullName = fullName;
@@ -29,7 +30,6 @@ class OneChainInfo {
     this.isCustom = isCustom;
     this.isTestNet = isTestNet;
     this.accountNamePrefix = accountNamePrefix;
-    Object.assign(this, others);
     // uniq key
     this.key = key || this.generateKey();
   }

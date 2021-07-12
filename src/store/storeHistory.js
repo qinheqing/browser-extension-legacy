@@ -72,8 +72,8 @@ class StoreHistory extends BaseStore {
     replace ? this.replace(ROUTE_TOKEN_DETAIL) : this.push(ROUTE_TOKEN_DETAIL);
   }
 
-  openBrowserLink({ tx, account, token, block, ...others }) {
-    const link = storeWallet.currentWallet.getBrowserLink({
+  openBlockBrowserLink({ tx, account, token, block, ...others }) {
+    const link = storeWallet.currentWallet.getBlockBrowserLink({
       tx,
       account,
       token,

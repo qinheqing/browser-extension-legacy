@@ -162,43 +162,10 @@ function PageTransfer() {
         </OneButton>
       </div>
 
-      <div className="py-8">
-        <div className="u-whitespace" />
-        <input
-          placeholder="Token mint address"
-          value={contract}
-          onChange={(e) => setContract(e.target.value)}
-        />
-        <br />
-        <div className="u-whitespace" />
-        <button
-          className="mr-4"
-          onClick={async () => {
-            const address = contract;
-            if (address) {
-              const _txid = await storeWallet.currentWallet.addAssociateToken({
-                contract: address,
-              });
-              utilsToast.toast(
-                <TxSubmitSuccessView txid={_txid}>
-                  Add token success, reload page later
-                </TxSubmitSuccessView>,
-              );
-            }
-          }}
-        >
-          + Add new token
-        </button>
-
-        <button onClick={() => setConfirmDialogOpen(true)}>
-          Open confirm dialog
-        </button>
-
-        <TransferConfirmDialog
-          open={confirmDialogOpen}
-          onOpenChange={setConfirmDialogOpen}
-        />
-      </div>
+      <TransferConfirmDialog
+        open={confirmDialogOpen}
+        onOpenChange={setConfirmDialogOpen}
+      />
     </AppPageLayout>
   );
 }
