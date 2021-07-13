@@ -21,11 +21,16 @@ class StoreApp extends BaseStore {
     autorun(() => {
       const { homeType } = this;
       untracked(() => {
-        if (homeType === 'NEW') {
-          uiGetBgControllerAsync().then((bg) =>
-            bg.disconnectAllDomainAccounts(),
-          );
-        }
+        uiGetBgControllerAsync().then((bg) => {
+          if (homeType === 'NEW') {
+            bg.disconnectAllDomainAccounts();
+          } else {
+            bg.emitAccountChangedToConnectedDomain(
+              this.legacyState.selectedAddress,
+            );
+          }
+          bg.notifyChainIdChanged();
+        });
       });
     });
   }

@@ -102,6 +102,7 @@ export default class Home extends PureComponent {
       pendingApprovals,
     } = this.props;
 
+    // if Dapp create approve window (isNotification=true), do NOT redirect to new home
     if (!isNotification && storeApp.homeType === 'NEW') {
       history.replace(ROUTE_HOME);
       return;
