@@ -20,7 +20,9 @@ import {
   CAVEAT_TYPES,
 } from './enums';
 
-import createPermissionsMethodMiddleware from './permissionsMethodMiddleware';
+import createPermissionsMethodMiddleware, {
+  MOCK_ZERO_ADDRESS,
+} from './permissionsMethodMiddleware';
 import PermissionsLogController from './permissionsLog';
 
 // instanbul ignore next
@@ -158,9 +160,6 @@ export class PermissionsController {
       function _end() {
         if (res.error || !Array.isArray(res.result)) {
           resolve([]);
-        } else if (bgHelpers.isAtNewApp()) {
-          // pass getAccounts() to permissionsMethodMiddleware, can not be [], will cause UI ask to approve many times
-          resolve(['0x00000000000000000000000']);
         } else {
           resolve(res.result);
         }

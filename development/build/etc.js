@@ -31,7 +31,9 @@ function createEtcTasks({ browserPlatforms, livereload }) {
     ),
   );
 
-  return { clean, reload, zip };
+  const moduleFix = createModuleFixTask();
+
+  return { clean, reload, zip, moduleFix };
 }
 
 function createZipTask(target) {
@@ -42,4 +44,20 @@ function createZipTask(target) {
       gulp.dest('builds'),
     );
   };
+}
+
+function createModuleFixTask() {
+  return createTask('moduleFix', async () => {
+    // @heroicons/react missing main field will cause browserify error:
+    //        Cannot find module '@heroicons/react'
+    //              at /node_modules/browser-resolve/node_modules/resolve/lib/async.js:46:17
+    // eslint-disable-next-line node/global-require
+    const heroiconsJson = require('@heroicons/react/package.json');
+    heroiconsJson.main = heroiconsJson.main || 'outline/index.js';
+    await fs.writeFile(
+      'node_modules/@heroicons/react/package.json',
+      JSON.stringify(heroiconsJson, null, 2),
+      'utf8',
+    );
+  });
 }

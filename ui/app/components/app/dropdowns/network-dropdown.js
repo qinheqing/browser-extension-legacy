@@ -217,7 +217,6 @@ class NetworkDropdown extends Component {
       >
         <div className="network-check__transparent" />
         <ColorIndicator
-          color="sol"
           size={SIZES.LG}
           type={ColorIndicator.TYPES.FILLED}
           backgroundColor="#dc1fff"

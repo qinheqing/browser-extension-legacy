@@ -125,11 +125,6 @@ const AccountsGroupItemSort = observer(function ({ ...others }) {
       icon="images/chains/ethereum.svg"
       size="small"
       onClick={() => {
-        uiGetBgControllerAsync().then((bg) =>
-          bg.emitAccountChangedToConnectedDomain(
-            storeApp.legacyState.selectedAddress,
-          ),
-        );
         storeApp.homeType = 'OLD';
         storeHistory.push(ROUTE_HOME_OLD);
       }}
