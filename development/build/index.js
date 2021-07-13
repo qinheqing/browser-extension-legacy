@@ -21,7 +21,7 @@ const createEtcTasks = require('./etc');
 const browserPlatforms = ['firefox', 'chrome', 'brave', 'opera'];
 
 const moduleCssFile = 'src/styles/tailwind.module.css';
-childProcess.exec(`touch ${moduleCssFile}`);
+childProcess.execSync(`touch ${moduleCssFile}`);
 
 defineAllTasks();
 detectAndRunEntryTask();
@@ -42,13 +42,9 @@ function defineAllTasks() {
     composeSeries(
       moduleFix,
       clean,
-      composeParallel(
-        scriptTasks.dev,
-        staticTasks.dev,
-        manifestTasks.dev,
-        reload,
-      ),
+      composeParallel(scriptTasks.dev, manifestTasks.dev, reload),
       styleTasks.dev,
+      staticTasks.dev,
     ),
   );
 
@@ -58,13 +54,9 @@ function defineAllTasks() {
     composeSeries(
       moduleFix,
       clean,
-      composeParallel(
-        scriptTasks.testDev,
-        staticTasks.dev,
-        manifestTasks.testDev,
-        reload,
-      ),
+      composeParallel(scriptTasks.testDev, manifestTasks.testDev, reload),
       styleTasks.dev,
+      staticTasks.dev,
     ),
   );
 
@@ -74,8 +66,9 @@ function defineAllTasks() {
     composeSeries(
       moduleFix,
       clean,
-      composeParallel(scriptTasks.prod, staticTasks.prod, manifestTasks.prod),
+      composeParallel(scriptTasks.prod, manifestTasks.prod),
       styleTasks.prod,
+      staticTasks.prod,
       zip,
     ),
   );
@@ -86,8 +79,9 @@ function defineAllTasks() {
     composeSeries(
       moduleFix,
       clean,
-      composeParallel(scriptTasks.test, staticTasks.prod, manifestTasks.test),
+      composeParallel(scriptTasks.test, manifestTasks.test),
       styleTasks.prod,
+      staticTasks.prod,
       zip,
     ),
   );
