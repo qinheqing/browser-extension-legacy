@@ -86,12 +86,12 @@ function createStyleTasks({ livereload }) {
           },
         );
       }
-      await buildScss();
       await buildTailwind();
+      await buildScss();
     };
 
     async function buildTailwind() {
-      exec('set -x && yarn tailwind', (err) => err && console.error(err));
+      childProcess.execSync('set -x && yarn tailwind');
     }
 
     async function buildScss() {

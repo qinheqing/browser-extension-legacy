@@ -11,7 +11,7 @@ module.exports = createEtcTasks;
 
 function createEtcTasks({ browserPlatforms, livereload }) {
   const clean = createTask('clean', async function clean() {
-    await del(['./dist/*']);
+    await del(['./dist/*', './ui/app/css/output/*']);
     await Promise.all(
       browserPlatforms.map(async (platform) => {
         await fs.mkdir(`./dist/${platform}`, { recursive: true });
