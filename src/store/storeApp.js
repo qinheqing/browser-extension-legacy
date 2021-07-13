@@ -9,6 +9,7 @@ import {
 import uiGetBgControllerAsync from '../wallets/bg/uiGetBgControllerAsync';
 import { NOTIFICATION_NAMES } from '../../app/scripts/controllers/permissions/enums';
 import BaseStore from './BaseStore';
+import storeStorage from './storeStorage';
 
 class StoreApp extends BaseStore {
   constructor(props) {
@@ -16,10 +17,8 @@ class StoreApp extends BaseStore {
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
 
-    this.autosave('homeType');
-
     autorun(() => {
-      const { homeType } = this;
+      const { homeType } = storeStorage;
       untracked(() => {
         uiGetBgControllerAsync().then((bg) => {
           if (homeType === 'NEW') {
@@ -35,10 +34,10 @@ class StoreApp extends BaseStore {
     });
   }
 
-  // TODO showUserConfirmation show MM approve popup
-  //      check homeType and return mock chainId=-1 address='1111'
-  @observable
-  homeType = 'OLD'; // NEW, OLD
+  @computed
+  get homeType() {
+    return storeStorage.homeType;
+  }
 
   @observable
   legacyState = {

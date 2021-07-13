@@ -15,6 +15,7 @@ import storeChain from './storeChain';
 import storeWallet from './storeWallet';
 import storeTx from './storeTx';
 import storeHistory from './storeHistory';
+import storeStorage from './storeStorage';
 
 class StoreToken extends BaseStore {
   constructor(props) {
@@ -23,18 +24,15 @@ class StoreToken extends BaseStore {
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
 
-    this.autosave('currentTokensRaw');
-    this.autosave('tokenMetas');
-
     autorun(() => {
       // TODO same address but different chainKey
       const address = storeAccount.currentAccountAddress;
       untracked(() => {
         if (
-          this.currentTokensRaw.ownerAddress &&
-          this.currentTokensRaw.ownerAddress !== address
+          storeStorage.currentTokensRaw.ownerAddress &&
+          storeStorage.currentTokensRaw.ownerAddress !== address
         ) {
-          this.currentTokensRaw.tokens = [];
+          storeStorage.currentTokensRaw.tokens = [];
         }
       });
     });
@@ -48,13 +46,6 @@ class StoreToken extends BaseStore {
     });
   }
 
-  // TODO custom token added by user (ETH)
-  @observable
-  currentTokensRaw = {
-    ownerAddress: '',
-    tokens: [],
-  };
-
   @observable
   currentDetailToken = null;
 
@@ -62,7 +53,7 @@ class StoreToken extends BaseStore {
   get currentTokens() {
     return [
       this.currentNativeToken,
-      ...this.currentTokensRaw.tokens.map((tokenRaw) => {
+      ...storeStorage.currentTokensRaw.tokens.map((tokenRaw) => {
         const tokenMeta = this.getTokenMeta({ token: tokenRaw });
         const { decimals, name, symbol, logoURI } = tokenMeta || {};
 
@@ -97,7 +88,7 @@ class StoreToken extends BaseStore {
   setCurrentTokens({ ownerAddress, tokens }) {
     if (ownerAddress === storeAccount.currentAccount.address) {
       // TODO update token balance to storeBalance
-      this.currentTokensRaw = {
+      storeStorage.currentTokensRaw = {
         ownerAddress,
         tokens,
       };
@@ -115,14 +106,13 @@ class StoreToken extends BaseStore {
     this.setCurrentTokens(tokensRes);
   }
 
-  @observable
-  tokenMetas = {
-    // chainKey-contract : {}
-  };
+  _buildTokenMetaKey({ token }) {
+    return `${token.chainKey}-${token.contractAddress}`;
+  }
 
   getTokenMeta({ token }) {
-    const key = `${token.chainKey}-${token.contractAddress}`;
-    return cloneDeep(this.tokenMetas[key]);
+    const key = this._buildTokenMetaKey({ token });
+    return cloneDeep(storeStorage.tokenMetasRaw[key]);
   }
 
   async updateTokensMeta(tokens) {
@@ -136,12 +126,12 @@ class StoreToken extends BaseStore {
         (item) => item.address === token.contractAddress,
       );
       if (tokenMeta) {
-        const key = `${token.chainKey}-${token.contractAddress}`;
+        const key = this._buildTokenMetaKey({ token });
         metas[key] = tokenMeta;
       }
     });
-    this.tokenMetas = {
-      ...this.tokenMetas,
+    storeStorage.tokenMetasRaw = {
+      ...storeStorage.tokenMetasRaw,
       ...metas,
     };
   }
