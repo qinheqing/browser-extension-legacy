@@ -31,7 +31,7 @@ function defineAllTasks() {
   const manifestTasks = createManifestTasks({ browserPlatforms });
   const styleTasks = createStyleTasks({ livereload });
   const scriptTasks = createScriptTasks({ livereload, browserPlatforms });
-  const { clean, reload, zip } = createEtcTasks({
+  const { clean, reload, zip, moduleFix } = createEtcTasks({
     livereload,
     browserPlatforms,
   });
@@ -40,6 +40,7 @@ function defineAllTasks() {
   createTask(
     'dev',
     composeSeries(
+      moduleFix,
       clean,
       styleTasks.dev,
       composeParallel(
@@ -55,6 +56,7 @@ function defineAllTasks() {
   createTask(
     'testDev',
     composeSeries(
+      moduleFix,
       clean,
       styleTasks.dev,
       composeParallel(
@@ -70,6 +72,7 @@ function defineAllTasks() {
   createTask(
     'prod',
     composeSeries(
+      moduleFix,
       clean,
       styleTasks.prod,
       composeParallel(scriptTasks.prod, staticTasks.prod, manifestTasks.prod),
@@ -81,6 +84,7 @@ function defineAllTasks() {
   createTask(
     'test',
     composeSeries(
+      moduleFix,
       clean,
       styleTasks.prod,
       composeParallel(scriptTasks.test, staticTasks.prod, manifestTasks.test),
