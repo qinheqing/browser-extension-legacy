@@ -64,6 +64,7 @@ import seedPhraseVerifier from './lib/seed-phrase-verifier';
 import MetaMetricsController from './controllers/metametrics';
 import DetectChainController from './controllers/detect-chain';
 import { segment, segmentLegacy } from './lib/segment';
+import { MOCK_CHAIN_ID_WHEN_NEW_APP } from './controllers/permissions/permissionsMethodMiddleware';
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)
@@ -647,6 +648,7 @@ export default class MetamaskController extends EventEmitter {
         this,
       ),
       notifyAllConnections: nodeify(this.notifyAllConnections, this),
+      notifyChainIdChanged: nodeify(this.notifyChainIdChanged, this),
       forgetDevice: nodeify(this.forgetDevice, this),
       checkHardwareStatus: nodeify(this.checkHardwareStatus, this),
       unlockHardwareWalletAccount: nodeify(
@@ -2393,18 +2395,27 @@ export default class MetamaskController extends EventEmitter {
           ) {
             _payload = {
               method: NOTIFICATION_NAMES.chainChanged,
-              params: {
-                // chainId: "0x61"
-                // networkVersion: "97"
-                chainId: '0xEEEEEEEE',
-                networkVersion: '4008636142',
-              },
+              params: MOCK_CHAIN_ID_WHEN_NEW_APP,
             };
           }
           conn.engine.emit('notification', _payload);
         }
       });
     });
+  }
+
+  notifyChainIdChanged() {
+    if (bgHelpers.isAtNewApp()) {
+      this.notifyAllConnections({
+        method: NOTIFICATION_NAMES.chainChanged,
+        params: MOCK_CHAIN_ID_WHEN_NEW_APP,
+      });
+    } else {
+      this.notifyAllConnections({
+        method: NOTIFICATION_NAMES.chainChanged,
+        params: this.getProviderNetworkState(this.getState()),
+      });
+    }
   }
 
   // handlers
