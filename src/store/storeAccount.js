@@ -18,18 +18,17 @@ import BaseStore from './BaseStore';
 import storeChain from './storeChain';
 import storeWallet from './storeWallet';
 import storeTx from './storeTx';
+import storeStorage from './storeStorage';
 
 class StoreAccount extends BaseStore {
   constructor(props) {
     super(props);
     makeObservable(this);
 
-    this.autosave('allAccountsRaw');
-    this.autosave('currentAccountRaw');
-    this.autosave('accountsGroupFilter');
+    this.setFirstChainKeyAsDefaultFilter();
 
     autorun(() => {
-      const { currentAccountRaw } = this;
+      const { currentAccountRaw } = storeStorage;
       untracked(() => {
         const { currentAccount } = this;
         if (currentAccount?.chainKey) {
@@ -41,7 +40,7 @@ class StoreAccount extends BaseStore {
 
     // TODO do not use auto run to new Wallet, as currentAccount balance change will trigger this callback
     autorun(() => {
-      const { currentAccountRaw } = this;
+      const { currentAccountRaw } = storeStorage;
       const { currentBaseChain } = storeChain;
       untracked(() => {
         this.updateCurrentWallet();
@@ -59,33 +58,19 @@ class StoreAccount extends BaseStore {
     storeWallet.setCurrentWallet(wallet);
   }
 
-  // allAccounts
-  // TODO auto clean data if chain has been deleted
-  @observable
-  allAccountsRaw = [
-    // { chainKey, id, type, name, address, path }
-  ];
-
-  @observable.ref
-  currentAccountRaw = {
-    chainKey: '',
-    id: '',
-    type: CONSTS_ACCOUNT_TYPES.Hardware,
-    name: '',
-    address: '',
-    path: '',
-  };
-
   // TODO rename to currentAccountInfo
   @computed
   get currentAccount() {
-    const { chainKey, address } = this.currentAccountRaw;
+    if (!storeStorage.currentAccountRaw) {
+      return null;
+    }
+    const { chainKey, address } = storeStorage.currentAccountRaw;
     if (!address || !chainKey) {
       return null;
     }
     const chainInfo = storeChain.getChainInfoByKey(chainKey);
     return new OneAccountInfo({
-      ...this.currentAccountRaw,
+      ...storeStorage.currentAccountRaw,
       currency: chainInfo.currency,
       decimals: storeWallet.currentWallet.options.balanceDecimals, // TODO move to chainInfo
     });
@@ -96,12 +81,20 @@ class StoreAccount extends BaseStore {
     return this.currentAccount?.address;
   }
 
-  // TODO add this to url query, because popup open new window will lost this params
-  @observable
-  accountsGroupFilter = {
-    type: CONST_ACCOUNTS_GROUP_FILTER_TYPES.chain,
-    chainKey: storeChain.currentChainKey,
-  };
+  @computed
+  get accountsGroupFilter() {
+    return storeStorage.accountsGroupFilter;
+  }
+
+  @action.bound
+  setFirstChainKeyAsDefaultFilter() {
+    if (!storeStorage.accountsGroupFilter.chainKey) {
+      storeStorage.accountsGroupFilter = {
+        ...storeStorage.accountsGroupFilter,
+        chainKey: storeChain.chainsKeys[0],
+      };
+    }
+  }
 
   @computed
   get chainInfoOfAccountsGroup() {
@@ -115,12 +108,12 @@ class StoreAccount extends BaseStore {
       return this.getAccountsByChainKey(filter.chainKey);
     }
     if (filter.type === CONST_ACCOUNTS_GROUP_FILTER_TYPES.hardware) {
-      return this.allAccountsRaw.filter(
+      return storeStorage.allAccountsRaw.filter(
         (acc) => acc.type === CONSTS_ACCOUNT_TYPES.Hardware,
       );
     }
     if (filter.type === CONST_ACCOUNTS_GROUP_FILTER_TYPES.wallet) {
-      return this.allAccountsRaw.filter(
+      return storeStorage.allAccountsRaw.filter(
         (acc) => acc.type === CONSTS_ACCOUNT_TYPES.Wallet,
       );
     }
@@ -131,19 +124,21 @@ class StoreAccount extends BaseStore {
     if (!chainKey) {
       return [];
     }
-    return this.allAccountsRaw.filter((acc) => acc.chainKey === chainKey);
+    return storeStorage.allAccountsRaw.filter(
+      (acc) => acc.chainKey === chainKey,
+    );
   }
 
   addAccounts(accounts = []) {
     // TODO auto generate account name
-    this.allAccountsRaw = uniqBy(
-      [...this.allAccountsRaw, ...accounts],
+    storeStorage.allAccountsRaw = uniqBy(
+      [...storeStorage.allAccountsRaw, ...accounts],
       (item) => item.chainKey + item.address,
     );
   }
 
   setCurrentAccount({ account }) {
-    this.currentAccountRaw = account;
+    storeStorage.currentAccountRaw = account;
   }
 }
 

@@ -7,28 +7,23 @@ import {
   makeObservable,
 } from 'mobx';
 import BaseStore from './BaseStore';
+import storeStorage from './storeStorage';
 
 class StoreTx extends BaseStore {
   constructor(props) {
     super(props);
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
-    this.autosave('pendingTx');
   }
-
-  @observable
-  pendingTx = [
-    // txid, txid, txid
-  ];
 
   @action.bound
   addPendingTx(txid) {
-    this.pendingTx.unshift(txid);
+    storeStorage.pendingTxid.unshift(txid);
   }
 
   @action.bound
   filterPendingTxConfirmed(confirmedTxList) {
-    this.pendingTx = this.pendingTx.filter((txid) => {
+    storeStorage.pendingTxid = storeStorage.pendingTxid.filter((txid) => {
       return !confirmedTxList.find((confirmTx) => {
         const confirmId = confirmTx?.transaction?.signatures?.[0];
         return confirmId === txid;
@@ -38,7 +33,7 @@ class StoreTx extends BaseStore {
 
   @action.bound
   clearPendingTx() {
-    this.pendingTx = [];
+    storeStorage.pendingTxid = [];
   }
 }
 

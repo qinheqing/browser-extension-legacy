@@ -8,6 +8,7 @@ import storeApp from '../../store/storeApp';
 import { ROUTE_HOME_OLD } from '../../routes/routeUrls';
 import storeHistory from '../../store/storeHistory';
 import uiGetBgControllerAsync from '../../wallets/bg/uiGetBgControllerAsync';
+import storeStorage from '../../store/storeStorage';
 import styles from './index.css';
 
 const AccountsGroupItem = observer(function ({
@@ -125,7 +126,7 @@ const AccountsGroupItemSort = observer(function ({ ...others }) {
       icon="images/chains/ethereum.svg"
       size="small"
       onClick={() => {
-        storeApp.homeType = 'OLD';
+        storeStorage.homeType = 'OLD';
         storeHistory.push(ROUTE_HOME_OLD);
       }}
       {...others}
