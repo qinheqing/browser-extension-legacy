@@ -11,6 +11,7 @@ import {
 import utilsApp from '../utils/utilsApp';
 import chainsConfig from '../config/chainsConfig';
 import BaseStore from './BaseStore';
+import storeStorage from './storeStorage';
 
 // TODO use https://github.com/OneKeyHQ/remote-config
 function createBuiltInChains() {
@@ -33,23 +34,16 @@ class StoreChain extends BaseStore {
     super(props);
     makeObservable(this);
 
-    this.autosave('chainsCustomRaw');
-    this.autosave('currentChainKey');
-    this.autosave('chainsSortKeys');
+    this.setFirstChainKeyAsDefault();
   }
 
   get chainsBuiltIn() {
     return createBuiltInChains();
   }
 
-  @observable
-  chainsCustomRaw = {
-    // chainKey: { ...OneChainInfo }
-  };
-
   @computed
   get chains() {
-    const chainsCustom = Object.entries(this.chainsCustomRaw).reduce(
+    const chainsCustom = Object.entries(storeStorage.chainsCustomRaw).reduce(
       (prev, [key, item]) => {
         prev[key] = new OneChainInfo(item);
         return prev;
@@ -62,18 +56,10 @@ class StoreChain extends BaseStore {
     };
   }
 
-  @observable
-  chainsSortKeys = [
-    CONST_CHAIN_KEYS.BSC,
-    CONST_CHAIN_KEYS.BSC_TEST_NET,
-    CONST_CHAIN_KEYS.SOL,
-    CONST_CHAIN_KEYS.SOL_TEST_NET,
-  ];
-
   @computed
   get chainsKeys() {
     return sortBy(Object.keys(this.chains), (item) => {
-      return this.chainsSortKeys.indexOf(item.key);
+      return storeStorage.chainsSortKeys.indexOf(item.key);
     });
   }
 
@@ -96,26 +82,35 @@ class StoreChain extends BaseStore {
   addCustomChain(info) {
     const infoJson = toPlainObject(info);
     infoJson.isCustom = true;
-    this.chainsCustomRaw[infoJson.key] = infoJson;
+    storeStorage.chainsCustomRaw[infoJson.key] = infoJson;
   }
 
   removeCustomChain(key) {
-    delete this.chainsCustomRaw[key];
+    delete storeStorage.chainsCustomRaw[key];
     // TODO remove accounts && remove tx && remove price
   }
-
-  @observable
-  currentChainKey = this.chainsKeys[0];
 
   @action.bound
   setCurrentChainKey(key) {
     if (key) {
-      this.currentChainKey = key;
+      storeStorage.currentChainKey = key;
+    }
+  }
+
+  @action.bound
+  setFirstChainKeyAsDefault() {
+    if (!this.currentChainKey) {
+      this.setCurrentChainKey(this.chainsKeys[0]);
     }
   }
 
   getChainInfoByKey(key) {
     return this.chains[key];
+  }
+
+  @computed
+  get currentChainKey() {
+    return storeStorage.currentChainKey;
   }
 
   @computed

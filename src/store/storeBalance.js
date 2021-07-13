@@ -9,43 +9,35 @@ import {
 import { merge } from 'lodash';
 import { Semaphore } from 'async-mutex';
 import BaseStore from './BaseStore';
+import storeStorage from './storeStorage';
 
 class StoreBalance extends BaseStore {
   constructor(props) {
     super(props);
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
-
-    // TODO rename allBalanceRaw
-    this.autosave('currentBalanceRaw');
   }
 
   balanceFetchSemaphore = new Semaphore(1);
-
-  @observable
-  currentBalanceRaw = {
-    // TODO move decimals to AccountInfo and TokenInfo
-    // key: { balance, decimals, lastUpdate }
-  };
 
   // TODO throttle, auto remove some very old records
   @action.bound
   updateTokenBalance(key, { balance, decimals, ...others } = {}) {
     if (key) {
       // use merge() DO NOT handle undefined value
-      const newInfo = merge({}, this.currentBalanceRaw[key], {
+      const newInfo = merge({}, storeStorage.currentBalanceRaw[key], {
         balance,
         decimals,
         ...others,
         lastUpdate: new Date().getTime(),
       });
-      this.currentBalanceRaw[key] = newInfo;
+      storeStorage.currentBalanceRaw[key] = newInfo;
     }
   }
 
   getBalanceInfoCacheByKey(key) {
     const { balance, decimals, lastUpdate, ...others } =
-      this.currentBalanceRaw[key] || {};
+      storeStorage.currentBalanceRaw[key] || {};
     return { balance, decimals, lastUpdate, ...others };
   }
 
@@ -53,14 +45,14 @@ class StoreBalance extends BaseStore {
 
   async fetchBalanceInfo({ wallet, address, tokenKey }) {
     if (this.fetchBalancePendingQueue[address]) {
-      return this.currentBalanceRaw[tokenKey];
+      return storeStorage.currentBalanceRaw[tokenKey];
     }
     this.fetchBalancePendingQueue[address] = true;
     const balanceInfo =
       // TODO cancel pending balance request if component destroy
       await this.balanceFetchSemaphore.runExclusive(async (semaphoreValue) => {
         if (!this.fetchBalancePendingQueue[address]) {
-          return this.currentBalanceRaw[tokenKey];
+          return storeStorage.currentBalanceRaw[tokenKey];
         }
         const result = await wallet.chainProvider.getAccountInfo({ address });
         delete this.fetchBalancePendingQueue[address];

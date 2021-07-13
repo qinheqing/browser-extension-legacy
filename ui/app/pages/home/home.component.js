@@ -35,6 +35,7 @@ import { getEnvironmentType } from '../../../../app/scripts/lib/util';
 import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
 import storeApp from '../../../../src/store/storeApp';
 import { ROUTE_HOME } from '../../../../src/routes/routeUrls';
+import storeStorage from '../../../../src/store/storeStorage';
 
 const LEARN_MORE_URL =
   'https://metamask.zendesk.com/hc/en-us/articles/360045129011-Intro-to-MetaMask-v8-extension';
@@ -103,7 +104,7 @@ export default class Home extends PureComponent {
     } = this.props;
 
     // if Dapp create approve window (isNotification=true), do NOT redirect to new home
-    if (!isNotification && storeApp.homeType === 'NEW') {
+    if (!isNotification && storeStorage.homeType === 'NEW') {
       history.replace(ROUTE_HOME);
       return;
     }
