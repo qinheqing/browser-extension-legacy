@@ -17,6 +17,7 @@ import storeTx from '../../store/storeTx';
 import storeHistory from '../../store/storeHistory';
 import NoDataView from '../../components/NoDataView';
 import OneCellItem from '../../components/OneCellItem';
+import storeStorage from '../../store/storeStorage';
 import styles from './index.css';
 
 const timeAgoLocaleFormatter = buildFormatter(timeAgoZhStrings);
@@ -225,11 +226,11 @@ function PageTransactionHistory() {
       {loading && <LoadingSpinner fullHeight />}
       {!loading && (
         <>
-          {!storeTx.pendingTx.length && !txList.length && (
+          {!storeStorage.pendingTxid.length && !txList.length && (
             <NoDataView fullHeight />
           )}
 
-          {storeTx.pendingTx.map((txid) => (
+          {storeStorage.pendingTxid.map((txid) => (
             <PendingTransactionCard
               key={txid}
               txid={txid}

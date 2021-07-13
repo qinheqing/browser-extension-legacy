@@ -42,13 +42,13 @@ function defineAllTasks() {
     composeSeries(
       moduleFix,
       clean,
-      styleTasks.dev,
       composeParallel(
         scriptTasks.dev,
         staticTasks.dev,
         manifestTasks.dev,
         reload,
       ),
+      styleTasks.dev,
     ),
   );
 
@@ -58,13 +58,13 @@ function defineAllTasks() {
     composeSeries(
       moduleFix,
       clean,
-      styleTasks.dev,
       composeParallel(
         scriptTasks.testDev,
         staticTasks.dev,
         manifestTasks.testDev,
         reload,
       ),
+      styleTasks.dev,
     ),
   );
 
@@ -74,8 +74,8 @@ function defineAllTasks() {
     composeSeries(
       moduleFix,
       clean,
-      styleTasks.prod,
       composeParallel(scriptTasks.prod, staticTasks.prod, manifestTasks.prod),
+      styleTasks.prod,
       zip,
     ),
   );
@@ -86,8 +86,8 @@ function defineAllTasks() {
     composeSeries(
       moduleFix,
       clean,
-      styleTasks.prod,
       composeParallel(scriptTasks.test, staticTasks.prod, manifestTasks.test),
+      styleTasks.prod,
       zip,
     ),
   );
