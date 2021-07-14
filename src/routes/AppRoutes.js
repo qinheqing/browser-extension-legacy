@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import Authenticated from '../../ui/app/helpers/higher-order-components/authenticated';
 import Initialized from '../../ui/app/helpers/higher-order-components/initialized';
-import utilsErrorsGlobalHandler from '../utils/utilsErrorsGlobalHandler';
+import errorsGlobalHandler from '../utils/errorsGlobalHandler';
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../ui/app/helpers/constants/common';
 import AppRootView from '../components/AppRootView';
 import {
@@ -29,7 +29,7 @@ const PageTokenDetail = lazy(() => import('../pages/PageTokenDetail'));
 const PageTokenAdd = lazy(() => import('../pages/PageTokenAdd'));
 const PageHome = lazy(() => import('../pages/PageHome'));
 
-utilsErrorsGlobalHandler.init();
+errorsGlobalHandler.init();
 
 const authDisabled = IS_ENV_IN_TEST_OR_DEBUG;
 

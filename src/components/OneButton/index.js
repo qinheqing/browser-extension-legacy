@@ -44,7 +44,7 @@ function OneButton({
   );
   cls.push(
     classnames({
-      'rounded-full': rounded,
+      '!rounded-full': rounded,
       'inline-flex': !block,
       'flex w-full text-center justify-center': block,
     }),
