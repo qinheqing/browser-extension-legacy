@@ -3,6 +3,7 @@ import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import classnames from 'classnames';
 import { Portal } from '@headlessui/react';
+import PreloadScreen from '../PreloadScreen';
 import styles from './index.css';
 
 export default function AppRootView({ children }) {
@@ -17,6 +18,7 @@ export default function AppRootView({ children }) {
         />
       </Helmet>
       <div className={styles.content}>
+        <PreloadScreen />
         <Portal>
           {/* TODO move toast container to .main-container-wrapper*/}
           <ToastContainer />
