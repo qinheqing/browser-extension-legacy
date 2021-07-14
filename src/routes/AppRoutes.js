@@ -9,7 +9,7 @@ import {
   ROUTE_CONNECT_HARDWARE,
   ROUTE_CREATE_ACCOUNT,
   ROUTE_HOME,
-  ROUTE_POPUP,
+  ROUTE_APPROVE_POPUP,
   ROUTE_TOKEN_ADD,
   ROUTE_TOKEN_DETAIL,
   ROUTE_TRANSFER,
@@ -19,7 +19,7 @@ import {
 
 const PageConnectHardware = lazy(() => import('../pages/PageConnectHardware'));
 const PageWalletSelect = lazy(() => import('../pages/PageWalletSelect'));
-const PagePopup = lazy(() => import('../pages/PagePopup'));
+const PageApprovePopup = lazy(() => import('../pages/PageApprovePopup'));
 const PageCreateAccount = lazy(() => import('../pages/PageCreateAccount'));
 const PageTransfer = lazy(() => import('../pages/PageTransfer'));
 const PageTransactionHistory = lazy(() =>
@@ -62,7 +62,11 @@ export default function AppRoutes() {
             component={PageWalletSelect}
             exact
           />
-          <RouteAuthenticated path={ROUTE_POPUP} component={PagePopup} exact />
+          <RouteAuthenticated
+            path={ROUTE_APPROVE_POPUP}
+            component={PageApprovePopup}
+            exact
+          />
           <RouteAuthenticated
             path={ROUTE_CREATE_ACCOUNT}
             component={PageCreateAccount}

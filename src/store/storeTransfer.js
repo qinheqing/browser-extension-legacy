@@ -118,6 +118,19 @@ class StoreTransfer extends BaseStore {
   }
 
   @action.bound
+  async fetchTransactionFee() {
+    if (!storeWallet.currentWallet) {
+      return;
+    }
+    let fee = await storeWallet.currentWallet.getTransactionFee();
+    fee = utilsNumber.toNormalNumber({
+      value: fee,
+      decimals: storeToken.currentNativeToken.decimals,
+    });
+    this.updateTransferFee(fee);
+  }
+
+  @action.bound
   clearData() {
     this.amount = '';
     this.toAddress = '';
