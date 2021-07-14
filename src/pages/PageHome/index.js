@@ -23,6 +23,7 @@ import TxSubmitSuccessView from '../../components/TxSubmitSuccessView';
 import AppIcons from '../../components/AppIcons';
 import OneButton from '../../components/OneButton';
 import storeHistory from '../../store/storeHistory';
+import storeChain from '../../store/storeChain';
 
 const HomeTopActionsBar = observer(function () {
   const [copied, handleCopy] = useCopyToClipboard();
@@ -89,14 +90,17 @@ const HomeAssetsHeader = observer(function () {
     <div className="text-xl flex items-center justify-between">
       <span>资产</span>
       <div className="flex-1" />
-      <OneButton
-        type="white"
-        size="xs"
-        rounded
-        onClick={() => storeHistory.push(ROUTE_TX_HISTORY)}
-      >
-        <AppIcons.ClipboardListIcon className="w-5" />
-      </OneButton>
+      {utilsApp.isExtensionTypePopup() && (
+        <OneButton
+          type="white"
+          size="xs"
+          rounded
+          onClick={() => utilsApp.openStandalonePage(ROUTE_HOME)}
+        >
+          <AppIcons.ArrowsExpandIcon className="w-5" />
+        </OneButton>
+      )}
+
       <div className="w-2" />
       <OneButton
         type="white"
@@ -167,13 +171,13 @@ function PageHome() {
   return (
     <AppPageLayout
       navLeft={
-        utilsApp.isExtensionTypePopup() && (
-          <AppIcons.ArrowsExpandIcon
+        storeAccount.currentAccountAddress ? (
+          <AppIcons.ClipboardListIcon
             role="button"
             className="w-6"
-            onClick={() => utilsApp.openStandalonePage(ROUTE_HOME)}
+            onClick={() => storeHistory.push(ROUTE_TX_HISTORY)}
           />
-        )
+        ) : null
       }
       navRight={
         <AppIcons.CollectionIcon
