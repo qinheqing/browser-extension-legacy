@@ -14,6 +14,7 @@ import {
 } from '../consts/consts';
 import OneAccountInfo from '../classes/OneAccountInfo';
 import walletFactory from '../wallets/walletFactory';
+import utilsApp from '../utils/utilsApp';
 import BaseStore from './BaseStore';
 import storeChain from './storeChain';
 import storeWallet from './storeWallet';
@@ -79,6 +80,11 @@ class StoreAccount extends BaseStore {
   @computed
   get currentAccountAddress() {
     return this.currentAccount?.address;
+  }
+
+  @computed
+  get currentAccountAddressShort() {
+    return utilsApp.shortenAddress(this.currentAccountAddress || '');
   }
 
   @computed

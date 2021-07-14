@@ -164,7 +164,6 @@ function AccountsGroupBar() {
         onClick={() => setExpand(false)}
         onMouseEnter={() => {
           setExpand(true);
-          console.log('expand group bar');
         }}
         onMouseLeave={() => setExpand(false)}
       >

@@ -49,7 +49,7 @@ function ImportAccountItem({
       />
       <div className="ImportAccountsList_itemContent">
         <div className="break-all text-sm leading-none">{account.address}</div>
-        <small className="text-gray-300 text-xs">{account.path}</small>
+        <small className="text-gray-400 text-xs">{account.path}</small>
         <div className="flex items-center justify-between text-sm leading-none">
           <TokenBalance
             tokenInfo={tokenInfo}

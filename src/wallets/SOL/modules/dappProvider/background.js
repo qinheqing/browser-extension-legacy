@@ -13,9 +13,9 @@ function launchPopup(message, sender, sendResponse) {
   // TODO consolidate popup dimensions
   window.chrome.windows.getLastFocused((focusedWindow) => {
     window.chrome.windows.create({
-      url: `popup.html#app/popup/?${searchParams.toString()}`,
+      url: `notification.html#app/approve-popup/?${searchParams.toString()}`,
       type: 'popup',
-      width: 375,
+      width: 360,
       height: 600,
       top: focusedWindow.top,
       left: focusedWindow.left + (focusedWindow.width - 375),
