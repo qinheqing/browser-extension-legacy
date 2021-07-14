@@ -143,6 +143,7 @@ class StoreAccount extends BaseStore {
     );
   }
 
+  @action.bound
   setCurrentAccount({ account }) {
     storeStorage.currentAccountRaw = account;
   }

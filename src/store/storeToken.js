@@ -85,6 +85,7 @@ class StoreToken extends BaseStore {
     });
   }
 
+  @action.bound
   setCurrentTokens({ ownerAddress, tokens }) {
     if (ownerAddress === storeAccount.currentAccount.address) {
       // TODO update token balance to storeBalance
@@ -115,6 +116,7 @@ class StoreToken extends BaseStore {
     return cloneDeep(storeStorage.tokenMetasRaw[key]);
   }
 
+  @action.bound
   async updateTokensMeta(tokens) {
     // TODO check tokens if meta should update
     if (!this.allTokenList || !this.allTokenList.length) {
