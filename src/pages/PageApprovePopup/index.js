@@ -13,10 +13,59 @@ import OneDappMessage from '../../classes/OneDappMessage';
 import storeWallet from '../../store/storeWallet';
 import TokenBalance from '../../components/TokenBalance';
 import storeToken from '../../store/storeToken';
+import OneButton from '../../components/OneButton';
+import AppIcons from '../../components/AppIcons';
+import OneDetailItem from '../../components/OneDetailItem';
+import storeTransfer from '../../store/storeTransfer';
 
-const { Transaction, PublicKey } = global.solanaWeb3;
+const { Transaction, PublicKey, Message } = global.solanaWeb3;
 
-// const PageSample = observer(PageSamplePure);
+function ApproveDappSiteInfo({ query, title, showAccountInfo = false }) {
+  const account = storeAccount.currentAccount;
+  const connectAccountInfo = account && (
+    <>
+      <AppIcons.SwitchVerticalIcon className="w-10 my-4 text-green-one-500" />
+      {account && (
+        <>
+          <div className="font-bold">{account.name}</div>
+          <div className="text-center break-all text-sm text-gray-500 leading-none">
+            {storeAccount.currentAccountAddressShort}
+          </div>
+        </>
+      )}
+      {!account && (
+        <div>
+          <div>请先选择一个账户进行操作</div>
+          <OneButton onClick={() => history.push(ROUTE_WALLET_SELECT)}>
+            选择账户
+          </OneButton>
+        </div>
+      )}
+    </>
+  );
+  return (
+    <div className="flex flex-col items-center py-6 px-4">
+      <AppIcons.GlobeAltIcon className="w-12 text-gray-400" />
+      <h1 className="text-2xl mt-2 mb-1">{title}</h1>
+      <div className="text-sm text-gray-500">{query.origin}</div>
+      {showAccountInfo && connectAccountInfo}
+    </div>
+  );
+}
+
+function ApprovePageLayout({ title, actions, ...others }) {
+  return (
+    <AppPageLayout
+      whiteBg
+      navLeft={null}
+      title={title}
+      footer={
+        <div className="bg-white px-4 py-2 flex items-center">{actions}</div>
+      }
+      {...others}
+    />
+  );
+}
 
 const CurrentBalanceView = observer(function () {
   if (!storeAccount.currentAccountAddress) {
@@ -39,58 +88,102 @@ const CurrentBalanceView = observer(function () {
   );
 });
 
-function ApproveConnection({ onApprove, query }) {
+const ApproveConnection = observer(function ({ onApprove, query }) {
   const history = useHistory();
+  const account = storeAccount.currentAccount;
   return (
-    <Observer>
-      {() => {
-        return (
-          <AppPageLayout>
-            <div className="u-padding-x">
-              <div className="u-wrap-text">
-                {storeAccount.currentAccountAddress ||
-                  'You should select a account first'}
-                <button onClick={() => history.push(ROUTE_WALLET_SELECT)}>
-                  Change account
-                </button>
-                <CurrentBalanceView />
-              </div>
-              <div className="u-whitespace" />
-              <hr />
-              {storeAccount.currentAccountAddress && (
-                <div className="u-flex-center">
-                  <button>Cancel</button>
-                  <button onClick={() => onApprove(false)}>Connect</button>
-                </div>
-              )}
-            </div>
-            <hr />
-            <ReactJsonView collapsed={false} src={query} />
-          </AppPageLayout>
-        );
-      }}
-    </Observer>
-  );
-}
-
-function ApproveTransaction({ onApprove, query }) {
-  return (
-    <AppPageLayout>
-      <div className="u-padding-x">
-        <CurrentBalanceView />
-        <div className="u-flex-center">
-          <button>Cancel</button>
-          <button onClick={() => onApprove(false)}>Approve</button>
-        </div>
-
-        <hr />
-        <ReactJsonView collapsed={false} src={query} />
+    <ApprovePageLayout
+      title="连接账户"
+      actions={
+        <>
+          {account && (
+            <>
+              <OneButton block type="white" onClick={() => window.close()}>
+                取消
+              </OneButton>
+              <div className="w-4" />
+              <OneButton block type="primary" onClick={() => onApprove(false)}>
+                连接
+              </OneButton>
+            </>
+          )}
+        </>
+      }
+    >
+      <div className="pt-8">
+        <ApproveDappSiteInfo
+          title="是否允许该网站连接"
+          query={query}
+          showAccountInfo
+        />
       </div>
-    </AppPageLayout>
+      {/* <ReactJsonView collapsed={false} src={query} />*/}
+    </ApprovePageLayout>
+  );
+});
+
+function TransactionItemView({ txStr }) {
+  if (!txStr) {
+    return null;
+  }
+  const tx = Message.from(bs58.decode(txStr));
+  const accountKeys = tx?.accountKeys || [];
+  return (
+    <>
+      {accountKeys.map((k, index) => (
+        <OneDetailItem
+          alignY
+          title="交易账户"
+          key={index}
+          content={<div className="break-all">{k.toString()}</div>}
+        />
+      ))}
+    </>
   );
 }
 
-function PagePopup() {
+const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
+  useEffect(() => {
+    storeTransfer.fetchTransactionFee();
+  }, []);
+  const account = storeAccount.currentAccount;
+  if (!account) {
+    return <div>Current wallet account not found</div>;
+  }
+  const txStr = query?.request?.params?.message;
+  return (
+    <ApprovePageLayout
+      title="授权交易"
+      actions={
+        <>
+          {/* TODO window close trigger onReject()*/}
+          <OneButton block type="white" onClick={() => onReject()}>
+            拒绝
+          </OneButton>
+          <div className="w-4" />
+          <OneButton block type="primary" onClick={() => onApprove(false)}>
+            确认授权
+          </OneButton>
+        </>
+      }
+    >
+      <div className="">
+        <ApproveDappSiteInfo title="是否授权该网站的交易请求" query={query} />
+        <div className="divide-y px-4">
+          <OneDetailItem title="手续费">
+            {storeTransfer.fee} {storeTransfer.feeSymbol}
+          </OneDetailItem>
+          <TransactionItemView txStr={txStr} />
+          <OneDetailItem alignY title="交易原始数据">
+            <div className="break-all">{txStr}</div>
+          </OneDetailItem>
+        </div>
+      </div>
+    </ApprovePageLayout>
+  );
+});
+
+function PageApprovePopup() {
   const query = useMemo(() => {
     // check background.js > launchPopup()
     // "chrome-extension://lmabaafdmodflajjjldinacmfaacegkl/popup.html#app/popup/?origin=xx&network=xx&request=xx"
@@ -103,8 +196,8 @@ function PagePopup() {
      */
     const { network, origin, request } = uri.query(true);
     return {
-      network,
-      origin,
+      network, // chain network
+      origin, // dapp origin
       request: JSON.parse(request),
     };
   }, [window.location.hash]);
@@ -187,11 +280,13 @@ function PagePopup() {
     return null;
   }
 
+  // TODO signAllTransactions
   if (request.method === 'signTransaction') {
     // debugger;
 
     // async function onApprove()
     const onApprove = async () => {
+      // TODO read [query.request.params.message] directly
       const txMessage = messages[0];
 
       // TODO check connectedWallets of this origin is matched with current selected Account
@@ -203,18 +298,34 @@ function PagePopup() {
 
       postMessageToBg(
         OneDappMessage.signedMessage({
+          id: request.id,
           result: {
             signature,
             publicKey: storeAccount.currentAccountAddress,
           },
-          id: request.id,
         }),
       );
 
       popRequest();
     };
 
-    return <ApproveTransaction query={query} onApprove={onApprove} />;
+    const onReject = () => {
+      popRequest();
+      postMessageToBg(
+        OneDappMessage.errorMessage({
+          id: request.id,
+          error: 'Transaction cancelled',
+        }),
+      );
+    };
+
+    return (
+      <ApproveTransaction
+        query={query}
+        onApprove={onApprove}
+        onReject={onReject}
+      />
+    );
   }
 
   if (request.method === 'connect') {
@@ -260,20 +371,14 @@ function PagePopup() {
   }
 
   return (
-    <Observer>
-      {() => {
-        return (
-          <AppPageLayout>
-            <ReactJsonView collapsed={false} src={query} />
-          </AppPageLayout>
-        );
-      }}
-    </Observer>
+    <AppPageLayout>
+      <ReactJsonView collapsed={false} src={query} />
+    </AppPageLayout>
   );
 }
 
-PagePopup.propTypes = {
+PageApprovePopup.propTypes = {
   // children: PropTypes.any,
 };
 
-export default PagePopup;
+export default observer(PageApprovePopup);
