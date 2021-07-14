@@ -65,6 +65,7 @@ import { TRANSACTION_STATUSES } from '../../../../shared/constants/transaction';
 import ConfirmationPage from '../confirmation';
 import AppRoutes from '../../../../src/routes/AppRoutes';
 import { ROUTE_PREFIX } from '../../../../src/routes/routeUrls';
+import PreloadScreen from '../../../../src/components/PreloadScreen';
 
 export default class Routes extends Component {
   static propTypes = {
@@ -127,6 +128,7 @@ export default class Routes extends Component {
           <AppRoutes />
         </Route>
         <Route path={DEFAULT_ROUTE}>
+          <PreloadScreen />
           <Helmet>
             <link
               rel="stylesheet"
