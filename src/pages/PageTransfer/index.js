@@ -80,13 +80,7 @@ function PageTransfer() {
   useEffect(() => {
     storeTransfer.clearData();
     if (storeWallet.currentWallet) {
-      storeWallet.currentWallet.getTransactionFee().then((fee) => {
-        const _fee = utilsNumber.toNormalNumber({
-          value: fee,
-          decimals: storeToken.currentNativeToken.decimals,
-        });
-        storeTransfer.updateTransferFee(_fee);
-      });
+      storeTransfer.fetchTransactionFee();
     }
   }, []);
 
