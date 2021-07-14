@@ -14,7 +14,6 @@ function init() {
 
   console.log('window.addEventListener#error');
   window.addEventListener('error', (event) => {
-    // TODO same error will dispatch twice
     console.log('window.addEventListener on error');
     utilsToast.toastError(event.error);
   });

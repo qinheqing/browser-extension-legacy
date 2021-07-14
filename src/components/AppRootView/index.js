@@ -18,6 +18,7 @@ export default function AppRootView({ children }) {
       </Helmet>
       <div className={styles.content}>
         <Portal>
+          {/* TODO move toast container to .main-container-wrapper*/}
           <ToastContainer />
         </Portal>
         {children}
