@@ -57,7 +57,7 @@ const AccountsGroupItemChain = observer(function ({ chainKey, ...others }) {
     <AccountsGroupItem
       icon={chainInfo.logo}
       onClick={() => {
-        storeAccount.accountsGroupFilter = {
+        storeStorage.accountsGroupFilter = {
           type: CONST_ACCOUNTS_GROUP_FILTER_TYPES.chain,
           chainKey,
         };
@@ -84,7 +84,7 @@ const AccountsGroupItemHardware = observer(function ({ ...others }) {
   return (
     <AccountsGroupItem
       onClick={() => {
-        storeAccount.accountsGroupFilter = {
+        storeStorage.accountsGroupFilter = {
           type: CONST_ACCOUNTS_GROUP_FILTER_TYPES.hardware,
         };
       }}
@@ -104,7 +104,7 @@ const AccountsGroupItemWallet = observer(function ({ ...others }) {
   return (
     <AccountsGroupItem
       onClick={() => {
-        storeAccount.accountsGroupFilter = {
+        storeStorage.accountsGroupFilter = {
           type: CONST_ACCOUNTS_GROUP_FILTER_TYPES.wallet,
         };
       }}
