@@ -1290,7 +1290,10 @@ export default class MetamaskController extends EventEmitter {
   }
 
   async emitAccountChangedToConnectedDomain(address) {
-    return this.permissionsController._handleAccountSelected(address);
+    const _address = address || this.preferencesController.getSelectedAddress();
+    if (_address) {
+      await this.permissionsController._handleAccountSelected(_address);
+    }
   }
 
   /**

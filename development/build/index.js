@@ -42,9 +42,10 @@ function defineAllTasks() {
     composeSeries(
       moduleFix,
       clean,
-      composeParallel(scriptTasks.dev, manifestTasks.dev, reload),
+      // dev build: style build must before js build, as livereload will block
       styleTasks.dev,
       staticTasks.dev,
+      composeParallel(scriptTasks.dev, manifestTasks.dev, reload),
     ),
   );
 
@@ -54,9 +55,9 @@ function defineAllTasks() {
     composeSeries(
       moduleFix,
       clean,
-      composeParallel(scriptTasks.testDev, manifestTasks.testDev, reload),
       styleTasks.dev,
       staticTasks.dev,
+      composeParallel(scriptTasks.testDev, manifestTasks.testDev, reload),
     ),
   );
 
@@ -67,6 +68,7 @@ function defineAllTasks() {
       moduleFix,
       clean,
       composeParallel(scriptTasks.prod, manifestTasks.prod),
+      // prod build, style build must be after js build, as module.css output
       styleTasks.prod,
       staticTasks.prod,
       zip,
