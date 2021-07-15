@@ -17,6 +17,7 @@ import OneButton from '../../components/OneButton';
 import AppIcons from '../../components/AppIcons';
 import OneDetailItem from '../../components/OneDetailItem';
 import storeTransfer from '../../store/storeTransfer';
+import utilsUrl from '../../utils/utilsUrl';
 
 const { Transaction, PublicKey, Message } = global.solanaWeb3;
 
@@ -187,14 +188,15 @@ function PageApprovePopup() {
   const query = useMemo(() => {
     // check background.js > launchPopup()
     // "chrome-extension://lmabaafdmodflajjjldinacmfaacegkl/popup.html#app/popup/?origin=xx&network=xx&request=xx"
-    const uri = new URI(window.location.hash.slice(1));
 
     /*
         network: "https://testnet.solana.com"
         origin: "https://0o0up.csb.app"
         request: '{"jsonrpc":"2.0","id":2,"method":"connect","params":{"network":"https://testnet.solana.com"}}'
      */
-    const { network, origin, request } = uri.query(true);
+    const { network, origin, request } = utilsUrl.getQuery({
+      url: window.location.hash.slice(1),
+    });
     return {
       network, // chain network
       origin, // dapp origin

@@ -29,13 +29,9 @@ function TokenInfoCard({ token, onClick }) {
             className="text-base text-gray-900"
             tokenInfo={token}
             watchBalanceChange
+            showPrice
+            classNamePrice="text-xs text-gray-400"
           />
-          <div
-            onMouseEnter={() => console.log(token)}
-            className="text-xs text-gray-400"
-          >
-            $ 0.0000
-          </div>
         </div>
       }
       title={

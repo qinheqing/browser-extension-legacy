@@ -9,6 +9,7 @@ import OneTokenInfo from '../../classes/OneTokenInfo';
 import AppIcons from '../AppIcons';
 import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
 import CopyHandle from '../CopyHandle';
+import storeToken from '../../store/storeToken';
 import styles from './index.css';
 
 function HardwareTypeTag() {
@@ -36,11 +37,9 @@ function AccountCard({
     storeAccount.currentAccount &&
     storeAccount.currentAccount.chainKey === account.chainKey &&
     storeAccount.currentAccount.address === account.address;
-  const tokenInfo = new OneTokenInfo({
-    isNative: true,
-    symbol: chainInfo.currency,
-    address: account.address,
-    chainKey: account.chainKey,
+  const tokenInfo = storeToken.buildNativeToken({
+    account,
+    chainInfo,
   });
   return (
     <div className={styles.AccountCard} {...others}>
@@ -63,18 +62,16 @@ function AccountCard({
       <div className={classnames(styles.AccountCard__blank)} />
       {showBalance && (
         <footer>
-          <div className={classnames(styles.AccountCard__balance)}>
-            {/* TODO get balance in cache if at wallet select page */}
-            <TokenBalance
-              wallet={wallet}
-              tokenInfo={tokenInfo}
-              showUnit
-              watchBalanceChange={watchBalanceChange}
-            />{' '}
-          </div>
-          <div className={classnames(styles.AccountCard__balanceFiat)}>
-            $ 0.0000
-          </div>
+          {/* TODO get balance in cache if at wallet select page */}
+          <TokenBalance
+            wallet={wallet}
+            tokenInfo={tokenInfo}
+            showUnit
+            watchBalanceChange={watchBalanceChange}
+            className={classnames(styles.AccountCard__balance)}
+            showPrice
+            classNamePrice={classnames(styles.AccountCard__balanceFiat)}
+          />
         </footer>
       )}
     </div>
