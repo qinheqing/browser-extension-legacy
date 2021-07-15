@@ -9,8 +9,8 @@ class OneChainInfo {
     description = '',
     internalChainId = -1, //
     rpc = [],
-    scan = [],
     currency = '', // BNB
+    scan = [], // TODO remove
     browser = [],
     isCustom = false, // is built-in or user custom Chain
     isTestNet = false,
