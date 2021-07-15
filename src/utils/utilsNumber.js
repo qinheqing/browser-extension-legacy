@@ -12,6 +12,9 @@ export const { ROUND_UP } = BigNumber;
 //  1.1->1, 1.9->1, -1.1->-1, -1.9->-1
 export const { ROUND_DOWN } = BigNumber;
 
+// always mute error, otherwise will cause application crash if number is invalid
+BigNumber.config({ ERRORS: false });
+
 function bigNum(value) {
   return new BigNumber(value);
 }
@@ -36,7 +39,7 @@ function toBnRoundMode(round) {
   return _round;
 }
 
-function toNormalNumber({ value, decimals, precision, roundMode = 'round' }) {
+function isValidNumber(value) {
   if (
     isNaN(value) ||
     value === '' ||
@@ -44,20 +47,19 @@ function toNormalNumber({ value, decimals, precision, roundMode = 'round' }) {
     value === undefined ||
     isBoolean(value)
   ) {
-    return NaN;
+    return false;
   }
-  // we can not update bignumber.js@4.1.0 to 9.0.0, as MM will throw error
-  try {
-    const num = bigNum(value).div(bigNum(10).pow(decimals));
-    return num.toFixed(precision, toBnRoundMode(roundMode));
-  } catch (ex) {
-    console.error(ex);
-    return NaN;
-  }
+  return true;
+}
+
+function toNormalNumber({ value, decimals, precision, roundMode = 'round' }) {
+  const num = bigNum(value).div(bigNum(10).pow(decimals));
+  return num.toFixed(precision, toBnRoundMode(roundMode));
 }
 
 export default {
   bigNum,
+  isValidNumber,
   toNormalNumber,
   toBnRoundMode,
 };
