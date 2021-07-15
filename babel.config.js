@@ -14,7 +14,9 @@ module.exports = function (api) {
     ],
     plugins: [
       '@babel/plugin-transform-runtime',
-      '@babel/plugin-proposal-class-properties',
+      ['@babel/plugin-proposal-decorators', { legacy: true }],
+      // In contrast to MobX 4/5, "loose" must be false!
+      ['@babel/plugin-proposal-class-properties', { loose: false }],
       '@babel/plugin-proposal-object-rest-spread',
       '@babel/plugin-proposal-optional-chaining',
       '@babel/plugin-proposal-nullish-coalescing-operator',

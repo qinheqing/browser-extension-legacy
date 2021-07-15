@@ -95,9 +95,8 @@ export default class TransactionController extends EventEmitter {
       getPendingTransactions: this.txStateManager.getPendingTransactions.bind(
         this.txStateManager,
       ),
-      getConfirmedTransactions: this.txStateManager.getConfirmedTransactions.bind(
-        this.txStateManager,
-      ),
+      getConfirmedTransactions:
+        this.txStateManager.getConfirmedTransactions.bind(this.txStateManager),
     });
 
     this.pendingTxTracker = new PendingTransactionTracker({
@@ -110,9 +109,8 @@ export default class TransactionController extends EventEmitter {
         return [...pending, ...approved];
       },
       approveTransaction: this.approveTransaction.bind(this),
-      getCompletedTransactions: this.txStateManager.getConfirmedTransactions.bind(
-        this.txStateManager,
-      ),
+      getCompletedTransactions:
+        this.txStateManager.getConfirmedTransactions.bind(this.txStateManager),
     });
 
     this.txStateManager.store.subscribe(() =>
@@ -265,10 +263,8 @@ export default class TransactionController extends EventEmitter {
 
     txMeta.origin = origin;
 
-    const {
-      transactionCategory,
-      getCodeResponse,
-    } = await this._determineTransactionCategory(txParams);
+    const { transactionCategory, getCodeResponse } =
+      await this._determineTransactionCategory(txParams);
     txMeta.transactionCategory = transactionCategory;
 
     // ensure value
@@ -306,10 +302,8 @@ export default class TransactionController extends EventEmitter {
    */
   async addTxGasDefaults(txMeta, getCodeResponse) {
     const defaultGasPrice = await this._getDefaultGasPrice(txMeta);
-    const {
-      gasLimit: defaultGasLimit,
-      simulationFails,
-    } = await this._getDefaultGasLimit(txMeta, getCodeResponse);
+    const { gasLimit: defaultGasLimit, simulationFails } =
+      await this._getDefaultGasLimit(txMeta, getCodeResponse);
 
     // eslint-disable-next-line no-param-reassign
     txMeta = this.txStateManager.getTx(txMeta.id);
@@ -369,11 +363,8 @@ export default class TransactionController extends EventEmitter {
       return { gasLimit: SIMPLE_GAS_COST };
     }
 
-    const {
-      blockGasLimit,
-      estimatedGasHex,
-      simulationFails,
-    } = await this.txGasUtil.analyzeGasUsage(txMeta);
+    const { blockGasLimit, estimatedGasHex, simulationFails } =
+      await this.txGasUtil.analyzeGasUsage(txMeta);
 
     // add additional gas buffer to our estimation for safety
     const gasLimit = this.txGasUtil.addGasBuffer(
