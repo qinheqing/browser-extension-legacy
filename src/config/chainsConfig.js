@@ -6,16 +6,39 @@ import {
 } from '../consts/consts';
 
 const SOL = {
+  // hdCoin: 'solana',
   key: CONST_CHAIN_KEYS.SOL,
-  name: 'Solana',
+
   baseChain: CONST_CHAIN_KEYS.SOL,
-  currency: CONST_SOL,
-  internalChainId: 101,
+  currency: CONST_SOL, // TODO return this.nativeToken.symbol
+
   rpc: ['https://solana-api.projectserum.com'],
   browser: ['https://solanascan.io/'],
-  logo: 'images/chains/solana.svg',
+
+  // https://api.coingecko.com/api/v3/asset_platforms
+  platformId: 'solana',
+  name: 'Solana',
+  shortname: 'Solana',
+  // TODO rename to "logoURI"
+  logo: 'images/chains/solana.svg', // chain logo,
+  // TODO rename to tokenChainId, "chain_identifier" in coingecko asset_platforms api
+  internalChainId: 101, // 101 MainNet, 102 TestNet, 103 DevNet, used for search tokens
+
+  // https://api.coingecko.com/api/v3/coins/list
+  //    TODO replace "currency"
+  nativeToken: {
+    tokenId: 'solana',
+    symbol: 'SOL',
+    name: 'Solana',
+    chainId: null,
+    logoURI: '', // TODO replace root."currencyIcon"
+    address: '', // token contract address
+    decimals: 18,
+    precision: 8, // UI display precision
+  },
   currencyIcon:
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
+
   isTestNet: false,
 };
 const SOL_TEST = {
@@ -24,8 +47,19 @@ const SOL_TEST = {
   baseChain: CONST_CHAIN_KEYS.SOL,
   currency: CONST_SOL,
   internalChainId: 102,
-  rpc: ['https://api.testnet.solana.com'],
-  browser: ['https://solanascan.io/?testnet'],
+  // internalChainId: 103,
+  rpc: [
+    'https://api.testnet.solana.com',
+    // 'https://api.devnet.solana.com',
+  ],
+  browser: [
+    'https://solanascan.io/?testnet',
+    // 'https://solanascan.io/?devnet',
+  ],
+  platformId: 'solana',
+  nativeToken: {
+    tokenId: 'solana',
+  },
   logo: 'images/chains/solana.svg',
   currencyIcon:
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',

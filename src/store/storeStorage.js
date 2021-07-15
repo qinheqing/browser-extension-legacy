@@ -34,6 +34,7 @@ class StoreStorage extends BaseStore {
     this.autosave('homeType');
     this.autosave('chainsCustomRaw');
     this.autosave('chainsSortKeys');
+    this.autosave('pricesMapRaw');
   }
 
   // TODO move to extension chrome.storage.local store, and save to single place
@@ -125,6 +126,9 @@ class StoreStorage extends BaseStore {
     CONST_CHAIN_KEYS.SOL,
     CONST_CHAIN_KEYS.SOL_TEST_NET,
   ];
+
+  @observable.ref
+  pricesMapRaw = {};
 }
 
 global._storeStorage = new StoreStorage();

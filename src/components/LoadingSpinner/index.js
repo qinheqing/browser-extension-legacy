@@ -3,7 +3,10 @@ import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import AppIcons from '../AppIcons';
+import Spinner from '../../../ui/app/components/ui/spinner';
 import styles from './index.css';
+
+// Spinner
 
 function LoadingSpinner({ fullHeight = false, className = 'w-11', children }) {
   // https://tailwindcss.com/docs/animation

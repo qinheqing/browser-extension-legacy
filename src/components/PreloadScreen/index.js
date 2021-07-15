@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import { useTimeout } from '../../../ui/app/hooks/useTimeout';
+import Spinner from '../../../ui/app/components/ui/spinner';
+import LoadingScreen from '../../../ui/app/components/ui/loading-screen';
 import styles from './index.css';
+
+// MM old component: LoadingScreen
 
 function PreloadScreen({ children }) {
   const [loading, setLoading] = useState(true);
@@ -46,7 +50,10 @@ function PreloadScreen({ children }) {
         ...doneStyle,
       }}
     >
-      <img src="images/loading-n.svg" style={{ width: 80 }} />
+      <div style={{ width: 40 }}>
+        <Spinner />
+      </div>
+      {/* <img src="images/loading-n.svg" style={{ width: 80 }} />*/}
     </div>
   );
 }

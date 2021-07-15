@@ -16,6 +16,7 @@ import storeWallet from './storeWallet';
 import storeTx from './storeTx';
 import storeHistory from './storeHistory';
 import storeStorage from './storeStorage';
+import storePrice from './storePrice';
 
 class StoreToken extends BaseStore {
   constructor(props) {
@@ -71,29 +72,39 @@ class StoreToken extends BaseStore {
     ];
   }
 
-  @computed
-  get currentNativeToken() {
-    const { address, currency } = storeAccount.currentAccount;
+  buildNativeToken({ account, chainInfo }) {
+    const { address } = account;
+    const { tokenId, name, symbol } = chainInfo?.nativeToken || {};
     return new OneTokenInfo({
-      chainKey: storeChain.currentChainKey,
-      name: currency,
-      symbol: currency,
+      chainKey: chainInfo.key,
+      name,
+      symbol: chainInfo.currency || symbol,
       decimals: storeWallet.currentWallet.options.balanceDecimals,
-      icon: storeChain.currentChainInfo?.currencyIcon,
+      icon: chainInfo?.currencyIcon,
       address,
       isNative: true,
+      tokenId,
+    });
+  }
+
+  @computed
+  get currentNativeToken() {
+    return this.buildNativeToken({
+      account: storeAccount.currentAccount,
+      chainInfo: storeChain.currentChainInfo,
     });
   }
 
   @action.bound
-  setCurrentTokens({ ownerAddress, tokens }) {
+  async setCurrentTokens({ ownerAddress, tokens }) {
     if (ownerAddress === storeAccount.currentAccount.address) {
       // TODO update token balance to storeBalance
       storeStorage.currentTokensRaw = {
         ownerAddress,
         tokens,
       };
-      this.updateTokensMeta(tokens);
+      await this.updateTokensMeta(tokens);
+      storePrice.fetchAllPrices(this.currentTokens);
     }
   }
 
@@ -118,7 +129,9 @@ class StoreToken extends BaseStore {
 
   @action.bound
   async updateTokensMeta(tokens) {
-    // TODO check tokens if meta should update
+    // TODO check tokens if meta should update,
+    //      to avoid unnecessary fetch request and memory consume
+    //      rename to allTokensMetaList
     if (!this.allTokenList || !this.allTokenList.length) {
       await this.fetchAllTokenList();
     }
