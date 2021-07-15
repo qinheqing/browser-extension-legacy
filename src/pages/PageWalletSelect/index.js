@@ -14,6 +14,7 @@ import {
 import walletFactory from '../../wallets/walletFactory';
 import utilsApp from '../../utils/utilsApp';
 import OneButton from '../../components/OneButton';
+import { IS_ENV_IN_TEST_OR_DEBUG } from '../../../ui/app/helpers/constants/common';
 
 const AccountsList = observer(function () {
   const history = useHistory();
@@ -59,11 +60,10 @@ function PageWalletSelect() {
     <OneButton
       block
       type="primary"
-      disabled000={!storeAccount.accountsGroupFilter.chainKey}
-      disabled
+      disabled={!storeAccount.accountsGroupFilter.chainKey}
       onClick={() => utilsApp.openStandalonePage(ROUTE_CONNECT_HARDWARE)}
     >
-      Connect hardware
+      连接硬件设备
     </OneButton>
   );
   return (
@@ -78,8 +78,12 @@ function PageWalletSelect() {
           >
             + 添加钱包账户
           </OneButton>
-          {/* <div className="w-6" />*/}
-          {/* {connectHardwareButton}*/}
+          {IS_ENV_IN_TEST_OR_DEBUG && (
+            <>
+              <div className="w-6" />
+              {connectHardwareButton}
+            </>
+          )}
         </footer>
       }
     >

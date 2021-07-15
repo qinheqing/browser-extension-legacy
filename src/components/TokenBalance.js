@@ -3,14 +3,17 @@ import { Observer } from 'mobx-react-lite';
 import storeWallet from '../store/storeWallet';
 import storeBalance from '../store/storeBalance';
 import AmountText from './AmountText';
+import TokenAmountInPrice from './TokenAmountInPrice';
 
 // eslint-disable-next-line react/prop-types
 export default function TokenBalance({
   className,
+  classNamePrice,
   wallet,
   tokenInfo, // { key, address, name },
   showUnit = false,
   watchBalanceChange = false,
+  showPrice = false,
   updateBalanceThrottle = 3 * 1000,
 }) {
   const tokenKey = tokenInfo.key;
@@ -95,9 +98,16 @@ export default function TokenBalance({
   }, [address]);
 
   return (
-    <span className={className}>
-      <AmountText value={balance} decimals={decimals} />
-      {showUnit && <span className="ml-1">{currency}</span>}
-    </span>
+    <>
+      <span className={className}>
+        <AmountText value={balance} decimals={decimals} />
+        {showUnit && <span className="ml-1">{currency}</span>}
+      </span>
+      {showPrice && (
+        <div className={classNamePrice}>
+          <TokenAmountInPrice token={tokenInfo} value={balance} />
+        </div>
+      )}
+    </>
   );
 }
