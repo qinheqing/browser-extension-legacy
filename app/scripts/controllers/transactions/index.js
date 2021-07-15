@@ -15,6 +15,7 @@ import {
   bnToHex,
   BnMultiplyByFraction,
   addHexPrefix,
+  retry,
 } from '../../lib/util';
 import { TRANSACTION_NO_CONTRACT_ERROR_KEY } from '../../../../ui/app/helpers/constants/error-keys';
 import { getSwapsTokensReceivedFromTxMeta } from '../../../../ui/app/pages/swaps/swaps.util';
@@ -279,7 +280,10 @@ export default class TransactionController extends EventEmitter {
     this.emit('newUnapprovedTx', txMeta);
 
     try {
-      txMeta = await this.addTxGasDefaults(txMeta, getCodeResponse);
+      txMeta = await retry(
+        async () => this.addTxGasDefaults(txMeta, getCodeResponse),
+        3,
+      );
     } catch (error) {
       log.warn(error);
       txMeta = this.txStateManager.getTx(txMeta.id);
@@ -501,7 +505,10 @@ export default class TransactionController extends EventEmitter {
       // wait for a nonce
       let { customNonceValue } = txMeta;
       customNonceValue = Number(customNonceValue);
-      nonceLock = await this.nonceTracker.getNonceLock(fromAddress);
+      nonceLock = await retry(
+        async () => this.nonceTracker.getNonceLock(fromAddress),
+        3,
+      );
       // add nonce to txParams
       // if txMeta has lastGasPrice then it is a retry at same nonce with higher
       // gas price transaction and their for the nonce should not be calculated

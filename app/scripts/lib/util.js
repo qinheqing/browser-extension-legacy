@@ -180,20 +180,39 @@ function bnToHex(inputBn) {
   return addHexPrefix(inputBn.toString(16));
 }
 
-function stringifyBalance (balance, bnDecimals) {
-  const zero = new BN(0)
+function stringifyBalance(balance, bnDecimals) {
+  const zero = new BN(0);
   if (balance.eq(zero)) {
-    return '0'
+    return '0';
   }
 
-  const decimals = parseInt(bnDecimals.toString())
+  const decimals = parseInt(bnDecimals.toString(), 10);
   if (decimals === 0) {
-    return balance.toString()
+    return balance.toString();
   }
 
-  let bal = balance.toString()
-  let val = String(bal / (10 ** decimals))
-  return val
+  const bal = balance.toString();
+  const val = String(bal / 10 ** decimals);
+  return val;
+}
+
+async function timeout(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+/* eslint consistent-return: "off" */
+async function retry(fn, count = 3) {
+  for (let i = 1; i <= count; i += 1) {
+    try {
+      return await fn();
+    } catch (e) {
+      if (i < count) {
+        await timeout(i * 1000);
+      } else {
+        throw e;
+      }
+    }
+  }
 }
 
 export {
@@ -205,5 +224,7 @@ export {
   checkForError,
   addHexPrefix,
   bnToHex,
-  stringifyBalance
+  stringifyBalance,
+  retry,
+  timeout,
 };
