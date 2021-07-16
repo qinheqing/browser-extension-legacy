@@ -98,8 +98,8 @@ function checkForHttpErrors(fetchRes) {
 
     case 503:
     case 504:
-    default:
       throw createTimeoutError();
+    default:
   }
 }
 
