@@ -34,6 +34,7 @@ cleanContextForImports();
 import log from 'loglevel';
 import LocalMessageDuplexStream from 'post-message-stream';
 import { initializeProvider } from '@metamask/inpage-provider';
+import inpageOneKeyProvider from './inpageOneKeyProvider';
 
 restoreContextAfterImports();
 
@@ -55,3 +56,4 @@ initializeProvider({
   logger: log,
   shouldShimWeb3: true,
 });
+inpageOneKeyProvider.init();
