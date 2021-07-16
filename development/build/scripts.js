@@ -8,6 +8,8 @@ const buffer = require('vinyl-buffer');
 const log = require('fancy-log');
 const { assign } = require('lodash');
 const watchify = require('watchify');
+const babelify = require('babelify');
+const unflowify = require('unflowify');
 const browserify = require('browserify');
 const envify = require('loose-envify/custom');
 const sourcemaps = require('gulp-sourcemaps');
@@ -315,17 +317,32 @@ function createScriptTasks({ browserPlatforms, livereload }) {
 
     if (!opts.buildLib) {
       if (opts.devMode && opts.filename === 'ui.js') {
-        browserifyOpts.entries = [
-          './development/require-react-devtools.js',
-          opts.filepath,
-        ];
+        browserifyOpts.entries = [opts.filepath];
+        // we can toggle react-devtools on or off by env
+        if (process.env.ENV_REACT_DEVTOOLS_ON) {
+          browserifyOpts.entries.unshift(
+            './development/require-react-devtools.js',
+          );
+        }
       } else {
         browserifyOpts.entries = [opts.filepath];
       }
     }
 
+    /*
+    SyntaxError: 'import' and 'export' may appear only with 'sourceType: module' (1:0) while parsing /Users/zuozhuo/workspace/onekey-extension/node_modules/@solana/web3.js/lib/index.browser.esm.js
+     */
+    // https://stackoverflow.com/questions/40029113/syntaxerror-import-and-export-may-appear-only-with-sourcetype-module-g
     let bundler = browserify(browserifyOpts)
-      .transform('babelify')
+      .transform(unflowify)
+      .transform(babelify)
+      // .transform(
+      //   babelify.configure({
+      //     // presets: ['@babel/preset-env'],
+      //     // ignore: [/\/node_modules\/(?!@solana\/web3\.js\/)/u],
+      //     presets: ['es2015'],
+      //   }),
+      // )
       .transform('brfs');
 
     if (opts.buildLib) {
@@ -357,6 +374,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
         CONF: opts.devMode ? conf : {},
         SENTRY_DSN: process.env.SENTRY_DSN || conf.SENTRY_DSN,
         SENTRY_DSN_DEV: process.env.SENTRY_DSN_DEV || conf.SENTRY_DSN_DEV,
+        ENV_REDUX_DEVTOOLS_ON: process.env.ENV_REDUX_DEVTOOLS_ON,
         ENV_ON_BOARDING_START_CHOICE: process.env.ENV_ON_BOARDING_START_CHOICE,
         ENV_DEFAULT_PASSWORD_AUTO_FILLED:
           process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED || '',

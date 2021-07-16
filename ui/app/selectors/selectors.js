@@ -17,7 +17,7 @@ import {
   getAccountKeyring,
 } from '../helpers/utils/util';
 import { contractMap } from '../../../shared/tokens';
-import { CONST_ACCOUNT_TYPES } from '../helpers/constants/common';
+import { WALLET_ACCOUNT_TYPES } from '../helpers/constants/common';
 import { getPermissionsRequestCount } from './permissions';
 
 export function getNetworkIdentifier(state) {
@@ -158,7 +158,7 @@ export const getMetaMaskAccountsOrdered = createSelector(
       .reduce((list, keyring) => list.concat(keyring.accounts), [])
       .filter((address) => {
         if (hwOnlyMode && accounts[address]?.accountType) {
-          if (accounts[address].accountType !== CONST_ACCOUNT_TYPES.HARDWARE) {
+          if (accounts[address].accountType !== WALLET_ACCOUNT_TYPES.HARDWARE) {
             return false;
           }
         }

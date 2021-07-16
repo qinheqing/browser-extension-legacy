@@ -30,7 +30,7 @@ function createStyleTasks({ livereload }) {
       src: 'ui/app/css/index.scss',
       dest: 'ui/app/css/output',
       devMode: true,
-      pattern: 'ui/app/**/*.scss',
+      pattern: ['ui/app/**/*.scss', 'src/**/*.scss'],
     }),
   );
 
@@ -71,7 +71,9 @@ async function buildScssPipeline(src, dest, devMode, rtl) {
       // pre-process
       gulp.src(src),
       devMode && sourcemaps.init(),
-      sass().on('error', sass.logError),
+      sass({
+        includePaths: ['src'],
+      }).on('error', sass.logError),
       autoprefixer(),
       rtl && rtlcss(),
       rtl && rename({ suffix: '-rtl' }),

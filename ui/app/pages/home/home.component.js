@@ -29,7 +29,7 @@ import {
   CONFIRMATION_V_NEXT_ROUTE,
   CONNECT_HARDWARE_ROUTE,
 } from '../../helpers/constants/routes';
-import { CONST_ACCOUNT_TYPES } from '../../helpers/constants/common';
+import { WALLET_ACCOUNT_TYPES } from '../../helpers/constants/common';
 import { getEnvironmentType } from '../../../../app/scripts/lib/util';
 import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
 
@@ -312,7 +312,7 @@ export default class Home extends PureComponent {
     if (
       hwOnlyMode &&
       accountType &&
-      accountType !== CONST_ACCOUNT_TYPES.HARDWARE
+      accountType !== WALLET_ACCOUNT_TYPES.HARDWARE
     ) {
       return (
         <div className="home__container home__connect-hw">

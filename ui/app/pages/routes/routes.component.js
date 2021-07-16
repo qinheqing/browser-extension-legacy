@@ -55,7 +55,6 @@ import {
   BUILD_QUOTE_ROUTE,
   CONFIRMATION_V_NEXT_ROUTE,
 } from '../../helpers/constants/routes';
-
 import {
   ENVIRONMENT_TYPE_NOTIFICATION,
   ENVIRONMENT_TYPE_POPUP,
@@ -63,6 +62,8 @@ import {
 import { getEnvironmentType } from '../../../../app/scripts/lib/util';
 import { TRANSACTION_STATUSES } from '../../../../shared/constants/transaction';
 import ConfirmationPage from '../confirmation';
+import AppRoutes from '../../../../src/routes/AppRoutes';
+import { ROUTE_PREFIX } from '../../../../src/routes/routeUrls';
 
 export default class Routes extends Component {
   static propTypes = {
@@ -103,11 +104,8 @@ export default class Routes extends Component {
   }
 
   UNSAFE_componentWillMount() {
-    const {
-      currentCurrency,
-      pageChanged,
-      setCurrentCurrencyToUSD,
-    } = this.props;
+    const { currentCurrency, pageChanged, setCurrentCurrencyToUSD } =
+      this.props;
 
     if (!currentCurrency) {
       setCurrentCurrencyToUSD();
@@ -122,9 +120,11 @@ export default class Routes extends Component {
 
   renderRoutes() {
     const { autoLockTimeLimit, setLastActiveTime } = this.props;
-
     const routes = (
       <Switch>
+        <Route path={ROUTE_PREFIX}>
+          <AppRoutes />
+        </Route>
         <Route path={LOCK_ROUTE} component={Lock} exact />
         <Route path={INITIALIZE_ROUTE} component={FirstTimeFlow} />
         <Initialized path={UNLOCK_ROUTE} component={UnlockPage} exact />
@@ -248,6 +248,13 @@ export default class Routes extends Component {
       return true;
     }
 
+    const isNewAppRoutesPath = Boolean(
+      matchPath(location.pathname, {
+        path: ROUTE_PREFIX,
+        exact: false,
+      }),
+    );
+
     const isHandlingPermissionsRequest = Boolean(
       matchPath(location.pathname, {
         path: CONNECT_ROUTE,
@@ -262,7 +269,11 @@ export default class Routes extends Component {
       }),
     );
 
-    return isHandlingPermissionsRequest || isHandlingAddEthereumChainRequest;
+    return (
+      isHandlingPermissionsRequest ||
+      isHandlingAddEthereumChainRequest ||
+      isNewAppRoutesPath
+    );
   }
 
   render() {

@@ -58,7 +58,11 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 
   const onSubmit = async (password) => {
     await tryUnlockMetamask(password);
-    history.push(DEFAULT_ROUTE);
+    let returnRoute = DEFAULT_ROUTE;
+    if (history?.location?.state?.returnRoute) {
+      returnRoute = history?.location?.state?.returnRoute;
+    }
+    history.push(returnRoute);
   };
 
   return {

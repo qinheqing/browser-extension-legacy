@@ -10,7 +10,7 @@ import CheckBox, {
 } from '../../../components/ui/check-box';
 import Tooltip from '../../../components/ui/tooltip';
 import {
-  CONST_ACCOUNT_TYPES,
+  WALLET_ACCOUNT_TYPES,
   PRIMARY,
 } from '../../../helpers/constants/common';
 import UserPreferencedCurrencyDisplay from '../../../components/app/user-preferenced-currency-display';
