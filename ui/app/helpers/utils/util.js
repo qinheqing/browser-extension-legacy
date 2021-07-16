@@ -8,7 +8,7 @@ import {
   addHexPrefix,
   getEnvironmentType,
 } from '../../../../app/scripts/lib/util';
-import { CONST_ACCOUNT_TYPES } from '../constants/common';
+import { WALLET_ACCOUNT_TYPES } from '../constants/common';
 import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
 import { CONNECT_HARDWARE_ROUTE } from '../constants/routes';
 
@@ -490,13 +490,13 @@ export function keyringTypeToAccountType(keyringType) {
   switch (keyringType) {
     case 'Trezor Hardware':
     case 'Ledger Hardware':
-      return CONST_ACCOUNT_TYPES.HARDWARE;
+      return WALLET_ACCOUNT_TYPES.HARDWARE;
     case 'Simple Key Pair':
-      return CONST_ACCOUNT_TYPES.IMPORTED;
+      return WALLET_ACCOUNT_TYPES.IMPORTED;
     case 'Watch Account':
-      return CONST_ACCOUNT_TYPES.WATCHED;
+      return WALLET_ACCOUNT_TYPES.WATCHED;
     default:
-      return CONST_ACCOUNT_TYPES.DEFAULT;
+      return WALLET_ACCOUNT_TYPES.DEFAULT;
   }
 }
 
@@ -535,7 +535,7 @@ export function filterAccountsByHwOnly({ accounts, hwOnlyMode }) {
     return accounts.filter(
       (account) =>
         account.accountType &&
-        account.accountType === CONST_ACCOUNT_TYPES.HARDWARE,
+        account.accountType === WALLET_ACCOUNT_TYPES.HARDWARE,
     );
   }
   return accounts;

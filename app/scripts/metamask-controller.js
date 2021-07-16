@@ -26,6 +26,7 @@ import {
 } from '@metamask/controllers';
 import { getBackgroundMetaMetricState } from '../../ui/app/selectors';
 import { TRANSACTION_STATUSES } from '../../shared/constants/transaction';
+import bgConnectProxy from '../../src/bg/bgConnectProxy';
 import AddressKeyring from './lib/eth-address-keyring';
 import ComposableObservableStore from './lib/ComposableObservableStore';
 import AccountTracker from './lib/account-tracker';
@@ -643,6 +644,7 @@ export default class MetamaskController extends EventEmitter {
 
       // hardware wallets
       connectHardware: nodeify(this.connectHardware, this),
+      connectProxyCall: nodeify(this.connectProxyCall, this),
       forgetDevice: nodeify(this.forgetDevice, this),
       checkHardwareStatus: nodeify(this.checkHardwareStatus, this),
       unlockHardwareWalletAccount: nodeify(
@@ -1264,6 +1266,10 @@ export default class MetamaskController extends EventEmitter {
     keyring.network = this.networkController.getProviderConfig().type;
 
     return keyring;
+  }
+
+  async connectProxyCall(method, params) {
+    return await bgConnectProxy.callMethod(method, params);
   }
 
   /**
