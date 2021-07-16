@@ -2243,15 +2243,18 @@
     tiny-worker "^2.3.0"
     ws "^7.4.0"
 
-"@onekeyhq/connect@8.1.31-extended":
-  version "8.1.31-extended"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/connect/8.1.31-extended/920deeecc3dc2da0aecc10ce2079d6c3d246a8539f4fdc6725ac228e30e9b26e#a07c54ed01dd687212b6e5846f5d7d1d9bffd5ee"
-  integrity sha512-BUYVgFa4qrC44A7MJQOMZeo+CmuFxFv4LcNeZUUkjp3i40vPva7WAVab71pCsRVe71SgTpO2ZU9eltcd2uRMDA==
+"@onekeyhq/connect@8.2.3-extended":
+  version "8.2.3-extended"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/connect/8.2.3-extended/0ab6381c709c41e1d0ef595847a8732ae697d3169db6e2a09eb86e18d35e80d4#091e96cb3da4ff3a67e7bad93a72c032498ea411"
+  integrity sha512-7nZI7CU+CzjevPA6UNupNK/5xgb2ciJzWeAO4l7jSLQVY3nwSmXyMM73saii3wlI4n1V9hvvGiUnaxaMJ63+mw==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@onekeyhq/blockchain-link" "1.0.18"
-    "@onekeyhq/link" "1.7.4"
+    "@onekeyhq/link" "1.7.5"
     "@onekeyhq/rollout" "1.0.6"
+    "@sentry/browser" "^6.4.0"
+    "@sentry/integrations" "^6.4.0"
+    "@sentry/tracing" "^6.4.0"
     "@trezor/utxo-lib" "^0.1.2"
     bchaddrjs "0.4.9"
     bignumber.js "^9.0.1"
@@ -2266,21 +2269,21 @@
     tiny-worker "^2.3.0"
     whatwg-fetch "^3.5.0"
 
-"@onekeyhq/eth-trezor-keyring@0.6.5":
-  version "0.6.5"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-trezor-keyring/0.6.5/b195622c2b5f05ac0380a76fcf606fd87aa515692369dceb5f6930e40439c88b#1f179383587f9f69d4c644a5086d305e1518d56c"
-  integrity sha512-/jkNBZ4KJz4AHWC+e+FlflKE5+Ny/AX3hCobNn+geARFSt8O8YIXMQQ2jH82Tzrq9q4CLDyDovYnzAUHmEjepw==
+"@onekeyhq/eth-onekey-keyring@0.7.0":
+  version "0.7.0"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-onekey-keyring/0.7.0/bc20290f86a6d22568ff948b36f870c2c9120ed51448638b8717bffeab745d58#91778c9309f147e455c899b8f22d71e9f757112b"
+  integrity sha512-Ufa5viCD8Y0Ql8EfZDtk26fyt8nRqk8QYb5sUB0W5xFEf0KCYtgF30TjxlnT+SXHOlA7iuS0o2PYjwUWl687Gg==
   dependencies:
-    "@onekeyhq/connect" "8.1.31-extended"
+    "@onekeyhq/connect" "8.2.3-extended"
     eth-sig-util "^1.4.2"
     ethereumjs-tx "^1.3.4"
     ethereumjs-util "^7.0.9"
     hdkey "0.8.0"
 
-"@onekeyhq/link@1.7.4":
-  version "1.7.4"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/link/1.7.4/402d6273fb1b91b8ada6522d462cbfe8fa862ec206f9f3215f0bed77d1b53d48#1c39db71f059e608941ee7219ae6f5f522c80289"
-  integrity sha512-tcfjMu8rD+Mg3imkEbULd4Tf+bLBKCzbo9LPWYjrFdRrNUXHTCiqX8gAmLffelGRJ+NpZPzbmXeHGKLvIWlF6g==
+"@onekeyhq/link@1.7.5":
+  version "1.7.5"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/link/1.7.5/1bdce865ec2d3341867e4a06a0e428b55865de7e2cca5191ae838b347a394fba#549f2a8fb54699f976e0ac260598c6cbc81c0f50"
+  integrity sha512-biDf4fVamQXroX/OVPG4KvTUvvh+MXNe0xwMJBm0Si7SuxWj3rYHh/+x/ROnjDwJJK/qNbpKrASMFhBOIAkk1A==
   dependencies:
     bigi "^1.4.1"
     ecurve "^1.0.3"
@@ -2359,6 +2362,16 @@
     "@sentry/utils" "6.3.0"
     tslib "^1.9.3"
 
+"@sentry/browser@^6.4.0":
+  version "6.9.0"
+  resolved "https://registry.npmjs.org/@sentry/browser/-/browser-6.9.0.tgz#b75ac1a6ff8fe60d451b14aea94d66f9dcd5570f"
+  integrity sha512-4JnEPcwoNs6JqeEd4wscBq+hxpotEJ0DJ4eOIsaNZIMyqEHXBHTXCk/gfrSsiZFrkHM4PgvUHOxaC0HcZ92oBA==
+  dependencies:
+    "@sentry/core" "6.9.0"
+    "@sentry/types" "6.9.0"
+    "@sentry/utils" "6.9.0"
+    tslib "^1.9.3"
+
 "@sentry/cli@^1.58.0":
   version "1.58.0"
   resolved "https://registry.yarnpkg.com/@sentry/cli/-/cli-1.58.0.tgz#b1609f10e71539951499866502b13bf3a270fe79"
@@ -2381,6 +2394,17 @@
     "@sentry/utils" "6.3.0"
     tslib "^1.9.3"
 
+"@sentry/core@6.9.0":
+  version "6.9.0"
+  resolved "https://registry.npmjs.org/@sentry/core/-/core-6.9.0.tgz#43b25290f3b1eb2c23f665e1c0fcbadd06d06012"
+  integrity sha512-oFX2qQcMLujCeIuCQGlhpTUIOXiU5n6V2lqDnvMXUV8gKpplBPalwdlR9bgbSi+VO8u7LjHR1IKM0RAPWgNHWw==
+  dependencies:
+    "@sentry/hub" "6.9.0"
+    "@sentry/minimal" "6.9.0"
+    "@sentry/types" "6.9.0"
+    "@sentry/utils" "6.9.0"
+    tslib "^1.9.3"
+
 "@sentry/hub@6.3.0":
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-6.3.0.tgz#4225b3b0f31fe47f24d80753b257a4b57de5d651"
@@ -2388,6 +2412,15 @@
   dependencies:
     "@sentry/types" "6.3.0"
     "@sentry/utils" "6.3.0"
+    tslib "^1.9.3"
+
+"@sentry/hub@6.9.0":
+  version "6.9.0"
+  resolved "https://registry.npmjs.org/@sentry/hub/-/hub-6.9.0.tgz#21068e12769cc745825e8d122c7e81858f609708"
+  integrity sha512-5mors7ojbo7G85ZmoVPQBgFBMONAJwyZfV0LNLy14GenoaVNuxTPyvAQiJb1FYq+x6YZ3CvqGX6r74KRKQU87w==
+  dependencies:
+    "@sentry/types" "6.9.0"
+    "@sentry/utils" "6.9.0"
     tslib "^1.9.3"
 
 "@sentry/integrations@^6.2.5":
@@ -2400,6 +2433,16 @@
     localforage "^1.8.1"
     tslib "^1.9.3"
 
+"@sentry/integrations@^6.4.0":
+  version "6.9.0"
+  resolved "https://registry.npmjs.org/@sentry/integrations/-/integrations-6.9.0.tgz#40efd6dd933f7b9589da0c53ac19a52560f17a26"
+  integrity sha512-p4z+PsPhimoII1iiT55Favjd0wxeXVio/oHEGivaYd7Al4G2CYLVsDu25OAejxizwNn6rJE8A3WIhXC3DXN84g==
+  dependencies:
+    "@sentry/types" "6.9.0"
+    "@sentry/utils" "6.9.0"
+    localforage "^1.8.1"
+    tslib "^1.9.3"
+
 "@sentry/minimal@6.3.0":
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-6.3.0.tgz#e64d87c92a4676a11168672a96589f46985f2b22"
@@ -2407,6 +2450,15 @@
   dependencies:
     "@sentry/hub" "6.3.0"
     "@sentry/types" "6.3.0"
+    tslib "^1.9.3"
+
+"@sentry/minimal@6.9.0":
+  version "6.9.0"
+  resolved "https://registry.npmjs.org/@sentry/minimal/-/minimal-6.9.0.tgz#e6201eb237753994be83ec33866e3fdae9a79bf3"
+  integrity sha512-GBZ6wG2Rc1wInYEl2BZTZc/t57O1Da876ifLsSPpEQAEnGWbqZWb8RLjZskH09ZIL/K4XCIDDi5ySzN8kFUWJw==
+  dependencies:
+    "@sentry/hub" "6.9.0"
+    "@sentry/types" "6.9.0"
     tslib "^1.9.3"
 
 "@sentry/tracing@^6.2.5":
@@ -2420,10 +2472,26 @@
     "@sentry/utils" "6.3.0"
     tslib "^1.9.3"
 
+"@sentry/tracing@^6.4.0":
+  version "6.9.0"
+  resolved "https://registry.npmjs.org/@sentry/tracing/-/tracing-6.9.0.tgz#5dff993af253ee31e62c5f84ab21b008df7d0841"
+  integrity sha512-gogVTypolhPazXr3Lue8HgzBg5Sy1cQpEp5Iq9LtECs+TlOlxJ+S+P+EIjEZ0f1AHVu706jr5cY2G2Shluli9g==
+  dependencies:
+    "@sentry/hub" "6.9.0"
+    "@sentry/minimal" "6.9.0"
+    "@sentry/types" "6.9.0"
+    "@sentry/utils" "6.9.0"
+    tslib "^1.9.3"
+
 "@sentry/types@6.3.0":
   version "6.3.0"
   resolved "https://registry.yarnpkg.com/@sentry/types/-/types-6.3.0.tgz#919cc1870f34b7126546c77e3c695052795d3add"
   integrity sha512-xWyCYDmFPjS5ex60kxOOHbHEs4vs00qHbm0iShQfjl4OSg9S2azkcWofDmX8Xbn0FSOUXgdPCjNJW1B0bPVhCA==
+
+"@sentry/types@6.9.0":
+  version "6.9.0"
+  resolved "https://registry.npmjs.org/@sentry/types/-/types-6.9.0.tgz#ef1a541c4240df6a7c6f5f31d7cdddd7d92c15f1"
+  integrity sha512-v52HJqLoLapEnqS2NdVtUXPvT+aezQgNXQkp8hiQ3RUdTm5cffwBVG7wlbpE6OsOOIZxd6p1zKylFkwCypiIIA==
 
 "@sentry/utils@6.3.0":
   version "6.3.0"
@@ -2431,6 +2499,14 @@
   integrity sha512-NZzw4oLelgvCsVBG2e+ZtFtaBvgA7rZYtcGFbZTphhAlYoJ6JMCQUzYk0iwJK79yR1quh510x4UE0jynvvToWg==
   dependencies:
     "@sentry/types" "6.3.0"
+    tslib "^1.9.3"
+
+"@sentry/utils@6.9.0":
+  version "6.9.0"
+  resolved "https://registry.npmjs.org/@sentry/utils/-/utils-6.9.0.tgz#6bf0bf290a6d37a27078b7c1331a06d8a7e313c5"
+  integrity sha512-PimDr6KAi4cCp5hQZ8Az2/pDcdfhTu7WAU30Dd9MZwknpHSTmD4G6QvkdrB5er6kMMnNQOC7rMo6w/Do3m6X3w==
+  dependencies:
+    "@sentry/types" "6.9.0"
     tslib "^1.9.3"
 
 "@sindresorhus/is@^0.14.0":
