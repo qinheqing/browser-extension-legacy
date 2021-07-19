@@ -65,7 +65,7 @@ import { TRANSACTION_STATUSES } from '../../../../shared/constants/transaction';
 import ConfirmationPage from '../confirmation';
 import AppRoutes from '../../../../src/routes/AppRoutes';
 import { ROUTE_PREFIX } from '../../../../src/routes/routeUrls';
-import PreloadScreen from '../../../../src/components/PreloadScreen';
+import { OldHomeRootComponents } from '../../../../src/components/AppRootView';
 
 export default class Routes extends Component {
   static propTypes = {
@@ -128,22 +128,7 @@ export default class Routes extends Component {
           <AppRoutes />
         </Route>
         <Route path={DEFAULT_ROUTE}>
-          <PreloadScreen />
-          <Helmet>
-            <link
-              rel="stylesheet"
-              type="text/css"
-              href="./index.css"
-              title="ltr"
-            />
-            <link
-              rel="stylesheet"
-              type="text/css"
-              href="./index-rtl.css"
-              title="rtl"
-              disabled
-            />
-          </Helmet>
+          <OldHomeRootComponents />
           <Switch>
             <Route path={LOCK_ROUTE} component={Lock} exact />
             <Route path={INITIALIZE_ROUTE} component={FirstTimeFlow} />

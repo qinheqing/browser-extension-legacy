@@ -42,7 +42,13 @@ function AccountCard({
     chainInfo,
   });
   return (
-    <div className={styles.AccountCard} {...others}>
+    <div
+      className={classnames(
+        styles.AccountCard,
+        'shadow hover:transform hover:scale-[1.01]',
+      )}
+      {...others}
+    >
       <header className={classnames(styles.AccountCard__header)}>
         {isActive && showActiveBadge && (
           <span className={classnames(styles.AccountCard__activeBadge)} />

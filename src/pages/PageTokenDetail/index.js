@@ -8,12 +8,17 @@ import TokenBalance from '../../components/TokenBalance';
 import OneButton from '../../components/OneButton';
 import TokenIcon from '../../components/TokenIcon';
 import TokenDepositQrcode from '../../components/TokenDepositQrcode';
+import TokenAmountInPrice from '../../components/TokenAmountInPrice';
+import useRequiredData from '../../utils/hooks/useRequiredData';
 
 function PageTokenDetail() {
   const token = storeToken.currentDetailToken;
-  if (!token) {
-    storeHistory.replaceToHome();
-    return null;
+  if (
+    !useRequiredData({
+      data: token,
+    })
+  ) {
+    return <div />;
   }
   return (
     <AppPageLayout
@@ -39,10 +44,14 @@ function PageTokenDetail() {
       }
     >
       <div className="flex items-center flex-col py-8">
-        <div className="text-xl">
-          <TokenBalance tokenInfo={token} showUnit watchBalanceChange />
-        </div>
-        <div className="text-gray-400 text-sm">≈ 0.00 CNY</div>
+        <TokenBalance
+          className="text-xl"
+          classNamePrice="text-gray-400 text-sm"
+          tokenInfo={token}
+          showUnit
+          watchBalanceChange
+          showPrice
+        />
       </div>
       <TokenDepositQrcode tokenInfo={token} />
     </AppPageLayout>
