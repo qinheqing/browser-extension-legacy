@@ -12,8 +12,19 @@ const SOL = {
   baseChain: CONST_CHAIN_KEYS.SOL,
   currency: CONST_SOL, // TODO return this.nativeToken.symbol
 
-  rpc: ['https://solana-api.projectserum.com'],
-  browser: ['https://solanascan.io/'],
+  rpc: [
+    'https://api.mainnet-beta.solana.com',
+    // 'https://solana-api.projectserum.com'
+  ],
+  browser: [
+    {
+      home: 'https://explorer.solana.com',
+      tx: 'https://explorer.solana.com/tx/{{tx}}',
+      account: 'https://explorer.solana.com/address/{{account}}',
+      token: 'https://explorer.solana.com/address/{{account}}',
+      block: 'https://explorer.solana.com/block/{{block}}',
+    },
+  ],
 
   // https://api.coingecko.com/api/v3/asset_platforms
   platformId: 'solana',
@@ -61,8 +72,13 @@ const SOL_TEST = {
       token: 'https://explorer.solana.com/address/{{account}}?cluster=testnet',
       block: 'https://explorer.solana.com/block/{{block}}?cluster=testnet',
     },
-    'https://solanascan.io/?testnet',
-    // 'https://solanascan.io/?devnet',
+    {
+      home: 'https://explorer.solana.com?cluster=devnet',
+      tx: 'https://explorer.solana.com/tx/{{tx}}?cluster=devnet',
+      account: 'https://explorer.solana.com/address/{{account}}?cluster=devnet',
+      token: 'https://explorer.solana.com/address/{{account}}?cluster=devnet',
+      block: 'https://explorer.solana.com/block/{{block}}?cluster=devnet',
+    },
   ],
   platformId: 'solana',
   nativeToken: {
