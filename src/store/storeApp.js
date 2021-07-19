@@ -1,3 +1,4 @@
+/* eslint import/no-cycle: "error" */
 import {
   observable,
   computed,
@@ -7,7 +8,6 @@ import {
   makeObservable,
 } from 'mobx';
 import uiGetBgControllerAsync from '../wallets/bg/uiGetBgControllerAsync';
-import { NOTIFICATION_NAMES } from '../../app/scripts/controllers/permissions/enums';
 import BaseStore from './BaseStore';
 import storeStorage from './storeStorage';
 
