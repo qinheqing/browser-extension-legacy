@@ -1,3 +1,4 @@
+/* eslint import/no-cycle: "error" */
 import {
   observable,
   computed,

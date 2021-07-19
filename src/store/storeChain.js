@@ -1,3 +1,4 @@
+/* eslint import/no-cycle: "error" */
 import { observable, computed, makeObservable, action } from 'mobx';
 import { toPlainObject, sortBy } from 'lodash';
 import OneChainInfo from '../classes/OneChainInfo';
