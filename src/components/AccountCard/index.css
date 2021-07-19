@@ -8,6 +8,7 @@
   padding: 16px;
   display: flex;
   flex-direction: column;
+  transition: all 0.3s;
 }
 
 .AccountCard__header {

@@ -108,6 +108,12 @@ class StoreTransfer extends BaseStore {
         amount = utilsNumber.bigNum(amount).minus(this.fee).toFixed();
       }
 
+      if (amount < 0) {
+        amount = '0';
+      }
+      if (!utilsNumber.isValidNumber(amount)) {
+        amount = '';
+      }
       this.amount = amount;
     }
   }

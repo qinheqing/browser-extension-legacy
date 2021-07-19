@@ -20,6 +20,7 @@ import { IS_ENV_IN_TEST_OR_DEBUG } from '../../../helpers/constants/common';
 import storeApp from '../../../../../src/store/storeApp';
 import { ROUTE_HOME } from '../../../../../src/routes/routeUrls';
 import storeStorage from '../../../../../src/store/storeStorage';
+import storeHistory from '../../../../../src/store/storeHistory';
 import { Dropdown, DropdownMenuItem } from './components/dropdown';
 
 // classes from nodes of the toggle element.
@@ -211,8 +212,7 @@ class NetworkDropdown extends Component {
       <DropdownMenuItem
         closeMenu={this.props.hideNetworkDropdown}
         onClick={() => {
-          storeStorage.homeType = 'NEW';
-          history.push(ROUTE_HOME);
+          storeHistory.goToHomeNew();
         }}
         style={DROP_DOWN_MENU_ITEM_STYLE}
       >

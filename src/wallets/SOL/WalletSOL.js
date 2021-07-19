@@ -123,12 +123,6 @@ class WalletSOL extends WalletBase {
 
     const rawTx = tx.serialize();
     const txid = await this.sendTx(rawTx);
-    console.log(
-      `SOL Transfer success:
-      https://explorer.solana.com/address/${accountInfo.address}?cluster=testnet
-      https://explorer.solana.com/tx/${txid}?cluster=testnet`,
-    );
-
     return txid;
   }
 

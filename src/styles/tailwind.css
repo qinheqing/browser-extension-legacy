@@ -37,6 +37,10 @@
     @apply flex items-center justify-center;
   }
 
+  .u-inline-flex-center {
+    @apply inline-flex items-center justify-center;
+  }
+
   .animate-duration-300 {
     animation-duration: 300ms;
   }
@@ -57,5 +61,9 @@
   .u-py-none {
     padding-top: 0;
     padding-bottom: 0;
+  }
+
+  .u-leading-0 {
+    line-height: 0;
   }
 }

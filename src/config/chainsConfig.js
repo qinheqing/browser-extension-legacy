@@ -53,6 +53,14 @@ const SOL_TEST = {
     // 'https://api.devnet.solana.com',
   ],
   browser: [
+    {
+      home: 'https://explorer.solana.com?cluster=testnet',
+      tx: 'https://explorer.solana.com/tx/{{tx}}?cluster=testnet',
+      account:
+        'https://explorer.solana.com/address/{{account}}?cluster=testnet',
+      token: 'https://explorer.solana.com/address/{{account}}?cluster=testnet',
+      block: 'https://explorer.solana.com/block/{{block}}?cluster=testnet',
+    },
     'https://solanascan.io/?testnet',
     // 'https://solanascan.io/?devnet',
   ],

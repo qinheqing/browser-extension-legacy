@@ -45,7 +45,8 @@ function isValidNumber(value) {
     value === '' ||
     value === null ||
     value === undefined ||
-    isBoolean(value)
+    isBoolean(value) ||
+    value === 'NaN'
   ) {
     return false;
   }
@@ -54,7 +55,11 @@ function isValidNumber(value) {
 
 function toNormalNumber({ value, decimals, precision, roundMode = 'round' }) {
   const num = bigNum(value).div(bigNum(10).pow(decimals));
-  return num.toFixed(precision, toBnRoundMode(roundMode));
+  const result = num.toFixed(precision, toBnRoundMode(roundMode));
+  if (result === 'NaN') {
+    return '-';
+  }
+  return result;
 }
 
 export default {
