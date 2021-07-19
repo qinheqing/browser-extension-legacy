@@ -1492,7 +1492,7 @@
     "message": "选择一个账户"
   },
   "selectAnAccountAlreadyConnected": {
-    "message": "This account has already been connected to MetaMask"
+    "message": "该账号已经连接到 OneKey"
   },
   "selectAnAccountHelp": {
     "message": "选择在 OneKey 中查看的账户"
