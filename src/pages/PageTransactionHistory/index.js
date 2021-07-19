@@ -77,12 +77,33 @@ function TransactionInfoCardView({
 
 function InstructionsInfoCard({ onClick, account, txid, ix, time, txMeta }) {
   const { program, programId, parsed } = ix;
+  const timeMs = time * 1000;
+  let title = utilsApp.shortenAddress(txid);
+  let content = '交易成功';
+  let icon = (
+    <TransactionInfoIcon
+      className="bg-green-50"
+      iconClassName="text-green-600"
+      IconComponent={AppIcons.CheckIcon}
+    />
+  );
+  // TODO tx status success \ fail
+  if (!parsed) {
+    content = 'Transaction NOT parsed';
+    return (
+      <TransactionInfoCardView
+        icon={icon}
+        title={title}
+        content={content}
+        time={timeMs}
+        onClick={onClick}
+      />
+    );
+  }
   // program: system, spl-token, ...
   const ixType = parsed.type;
   const { destination, lamports, source } = parsed.info || {};
   const okStatus = txMeta?.status?.Ok;
-  let icon, title, content;
-  const timeMs = time * 1000;
 
   const amount = lamports;
   const { decimals, currency } = account;
@@ -118,15 +139,8 @@ function InstructionsInfoCard({ onClick, account, txid, ix, time, txMeta }) {
       content = <span>接收方: {utilsApp.shortenAddress(destination)}</span>;
     }
   } else {
-    icon = (
-      <TransactionInfoIcon
-        className="bg-green-50"
-        iconClassName="text-green-600"
-        IconComponent={AppIcons.CheckIcon}
-      />
-    );
-    title = utilsApp.shortenAddress(txid);
-    content = <span>交易成功</span>;
+    // content = <span>交易成功</span>;
+    // icon = null
   }
 
   return (
