@@ -165,18 +165,23 @@ function TransactionInfoCard({ account, tx, onClick }) {
 function PendingTransactionCard({ txid, ...others }) {
   const [tx, setTx] = useState(null);
   async function confirmTransaction() {
-    const res =
-      await storeWallet.currentWallet.chainProvider.confirmTransaction({
-        txid,
-      });
-    const res1 = await storeWallet.currentWallet.chainProvider.getTransactions({
-      ids: [txid],
-    });
-    const confirmedTx = res1?.items?.[0];
-    if (confirmedTx) {
-      setTx(confirmedTx);
+    try {
+      const res =
+        await storeWallet.currentWallet.chainProvider.confirmTransaction({
+          txid,
+        });
+      // res = {"context":{"slot":85562176},"value":{"err":null}}
+      const res1 =
+        await storeWallet.currentWallet.chainProvider.getTransactions({
+          ids: [txid],
+        });
+      const confirmedTx = res1?.items?.[0];
+      if (confirmedTx) {
+        setTx(confirmedTx);
+      }
+    } catch (e) {
+      // confirmTransaction timeout will throw exception
     }
-    console.log('confirmTransaction', res, res1);
   }
   useEffect(() => {
     confirmTransaction();
@@ -201,6 +206,7 @@ function PageTransactionHistory() {
       setLoading(true);
       const res = await storeWallet.currentWallet.getTxHistory({
         address: storeAccount.currentAccountAddress,
+        limit: 20,
       });
       setTxList(res.items);
       storeTx.filterPendingTxConfirmed(res.items);

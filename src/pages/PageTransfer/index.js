@@ -17,6 +17,8 @@ import utilsNumber from '../../utils/utilsNumber';
 import TransferConfirmDialog from '../../components/TransferConfirmDialog';
 import OneInput from '../../components/OneInput';
 import OneCellItem from '../../components/OneCellItem';
+import useRequiredData from '../../utils/hooks/useRequiredData';
+import TokenIcon from '../../components/TokenIcon';
 
 function CmpFieldInputItem({ border, placeholder, right, ...others }) {
   return (
@@ -84,8 +86,12 @@ function PageTransfer() {
     }
   }, []);
 
-  if (!storeTransfer.fromToken) {
-    return <AppPageLayout>You need select a token to transfer</AppPageLayout>;
+  if (
+    !useRequiredData({
+      data: storeTransfer.fromToken,
+    })
+  ) {
+    return <div />;
   }
 
   const token = storeTransfer.fromToken;
@@ -106,7 +112,18 @@ function PageTransfer() {
       </CmpField>
 
       <CmpField>
-        <CmpFieldItem titleWrapped title="数量" end={token.symbolDisplay} />
+        <CmpFieldItem
+          titleWrapped
+          title="数量"
+          end={
+            <div className="flex items-center leading-none">
+              <span>{token.symbolDisplay}</span>
+              <span className="ml-2 u-leading-0">
+                <TokenIcon tokenInfo={token} size="sm" />
+              </span>
+            </div>
+          }
+        />
         <CmpFieldInputItem
           border
           value={storeTransfer.amount}

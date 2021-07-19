@@ -14,6 +14,7 @@ export default function TokenBalance({
   showUnit = false,
   watchBalanceChange = false,
   showPrice = false,
+  priceEqualSign = '≈',
   updateBalanceThrottle = 3 * 1000,
 }) {
   const tokenKey = tokenInfo.key;
@@ -105,6 +106,7 @@ export default function TokenBalance({
       </span>
       {showPrice && (
         <div className={classNamePrice}>
+          {priceEqualSign}{' '}
           <TokenAmountInPrice token={tokenInfo} value={balance} />
         </div>
       )}

@@ -325,7 +325,7 @@ class ChainProvider extends ChainProviderBase {
     return res?.feeCalculator?.lamportsPerSignature;
   }
 
-  async getTxHistory({ address }) {
+  async getTxHistory({ address, limit = 15 }) {
     const pubKey = new PublicKey(address);
     const commitment = helpersSOL.COMMITMENT_TYPES.confirmed;
 
@@ -334,7 +334,7 @@ class ChainProvider extends ChainProviderBase {
       {
         before: undefined,
         until: undefined,
-        limit: 15,
+        limit,
       },
       commitment,
     );

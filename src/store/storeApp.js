@@ -39,10 +39,16 @@ class StoreApp extends BaseStore {
     return storeStorage.homeType;
   }
 
+  @computed
+  get isNewHome() {
+    return this.homeType === 'NEW';
+  }
+
   @observable
   legacyState = {
     isUnlocked: false,
     selectedAddress: '',
+    hwOnlyMode: false,
   };
 }
 

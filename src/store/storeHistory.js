@@ -9,12 +9,15 @@ import {
 import { cloneDeep } from 'lodash';
 import {
   ROUTE_HOME,
+  ROUTE_HOME_OLD,
   ROUTE_TOKEN_ADD,
   ROUTE_TOKEN_DETAIL,
   ROUTE_TRANSFER,
 } from '../routes/routeUrls';
+import utilsToast from '../utils/utilsToast';
 import BaseStore from './BaseStore';
 import storeWallet from './storeWallet';
+import storeStorage from './storeStorage';
 
 class StoreHistory extends BaseStore {
   constructor(props) {
@@ -53,6 +56,23 @@ class StoreHistory extends BaseStore {
 
   replaceToHome() {
     this.replace(ROUTE_HOME);
+  }
+
+  async goToHomeNew() {
+    const storeApp = (await import('./storeApp')).default;
+
+    if (storeApp.legacyState.hwOnlyMode) {
+      utilsToast.toast.info('设备暂不支持 Solana，请选择其他网络');
+      return;
+    }
+
+    storeStorage.homeType = 'NEW';
+    this.push(ROUTE_HOME);
+  }
+
+  goToHomeOld() {
+    storeStorage.homeType = 'OLD';
+    this.push(ROUTE_HOME_OLD);
   }
 
   async goToPageTokenAdd() {

@@ -8,10 +8,12 @@ const syncReduxToMobxMiddleware = (store) => (next) => (action) => {
 
   const newState = store.getState();
   if (newState.metamask) {
-    const { isUnlocked, selectedAddress } = newState.metamask;
+    const { isUnlocked, selectedAddress, hwOnlyMode } = newState.metamask;
+    // TODO optimize
     storeApp.legacyState = {
       isUnlocked,
       selectedAddress,
+      hwOnlyMode,
     };
   }
 

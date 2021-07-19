@@ -11,7 +11,7 @@ function TokenIcon({ tokenInfo, size = 'md', className, children }) {
   return (
     <div
       className={classnames(
-        ' rounded-full overflow-hidden bg-gray-50 border border-gray-100 u-flex-center',
+        ' rounded-full overflow-hidden bg-gray-50 border border-gray-100 u-inline-flex-center',
         {
           'w-8 h-8': size === 'md',
           'w-6 h-6': size === 'sm',

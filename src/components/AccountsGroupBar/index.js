@@ -126,8 +126,7 @@ const AccountsGroupItemSort = observer(function ({ ...others }) {
       icon="images/chains/ethereum.svg"
       size="small"
       onClick={() => {
-        storeStorage.homeType = 'OLD';
-        storeHistory.push(ROUTE_HOME_OLD);
+        storeHistory.goToHomeOld();
       }}
       {...others}
     >
@@ -156,7 +155,7 @@ function AccountsGroupBar() {
     <div className="w-12 h-full">
       <div
         className={classnames(
-          'h-full relative flex flex-col items-stretch bg-white shadow-md overflow-y-auto',
+          'h-full relative z-10 flex flex-col items-stretch bg-white shadow-md overflow-y-auto',
           {
             'w-48': expand,
           },
