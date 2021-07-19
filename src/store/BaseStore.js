@@ -1,3 +1,4 @@
+/* eslint import/no-cycle: "error" */
 import { autorun, makeObservable, toJS } from 'mobx';
 import { isFunction, isNil } from 'lodash';
 import utilsStorage from '../utils/utilsStorage';

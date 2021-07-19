@@ -1,3 +1,4 @@
+/* eslint import/no-cycle: "error" */
 import { observable, autorun, untracked, makeObservable, action } from 'mobx';
 import WalletBase from '../wallets/WalletBase';
 import BaseStore from './BaseStore';

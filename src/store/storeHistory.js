@@ -1,3 +1,4 @@
+/* eslint import/no-cycle: "error" */
 import {
   observable,
   computed,
@@ -14,10 +15,7 @@ import {
   ROUTE_TOKEN_DETAIL,
   ROUTE_TRANSFER,
 } from '../routes/routeUrls';
-import utilsToast from '../utils/utilsToast';
 import BaseStore from './BaseStore';
-import storeWallet from './storeWallet';
-import storeStorage from './storeStorage';
 
 class StoreHistory extends BaseStore {
   constructor(props) {
@@ -60,6 +58,8 @@ class StoreHistory extends BaseStore {
 
   async goToHomeNew() {
     const storeApp = (await import('./storeApp')).default;
+    const storeStorage = (await import('./storeStorage')).default;
+    const utilsToast = (await import('../utils/utilsToast')).default;
 
     if (storeApp.legacyState.hwOnlyMode) {
       utilsToast.toast.info('设备暂不支持 Solana，请选择其他网络');
@@ -70,7 +70,8 @@ class StoreHistory extends BaseStore {
     this.push(ROUTE_HOME);
   }
 
-  goToHomeOld() {
+  async goToHomeOld() {
+    const storeStorage = (await import('./storeStorage')).default;
     storeStorage.homeType = 'OLD';
     this.push(ROUTE_HOME_OLD);
   }
@@ -92,7 +93,9 @@ class StoreHistory extends BaseStore {
     replace ? this.replace(ROUTE_TOKEN_DETAIL) : this.push(ROUTE_TOKEN_DETAIL);
   }
 
-  openBlockBrowserLink({ tx, account, token, block, ...others }) {
+  async openBlockBrowserLink({ tx, account, token, block, ...others }) {
+    const storeWallet = (await import('./storeWallet')).default;
+
     const link = storeWallet.currentWallet.getBlockBrowserLink({
       tx,
       account,
