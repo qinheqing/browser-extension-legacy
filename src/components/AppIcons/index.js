@@ -22,7 +22,7 @@ import {
   SearchIcon,
   PaperAirplaneIcon,
   RefreshIcon,
-  XIcon,
+  XIcon, // ErrorIcon, CrossIcon
   ExclamationIcon,
   ClipboardListIcon,
   CheckIcon,

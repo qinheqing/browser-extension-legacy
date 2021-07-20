@@ -75,7 +75,15 @@ function TransactionInfoCardView({
   );
 }
 
-function InstructionsInfoCard({ onClick, account, txid, ix, time, txMeta }) {
+function InstructionsInfoCard({
+  onClick,
+  account,
+  txid,
+  ix,
+  time,
+  txMeta,
+  error,
+}) {
   const { program, programId, parsed } = ix;
   const timeMs = time * 1000;
   let title = utilsApp.shortenAddress(txid);
@@ -87,6 +95,16 @@ function InstructionsInfoCard({ onClick, account, txid, ix, time, txMeta }) {
       IconComponent={AppIcons.CheckIcon}
     />
   );
+  if (error) {
+    content = '交易错误';
+    icon = (
+      <TransactionInfoIcon
+        className="bg-red-50"
+        iconClassName="text-red-600"
+        IconComponent={AppIcons.XIcon}
+      />
+    );
+  }
   // TODO tx status success \ fail
   if (!parsed) {
     content = 'Transaction NOT parsed';
@@ -159,10 +177,12 @@ function TransactionInfoCard({ account, tx, onClick }) {
   const txid = tx?.transaction?.signatures?.[0];
   const time = tx?.blockTime;
   const instructions = tx?.transaction?.message?.instructions || [];
+  const error = tx?.meta?.err;
   return (
     <>
       {instructions.map((ix, index) => (
         <InstructionsInfoCard
+          error={error}
           onClick={onClick}
           key={index}
           account={account}
