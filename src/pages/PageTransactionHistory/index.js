@@ -105,9 +105,8 @@ function InstructionsInfoCard({
       />
     );
   }
-  // TODO tx status success \ fail
   if (!parsed) {
-    content = 'Transaction NOT parsed';
+    // some transaction can not be parsed, like DAPP contract interaction
     return (
       <TransactionInfoCardView
         icon={icon}
