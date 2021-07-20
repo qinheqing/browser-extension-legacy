@@ -36,6 +36,7 @@ class StoreStorage extends BaseStore {
     this.autosave('chainsCustomRaw');
     this.autosave('chainsSortKeys');
     this.autosave('pricesMapRaw');
+    this.autosave('maskAssetBalance');
   }
 
   // TODO move to extension chrome.storage.local store, and save to single place
@@ -114,6 +115,9 @@ class StoreStorage extends BaseStore {
   //      check homeType and return mock chainId=-1 address='1111'
   @observable
   homeType = 'OLD'; // NEW, OLD
+
+  @observable
+  maskAssetBalance = false;
 
   @observable
   chainsCustomRaw = {

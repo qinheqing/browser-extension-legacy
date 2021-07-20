@@ -4,6 +4,7 @@ import storeWallet from '../store/storeWallet';
 import storeBalance from '../store/storeBalance';
 import AmountText from './AmountText';
 import TokenAmountInPrice from './TokenAmountInPrice';
+import SensitiveDataMask from './SensitiveDataMask';
 
 // eslint-disable-next-line react/prop-types
 function TokenBalance({
@@ -11,6 +12,7 @@ function TokenBalance({
   classNamePrice,
   wallet,
   tokenInfo, // { key, address, name },
+  maskAssetBalance = false,
   showUnit = false,
   watchBalanceChange = false,
   showPrice = false,
@@ -94,19 +96,24 @@ function TokenBalance({
       _wallet.chainProvider.removeAccountChangeListener(listenerId);
     };
   }, [address]);
-
   return (
     <>
       <span className={className}>
-        <AmountText value={balance} decimals={decimals} />
-        {showUnit && <span className="ml-1">{currency}</span>}
+        <SensitiveDataMask mask="****" hide={maskAssetBalance}>
+          <>
+            <AmountText value={balance} decimals={decimals} />
+            {showUnit && <span className="ml-1">{currency}</span>}
+          </>
+        </SensitiveDataMask>
       </span>
-      {showPrice && (
-        <div className={classNamePrice}>
-          {priceEqualSign}{' '}
-          <TokenAmountInPrice token={tokenInfo} value={balance} />
-        </div>
-      )}
+      <SensitiveDataMask mask="****" hide={maskAssetBalance}>
+        {showPrice && (
+          <div className={classNamePrice}>
+            {priceEqualSign} &nbsp;
+            <TokenAmountInPrice token={tokenInfo} value={balance} />
+          </div>
+        )}
+      </SensitiveDataMask>
     </>
   );
 }

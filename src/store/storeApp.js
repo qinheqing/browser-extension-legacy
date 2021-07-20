@@ -44,6 +44,10 @@ class StoreApp extends BaseStore {
     return this.homeType === 'NEW';
   }
 
+  toggleAssetBalanceVisible() {
+    storeStorage.maskAssetBalance = !storeStorage.maskAssetBalance;
+  }
+
   @observable
   legacyState = {
     isUnlocked: false,
