@@ -16,7 +16,7 @@
 @layer base {
   #app-content,
   html {
-    @apply bg-root-html;
+    @apply xs:bg-root-html;
   }
 
   body {

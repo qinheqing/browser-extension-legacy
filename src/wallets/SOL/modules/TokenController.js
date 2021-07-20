@@ -8,7 +8,7 @@ class TokenController {
 
   tokenList = null;
 
-  async getTokenListAsync() {
+  async getTokenListMetaAsync() {
     if (this.tokenList) {
       return this.tokenList;
     }
