@@ -1,3 +1,4 @@
+/* eslint import/no-cycle: "error" */
 import {
   observable,
   computed,
@@ -68,6 +69,8 @@ https://api.coingecko.com/api/v3/simple/token_price/binance-smart-chain?contract
 }
 
 https://api.coingecko.com/api/v3/simple/token_price/solana?contract_addresses=SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt&vs_currencies=usd,cny&include_market_cap=true&include_24hr_vol=true&include_24hr_change=true&include_last_updated_at=true
+
+https://api.coingecko.com/api/v3/coins/serum
 
 */
 

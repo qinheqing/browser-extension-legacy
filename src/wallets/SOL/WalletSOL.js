@@ -1,3 +1,4 @@
+import assert from 'assert';
 import bs58 from 'bs58';
 import WalletBase from '../WalletBase';
 import { CONST_CHAIN_KEYS } from '../../consts/consts';
@@ -141,19 +142,29 @@ class WalletSOL extends WalletBase {
   }
 
   getBlockBrowserLink({ tx, account, token, block }) {
+    const { chainInfo } = this.options;
+    const browserLinks = chainInfo?.browser?.[0];
+
+    assert(browserLinks, 'chainInfo.browser NOT exists');
+    assert(browserLinks.tx, 'chainInfo.browser.tx NOT exists');
+    assert(browserLinks.account, 'chainInfo.browser.account NOT exists');
+    assert(browserLinks.token, 'chainInfo.browser.token NOT exists');
+    assert(browserLinks.block, 'chainInfo.browser.block NOT exists');
+    assert(browserLinks.home, 'chainInfo.browser.home NOT exists');
+
     if (tx) {
-      return `https://explorer.solana.com/tx/${tx}?cluster=testnet`;
+      return utilsApp.formatTemplate(browserLinks.tx, { tx });
     }
     if (account) {
-      return `https://explorer.solana.com/address/${account}?cluster=testnet`;
+      return utilsApp.formatTemplate(browserLinks.account, { account });
     }
     if (token) {
-      return `https://explorer.solana.com/address/${token}?cluster=testnet`;
+      return utilsApp.formatTemplate(browserLinks.token, { token });
     }
     if (block) {
-      return `https://explorer.solana.com/block/${block}?cluster=testnet`;
+      return utilsApp.formatTemplate(browserLinks.block, { block });
     }
-    return utilsApp.throwToBeImplemented(this);
+    return browserLinks.home || utilsApp.throwToBeImplemented(this);
   }
 }
 

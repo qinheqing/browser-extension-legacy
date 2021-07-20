@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import OneButton from '../components/OneButton';
-import TxSubmitSuccessView from '../components/TxSubmitSuccessView';
 
 let lastErrorData = {
   text: '',
@@ -44,8 +43,13 @@ function toastError(error = {}) {
 }
 
 function toastTx({ message, txid }) {
+  const TxSubmitSuccessViewLazy = lazy(() =>
+    import('../components/TxSubmitSuccessView'),
+  );
   toast.success(
-    <TxSubmitSuccessView txid={txid}>{message}</TxSubmitSuccessView>,
+    <Suspense fallback={<div />}>
+      <TxSubmitSuccessViewLazy txid={txid}>{message}</TxSubmitSuccessViewLazy>
+    </Suspense>,
   );
 }
 
