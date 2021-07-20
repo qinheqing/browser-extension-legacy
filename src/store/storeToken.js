@@ -73,6 +73,11 @@ class StoreToken extends BaseStore {
     ];
   }
 
+  newTokenInfo() {
+    const tokenController = storeWallet.currentWallet?.tokenController;
+    return tokenController.newTokenInfo();
+  }
+
   buildNativeToken({ account, chainInfo }) {
     const { address } = account;
     const { tokenId, name, symbol } = chainInfo?.nativeToken || {};

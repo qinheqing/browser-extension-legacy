@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Observer } from 'mobx-react-lite';
+import { observer } from 'mobx-react-lite';
 import storeWallet from '../store/storeWallet';
 import storeBalance from '../store/storeBalance';
 import AmountText from './AmountText';
 import TokenAmountInPrice from './TokenAmountInPrice';
 
 // eslint-disable-next-line react/prop-types
-export default function TokenBalance({
+function TokenBalance({
   className,
   classNamePrice,
   wallet,
@@ -19,9 +19,9 @@ export default function TokenBalance({
 }) {
   const tokenKey = tokenInfo.key;
   const { address, symbol, symbolDisplay } = tokenInfo;
-  const cacheBalanceInfo = storeBalance.getBalanceInfoCacheByKey(tokenKey);
-  const [balance, setBalance] = useState(cacheBalanceInfo.balance);
-  const [decimals, setDecimals] = useState(cacheBalanceInfo.decimals);
+  const cacheBalanceInfo = storeBalance.getTokenBalanceInfoCacheByKey(tokenKey);
+  const { balance } = cacheBalanceInfo;
+  const decimals = tokenInfo.decimals || cacheBalanceInfo.decimals;
   const _wallet = wallet || storeWallet.currentWallet;
   const currency = symbol || symbolDisplay;
 
@@ -58,8 +58,6 @@ export default function TokenBalance({
         tokenKey,
       });
       if (info) {
-        setBalance(info.balance);
-        setDecimals(info.decimals);
         storeBalance.updateTokenBalance(tokenKey, {
           balance: info.balance,
           decimals: info.decimals,
@@ -84,7 +82,6 @@ export default function TokenBalance({
       (info) => {
         // TODO update check which is fresh data (getAccountInfo/addAccountChangeListener)
         // only update balance, decimals is undefined in wss data
-        setBalance(info.balance);
         console.log('TokenBalance > balance updated!', info);
         storeBalance.updateTokenBalance(tokenKey, {
           balance: info.balance,
@@ -113,3 +110,5 @@ export default function TokenBalance({
     </>
   );
 }
+
+export default observer(TokenBalance);
