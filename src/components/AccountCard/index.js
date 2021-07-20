@@ -5,7 +5,6 @@ import storeChain from '../../store/storeChain';
 import utilsApp from '../../utils/utilsApp';
 import storeAccount from '../../store/storeAccount';
 import TokenBalance from '../TokenBalance';
-import OneTokenInfo from '../../classes/OneTokenInfo';
 import AppIcons from '../AppIcons';
 import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
 import CopyHandle from '../CopyHandle';

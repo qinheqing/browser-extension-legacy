@@ -43,10 +43,9 @@ class OneTokenInfo {
   }
 
   generateKey() {
-    if (this.isNative) {
-      return `${this.chainKey}-${this.ownerAddress}`;
-    }
-    return `${this.chainKey}-${this.ownerAddress}-${this.contractAddress}`;
+    // TODO use tokenController.newTokenInfo() .generateTokenKey()
+    //    because the key schema should be different in other chains
+    return `${this.chainKey}-${this.address}`;
   }
 }
 

@@ -36,7 +36,7 @@ class StoreBalance extends BaseStore {
     }
   }
 
-  getBalanceInfoCacheByKey(key) {
+  getTokenBalanceInfoCacheByKey(key) {
     const { balance, decimals, lastUpdate, ...others } =
       storeStorage.currentBalanceRaw[key] || {};
     return { balance, decimals, lastUpdate, ...others };
