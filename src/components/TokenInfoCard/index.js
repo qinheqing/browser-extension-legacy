@@ -10,6 +10,7 @@ import storeTransfer from '../../store/storeTransfer';
 import { ROUTE_TRANSFER } from '../../routes/routeUrls';
 import TokenIcon from '../TokenIcon';
 import storeHistory from '../../store/storeHistory';
+import storeStorage from '../../store/storeStorage';
 import OneCellItem from '../OneCellItem';
 import storeToken from '../../store/storeToken';
 
@@ -30,6 +31,7 @@ function TokenInfoCard({ token, onClick }) {
             tokenInfo={token}
             watchBalanceChange
             showPrice
+            maskAssetBalance={storeStorage.maskAssetBalance}
             classNamePrice="text-xs text-gray-400"
           />
         </div>
