@@ -42,7 +42,7 @@ class StoreToken extends BaseStore {
     autorun(() => {
       const chainKey = storeChain.currentChainKey;
       untracked(() => {
-        this.allTokenList = [];
+        this.allTokenListMeta = [];
         this.tokenListFiltered = null;
       });
     });
@@ -73,6 +73,11 @@ class StoreToken extends BaseStore {
     ];
   }
 
+  newTokenInfo() {
+    const tokenController = storeWallet.currentWallet?.tokenController;
+    return tokenController.newTokenInfo();
+  }
+
   buildNativeToken({ account, chainInfo }) {
     const { address } = account;
     const { tokenId, name, symbol } = chainInfo?.nativeToken || {};
@@ -97,26 +102,32 @@ class StoreToken extends BaseStore {
   }
 
   @action.bound
-  async setCurrentTokens({ ownerAddress, tokens }) {
+  async setCurrentTokens({
+    ownerAddress,
+    tokens,
+    forceUpdateTokenMeta = false,
+  }) {
     if (ownerAddress === storeAccount.currentAccount.address) {
       // TODO update token balance to storeBalance
       storeStorage.currentTokensRaw = {
         ownerAddress,
         tokens,
       };
-      await this.updateTokensMeta(tokens);
-      storePrice.fetchAllPrices(this.currentTokens);
+      // - update token meta by tokenList.json
+      await this.updateTokensMeta({ tokens, forceUpdateTokenMeta });
+      // - update token price
+      await storePrice.fetchAllPrices(this.currentTokens);
     }
   }
 
-  async getCurrentAccountTokens() {
+  async fetchCurrentAccountTokens({ forceUpdateTokenMeta = false } = {}) {
     if (!storeAccount.currentAccount) {
       return;
     }
     const tokensRes =
       await storeWallet.currentWallet.chainProvider.getAccountTokens();
-    console.log('getCurrentAccountTokens', tokensRes);
-    this.setCurrentTokens(tokensRes);
+    console.log('fetchCurrentAccountTokens', tokensRes);
+    await this.setCurrentTokens({ ...tokensRes, forceUpdateTokenMeta });
   }
 
   _buildTokenMetaKey({ token }) {
@@ -128,23 +139,36 @@ class StoreToken extends BaseStore {
     return cloneDeep(storeStorage.tokenMetasRaw[key]);
   }
 
-  @action.bound
-  async updateTokensMeta(tokens) {
-    // TODO check tokens if meta should update,
-    //      to avoid unnecessary fetch request and memory consume
-    //      rename to allTokensMetaList
-    if (!this.allTokenList || !this.allTokenList.length) {
-      await this.fetchAllTokenList();
+  shouldReloadTokenMetas(tokens) {
+    if (this.allTokenListMeta?.length) {
+      return false;
     }
+    let result = false;
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i];
+      const key = this._buildTokenMetaKey({ token });
+      if (!storeStorage.tokenMetasRaw?.[key]) {
+        result = true;
+        break;
+      }
+    }
+    return result;
+  }
+
+  @action.bound
+  async updateTokensMeta({ tokens, forceUpdateTokenMeta = false }) {
+    if (!this.shouldReloadTokenMetas(tokens) && !forceUpdateTokenMeta) {
+      return;
+    }
+    await this.fetchAllTokenListMeta();
     const metas = {};
     tokens.forEach((token) => {
-      const tokenMeta = this.allTokenList.find(
+      const tokenMeta = this.allTokenListMeta.find(
         (item) => item.address === token.contractAddress,
       );
-      if (tokenMeta) {
-        const key = this._buildTokenMetaKey({ token });
-        metas[key] = tokenMeta;
-      }
+      const key = this._buildTokenMetaKey({ token });
+      // give default empty object, so that shouldReloadTokenMetas() can work correctly.
+      metas[key] = tokenMeta || {};
     });
     storeStorage.tokenMetasRaw = {
       ...storeStorage.tokenMetasRaw,
@@ -153,7 +177,7 @@ class StoreToken extends BaseStore {
   }
 
   @observable.ref
-  allTokenList = [
+  allTokenListMeta = [
     /*
     address: "2jQc2jDHVCewoWsQJK7JPLetP7UjqXvaFdno8rtrD8Kg"
     chainId: 102
@@ -170,13 +194,11 @@ class StoreToken extends BaseStore {
   tokenListFiltered = null;
 
   @action.bound
-  async fetchAllTokenList() {
+  async fetchAllTokenListMeta() {
     const tokenController = storeWallet.currentWallet?.tokenController;
-    if (tokenController?.getTokenListAsync) {
-      tokenController.getTokenListAsync().then((list) => {
-        console.log(list);
-        this.allTokenList = list;
-      });
+    if (tokenController?.getTokenListMetaAsync) {
+      const list = await tokenController.getTokenListMetaAsync();
+      this.allTokenListMeta = list;
     }
   }
 
@@ -185,7 +207,7 @@ class StoreToken extends BaseStore {
       this.tokenListFiltered = null;
       return;
     }
-    let tokens = this.allTokenList.filter((item) => {
+    let tokens = this.allTokenListMeta.filter((item) => {
       return (
         toLower(item.name).includes(toLower(text)) ||
         toLower(item.symbol).includes(toLower(text)) ||

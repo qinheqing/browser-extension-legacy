@@ -10,9 +10,7 @@
   position: relative;
   transform: scale(1);
   width: 100%;
-  max-width: 365px;
   height: 100vh;
-  max-height: 600px;
 
-  @apply bg-root-body;
+  @apply bg-root-body xs:max-w-[364px] xs:max-h-[601px];
 }

@@ -84,6 +84,8 @@ class ChainProvider extends ChainProviderBase {
 
   async sendTransaction({
     rawTransaction,
+    // false: will make simulation transaction first, fallback if error, need rpc stability
+    // true:  will send transaction directly even if error occurs, more fast but will cost fee if error
     skipPreflight = false,
     preflightCommitment = 'single',
   }) {

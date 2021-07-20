@@ -64,7 +64,7 @@ class StoreTransfer extends BaseStore {
       return null;
     }
     // TODO fetch decimals by rpc fallback if cache is null
-    const { decimals } = storeBalance.getBalanceInfoCacheByKey(
+    const { decimals } = storeBalance.getTokenBalanceInfoCacheByKey(
       this.fromToken.key,
     );
     this.previewPayload = {
@@ -95,7 +95,7 @@ class StoreTransfer extends BaseStore {
 
   @action.bound
   fillMaxAmount() {
-    const balanceInfo = storeBalance.getBalanceInfoCacheByKey(
+    const balanceInfo = storeBalance.getTokenBalanceInfoCacheByKey(
       this.fromToken.key,
     );
     if (balanceInfo) {
