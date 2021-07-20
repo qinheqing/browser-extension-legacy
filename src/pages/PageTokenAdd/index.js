@@ -52,7 +52,7 @@ function PageTokenAdd() {
   const [tokenToAdd, setTokenToAdd] = useState({});
   const [fee, setFee] = useState(null);
   useEffect(() => {
-    storeToken.fetchAllTokenList();
+    storeToken.fetchAllTokenListMeta();
     storeWallet.currentWallet.chainProvider
       .getAddAssociateTokenFee()
       .then((_fee) => setFee(_fee));
@@ -60,8 +60,8 @@ function PageTokenAdd() {
       storeToken.tokenListFiltered = null;
     };
   }, []);
-  const { tokenListFiltered, allTokenList } = storeToken;
-  const tokens = tokenListFiltered || allTokenList;
+  const { tokenListFiltered, allTokenListMeta } = storeToken;
+  const tokens = tokenListFiltered || allTokenListMeta;
   return (
     <AppPageLayout title="添加代币">
       <div className="px-4 py-2">

@@ -117,11 +117,13 @@ class StorePrice extends BaseStore {
     };
   }
 
-  fetchAllPrices(tokens = []) {
+  async fetchAllPrices(tokens = []) {
     const nativeToken = tokens.find((item) => item.isNative);
     const _tokens = tokens.filter((item) => !item.isNative);
-    this.fetchNativeTokenPrice(nativeToken);
-    this.fetchTokensPrice(_tokens);
+    return Promise.all([
+      this.fetchNativeTokenPrice(nativeToken),
+      this.fetchTokensPrice(_tokens),
+    ]);
   }
 
   async fetchNativeTokenPrice(nativeToken) {

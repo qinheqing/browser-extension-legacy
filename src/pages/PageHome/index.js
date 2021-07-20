@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
+import classnames from 'classnames';
 import AppPageLayout from '../../components/AppPageLayout';
 import storeAccount from '../../store/storeAccount';
 import AccountCard from '../../components/AccountCard';
@@ -85,6 +86,33 @@ const HomeTopActionButton = observer(function ({
   );
 });
 
+function RefreshButton() {
+  const [loading, setLoading] = useState(false);
+  return (
+    <OneButton
+      type="white"
+      size="xs"
+      rounded
+      onClick={async () => {
+        setLoading(true);
+        try {
+          await storeToken.fetchCurrentAccountTokens({
+            forceUpdateTokenMeta: true,
+          });
+        } finally {
+          setLoading(false);
+        }
+      }}
+    >
+      <AppIcons.RefreshIcon
+        className={classnames('w-5 ', {
+          'animate-spin': loading,
+        })}
+      />
+    </OneButton>
+  );
+}
+
 const HomeAssetsHeader = observer(function () {
   return (
     <div className="text-xl flex items-center justify-between">
@@ -102,14 +130,7 @@ const HomeAssetsHeader = observer(function () {
       )}
 
       <div className="w-2" />
-      <OneButton
-        type="white"
-        size="xs"
-        rounded
-        onClick={() => storeToken.getCurrentAccountTokens()}
-      >
-        <AppIcons.RefreshIcon className="w-5" />
-      </OneButton>
+      <RefreshButton />
       <div className="w-2" />
       <OneButton
         type="white"
@@ -165,7 +186,7 @@ function PageHome() {
   const [copied, handleCopy] = useCopyToClipboard();
 
   useEffect(() => {
-    storeToken.getCurrentAccountTokens();
+    storeToken.fetchCurrentAccountTokens();
   }, []);
 
   return (
