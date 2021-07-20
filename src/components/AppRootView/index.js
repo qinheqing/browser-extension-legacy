@@ -7,6 +7,7 @@ import { Route } from 'react-router-dom';
 import PreloadScreen from '../PreloadScreen';
 import styles from './index.css';
 
+// AppToastContainer should be singleton
 function AppToastContainer() {
   return (
     <Portal>
@@ -28,7 +29,6 @@ function NewHomeRootComponents() {
       </Helmet>
       {/* LoadingScreen*/}
       <PreloadScreen />
-      <AppToastContainer />
     </>
   );
 }
@@ -47,7 +47,6 @@ function OldHomeRootComponents() {
         />
       </Helmet>
       <PreloadScreen />
-      <AppToastContainer />
     </>
   );
 }
@@ -55,7 +54,7 @@ function OldHomeRootComponents() {
 export default function AppRootView({ children }) {
   return (
     <div className={classnames(styles.root, '')}>
-      <div className={styles.content}>
+      <div className={classnames(styles.content, '')}>
         <NewHomeRootComponents />
         {children}
       </div>
@@ -63,4 +62,4 @@ export default function AppRootView({ children }) {
   );
 }
 
-export { OldHomeRootComponents };
+export { OldHomeRootComponents, AppToastContainer };

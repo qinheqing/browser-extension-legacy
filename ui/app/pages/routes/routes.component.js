@@ -65,7 +65,10 @@ import { TRANSACTION_STATUSES } from '../../../../shared/constants/transaction';
 import ConfirmationPage from '../confirmation';
 import AppRoutes from '../../../../src/routes/AppRoutes';
 import { ROUTE_PREFIX } from '../../../../src/routes/routeUrls';
-import { OldHomeRootComponents } from '../../../../src/components/AppRootView';
+import {
+  AppToastContainer,
+  OldHomeRootComponents,
+} from '../../../../src/components/AppRootView';
 
 export default class Routes extends Component {
   static propTypes = {
@@ -372,6 +375,8 @@ export default class Routes extends Component {
           {isLoading && <Loading loadingMessage={loadMessage} />}
           {!isLoading && isLoadingNetwork && <LoadingNetwork />}
           {this.renderRoutes()}
+          {/* AppToastContainer should be singleton */}
+          <AppToastContainer />
         </div>
         {isUnlocked ? <Alerts history={this.props.history} /> : null}
       </div>
