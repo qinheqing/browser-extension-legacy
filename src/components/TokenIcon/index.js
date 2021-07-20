@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
@@ -8,6 +8,11 @@ import styles from './index.css';
 function TokenIcon({ tokenInfo, size = 'md', className, children }) {
   const [imgError, setImgError] = useState(false);
   const imgSrc = tokenInfo?.logoURI || tokenInfo?.icon;
+  useEffect(() => {
+    if (imgSrc && imgError) {
+      setImgError(false);
+    }
+  }, [imgSrc]);
   return (
     <div
       className={classnames(

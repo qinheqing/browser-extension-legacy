@@ -1,5 +1,6 @@
 // eslint-disable-next-line import/unambiguous
 const colors = require('tailwindcss/colors');
+const defaultTheme = require('tailwindcss/defaultTheme');
 
 const borderColor = '#eee';
 const colorPrimary = '#00B812';
@@ -10,6 +11,10 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   important: false,
   theme: {
+    screens: {
+      xs: '475px',
+      ...defaultTheme.screens,
+    },
     colors: {
       ...colors,
       transparent: 'transparent',
@@ -77,7 +82,7 @@ module.exports = {
       ...theme('colors'),
       primary: colorPrimary,
       'root-html': '#2c2d30',
-      'root-body': '#f3f3f3',
+      'root-body': '#f3f3f3', // bg-root-body
       'nav-bar': '#fff',
     }),
     borderColor: (theme) => ({
