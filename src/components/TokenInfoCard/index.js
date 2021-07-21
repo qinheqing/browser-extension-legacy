@@ -14,7 +14,7 @@ import storeStorage from '../../store/storeStorage';
 import OneCellItem from '../OneCellItem';
 import storeToken from '../../store/storeToken';
 
-function TokenInfoCard({ token, onClick }) {
+function TokenInfoCard({ token, onClick, maskAssetBalance = false }) {
   const { symbol } = token;
   const { name, icon } = token;
   const tokenName = token.symbolOrName || token.contractAddressShort;
@@ -31,7 +31,7 @@ function TokenInfoCard({ token, onClick }) {
             tokenInfo={token}
             watchBalanceChange
             showPrice
-            maskAssetBalance={storeStorage.maskAssetBalance}
+            maskAssetBalance={maskAssetBalance}
             classNamePrice="text-xs text-gray-400"
           />
         </div>

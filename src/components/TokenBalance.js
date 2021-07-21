@@ -99,21 +99,21 @@ function TokenBalance({
   return (
     <>
       <span className={className}>
-        <SensitiveDataMask mask="****" hide={maskAssetBalance}>
+        <SensitiveDataMask hide={maskAssetBalance}>
           <>
             <AmountText value={balance} decimals={decimals} />
             {showUnit && <span className="ml-1">{currency}</span>}
           </>
         </SensitiveDataMask>
       </span>
-      <SensitiveDataMask mask="****" hide={maskAssetBalance}>
-        {showPrice && (
-          <div className={classNamePrice}>
+      {showPrice && (
+        <div className={classNamePrice}>
+          <SensitiveDataMask hide={maskAssetBalance}>
             {priceEqualSign} &nbsp;
             <TokenAmountInPrice token={tokenInfo} value={balance} />
-          </div>
-        )}
-      </SensitiveDataMask>
+          </SensitiveDataMask>
+        </div>
+      )}
     </>
   );
 }

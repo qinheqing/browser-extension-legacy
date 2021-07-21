@@ -291,7 +291,11 @@ export default class MetaMetricsController {
    * @param {MetaMetricsPageOptions} [options] - options for handling the page
    *  view
    */
-  trackPage({ name, params, environmentType, page, referrer }, options) {
+  trackPage() {
+    // disable event track, check original trackPageLegacy()
+  }
+
+  trackPageLegacy({ name, params, environmentType, page, referrer }, options) {
     if (this.state.participateInMetaMetrics === false) {
       return;
     }
@@ -326,6 +330,10 @@ export default class MetaMetricsController {
    * @returns {Promise<void>}
    */
   async trackEvent(payload, options) {
+    // disable metametrics event track, check original trackEventLegacy()
+  }
+
+  async trackEventLegacy(payload, options) {
     // event and category are required fields for all payloads
     if (!payload.event || !payload.category) {
       throw new Error('Must specify event and category.');

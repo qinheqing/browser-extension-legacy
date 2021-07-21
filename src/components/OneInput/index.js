@@ -14,8 +14,8 @@ function OneInputIcon({ name }) {
 }
 
 function OneInput({
-  left,
-  right,
+  start,
+  end,
   icon,
   label,
   placeholder,
@@ -55,7 +55,7 @@ function OneInput({
           {...others}
         />
         {/* TODO clearable button */}
-        {right && <div className="pl-2">{right}</div>}
+        {end && <div className="pl-2">{end}</div>}
       </div>
     </div>
   );
@@ -65,4 +65,4 @@ OneInput.propTypes = {
   children: PropTypes.any,
 };
 
-export default observer(OneInput);
+export default OneInput;
