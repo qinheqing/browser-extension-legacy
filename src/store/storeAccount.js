@@ -93,6 +93,30 @@ class StoreAccount extends BaseStore {
     return storeStorage.accountsGroupFilter;
   }
 
+  @computed
+  get currentAccountTypeText() {
+    let type;
+    switch (this.currentAccount.type) {
+      case CONSTS_ACCOUNT_TYPES.Hardware: {
+        type = '硬件账户';
+        break;
+      }
+      case CONSTS_ACCOUNT_TYPES.Observer: {
+        type = '观察账户';
+        break;
+      }
+      case CONSTS_ACCOUNT_TYPES.SingleChain: {
+        type = '单币种账户';
+        break;
+      }
+      case CONSTS_ACCOUNT_TYPES.Wallet:
+      default: {
+        type = '钱包账户';
+      }
+    }
+    return type;
+  }
+
   @action.bound
   setFirstChainKeyAsDefaultFilter() {
     if (!storeStorage.accountsGroupFilter.chainKey) {
