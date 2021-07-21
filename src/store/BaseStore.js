@@ -1,7 +1,13 @@
 /* eslint import/no-cycle: "error" */
-import { autorun, makeObservable, toJS } from 'mobx';
+import { autorun, makeObservable, toJS, configure } from 'mobx';
 import { isFunction, isNil } from 'lodash';
 import utilsStorage from '../utils/utilsStorage';
+
+configure({
+  // https://mobx.js.org/configuration.html#enforceactions
+  enforceActions: 'never',
+});
+global.__mobxToJS = toJS;
 
 export function getAutoSaveStorageItem(name) {
   const storageKey = buildAutoSaveStorageKey(name);
