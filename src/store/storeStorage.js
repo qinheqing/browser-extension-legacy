@@ -6,6 +6,7 @@ import {
   untracked,
   action,
   makeObservable,
+  toJS,
 } from 'mobx';
 import { isNil } from 'lodash';
 import {
@@ -14,9 +15,9 @@ import {
   CONSTS_ACCOUNT_TYPES,
 } from '../consts/consts';
 import utilsStorage from '../utils/utilsStorage';
+import ExtensionStore from '../../app/scripts/lib/local-store';
 import BaseStore, { buildAutoSaveStorageKey } from './BaseStore';
 
-// TODO move all autosave() fields to this store, so that we can migrate data clearly
 class StoreStorage extends BaseStore {
   constructor(props) {
     super(props);
@@ -39,25 +40,62 @@ class StoreStorage extends BaseStore {
     this.autosave('maskAssetBalance');
   }
 
+  // true: localStorage
+  // false: extensionStorage
+  useLocalStorage = false;
+
+  extStorage = new ExtensionStore();
+
+  async getStorageItemAsync(key) {
+    if (this.useLocalStorage) {
+      return utilsStorage.getItem(key);
+    }
+    return (await this.extStorage.get([key]))?.[key];
+  }
+
+  async setStorageItemAsync(key, value) {
+    if (this.useLocalStorage) {
+      utilsStorage.setItem(key, value);
+    }
+    return this.extStorage.set({
+      [key]: value,
+    });
+  }
+
   // TODO move to extension chrome.storage.local store, and save to single place
   // TODO make autosave to decorator
   // TODO data migrate implement
   autosave(storeProp) {
     // eslint-disable-next-line consistent-this
     const store = this;
-    // TODO  this will have some problem, when code change, save key will change
     const storageKey = buildAutoSaveStorageKey(storeProp);
-    // * init from localStorage
-    const value = utilsStorage.getItem(storageKey);
-    if (!isNil(value)) {
-      store[storeProp] = value;
-    }
 
-    // * watch value change, auto save to localStorage
-    autorun(() => {
-      const watchValue = store[storeProp];
-      // TODO requestAnimationFrame + throttle optimize
-      utilsStorage.setItem(storageKey, watchValue);
+    const createAutoRunHook = () => {
+      autorun(() => {
+        const watchValue = store[storeProp];
+        // keep this outside untracked(), otherwise deep object will not trigger autorun
+        const plainValue = toJS(watchValue);
+
+        untracked(() => {
+          if (storeProp === 'allAccountsRaw') {
+            // debugger;
+          }
+          // TODO requestAnimationFrame + throttle optimize
+          this.setStorageItemAsync(storageKey, plainValue);
+        });
+      });
+    };
+
+    // * init from localStorage
+    this.getStorageItemAsync(storageKey).then((value) => {
+      if (storeProp === 'allAccountsRaw') {
+        // debugger;
+      }
+      if (!isNil(value)) {
+        store[storeProp] = value;
+      }
+      // * watch value change, auto save to localStorage
+      createAutoRunHook();
     });
   }
 

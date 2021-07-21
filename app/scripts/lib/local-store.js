@@ -20,11 +20,11 @@ export default class ExtensionStore {
    * Returns all of the keys currently saved
    * @returns {Promise<*>}
    */
-  async get() {
+  async get(keys = null) {
     if (!this.isSupported) {
       return undefined;
     }
-    const result = await this._get();
+    const result = await this._get(keys);
     // extension.storage.local always returns an obj
     // if the object is empty, treat it as undefined
     if (isEmpty(result)) {
@@ -47,10 +47,10 @@ export default class ExtensionStore {
    * @private
    * @returns {Object} the key-value map from local storage
    */
-  _get() {
+  _get(keys = null) {
     const { local } = extension.storage;
     return new Promise((resolve, reject) => {
-      local.get(null, (/** @type {any} */ result) => {
+      local.get(keys, (/** @type {any} */ result) => {
         const err = checkForError();
         if (err) {
           reject(err);
