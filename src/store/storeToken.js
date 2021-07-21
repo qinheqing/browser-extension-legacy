@@ -208,6 +208,7 @@ class StoreToken extends BaseStore {
       return;
     }
     let tokens = this.allTokenListMeta.filter((item) => {
+      // TODO do not show SOL ATA token
       return (
         toLower(item.name).includes(toLower(text)) ||
         toLower(item.symbol).includes(toLower(text)) ||
