@@ -29,6 +29,7 @@ import {
   ExternalLinkIcon,
   SwitchVerticalIcon,
   GlobeAltIcon,
+  LockClosedIcon,
 } from '@heroicons/react/outline';
 import { SpinnerIcon, QuestionIcon } from './icons';
 
@@ -65,6 +66,7 @@ const AppIcons = {
   QuestionIcon,
   SwitchVerticalIcon,
   GlobeAltIcon,
+  LockClosedIcon,
 };
 
 export default AppIcons;

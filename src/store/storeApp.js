@@ -8,6 +8,7 @@ import {
   makeObservable,
 } from 'mobx';
 import uiGetBgControllerAsync from '../wallets/bg/uiGetBgControllerAsync';
+import { getBackgroundInstanceAsync } from '../../ui/app/store/actions';
 import BaseStore from './BaseStore';
 import storeStorage from './storeStorage';
 
@@ -46,6 +47,19 @@ class StoreApp extends BaseStore {
 
   toggleAssetBalanceVisible() {
     storeStorage.maskAssetBalance = !storeStorage.maskAssetBalance;
+  }
+
+  async lockScreen() {
+    const bg = await getBackgroundInstanceAsync();
+    return new Promise((resolve, reject) => {
+      bg.setLocked((error) => {
+        if (error) {
+          reject(error);
+          return;
+        }
+        resolve();
+      });
+    });
   }
 
   @observable
