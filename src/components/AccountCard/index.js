@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import storeChain from '../../store/storeChain';
@@ -31,6 +31,11 @@ function AccountCard({
   showActiveBadge = true,
   ...others
 }) {
+  const onToggle = useCallback((e) => {
+    e.stopPropagation();
+    storeApp.toggleAssetBalanceVisible();
+  }, []);
+
   if (!account || !account.address) {
     return null;
   }
@@ -58,7 +63,7 @@ function AccountCard({
         )}
         <span className={classnames(styles.AccountCard__name)}>
           {account.name || 'ACCOUNT_NAME'}
-          <span onClick={storeApp.toggleAssetBalanceVisible}>
+          <span onClick={onToggle}>
             {maskAssetBalance ? (
               <AppIcons.EyeOffIcon role="button" className="w-4 ml-1 " />
             ) : (

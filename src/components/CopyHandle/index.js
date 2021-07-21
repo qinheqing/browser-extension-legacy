@@ -15,7 +15,8 @@ function CopyHandle({ text, children }) {
       <span
         role="button"
         className=""
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           handleCopy(text);
         }}
       >

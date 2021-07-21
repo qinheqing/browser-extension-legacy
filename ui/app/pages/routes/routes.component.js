@@ -127,9 +127,9 @@ export default class Routes extends Component {
     const { autoLockTimeLimit, setLastActiveTime } = this.props;
     let routes = (
       <Switch>
-        <Authenticated path={ROUTE_PREFIX}>
+        <Route path={ROUTE_PREFIX}>
           <AppRoutes />
-        </Authenticated>
+        </Route>
         <Route path={DEFAULT_ROUTE}>
           <OldHomeRootComponents />
           <Switch>

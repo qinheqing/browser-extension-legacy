@@ -106,6 +106,7 @@ async function startApp(metamaskState, backgroundConnection, opts) {
   }
 
   const store = configureStore(draftInitialState);
+  actions.setStore(store);
 
   // if unconfirmed txs, start on txConf page
   const unapprovedTxsAll = txHelper(
