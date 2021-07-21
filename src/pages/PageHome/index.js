@@ -26,6 +26,7 @@ import OneButton from '../../components/OneButton';
 import storeHistory from '../../store/storeHistory';
 import storeChain from '../../store/storeChain';
 import storeStorage from '../../store/storeStorage';
+import storeApp from '../../store/storeApp';
 
 const HomeTopActionsBar = observer(function () {
   const [copied, handleCopy] = useCopyToClipboard();
@@ -62,9 +63,9 @@ const HomeTopActionsBar = observer(function () {
       />
 
       <HomeTopActionButton
-        text="Dapp调试"
-        icon={AppIcons.BeakerIcon}
-        onClick={() => window.open('https://vef61.csb.app/')}
+        text="锁屏"
+        icon={AppIcons.LockClosedIcon}
+        onClick={storeApp.lockScreen}
       />
     </div>
   );
