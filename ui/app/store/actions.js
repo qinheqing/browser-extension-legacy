@@ -2974,6 +2974,7 @@ export function trackMetaMetricsPage(payload, options) {
 export async function getBackgroundInstanceAsync() {
   await utilsApp.waitForDataLoaded({
     data: () => Boolean(promisifiedBackground),
+    log: 'getBackgroundInstanceAsync',
   });
   return promisifiedBackground;
 }
