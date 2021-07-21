@@ -27,6 +27,7 @@ function AccountCard({
   account,
   showBalance = false,
   watchBalanceChange = false,
+  maskAssetBalance = false,
   showActiveBadge = true,
   ...others
 }) {
@@ -58,7 +59,7 @@ function AccountCard({
         <span className={classnames(styles.AccountCard__name)}>
           {account.name || 'ACCOUNT_NAME'}
           <span onClick={storeApp.toggleAssetBalanceVisible}>
-            {storeStorage.maskAssetBalance ? (
+            {maskAssetBalance ? (
               <AppIcons.EyeOffIcon role="button" className="w-4 ml-1 " />
             ) : (
               <AppIcons.EyeIcon role="button" className="w-4 ml-1 " />
@@ -81,7 +82,7 @@ function AccountCard({
             wallet={wallet}
             tokenInfo={tokenInfo}
             showUnit
-            maskAssetBalance={storeStorage.maskAssetBalance}
+            maskAssetBalance={maskAssetBalance}
             watchBalanceChange={watchBalanceChange}
             className={classnames(styles.AccountCard__balance)}
             showPrice
