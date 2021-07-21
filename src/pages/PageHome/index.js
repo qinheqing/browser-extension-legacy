@@ -25,6 +25,7 @@ import AppIcons from '../../components/AppIcons';
 import OneButton from '../../components/OneButton';
 import storeHistory from '../../store/storeHistory';
 import storeChain from '../../store/storeChain';
+import storeStorage from '../../store/storeStorage';
 
 const HomeTopActionsBar = observer(function () {
   const [copied, handleCopy] = useCopyToClipboard();
@@ -168,6 +169,7 @@ const HomeAssetsList = observer(function () {
         return (
           <TokenInfoCard
             key={token.contractAddress + index}
+            maskAssetBalance={storeStorage.maskAssetBalance}
             token={token}
             onClick={() => {
               storeHistory.goToPageTokenDetail({
@@ -217,6 +219,7 @@ function PageHome() {
       {storeAccount.currentAccount && (
         <>
           <AccountCard
+            maskAssetBalance={storeStorage.maskAssetBalance}
             account={storeAccount.currentAccount}
             showBalance
             watchBalanceChange
