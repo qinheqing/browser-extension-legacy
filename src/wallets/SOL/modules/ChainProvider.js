@@ -239,6 +239,29 @@ class ChainProvider extends ChainProviderBase {
     };
   }
 
+  filterTokensOnlyCreated(tokens) {
+    let _tokens = tokens;
+    // only display created token account (if both includes associate token account and created token account )
+    const createdTokenContractAddress = _tokens
+      .filter((t) => !t.isAssociatedToken)
+      .map((t) => t.contractAddress);
+
+    if (createdTokenContractAddress.length) {
+      _tokens = _tokens.filter(
+        (t) =>
+          !(
+            t.isAssociatedToken &&
+            createdTokenContractAddress.includes(t.contractAddress)
+          ),
+      );
+    }
+    return _tokens;
+  }
+
+  filterTokensOnlyATA(tokens) {
+    return tokens.filter((t) => t.isAssociatedToken);
+  }
+
   async getAccountTokens({ address } = {}) {
     const chainKey = this.options.chainInfo.key;
     const ownerAddress = address || this.options?.accountInfo?.address;
@@ -291,20 +314,8 @@ class ChainProvider extends ChainProviderBase {
       }),
     );
 
-    // only display created token account (if associate token includes)
-    const createdTokenContractAddress = tokens
-      .filter((t) => !t.isAssociatedToken)
-      .map((t) => t.contractAddress);
-
-    if (createdTokenContractAddress.length) {
-      tokens = tokens.filter(
-        (t) =>
-          !(
-            t.isAssociatedToken &&
-            createdTokenContractAddress.includes(t.contractAddress)
-          ),
-      );
-    }
+    // tokens = this.filterTokensOnlyCreated(tokens);
+    tokens = this.filterTokensOnlyATA(tokens);
 
     return {
       chainKey,

@@ -7,10 +7,13 @@
 import { ROUTE_HOME } from '../../routes/routeUrls';
 import storeHistory from '../../store/storeHistory';
 
-export default function useRequiredData({ data, redirect = ROUTE_HOME }) {
+export default function useDataRequiredOrRedirect(
+  data,
+  { redirect = ROUTE_HOME } = {},
+) {
   if (!data) {
     storeHistory.replace(redirect);
-    return false;
+    return true;
   }
-  return true;
+  return false;
 }

@@ -9,15 +9,11 @@ import OneButton from '../../components/OneButton';
 import TokenIcon from '../../components/TokenIcon';
 import TokenDepositQrcode from '../../components/TokenDepositQrcode';
 import TokenAmountInPrice from '../../components/TokenAmountInPrice';
-import useRequiredData from '../../utils/hooks/useRequiredData';
+import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
 
 function PageTokenDetail() {
   const token = storeToken.currentDetailToken;
-  if (
-    !useRequiredData({
-      data: token,
-    })
-  ) {
+  if (useDataRequiredOrRedirect(token)) {
     return <div />;
   }
   return (

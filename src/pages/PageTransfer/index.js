@@ -17,60 +17,13 @@ import utilsNumber from '../../utils/utilsNumber';
 import TransferConfirmDialog from '../../components/TransferConfirmDialog';
 import OneInput from '../../components/OneInput';
 import OneCellItem from '../../components/OneCellItem';
-import useRequiredData from '../../utils/hooks/useRequiredData';
+import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
 import TokenIcon from '../../components/TokenIcon';
-
-function CmpFieldInputItem({ border, placeholder, right, ...others }) {
-  return (
-    <CmpFieldItem border={border}>
-      <OneInput
-        bgTransparent
-        placeholder={placeholder}
-        right={right}
-        {...others}
-      />
-    </CmpFieldItem>
-  );
-}
-
-function CmpFieldItemSplit() {
-  return <div className="my-2 border-t" />;
-}
-
-function CmpFieldItem({
-  title,
-  titleWrapped = false,
-  end,
-  arrow = false,
-  className,
-  border = false,
-  ...others
-}) {
-  const titleView = title && (
-    <div
-      className={classnames('text-sm inline-block', {
-        'bg-gray-100 rounded-full px-2 py-0 ': titleWrapped,
-      })}
-    >
-      {title}
-    </div>
-  );
-  const endView = end && <div className="text-sm">{end}</div>;
-  return (
-    <OneCellItem
-      title={titleView}
-      end={endView}
-      className={classnames('', className)}
-      arrow={arrow}
-      border={border}
-      {...others}
-    />
-  );
-}
-
-function CmpField({ children }) {
-  return <div className="bg-white my-4">{children}</div>;
-}
+import {
+  OneField,
+  OneFieldInputItem,
+  OneFieldItem,
+} from '../../components/OneField';
 
 function PageTransfer() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -86,33 +39,29 @@ function PageTransfer() {
     }
   }, []);
 
-  if (
-    !useRequiredData({
-      data: storeTransfer.fromToken,
-    })
-  ) {
+  if (useDataRequiredOrRedirect(storeTransfer.fromToken)) {
     return <div />;
   }
 
   const token = storeTransfer.fromToken;
   return (
     <AppPageLayout title="转账">
-      <CmpField>
-        <CmpFieldItem titleWrapped title="收款账号" />
-        <CmpFieldInputItem
+      <OneField>
+        <OneFieldItem titleWrapped title="收款账号" />
+        <OneFieldInputItem
           value={storeTransfer.toAddress}
           onChange={(e) => (storeTransfer.toAddress = e.target.value)}
           placeholder="输入或粘贴地址"
-          right000={
+          end000={
             <OneButton size="2xs" className="bg-transparent">
               粘贴
             </OneButton>
           }
         />
-      </CmpField>
+      </OneField>
 
-      <CmpField>
-        <CmpFieldItem
+      <OneField>
+        <OneFieldItem
           titleWrapped
           title="数量"
           end={
@@ -124,12 +73,12 @@ function PageTransfer() {
             </div>
           }
         />
-        <CmpFieldInputItem
+        <OneFieldInputItem
           border
           value={storeTransfer.amount}
           onChange={(e) => (storeTransfer.amount = e.target.value)}
           placeholder="输入转出金额"
-          right={
+          end={
             <OneButton
               onClick={() => storeTransfer.fillMaxAmount()}
               size="2xs"
@@ -139,14 +88,14 @@ function PageTransfer() {
             </OneButton>
           }
         />
-        <CmpFieldItem
+        <OneFieldItem
           title="余额"
           end={<TokenBalance showUnit tokenInfo={token} />}
         />
-      </CmpField>
+      </OneField>
 
-      <CmpField>
-        <CmpFieldItem
+      <OneField>
+        <OneFieldItem
           titleWrapped
           title="交易费"
           end={
@@ -156,7 +105,7 @@ function PageTransfer() {
             </span>
           }
         />
-      </CmpField>
+      </OneField>
 
       <div className="px-4">
         <OneButton
