@@ -1269,7 +1269,7 @@ export function updateMetamaskState(newState) {
   };
 }
 
-const backgroundSetLocked = () => {
+export const backgroundSetLocked = () => {
   return new Promise((resolve, reject) => {
     background.setLocked((error) => {
       if (error) {
@@ -2982,4 +2982,13 @@ export async function getBackgroundInstanceAsync() {
 // background method call will be always undefined
 export function getBackgroundInstance() {
   return background;
+}
+
+let store = null;
+export function setStore(_store) {
+  store = _store;
+}
+
+export function getStore() {
+  return store;
 }
