@@ -4,6 +4,8 @@ import classnames from 'classnames';
 import storeChain from '../../store/storeChain';
 import utilsApp from '../../utils/utilsApp';
 import storeAccount from '../../store/storeAccount';
+import storeApp from '../../store/storeApp';
+import storeStorage from '../../store/storeStorage';
 import TokenBalance from '../TokenBalance';
 import AppIcons from '../AppIcons';
 import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
@@ -40,6 +42,7 @@ function AccountCard({
     account,
     chainInfo,
   });
+
   return (
     <div
       className={classnames(
@@ -54,7 +57,13 @@ function AccountCard({
         )}
         <span className={classnames(styles.AccountCard__name)}>
           {account.name || 'ACCOUNT_NAME'}
-          <AppIcons.EyeIcon role="button" className="w-4 ml-1 " />
+          <span onClick={storeApp.toggleAssetBalanceVisible}>
+            {storeStorage.maskAssetBalance ? (
+              <AppIcons.EyeOffIcon role="button" className="w-4 ml-1 " />
+            ) : (
+              <AppIcons.EyeIcon role="button" className="w-4 ml-1 " />
+            )}
+          </span>
         </span>
         {account.type === CONSTS_ACCOUNT_TYPES.Hardware && <HardwareTypeTag />}
       </header>
@@ -72,6 +81,7 @@ function AccountCard({
             wallet={wallet}
             tokenInfo={tokenInfo}
             showUnit
+            maskAssetBalance={storeStorage.maskAssetBalance}
             watchBalanceChange={watchBalanceChange}
             className={classnames(styles.AccountCard__balance)}
             showPrice
