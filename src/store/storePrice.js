@@ -7,9 +7,12 @@ import {
   action,
   makeObservable,
 } from 'mobx';
+import { Semaphore } from 'async-mutex';
 import utilsUrl from '../utils/utilsUrl';
+import utilsApp from '../utils/utilsApp';
 import BaseStore from './BaseStore';
 import storeStorage from './storeStorage';
+import storeChain from './storeChain';
 
 /*  coingecko api
 
@@ -76,15 +79,19 @@ https://api.coingecko.com/api/v3/coins/serum
 
 // https://github.com/miscavage/CoinGecko-API
 
-function coinGeckoFetch({ url, query, method = 'GET' }) {
+const priceFetchSemaphore = new Semaphore(1);
+
+async function coinGeckoFetch({ url, query, method = 'GET' }) {
   let _url = url.replace(/^\//giu, '');
   _url = utilsUrl.addQuery({
     url: `https://api.coingecko.com/${_url}`,
     query,
   });
-  return fetch(_url, {
-    method,
-  });
+  return await priceFetchSemaphore.runExclusive(() =>
+    fetch(_url, {
+      method,
+    }),
+  );
 }
 
 function coinGeckoGet(url, query) {
@@ -101,16 +108,23 @@ class StorePrice extends BaseStore {
     makeObservable(this);
   }
 
-  getTokenPrice({ token }) {
+  getTokenPriceInfo(token) {
     const { isNative, tokenId, contractAddress, decimals } = token;
     const id = isNative ? tokenId : contractAddress;
+    return storeStorage.pricesMapRaw?.[id] || {};
+  }
+
+  getTokenPrice({ token }) {
     const currency = 'usd';
-    return storeStorage.pricesMapRaw?.[id]?.[currency] || 0;
+    return this.getTokenPriceInfo(token)?.[currency] || 0;
   }
 
   // TODO add throttle update
   @action.bound
   updatePricesMap(pricesMap = {}) {
+    Object.values(pricesMap).forEach(
+      (info) => (info.lastUpdate = new Date().getTime()),
+    );
     storeStorage.pricesMapRaw = {
       ...storeStorage.pricesMapRaw,
       ...pricesMap,
@@ -146,13 +160,13 @@ class StorePrice extends BaseStore {
   }
 
   async fetchTokensPrice(tokens) {
-    // const platformId = storeChain?.currentChainInfo?.platformId;
-    // const contractAddresses = tokens.map((t) => t.contractAddress);
-    const platformId = 'binance-smart-chain';
-    const contractAddresses = [
-      '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82',
-      '0x9c65ab58d8d978db963e63f2bfb7121627e3a739',
-    ];
+    const platformId = storeChain.currentChainInfo?.platformId;
+    const contractAddresses = tokens.map((t) => t.contractAddress);
+    // const platformId = 'binance-smart-chain';
+    // const contractAddresses = [
+    //   '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82',
+    //   '0x9c65ab58d8d978db963e63f2bfb7121627e3a739',
+    // ];
     const data = await coinGeckoGet(
       `/api/v3/simple/token_price/${platformId}`,
       {
@@ -170,6 +184,35 @@ class StorePrice extends BaseStore {
      */
     const pricesMap = await data.json();
     this.updatePricesMap(pricesMap);
+  }
+
+  isTokenPriceExpired(token) {
+    const priceInfo = this.getTokenPriceInfo(token);
+    if (
+      !priceInfo.lastUpdate ||
+      priceInfo.lastUpdate < new Date().getTime() - 5 * 60 * 1000
+    ) {
+      return true;
+    }
+    return false;
+  }
+
+  async fetchSingleTokenPrice(token) {
+    const { contractAddress } = token;
+    const coingeckoId = token?.extensions?.coingeckoId;
+    if (!coingeckoId || !contractAddress) {
+      return;
+    }
+    if (!this.isTokenPriceExpired(token)) {
+      return;
+    }
+    const data = await coinGeckoGet(`/api/v3/coins/${coingeckoId}`);
+    const tokenData = await data.json();
+    const priceInfo = tokenData?.market_data?.current_price || {};
+    const { cny, usd } = priceInfo;
+    this.updatePricesMap({
+      [contractAddress]: { cny, usd },
+    });
   }
 }
 
