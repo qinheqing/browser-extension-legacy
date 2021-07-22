@@ -40,17 +40,7 @@ function toBnRoundMode(round) {
 }
 
 function isValidNumber(value) {
-  if (
-    isNaN(value) ||
-    value === '' ||
-    value === null ||
-    value === undefined ||
-    isBoolean(value) ||
-    value === 'NaN'
-  ) {
-    return false;
-  }
-  return true;
+  return !bigNum(value).isNaN();
 }
 
 function toNormalNumber({ value, decimals, precision, roundMode = 'round' }) {
@@ -62,9 +52,12 @@ function toNormalNumber({ value, decimals, precision, roundMode = 'round' }) {
   return result;
 }
 
-export default {
+const utilsNumber = {
   bigNum,
   isValidNumber,
   toNormalNumber,
   toBnRoundMode,
 };
+
+global._utilsNumber = utilsNumber;
+export default utilsNumber;
