@@ -78,7 +78,7 @@ function TokenBalance({
     if (!shouldUpdateRecord || !watchBalanceChange) {
       return () => null;
     }
-
+    // start WSS WebSocket listening
     const listenerId = _wallet.chainProvider.addAccountChangeListener(
       address,
       (info) => {

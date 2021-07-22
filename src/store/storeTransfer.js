@@ -59,10 +59,19 @@ class StoreTransfer extends BaseStore {
       return null;
     }
     const wallet = storeWallet.currentWallet;
+    // * address is valid;
+    // * token address is valid;
     if (!wallet.isValidAddress({ address: this.toAddress })) {
       utilsToast.toast.error('收款地址不正确');
       return null;
     }
+    if (this.amount <= 0 || !utilsNumber.isValidNumber(this.amount)) {
+      utilsToast.toast.error('转账金额不正确');
+      return null;
+    }
+    // * amount is > 0
+    // * amount is valid number
+    // * amount is < ( balance - fee - createTokenFee )
     // TODO fetch decimals by rpc fallback if cache is null
     const { decimals } = storeBalance.getTokenBalanceInfoCacheByKey(
       this.fromToken.key,
@@ -82,6 +91,9 @@ class StoreTransfer extends BaseStore {
   async doTransfer() {
     const wallet = storeWallet.currentWallet;
     // TODO add global loading toast
+    // * get token address from native address
+    // * create ATA token for receipt if token not associated (activated)
+    // * test if mint address is same
     const txid = await wallet.transfer(this.previewPayload);
     if (txid) {
       utilsToast.toastTx({ txid, message: '转账提交成功' });
