@@ -16,6 +16,7 @@ import {
 } from '../consts/consts';
 import utilsStorage from '../utils/utilsStorage';
 import ExtensionStore from '../../app/scripts/lib/local-store';
+import utilsApp from '../utils/utilsApp';
 import BaseStore, { buildAutoSaveStorageKey } from './BaseStore';
 
 class StoreStorage extends BaseStore {
@@ -24,20 +25,25 @@ class StoreStorage extends BaseStore {
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
 
-    this.autosave('allAccountsRaw');
-    this.autosave('currentAccountRaw');
-    this.autosave('currentChainKey');
-    this.autosave('accountsGroupFilter');
-    this.autosave('pendingTxid');
-    this.autosave('currentTokensRaw');
-    this.autosave('tokenMetasRaw');
-    // TODO rename allBalanceRaw
-    this.autosave('currentBalanceRaw');
-    this.autosave('homeType');
-    this.autosave('chainsCustomRaw');
-    this.autosave('chainsSortKeys');
-    this.autosave('pricesMapRaw');
-    this.autosave('maskAssetBalance');
+    Promise.all([
+      this.autosave('allAccountsRaw'),
+      this.autosave('currentAccountRaw'),
+      this.autosave('currentChainKey'),
+      this.autosave('accountsGroupFilter'),
+      this.autosave('pendingTxid'),
+      this.autosave('currentTokensRaw'),
+      this.autosave('tokenMetasRaw'),
+      // TODO rename allBalanceRaw
+      this.autosave('currentBalanceRaw'),
+      // homeType should be sync loaded, check bgHelpers.isAtNewApp();
+      this.autosave('homeType', { useLocalStorage: true }),
+      this.autosave('chainsCustomRaw'),
+      this.autosave('chainsSortKeys'),
+      this.autosave('pricesMapRaw'),
+      this.autosave('maskAssetBalance'),
+    ]).then(() => {
+      this.storageReady = true;
+    });
   }
 
   // true: localStorage
@@ -46,15 +52,22 @@ class StoreStorage extends BaseStore {
 
   extStorage = new ExtensionStore();
 
-  async getStorageItemAsync(key) {
-    if (this.useLocalStorage) {
+  async getStorageItemAsync(
+    key,
+    { useLocalStorage = this.useLocalStorage } = {},
+  ) {
+    if (useLocalStorage) {
       return utilsStorage.getItem(key);
     }
     return (await this.extStorage.get([key]))?.[key];
   }
 
-  async setStorageItemAsync(key, value) {
-    if (this.useLocalStorage) {
+  async setStorageItemAsync(
+    key,
+    value,
+    { useLocalStorage = this.useLocalStorage } = {},
+  ) {
+    if (useLocalStorage) {
       utilsStorage.setItem(key, value);
     }
     return this.extStorage.set({
@@ -62,42 +75,50 @@ class StoreStorage extends BaseStore {
     });
   }
 
-  // TODO move to extension chrome.storage.local store, and save to single place
+  createAutoRunHook({ store, storeProp, storageKey, useLocalStorage }) {
+    autorun(() => {
+      const watchValue = store[storeProp];
+      // keep this outside untracked(), otherwise deep object will not trigger autorun
+      const plainValue = toJS(watchValue);
+
+      untracked(() => {
+        if (storeProp === 'allAccountsRaw') {
+          // debugger;
+        }
+        // TODO requestAnimationFrame + throttle optimize
+        this.setStorageItemAsync(storageKey, plainValue, { useLocalStorage });
+      });
+    });
+  }
+
   // TODO make autosave to decorator
   // TODO data migrate implement
-  autosave(storeProp) {
+  async autosave(storeProp, { useLocalStorage } = {}) {
     // eslint-disable-next-line consistent-this
     const store = this;
     const storageKey = buildAutoSaveStorageKey(storeProp);
 
-    const createAutoRunHook = () => {
-      autorun(() => {
-        const watchValue = store[storeProp];
-        // keep this outside untracked(), otherwise deep object will not trigger autorun
-        const plainValue = toJS(watchValue);
-
-        untracked(() => {
-          if (storeProp === 'allAccountsRaw') {
-            // debugger;
-          }
-          // TODO requestAnimationFrame + throttle optimize
-          this.setStorageItemAsync(storageKey, plainValue);
-        });
-      });
-    };
-
     // * init from localStorage
-    this.getStorageItemAsync(storageKey).then((value) => {
-      if (storeProp === 'allAccountsRaw') {
-        // debugger;
-      }
-      if (!isNil(value)) {
-        store[storeProp] = value;
-      }
-      // * watch value change, auto save to localStorage
-      createAutoRunHook();
+    const value = await this.getStorageItemAsync(storageKey, {
+      useLocalStorage,
     });
+
+    // load storage data async delay simulate
+    // await utilsApp.delay(5000);
+
+    if (storeProp === 'allAccountsRaw') {
+      // debugger;
+    }
+    if (!isNil(value)) {
+      store[storeProp] = value;
+    }
+
+    // * watch value change, auto save to localStorage
+    this.createAutoRunHook({ store, storeProp, storageKey, useLocalStorage });
   }
+
+  @observable
+  storageReady = false; // DO NOT autosave this field
 
   // allAccounts
   // TODO auto clean data if chain has been deleted

@@ -9,7 +9,7 @@ configure({
 });
 global.__mobxToJS = toJS;
 
-export function getAutoSaveStorageItem(name) {
+export function getAutoSaveLocalStorageItem(name) {
   const storageKey = buildAutoSaveStorageKey(name);
   return utilsStorage.getItem(storageKey);
 }
