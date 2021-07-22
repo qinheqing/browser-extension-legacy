@@ -119,37 +119,47 @@ const HomeAssetsHeader = observer(function () {
     <div className="text-xl flex items-center justify-between">
       <span>资产</span>
       <div className="flex-1" />
+
       {utilsApp.isExtensionTypePopup() && (
-        <OneButton
-          type="white"
-          size="xs"
-          rounded
-          onClick={() => utilsApp.openStandalonePage(ROUTE_HOME)}
-        >
-          <AppIcons.ArrowsExpandIcon className="w-5" />
-        </OneButton>
+        <>
+          {/* // Expand*/}
+          <OneButton
+            type="white"
+            size="xs"
+            rounded
+            onClick={() => utilsApp.openStandalonePage(ROUTE_HOME)}
+          >
+            <AppIcons.ArrowsExpandIcon className="w-5" />
+          </OneButton>
+          <div className="w-2" />
+        </>
       )}
 
-      <div className="w-2" />
       <RefreshButton />
       <div className="w-2" />
-      <OneButton
-        type="white"
-        size="xs"
-        rounded
-        onClick={() => {
-          storeWallet.currentWallet.requestAirdrop().then((txid) => {
-            utilsToast.toast.success(
-              <TxSubmitSuccessView txid={txid}>
-                Done! Airdrop request submitted
-              </TxSubmitSuccessView>,
-            );
-          });
-        }}
-      >
-        <AppIcons.PaperAirplaneIcon className="w-5" />
-      </OneButton>
-      <div className="w-2" />
+
+      {storeChain.currentChainInfo?.isTestNet && (
+        <>
+          <OneButton
+            type="white"
+            size="xs"
+            rounded
+            onClick={() => {
+              storeWallet.currentWallet.requestAirdrop().then((txid) => {
+                utilsToast.toast.success(
+                  <TxSubmitSuccessView txid={txid}>
+                    Done! Airdrop request submitted
+                  </TxSubmitSuccessView>,
+                );
+              });
+            }}
+          >
+            <AppIcons.PaperAirplaneIcon className="w-5" />
+          </OneButton>
+          <div className="w-2" />
+        </>
+      )}
+
       <OneButton
         type="white"
         size="xs"

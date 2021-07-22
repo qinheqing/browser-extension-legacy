@@ -4,7 +4,6 @@ import { Observer, observer } from 'mobx-react-lite';
 import BigNumber from 'bignumber.js';
 import { range } from 'lodash';
 import SelectHardware from '../../../ui/app/pages/create-account/connect-hardware/select-hardware';
-import { DEFAULT_ROUTE } from '../../../ui/app/helpers/constants/routes';
 import {
   CONST_CHAIN_KEYS,
   CONST_HARDWARE_MODELS,

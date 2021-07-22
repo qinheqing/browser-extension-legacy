@@ -62,7 +62,7 @@ class StoreHistory extends BaseStore {
     const utilsToast = (await import('../utils/utilsToast')).default;
 
     if (storeApp.legacyState.hwOnlyMode) {
-      utilsToast.toast.info('设备暂不支持 Solana，请选择其他网络');
+      utilsToast.toast.info('硬件设备暂不支持 Solana，请选择其他网络');
       return;
     }
 
