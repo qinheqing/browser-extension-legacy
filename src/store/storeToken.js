@@ -57,7 +57,7 @@ class StoreToken extends BaseStore {
       this.currentNativeToken,
       ...storeStorage.currentTokensRaw.tokens.map((tokenRaw) => {
         const tokenMeta = this.getTokenMeta({ token: tokenRaw });
-        const { decimals, name, symbol, logoURI } = tokenMeta || {};
+        const { decimals, name, symbol, logoURI, extensions } = tokenMeta || {};
 
         const tokenInfo = new OneTokenInfo(
           merge({}, tokenRaw, {
@@ -65,6 +65,7 @@ class StoreToken extends BaseStore {
             name,
             symbol,
             logoURI,
+            extensions,
           }),
         );
 
@@ -113,6 +114,7 @@ class StoreToken extends BaseStore {
         ownerAddress,
         tokens,
       };
+      // TODO forceUpdateTokenMeta per day
       // - update token meta by tokenList.json
       await this.updateTokensMeta({ tokens, forceUpdateTokenMeta });
       // - update token price
