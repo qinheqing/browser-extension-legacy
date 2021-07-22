@@ -9,13 +9,13 @@ import styles from './index.css';
 
 // MM old component: LoadingScreen
 
-function PreloadScreen({ children }) {
+function PreloadScreen({ children, autoHideTimeout = 400 }) {
   const [loading, setLoading] = useState(true);
   const [hide, setHide] = useState(false);
   useEffect(() => {
     const timer = setTimeout(() => {
-      setLoading(false);
-    }, 300);
+      autoHideTimeout && setLoading(false);
+    }, autoHideTimeout);
     return () => {
       clearTimeout(timer);
     };
@@ -34,6 +34,8 @@ function PreloadScreen({ children }) {
       onTransitionEnd={() => {
         !loading && setHide(true);
       }}
+      // because this component should work in both old and new UI
+      //    css will not working, use inline-style instead
       style={{
         opacity: 1,
         transition: 'all 0.5s',

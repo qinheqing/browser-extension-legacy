@@ -126,6 +126,7 @@
     "dnode": "^1.2.2",
     "ed25519-hd-key": "^1.2.0",
     "end-of-stream": "^1.4.4",
+    "es6-event-emitter": "^1.10.2",
     "eth-block-tracker": "^4.4.2",
     "eth-ens-namehash": "^2.0.8",
     "eth-json-rpc-filters": "^4.2.1",

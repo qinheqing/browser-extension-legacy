@@ -1,7 +1,7 @@
-import { getAutoSaveStorageItem } from '../../store/BaseStore';
+import { getAutoSaveLocalStorageItem } from '../../store/BaseStore';
 
 function isAtNewApp() {
-  return getAutoSaveStorageItem('homeType') === 'NEW';
+  return getAutoSaveLocalStorageItem('homeType') === 'NEW';
 }
 
 export default {
