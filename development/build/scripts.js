@@ -17,6 +17,7 @@ const envify = require('loose-envify/custom');
 const sourcemaps = require('gulp-sourcemaps');
 const terser = require('gulp-terser-js');
 const cssModulesify = require('css-modulesify');
+const scssify = require('scssify2');
 
 const conf = require('rc')('metamask', {
   INFURA_PROJECT_ID: process.env.INFURA_PROJECT_ID,
@@ -341,6 +342,10 @@ function createScriptTasks({ browserPlatforms, livereload }) {
     let bundler = browserify(browserifyOpts)
       .transform(unflowify)
       .transform(babelify)
+
+      // [scssify] is conflict by [cssModulesify], will finally output by [cssModulesify], use gulp instead.
+      // .transform(scssify, configs.scssifyConfig)
+
       // .transform(
       //   babelify.configure({
       //     // presets: ['@babel/preset-env'],
@@ -418,6 +423,8 @@ function createScriptTasks({ browserPlatforms, livereload }) {
     if (opts.label === 'ui') {
       // some thing only build ui
       bundler.plugin(cssModulesify, {
+        // eslint-disable-next-line no-useless-escape
+        filePattern: `\.css$`,
         // rootDir: __dirname,
         before: [
           // require('postcss-import'),
