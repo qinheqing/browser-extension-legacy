@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
@@ -11,6 +11,9 @@ function TokenAmountInPrice({ token, value }) {
   const { decimals } = token;
   const price = storePrice.getTokenPrice({ token });
   const amount = utilsNumber.bigNum(value).times(price).toFixed();
+  useEffect(() => {
+    storePrice.fetchSingleTokenPrice(token);
+  }, [token?.contractAddress]);
   return (
     <span>
       <AmountText value={amount} decimals={decimals} precision={2} /> USD

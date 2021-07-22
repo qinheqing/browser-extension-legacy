@@ -14,7 +14,7 @@ function getQuery({ url }) {
   return uri.query(true);
 }
 
-function addQuery({ url, query, arrayToCommaString = true }) {
+function addQuery({ url, query = {}, arrayToCommaString = true }) {
   const uri = toUriObject({ url });
   if (arrayToCommaString) {
     Object.entries(query).forEach(([k, v]) => {
