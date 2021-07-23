@@ -67,6 +67,37 @@ class WalletSOL extends WalletBase {
     decimals,
     contract,
   }) {
+    let createTokenIx = null;
+    const toAccountInfo = await this.chainProvider.getAccountInfo({
+      address: to,
+    });
+
+    // to address is SOL address, not a token address
+    if (!toAccountInfo.isToken) {
+      const { tokens } = await this.chainProvider.getAccountTokens({
+        address: to,
+      });
+      const matchToken = tokens.find((t) => t.contractAddress === contract);
+      if (matchToken) {
+        // eslint-disable-next-line no-param-reassign
+        to = matchToken.address;
+      } else {
+        // TODO add createATATokenFee display in UI
+        createTokenIx = await helpersSOL.createAssociatedTokenIxAsync({
+          creatorAddress: new PublicKey(accountInfo.address),
+          accountAddress: new PublicKey(to),
+          mintAddress: new PublicKey(contract),
+        });
+        // eslint-disable-next-line no-param-reassign
+        to = (
+          await helpersSOL.generateAssociatedTokenAddress(
+            new PublicKey(to),
+            new PublicKey(contract),
+          )
+        ).toString();
+      }
+    }
+
     const keys = [
       { pubkey: new PublicKey(from), isSigner: false, isWritable: true },
       { pubkey: new PublicKey(contract), isSigner: false, isWritable: false },
@@ -86,7 +117,7 @@ class WalletSOL extends WalletBase {
     });
     return this._createTxObject({
       accountInfo,
-      instructions: [ix],
+      instructions: [createTokenIx, ix].filter((item) => Boolean(item)),
     });
   }
 

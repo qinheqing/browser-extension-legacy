@@ -7,6 +7,7 @@ import {
   action,
   makeObservable,
 } from 'mobx';
+import { trim } from 'lodash';
 import utilsNumber from '../utils/utilsNumber';
 import utilsToast from '../utils/utilsToast';
 import { ROUTE_TX_HISTORY } from '../routes/routeUrls';
@@ -51,38 +52,61 @@ class StoreTransfer extends BaseStore {
     return this.fromToken?.address;
   }
 
+  @computed
+  get fromDepositAddress() {
+    return this.fromToken?.depositAddress;
+  }
+
   previewPayload = {};
 
   @action.bound
   async previewTransfer() {
-    if (!this.fromToken || !this.toAddress || !this.amount) {
+    const wallet = storeWallet.currentWallet;
+
+    const toAddress = trim(this.toAddress || '');
+    const token = this.fromToken;
+
+    // * all fields are empty
+    if (!token || !toAddress || !this.amount) {
       return null;
     }
-    const wallet = storeWallet.currentWallet;
+
     // * address is valid;
     // * token address is valid;
-    if (!wallet.isValidAddress({ address: this.toAddress })) {
+    if (!wallet.isValidAddress({ address: toAddress })) {
       utilsToast.toast.error('收款地址不正确');
       return null;
     }
-    if (this.amount <= 0 || !utilsNumber.isValidNumber(this.amount)) {
+
+    // * amount is > 0
+    // * amount is valid number
+    if (
+      !utilsNumber.isValidNumber(this.amount) ||
+      utilsNumber.bigNum(this.amount).lte(0)
+    ) {
       utilsToast.toast.error('转账金额不正确');
       return null;
     }
-    // * amount is > 0
-    // * amount is valid number
+
     // * amount is < ( balance - fee - createTokenFee )
-    // TODO fetch decimals by rpc fallback if cache is null
-    const { decimals } = storeBalance.getTokenBalanceInfoCacheByKey(
-      this.fromToken.key,
-    );
+    const maxAmount = this.getTransferMaxAmount(token);
+    if (utilsNumber.bigNum(this.amount).gt(maxAmount)) {
+      utilsToast.toast.error('转账余额不足');
+      return null;
+    }
+
+    // * TODO transfer token, but SOL balance is insufficient
+
+    const decimals = storeToken.getTokenDecimals(token);
+
     this.previewPayload = {
       amount: this.amount,
       decimals,
-      from: this.fromToken.address,
-      to: this.toAddress,
-      contract: this.fromToken.contractAddress,
-      isToken: !this.fromToken.isNative,
+      from: token.address,
+      to: toAddress,
+      contract: token.contractAddress,
+      // TODO change isToken,isNative to isNativeToken
+      isToken: !token.isNative,
     };
     return true;
   }
@@ -105,30 +129,37 @@ class StoreTransfer extends BaseStore {
     return '';
   }
 
-  @action.bound
-  fillMaxAmount() {
-    const balanceInfo = storeBalance.getTokenBalanceInfoCacheByKey(
-      this.fromToken.key,
-    );
+  getTransferMaxAmount(token) {
+    // eslint-disable-next-line
+    token = token || this.fromToken;
+    const balanceInfo = storeBalance.getTokenBalanceInfoCacheByKey(token.key);
+    let amount = '0';
     if (balanceInfo) {
-      const { balance, decimals } = balanceInfo;
-      let amount = utilsNumber.toNormalNumber({
+      const { balance } = balanceInfo;
+      const decimals = storeToken.getTokenDecimals(token);
+      amount = utilsNumber.toNormalNumber({
         value: balance,
         decimals,
         roundMode: 'floor',
       });
-      if (this.fromToken.isNative) {
+      if (token.isNative) {
+        // TODO minus chain fee + createTokenFee
         amount = utilsNumber.bigNum(amount).minus(this.fee).toFixed();
       }
 
-      if (amount < 0) {
+      if (utilsNumber.bigNum(amount).lt(0)) {
         amount = '0';
       }
       if (!utilsNumber.isValidNumber(amount)) {
-        amount = '';
+        amount = '0';
       }
-      this.amount = amount;
     }
+    return amount;
+  }
+
+  @action.bound
+  fillMaxAmount() {
+    this.amount = this.getTransferMaxAmount();
   }
 
   @action.bound
@@ -144,7 +175,7 @@ class StoreTransfer extends BaseStore {
     let fee = await storeWallet.currentWallet.getTransactionFee();
     fee = utilsNumber.toNormalNumber({
       value: fee,
-      decimals: storeToken.currentNativeToken.decimals,
+      decimals: storeToken.getTokenDecimals(storeToken.currentNativeToken),
     });
     this.updateTransferFee(fee);
   }
