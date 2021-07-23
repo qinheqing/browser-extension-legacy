@@ -3,20 +3,19 @@ import { observer } from 'mobx-react-lite';
 import AppPageLayout from '../../components/AppPageLayout';
 import storeAccount from '../../store/storeAccount';
 import storeHistory from '../../store/storeHistory';
+import storeStorage from '../../store/storeStorage';
 import AppIcons from '../../components/AppIcons';
 import CopyHandle from '../../components/CopyHandle';
 import OneDialog from '../../components/OneDialog';
 import EditableLabel from '../../components/EditableLabel';
+import utilsToast from '../../utils/utilsToast';
 
 function PageAccountDetail() {
   const [dialogVisible, setDialogVisible] = useState(false);
-  const onChangeName = useCallback((label) => {
-    console.log(label);
-    storeAccount.currentAccount.name = label;
-  }, []);
 
   const onDeleteAccount = useCallback(() => {
-    // do some thing
+    storeAccount.deleteAccountByAddress(storeAccount.currentAccountAddress);
+    storeHistory.goBack();
   }, []);
 
   return (
@@ -41,7 +40,7 @@ function PageAccountDetail() {
           <EditableLabel
             className="pt-2"
             defaultValue={storeAccount.currentAccount.name}
-            onSubmit={onChangeName}
+            onSubmit={storeAccount.changeAccountName}
           />
         </div>
         <div className="bg-white shadow overflow-hidden sm:rounded-md">
@@ -64,20 +63,23 @@ function PageAccountDetail() {
             </li>
           </ul>
         </div>
-        <div className="mt-20 px-3">
-          <button
-            onClick={() => setDialogVisible(true)}
-            type="button"
-            className="text-center inline-flex items-center px-4 py-4 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-500 hover:bg-red-700"
-          >
-            删除账户
-          </button>
-        </div>
+        {storeStorage.allAccountsRaw.length > 1 ? (
+          <div className="mt-20 px-3">
+            <button
+              onClick={() => setDialogVisible(true)}
+              type="button"
+              className="w-full text-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-500 hover:bg-red-700"
+            >
+              删除账户
+            </button>
+          </div>
+        ) : null}
       </div>
       <OneDialog
         title="删除账户"
         content="你确认要删除账户，删除后不能恢复"
         confirmText="删除"
+        onConfirm={onDeleteAccount}
         open={dialogVisible}
         onOpenChange={(val) => setDialogVisible(val)}
       />
