@@ -7,7 +7,7 @@ import {
   action,
   makeObservable,
 } from 'mobx';
-import { toLower, debounce, cloneDeep, merge } from 'lodash';
+import { toLower, debounce, cloneDeep, merge, isNil } from 'lodash';
 import OneTokenInfo from '../classes/OneTokenInfo';
 import { ROUTE_TX_HISTORY } from '../routes/routeUrls';
 import BaseStore from './BaseStore';
@@ -18,6 +18,7 @@ import storeTx from './storeTx';
 import storeHistory from './storeHistory';
 import storeStorage from './storeStorage';
 import storePrice from './storePrice';
+import storeBalance from './storeBalance';
 
 class StoreToken extends BaseStore {
   constructor(props) {
@@ -241,6 +242,16 @@ class StoreToken extends BaseStore {
       return txid;
     }
     return '';
+  }
+
+  getTokenDecimals(token) {
+    let { decimals } = token;
+    if (isNil(decimals)) {
+      // TODO fetch decimals by rpc fallback if cache is null
+      const balanceInfo = storeBalance.getTokenBalanceInfoCacheByKey(token.key);
+      decimals = balanceInfo.decimals;
+    }
+    return decimals;
   }
 }
 

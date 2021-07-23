@@ -24,7 +24,7 @@ function TransferConfirmDialog({ open, onOpenChange }) {
       </div>
       <div className="divide-y divide-gray-200 mt-3">
         <OneDetailItem title="发送方">
-          <div className="break-all">{storeTransfer.fromAddress}</div>
+          <div className="break-all">{storeTransfer.fromDepositAddress}</div>
         </OneDetailItem>
         <OneDetailItem title="接收方">
           <div className="break-all">{storeTransfer.toAddress}</div>
