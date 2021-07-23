@@ -89,22 +89,25 @@ function ImportAccountsList({ wallet, onLoadMore }) {
 
   const confirmImport = useCallback(() => {
     let accountNameIndex = existsAccounts.length;
-    storeAccount.addAccounts(
-      // TODO sort by hdIndex first, and update name
-      Object.values(selectedAccounts).map((addr) => {
-        const { address, path, name, chainKey, type } = addr;
-        accountNameIndex += 1;
-        return {
-          name: wallet.chainInfo.generateAccountName({
-            index: accountNameIndex,
-          }),
-          chainKey,
-          address,
-          path,
-          type,
-        };
-      }),
+    const accountsSorted = Object.values(selectedAccounts).sort((a, b) =>
+      a.hdPathIndex < b.hdPathIndex ? -1 : 1,
     );
+    const newAccounts = accountsSorted.map((addr) => {
+      const { address, path, name, chainKey, type } = addr;
+      accountNameIndex += 1;
+      return {
+        name: wallet.chainInfo.generateAccountName({
+          index: accountNameIndex,
+        }),
+        chainKey,
+        address,
+        path,
+        type,
+      };
+    });
+
+    storeAccount.addAccounts(newAccounts);
+    storeAccount.setCurrentAccount({ account: newAccounts[0] });
     history.replace(ROUTE_WALLET_SELECT);
   }, []);
 

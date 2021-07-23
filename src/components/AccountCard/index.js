@@ -39,6 +39,7 @@ function AccountCard({
   if (!account || !account.address) {
     return null;
   }
+
   const chainInfo = storeChain.getChainInfoByKey(account.chainKey);
   const isActive =
     storeAccount.currentAccount &&

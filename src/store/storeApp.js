@@ -56,7 +56,7 @@ class StoreApp extends BaseStore {
   }
 
   async lockScreen() {
-    const bg = await getBackgroundInstanceAsync();
+    const bg = await uiGetBgControllerAsync();
     const store = getStore();
     await bg.setLocked();
     await forceUpdateMetamaskState(store?.dispatch);
