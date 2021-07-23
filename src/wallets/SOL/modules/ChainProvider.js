@@ -1,6 +1,7 @@
+import assert from 'assert';
 import * as BufferLayout from 'buffer-layout';
 import bs58 from 'bs58';
-import { isBuffer, uniqBy } from 'lodash';
+import { isBuffer, uniqBy, isNil } from 'lodash';
 import ChainProviderBase from '../../ChainProviderBase';
 import utilsApp from '../../../utils/utilsApp';
 import OneAccountInfo from '../../../classes/OneAccountInfo';
@@ -69,7 +70,13 @@ class ChainProvider extends ChainProviderBase {
         console.log('tokenParsedInfo', tokenParsedInfo);
       }
     } else {
-      decimals = this.options.balanceDecimals;
+      decimals = this.options.chainInfo.nativeToken.decimals;
+      // TODO replace to this.options.chainInfo.nativeToken.decimals
+      // decimals = this.options.balanceDecimals;
+      assert(
+        !isNil(decimals),
+        'chainInfo.nativeToken.decimals is not defined.',
+      );
     }
     // TODO rename to BalanceInfo or AccountUpdatesInfo
     // { data: Uint8Array(0), executable: false, lamports: 2997561, owner: PublicKey, rentEpoch: 201 }
@@ -131,114 +138,6 @@ class ChainProvider extends ChainProviderBase {
     });
   }
 
-  // TODO change to web3.getTokenAccountsByOwner
-  async getAccountTokensLegacy({ address } = {}) {
-    const ownerAddress = address || this.options?.accountInfo?.address;
-    if (!ownerAddress) {
-      return {
-        ownerAddress,
-        tokens: [],
-      };
-    }
-    const accountPublicKey = new PublicKey(ownerAddress);
-    const filters = helpersSOL.getOwnedAccountsFilters(accountPublicKey);
-    // TODO https://solana-labs.github.io/solana-web3.js/classes/connection.html#getparsedtokenaccountsbyowner
-    //    getParsedProgramAccounts, getParsedTokenAccountsByOwner, getTokenAccountsByOwner(Phantom used)
-    const resp = await this.solWeb3._rpcRequest('getProgramAccounts', [
-      helpersSOL.TOKEN_PROGRAM_ID.toBase58(),
-      {
-        commitment: this.defaultCommitment,
-        filters,
-      },
-    ]);
-    if (resp.error) {
-      throw new Error(
-        `failed to get token accounts owned by ${accountPublicKey.toBase58()}: ${
-          resp.error.message
-        }`,
-      );
-    }
-    const result = resp.result
-      .map(({ pubkey, account: { data, executable, owner, lamports } }) => ({
-        publicKey: new PublicKey(pubkey),
-        accountInfo: {
-          data: bs58.decode(data),
-          executable,
-          owner: new PublicKey(owner),
-          lamports,
-        },
-      }))
-      .filter(({ accountInfo }) => {
-        // TODO: remove this check once mainnet is updated
-        return filters.every((filter) => {
-          if (filter.dataSize) {
-            return accountInfo.data.length === filter.dataSize;
-          } else if (filter.memcmp) {
-            const filterBytes = bs58.decode(filter.memcmp.bytes);
-            return accountInfo.data
-              .slice(
-                filter.memcmp.offset,
-                filter.memcmp.offset + filterBytes.length,
-              )
-              .equals(filterBytes);
-          }
-          return false;
-        });
-      });
-    let tokens = await Promise.all(
-      result.map(async (item) => {
-        const { publicKey, accountInfo } = item;
-        // get balance, mint from accountInfo.data
-        const parsed = helpersSOL.parseTokenAccountData(item.accountInfo.data);
-        const associatedAddress =
-          await helpersSOL.generateAssociatedTokenAddress(
-            accountPublicKey,
-            parsed.mint,
-            publicKey,
-          );
-
-        // DO NOT use ownerAddress as token deposit address, it should be support by the wallet sender code
-        //    the sender code will find token real address from owner address from chain
-        /*  const depositAddress = associatedAddress.equals(publicKey)
-          ? ownerAddress
-          : publicKey.toString();
-        */
-        const depositAddress = publicKey.toString();
-
-        return {
-          chainKey: this.options.chainInfo.key,
-          balance: parsed.amount, // Token account balance
-          address: publicKey.toString(), // Token account address
-          depositAddress, // Token deposit address
-          ownerAddress, // Owner account address which token belongs to
-          contractAddress: parsed.mint.toString(), // token contract address (mintAddress) / token real name
-          programAddress: accountInfo.owner.toString(), // token program address
-          associatedAddress: associatedAddress.toString(), // token associated address
-          isAssociatedToken: publicKey.equals(associatedAddress),
-        };
-      }),
-    );
-
-    // only display created token account (if associate token includes)
-    const createdTokenContractAddress = tokens
-      .filter((t) => !t.isAssociatedToken)
-      .map((t) => t.contractAddress);
-    if (createdTokenContractAddress.length) {
-      tokens = tokens.filter(
-        (t) =>
-          !(
-            t.isAssociatedToken &&
-            createdTokenContractAddress.includes(t.contractAddress)
-          ),
-      );
-    }
-
-    return {
-      ownerAddress,
-      tokens,
-    };
-  }
-
   filterTokensOnlyCreated(tokens) {
     let _tokens = tokens;
     // only display created token account (if both includes associate token account and created token account )
@@ -297,15 +196,16 @@ class ChainProvider extends ChainProviderBase {
             publicKey,
           );
 
-        const depositAddress = publicKey.toString();
+        const _address = publicKey.toString();
+        const depositAddress = ownerAddress;
 
         return {
           chainKey,
-          ownerAddress, // Owner account address which token belongs to
+          ownerAddress, // Owner account address which token belongs to ( native token address )
           balance: tokenAmount.amount, // Token account balance
           decimals: tokenAmount.decimals,
-          address: publicKey.toString(), // Token account address
-          depositAddress, // Token deposit address
+          address: _address, // Token account address ( actual depositAddress )
+          depositAddress, // Token deposit address ( depositAddress in UI )
           contractAddress: mint.toString(), // token contract address (mintAddress) / token real name
           programAddress: programId.toString(), // token program address
           associatedAddress: associatedAddress.toString(), // token associated address
