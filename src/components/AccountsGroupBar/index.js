@@ -9,14 +9,16 @@ import { ROUTE_HOME_OLD } from '../../routes/routeUrls';
 import storeHistory from '../../store/storeHistory';
 import uiGetBgControllerAsync from '../../wallets/bg/uiGetBgControllerAsync';
 import storeStorage from '../../store/storeStorage';
+import LogoIcon, { ChainLogoIcon } from '../LogoIcon';
 import styles from './index.css';
 
 const AccountsGroupItem = observer(function ({
   icon,
   children,
   isActive = false,
+  isTestNet = false,
   onRemove,
-  size = 'normal',
+  size = 'md',
   expand = false,
   ...others
 }) {
@@ -30,14 +32,17 @@ const AccountsGroupItem = observer(function ({
           &times;
         </div>
       )}
-      <div
-        className={classnames('u-flex-center', styles.AccountsGroupItem__icon, {
-          [styles.AccountsGroupItem__icon_active]: isActive,
-          [styles.AccountsGroupItem__icon_small]: size === 'small',
+      <LogoIcon
+        src={icon}
+        size="md"
+        active={isActive}
+        border={false}
+        label={isTestNet && 'Test'}
+        className={classnames({
+          'scale-90': size === 'sm',
+          '!bg-gray-100': !isActive,
         })}
-      >
-        {icon && <img className="max-w-full max-h-full" src={icon} />}
-      </div>
+      />
       {expand && (
         <div
           className={classnames(styles.AccountsGroupItem__text, {
@@ -62,6 +67,7 @@ const AccountsGroupItemChain = observer(function ({ chainKey, ...others }) {
           chainKey,
         };
       }}
+      isTestNet={chainInfo.isTestNet}
       isActive={storeAccount.accountsGroupFilter?.chainKey === chainKey}
       onRemove={
         chainInfo.isCustom
@@ -124,7 +130,7 @@ const AccountsGroupItemSort = observer(function ({ ...others }) {
   return (
     <AccountsGroupItem
       icon="images/chains/ethereum.svg"
-      size="small"
+      size="sm"
       onClick={() => {
         storeHistory.goToHomeOld();
       }}

@@ -6,10 +6,10 @@ import storeToken from '../../store/storeToken';
 import storeHistory from '../../store/storeHistory';
 import TokenBalance from '../../components/TokenBalance';
 import OneButton from '../../components/OneButton';
-import TokenIcon from '../../components/TokenIcon';
 import TokenDepositQrcode from '../../components/TokenDepositQrcode';
 import TokenAmountInPrice from '../../components/TokenAmountInPrice';
 import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
+import { TokenLogoIcon } from '../../components/LogoIcon';
 
 function PageTokenDetail() {
   const token = storeToken.currentDetailToken;
@@ -24,7 +24,7 @@ function PageTokenDetail() {
         </span>
       }
       whiteBg={false}
-      navRight={<TokenIcon tokenInfo={token} />}
+      navRight={<TokenLogoIcon tokenInfo={token} />}
       footer={
         <div className="flex items-center px-4 pt-2 pb-4 bg-white">
           <OneButton
