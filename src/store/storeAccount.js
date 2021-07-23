@@ -7,7 +7,7 @@ import {
   action,
   makeObservable,
 } from 'mobx';
-import { uniqBy } from 'lodash';
+import { uniqBy, findIndex } from 'lodash';
 import {
   CONSTS_ACCOUNT_TYPES,
   CONST_ACCOUNTS_GROUP_FILTER_TYPES,
@@ -169,8 +169,73 @@ class StoreAccount extends BaseStore {
   }
 
   @action.bound
+  changeAccountName(newName) {
+    this.currentAccount.name = newName;
+    storeStorage.currentAccountRaw = {
+      ...storeStorage.currentAccountRaw,
+      name: newName,
+    };
+    const index = findIndex(storeStorage.allAccountsRaw, (e) => {
+      return (
+        e.address === this.currentAccount.address &&
+        e.chainKey === this.currentAccount.chainKey
+      );
+    });
+
+    if (index >= 0) {
+      storeStorage.allAccountsRaw[index] = {
+        ...storeStorage.currentAccountRaw,
+      };
+    }
+  }
+
+  @action.bound
+  deleteAccountByAddress(address) {
+    if (storeStorage.allAccountsRaw.length <= 1) {
+      return;
+    }
+    const curAddress = this.currentAccountAddress;
+    const remains = storeStorage.allAccountsRaw.filter(
+      (e) =>
+        !(e.address === address && e.chainKey === storeChain.currentChainKey),
+    );
+    // todo delete all token、price、meta information
+    if (address === curAddress) {
+      this.setCurrentAccount({ account: remains[0] });
+    }
+    if (remains.length >= 1) {
+      storeStorage.allAccountsRaw = remains;
+    }
+  }
+
+  @action.bound
   setCurrentAccount({ account }) {
     storeStorage.currentAccountRaw = account;
+  }
+
+  @action.bound
+  async initFirstAccount() {
+    const accountsInCurrentChain = this.getAccountsByChainKey(
+      this.accountsGroupFilter.chainKey,
+    );
+
+    if (!this.currentAccount && accountsInCurrentChain.length === 0) {
+      const chainInfo = storeChain.currentChainInfo;
+      const _wallet = walletFactory.createWallet({
+        chainInfo,
+        accountInfo: new OneAccountInfo({
+          type: CONSTS_ACCOUNT_TYPES.Wallet,
+        }),
+      });
+      const addresses = await _wallet.getAddresses({
+        indexes: [0],
+      });
+      addresses[0].name = _wallet.chainInfo.generateAccountName({
+        index: accountsInCurrentChain.length + 1,
+      });
+      this.addAccounts(addresses);
+      this.setCurrentAccount({ account: addresses[0] });
+    }
   }
 }
 
