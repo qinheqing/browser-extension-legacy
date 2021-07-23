@@ -11,6 +11,7 @@ import AppIcons from '../AppIcons';
 import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
 import CopyHandle from '../CopyHandle';
 import storeToken from '../../store/storeToken';
+import { ChainLogoIcon } from '../LogoIcon';
 import styles from './index.css';
 
 function HardwareTypeTag() {
@@ -80,21 +81,30 @@ function AccountCard({
       </div>
 
       <div className={classnames(styles.AccountCard__blank)} />
-      {showBalance && (
-        <footer>
-          {/* TODO get balance in cache if at wallet select page */}
-          <TokenBalance
-            wallet={wallet}
-            tokenInfo={tokenInfo}
-            showUnit
-            maskAssetBalance={maskAssetBalance}
-            watchBalanceChange={watchBalanceChange}
-            className={classnames(styles.AccountCard__balance)}
-            showPrice
-            classNamePrice={classnames(styles.AccountCard__balanceFiat)}
-          />
-        </footer>
-      )}
+      <footer className="flex items-end">
+        {showBalance && (
+          // TODO get balance in cache if at wallet select page
+          <div>
+            <TokenBalance
+              wallet={wallet}
+              tokenInfo={tokenInfo}
+              showUnit
+              maskAssetBalance={maskAssetBalance}
+              watchBalanceChange={watchBalanceChange}
+              className={classnames(styles.AccountCard__balance)}
+              showPrice
+              classNamePrice={classnames(styles.AccountCard__balanceFiat)}
+            />
+          </div>
+        )}
+        <div className="flex-1" />
+        <ChainLogoIcon
+          chainInfo={chainInfo}
+          size="md"
+          border={false}
+          className="bg-opacity-25 bg-black"
+        />
+      </footer>
     </div>
   );
 }
