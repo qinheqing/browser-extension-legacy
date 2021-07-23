@@ -5,6 +5,7 @@ import Initialized from '../../ui/app/helpers/higher-order-components/initialize
 import errorsGlobalHandler from '../utils/errorsGlobalHandler';
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../ui/app/helpers/constants/common';
 import AppRootView from '../components/AppRootView';
+import PageAccountDetail from '../pages/PageAccountDetail';
 import {
   ROUTE_CONNECT_HARDWARE,
   ROUTE_CREATE_ACCOUNT,
@@ -15,6 +16,7 @@ import {
   ROUTE_TRANSFER,
   ROUTE_TX_HISTORY,
   ROUTE_WALLET_SELECT,
+  ROUTE_ACCOUNT_DETAIL,
 } from './routeUrls';
 
 const PageConnectHardware = lazy(() => import('../pages/PageConnectHardware'));
@@ -90,6 +92,11 @@ export default function AppRoutes() {
           <RouteAuthenticated
             path={ROUTE_TOKEN_ADD}
             component={PageTokenAdd}
+            exact
+          />
+          <RouteAuthenticated
+            path={ROUTE_ACCOUNT_DETAIL}
+            component={PageAccountDetail}
             exact
           />
           {/* Home route should be at last one */}

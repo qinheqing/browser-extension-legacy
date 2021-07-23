@@ -8,8 +8,15 @@ import {
   makeObservable,
 } from 'mobx';
 import uiGetBgControllerAsync from '../wallets/bg/uiGetBgControllerAsync';
+import {
+  getBackgroundInstanceAsync,
+  forceUpdateMetamaskState,
+  getStore,
+} from '../../ui/app/store/actions';
+import { UNLOCK_ROUTE } from '../../ui/app/helpers/constants/routes';
 import BaseStore from './BaseStore';
 import storeStorage from './storeStorage';
+import storeHistory from './storeHistory';
 
 class StoreApp extends BaseStore {
   constructor(props) {
@@ -46,6 +53,14 @@ class StoreApp extends BaseStore {
 
   toggleAssetBalanceVisible() {
     storeStorage.maskAssetBalance = !storeStorage.maskAssetBalance;
+  }
+
+  async lockScreen() {
+    const bg = await getBackgroundInstanceAsync();
+    const store = getStore();
+    await bg.setLocked();
+    await forceUpdateMetamaskState(store?.dispatch);
+    storeHistory.push(UNLOCK_ROUTE);
   }
 
   @observable
