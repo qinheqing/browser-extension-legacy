@@ -109,7 +109,7 @@ function TokenBalance({
       {showPrice && (
         <div className={classNamePrice}>
           <SensitiveDataMask hide={maskAssetBalance}>
-            {priceEqualSign} &nbsp;
+            {priceEqualSign}&nbsp;
             <TokenAmountInPrice token={tokenInfo} value={balance} />
           </SensitiveDataMask>
         </div>

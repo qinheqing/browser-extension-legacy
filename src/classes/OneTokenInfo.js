@@ -16,6 +16,8 @@ class OneTokenInfo {
     ownerAddress = '', // account address to which token belongs
     contractAddress = '', // token contract address, mintAddress in SOL
     associatedAddress = '',
+    tokenId,
+    platformId,
     ...others
   }) {
     Object.assign(this, others);
@@ -39,6 +41,8 @@ class OneTokenInfo {
       });
     this.associatedAddress = associatedAddress;
     this.chainKey = chainKey;
+    this.tokenId = tokenId || others?.extensions?.coingeckoId;
+    this.platformId = platformId;
     this.key = key || this.generateKey();
   }
 
