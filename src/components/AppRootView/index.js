@@ -3,8 +3,9 @@ import React from 'react';
 import { ToastContainer } from 'react-toastify';
 import classnames from 'classnames';
 import { Portal } from '@headlessui/react';
-import { Route } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
 import PreloadScreen from '../PreloadScreen';
+import storeStorage from '../../store/storeStorage';
 import styles from './index.css';
 
 // AppToastContainer should be singleton
@@ -51,7 +52,7 @@ function OldHomeRootComponents() {
   );
 }
 
-export default function AppRootView({ children }) {
+function AppRootView({ children }) {
   return (
     <div className={classnames(styles.root, '')}>
       <div className={classnames(styles.content, '')}>
@@ -62,4 +63,18 @@ export default function AppRootView({ children }) {
   );
 }
 
-export { OldHomeRootComponents, AppToastContainer };
+const UniversalRoutesWrapper = observer(function ({ children }) {
+  if (!storeStorage.storageReady) {
+    return <PreloadScreen autoHideTimeout={false} />;
+  }
+  return (
+    <>
+      {children}
+      {/* AppToastContainer should be singleton */}
+      <AppToastContainer />
+    </>
+  );
+});
+
+export default AppRootView;
+export { OldHomeRootComponents, UniversalRoutesWrapper };

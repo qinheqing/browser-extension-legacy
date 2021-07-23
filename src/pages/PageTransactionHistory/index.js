@@ -199,6 +199,7 @@ function PendingTransactionCard({ txid, ...others }) {
   const [tx, setTx] = useState(null);
   async function confirmTransaction() {
     try {
+      // start WSS WebSocket to confirmTransaction status
       const res =
         await storeWallet.currentWallet.chainProvider.confirmTransaction({
           txid,
@@ -211,6 +212,7 @@ function PendingTransactionCard({ txid, ...others }) {
       const confirmedTx = res1?.items?.[0];
       if (confirmedTx) {
         setTx(confirmedTx);
+        console.log('confirmTransaction', confirmedTx);
       }
     } catch (e) {
       // confirmTransaction timeout will throw exception

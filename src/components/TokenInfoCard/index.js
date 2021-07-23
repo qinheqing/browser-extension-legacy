@@ -39,14 +39,12 @@ function TokenInfoCard({ token, onClick, maskAssetBalance = false }) {
       title={
         <div className="text-lg relative" onClick={() => console.log(token)}>
           {tokenName}
-          {!symbol && (
-            <small
-              data-contract-address={token.contractAddress}
-              className="absolute text-xs text-gray-300 left-0 top-full -mt-1 "
-            >
-              {token.contractAddressShort}
-            </small>
-          )}
+          <small
+            data-contract-address={token.contractAddress}
+            className="absolute text-xs text-gray-300 left-0 top-full -mt-1 "
+          >
+            {symbol ? name : token.contractAddressShort}
+          </small>
         </div>
       }
     />
