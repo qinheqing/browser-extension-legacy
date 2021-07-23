@@ -200,6 +200,7 @@ class ChainProvider extends ChainProviderBase {
         const depositAddress = ownerAddress;
 
         return {
+          platformId: this.options.chainInfo.platformId,
           chainKey,
           ownerAddress, // Owner account address which token belongs to ( native token address )
           balance: tokenAmount.amount, // Token account balance
