@@ -1,18 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
-import { useHistory } from 'react-router-dom';
 import TokenBalance from '../TokenBalance';
-import utilsApp from '../../utils/utilsApp';
-import utilsToast from '../../utils/utilsToast';
-import { useCopyToClipboard } from '../../../ui/app/hooks/useCopyToClipboard';
-import storeTransfer from '../../store/storeTransfer';
-import { ROUTE_TRANSFER } from '../../routes/routeUrls';
-import TokenIcon from '../TokenIcon';
-import storeHistory from '../../store/storeHistory';
-import storeStorage from '../../store/storeStorage';
 import OneCellItem from '../OneCellItem';
-import storeToken from '../../store/storeToken';
+import { TokenLogoIcon } from '../LogoIcon';
 
 function TokenInfoCard({ token, onClick, maskAssetBalance = false }) {
   const { symbol } = token;
@@ -23,7 +14,7 @@ function TokenInfoCard({ token, onClick, maskAssetBalance = false }) {
     <OneCellItem
       className="px-4"
       onClick={onClick}
-      start={<TokenIcon tokenInfo={token} className="" />}
+      start={<TokenLogoIcon tokenInfo={token} className="" />}
       end={
         <div className="text-right">
           <TokenBalance

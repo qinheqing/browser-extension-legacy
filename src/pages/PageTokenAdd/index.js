@@ -11,10 +11,10 @@ import OneButton from '../../components/OneButton';
 import storeToken from '../../store/storeToken';
 import NoDataView from '../../components/NoDataView';
 import OneDialog from '../../components/OneDialog';
-import TokenIcon from '../../components/TokenIcon';
 import TokenBalance from '../../components/TokenBalance';
 import AmountText from '../../components/AmountText';
 import storeAccount from '../../store/storeAccount';
+import { TokenLogoIcon } from '../../components/LogoIcon';
 import styles from './index.css';
 
 function TokenAddItem({ token, onAddClick }) {
@@ -30,7 +30,7 @@ function TokenAddItem({ token, onAddClick }) {
    */
   return (
     <OneCellItem
-      start={<TokenIcon tokenInfo={token} />}
+      start={<TokenLogoIcon tokenInfo={token} />}
       title={
         <span>
           {token.symbol || '未知币种'}{' '}
