@@ -108,10 +108,18 @@ class StorePrice extends BaseStore {
     makeObservable(this);
   }
 
+  _buildTokenPriceKey(token) {
+    const { isNative, tokenId, contractAddress, platformId, decimals } = token;
+    const _tokenId = tokenId || token?.extensions?.coingeckoId;
+    if (_tokenId) {
+      return _tokenId;
+    }
+    return `${platformId} => ${contractAddress}`;
+  }
+
   getTokenPriceInfo(token) {
-    const { isNative, tokenId, contractAddress, decimals } = token;
-    const id = isNative ? tokenId : contractAddress;
-    return storeStorage.pricesMapRaw?.[id] || {};
+    const key = this._buildTokenPriceKey(token);
+    return storeStorage.pricesMapRaw?.[key] || {};
   }
 
   getTokenPrice({ token }) {
@@ -121,13 +129,32 @@ class StorePrice extends BaseStore {
 
   // TODO add throttle update
   @action.bound
-  updatePricesMap(pricesMap = {}) {
-    Object.values(pricesMap).forEach(
-      (info) => (info.lastUpdate = new Date().getTime()),
+  _updatePricesMap(pricesMap = {}, tokens) {
+    // eslint-disable-next-line no-param-reassign
+    tokens = [].concat(tokens);
+    const pricesMapNew = {};
+    Object.entries(pricesMap).forEach(
+      ([contractAddressOrTokenId, priceInfo]) => {
+        const tokenInfo = tokens.find(
+          (t) =>
+            t.contractAddress === contractAddressOrTokenId ||
+            t.tokenId === contractAddressOrTokenId,
+        );
+        const priceKey = this._buildTokenPriceKey(tokenInfo);
+        pricesMapNew[priceKey] = {
+          ...priceInfo,
+          lastUpdate: new Date().getTime(),
+          tokenInfo: {
+            // name: tokenInfo?.name, // name is meaningful, as different platform has different name
+            symbol: tokenInfo?.symbol,
+          },
+        };
+      },
     );
+
     storeStorage.pricesMapRaw = {
       ...storeStorage.pricesMapRaw,
-      ...pricesMap,
+      ...pricesMapNew,
     };
   }
 
@@ -136,7 +163,7 @@ class StorePrice extends BaseStore {
     const _tokens = tokens.filter((item) => !item.isNative);
     return Promise.all([
       this.fetchNativeTokenPrice(nativeToken),
-      this.fetchTokensPrice(_tokens),
+      this.fetchBatchTokensPrice(_tokens),
     ]);
   }
 
@@ -156,10 +183,11 @@ class StorePrice extends BaseStore {
       }
     */
     const pricesMap = await data.json();
-    this.updatePricesMap(pricesMap);
+    this._updatePricesMap(pricesMap, nativeToken);
   }
 
-  async fetchTokensPrice(tokens) {
+  // batch fetch price by contractAddress
+  async fetchBatchTokensPrice(tokens) {
     const platformId = storeChain.currentChainInfo?.platformId;
     const contractAddresses = tokens.map((t) => t.contractAddress);
     // const platformId = 'binance-smart-chain';
@@ -183,10 +211,35 @@ class StorePrice extends BaseStore {
       }
      */
     const pricesMap = await data.json();
-    this.updatePricesMap(pricesMap);
+    this._updatePricesMap(pricesMap, tokens);
   }
 
-  isTokenPriceExpired(token) {
+  // single fetch price by tokenId (coingeckoId)
+  async fetchSingleTokenPrice(token) {
+    // eslint-disable-next-line prefer-const
+    let { contractAddress, tokenId } = token;
+    tokenId = tokenId || token?.extensions?.coingeckoId;
+    if (!tokenId || !contractAddress) {
+      return;
+    }
+    if (!this._isTokenPriceExpired(token)) {
+      return;
+    }
+    // TODO use /api/v3/simple/price and merge with fetchNativeTokenPrice
+    //    https://api.coingecko.com/api/v3/simple/price?ids=solana,akropolis&vs_currencies=cny%2Cusd
+    const data = await coinGeckoGet(`/api/v3/coins/${tokenId}`);
+    const tokenData = await data.json();
+    const priceInfo = tokenData?.market_data?.current_price || {};
+    const { cny, usd } = priceInfo;
+    this._updatePricesMap(
+      {
+        [tokenId]: { cny, usd },
+      },
+      token,
+    );
+  }
+
+  _isTokenPriceExpired(token) {
     const priceInfo = this.getTokenPriceInfo(token);
     if (
       !priceInfo.lastUpdate ||
@@ -195,24 +248,6 @@ class StorePrice extends BaseStore {
       return true;
     }
     return false;
-  }
-
-  async fetchSingleTokenPrice(token) {
-    const { contractAddress } = token;
-    const coingeckoId = token?.extensions?.coingeckoId;
-    if (!coingeckoId || !contractAddress) {
-      return;
-    }
-    if (!this.isTokenPriceExpired(token)) {
-      return;
-    }
-    const data = await coinGeckoGet(`/api/v3/coins/${coingeckoId}`);
-    const tokenData = await data.json();
-    const priceInfo = tokenData?.market_data?.current_price || {};
-    const { cny, usd } = priceInfo;
-    this.updatePricesMap({
-      [contractAddress]: { cny, usd },
-    });
   }
 }
 

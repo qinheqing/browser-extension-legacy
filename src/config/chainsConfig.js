@@ -82,7 +82,7 @@ const SOL_TEST = {
   ],
   platformId: 'solana',
   nativeToken: {
-    tokenId: 'solana',
+    tokenId: 'solana', // TODO same to .extensions?.coingeckoId;
     symbol: 'SOL',
     name: 'Solana',
     chainId: null,

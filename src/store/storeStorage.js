@@ -120,7 +120,9 @@ class StoreStorage extends BaseStore {
   @observable
   storageReady = false; // DO NOT autosave this field
 
-  // allAccounts
+  // Why array but NOT object?
+  //      because PageWalletSelect should group accounts by chain\hardware\wallet
+  //      so array is more convenience
   // TODO auto clean data if chain has been deleted
   @observable
   allAccountsRaw = [
