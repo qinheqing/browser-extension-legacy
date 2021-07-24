@@ -19,9 +19,8 @@ function TokenBalance({
   priceEqualSign = '≈',
   updateBalanceThrottle = 3 * 1000,
 }) {
-  const tokenKey = tokenInfo.key;
   const { address, symbol, symbolDisplay } = tokenInfo;
-  const cacheBalanceInfo = storeBalance.getTokenBalanceInfoCacheByKey(tokenKey);
+  const cacheBalanceInfo = storeBalance.getTokenBalanceInfoInCache(tokenInfo);
   const { balance } = cacheBalanceInfo;
   const decimals = tokenInfo.decimals || cacheBalanceInfo.decimals;
   const _wallet = wallet || storeWallet.currentWallet;
@@ -57,10 +56,10 @@ function TokenBalance({
       const info = await storeBalance.fetchBalanceInfo({
         wallet: _wallet,
         address,
-        tokenKey,
+        tokenInfo,
       });
       if (info) {
-        storeBalance.updateTokenBalance(tokenKey, {
+        storeBalance.updateTokenBalance(tokenInfo, {
           balance: info.balance,
           decimals: info.decimals,
         });
@@ -85,7 +84,7 @@ function TokenBalance({
         // TODO update check which is fresh data (getAccountInfo/addAccountChangeListener)
         // only update balance, decimals is undefined in wss data
         console.log('TokenBalance > balance updated!', info);
-        storeBalance.updateTokenBalance(tokenKey, {
+        storeBalance.updateTokenBalance(tokenInfo, {
           balance: info.balance,
         });
       },

@@ -119,7 +119,7 @@ class StorePrice extends BaseStore {
 
   getTokenPriceInfo(token) {
     const key = this._buildTokenPriceKey(token);
-    return storeStorage.pricesMapRaw?.[key] || {};
+    return storeStorage.tokenPricesRaw?.[key] || {};
   }
 
   getTokenPrice({ token }) {
@@ -152,8 +152,8 @@ class StorePrice extends BaseStore {
       },
     );
 
-    storeStorage.pricesMapRaw = {
-      ...storeStorage.pricesMapRaw,
+    storeStorage.tokenPricesRaw = {
+      ...storeStorage.tokenPricesRaw,
       ...pricesMapNew,
     };
   }
