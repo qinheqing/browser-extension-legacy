@@ -84,6 +84,11 @@ class StoreAccount extends BaseStore {
   }
 
   @computed
+  get currentAccountChainKey() {
+    return this.currentAccount?.chainKey;
+  }
+
+  @computed
   get currentAccountAddressShort() {
     return utilsApp.shortenAddress(this.currentAccountAddress || '');
   }

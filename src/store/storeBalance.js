@@ -23,37 +23,44 @@ class StoreBalance extends BaseStore {
 
   // TODO throttle, auto remove some very old records
   @action.bound
-  updateTokenBalance(key, { balance, decimals, ...others } = {}) {
+  updateTokenBalance(tokenInfo, { balance, decimals, ...others } = {}) {
+    const { key, symbol, name } = tokenInfo;
     if (key) {
       // use merge() DO NOT handle undefined value
-      const newInfo = merge({}, storeStorage.currentBalanceRaw[key], {
+      const newInfo = merge({}, storeStorage.tokenBalancesRaw[key], {
         balance,
         decimals,
         ...others,
         lastUpdate: new Date().getTime(),
+        tokenInfo: {
+          symbol,
+          name,
+        },
       });
-      storeStorage.currentBalanceRaw[key] = newInfo;
+      storeStorage.tokenBalancesRaw[key] = newInfo;
     }
   }
 
-  getTokenBalanceInfoCacheByKey(key) {
+  getTokenBalanceInfoInCache(tokenInfo) {
+    const { key } = tokenInfo;
     const { balance, decimals, lastUpdate, ...others } =
-      storeStorage.currentBalanceRaw[key] || {};
+      storeStorage.tokenBalancesRaw[key] || {};
     return { balance, decimals, lastUpdate, ...others };
   }
 
   fetchBalancePendingQueue = {};
 
-  async fetchBalanceInfo({ wallet, address, tokenKey }) {
+  async fetchBalanceInfo({ wallet, address, tokenInfo }) {
+    const tokenKey = tokenInfo.key;
     if (this.fetchBalancePendingQueue[address]) {
-      return storeStorage.currentBalanceRaw[tokenKey];
+      return storeStorage.tokenBalancesRaw[tokenKey];
     }
     this.fetchBalancePendingQueue[address] = true;
     const balanceInfo =
       // TODO cancel pending balance request if component destroy
       await this.balanceFetchSemaphore.runExclusive(async (semaphoreValue) => {
         if (!this.fetchBalancePendingQueue[address]) {
-          return storeStorage.currentBalanceRaw[tokenKey];
+          return storeStorage.tokenBalancesRaw[tokenKey];
         }
         const result = await wallet.chainProvider.getAccountInfo({ address });
         delete this.fetchBalancePendingQueue[address];

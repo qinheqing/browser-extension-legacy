@@ -267,11 +267,11 @@ function PageTransactionHistory() {
       {loading && <LoadingSpinner fullHeight />}
       {!loading && (
         <>
-          {!storeStorage.pendingTxid.length && !txList.length && (
+          {!storeStorage.currentPendingTxid.length && !txList.length && (
             <NoDataView fullHeight />
           )}
 
-          {storeStorage.pendingTxid.map((txid) => (
+          {storeStorage.currentPendingTxid.map((txid) => (
             <PendingTransactionCard
               key={txid}
               txid={txid}
