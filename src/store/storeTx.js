@@ -19,22 +19,24 @@ class StoreTx extends BaseStore {
 
   @action.bound
   addPendingTx(txid) {
-    storeStorage.pendingTxid.unshift(txid);
+    storeStorage.currentPendingTxid.unshift(txid);
   }
 
   @action.bound
   filterPendingTxConfirmed(confirmedTxList) {
-    storeStorage.pendingTxid = storeStorage.pendingTxid.filter((txid) => {
-      return !confirmedTxList.find((confirmTx) => {
-        const confirmId = confirmTx?.transaction?.signatures?.[0];
-        return confirmId === txid;
-      });
-    });
+    storeStorage.currentPendingTxid = storeStorage.currentPendingTxid.filter(
+      (txid) => {
+        return !confirmedTxList.find((confirmTx) => {
+          const confirmId = confirmTx?.transaction?.signatures?.[0];
+          return confirmId === txid;
+        });
+      },
+    );
   }
 
   @action.bound
   clearPendingTx() {
-    storeStorage.pendingTxid = [];
+    storeStorage.currentPendingTxid = [];
   }
 }
 

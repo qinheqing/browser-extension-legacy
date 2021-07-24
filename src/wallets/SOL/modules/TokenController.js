@@ -21,7 +21,7 @@ class TokenController {
 
   generateTokenKey(tokenInfo) {
     const { chainKey, address } = tokenInfo;
-    return `${chainKey}-${address}`;
+    return `${chainKey} => ${address}`;
   }
 
   newTokenInfo(options) {

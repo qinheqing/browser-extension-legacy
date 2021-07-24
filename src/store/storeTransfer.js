@@ -132,7 +132,7 @@ class StoreTransfer extends BaseStore {
   getTransferMaxAmount(token) {
     // eslint-disable-next-line
     token = token || this.fromToken;
-    const balanceInfo = storeBalance.getTokenBalanceInfoCacheByKey(token.key);
+    const balanceInfo = storeBalance.getTokenBalanceInfoInCache(token);
     let amount = '0';
     if (balanceInfo) {
       const { balance } = balanceInfo;

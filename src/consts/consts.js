@@ -49,3 +49,14 @@ export const BACKGROUND_PROXY_MODULE_NAMES = {
   hardware: 'hardware',
   keyring: 'keyring',
 };
+
+export const CONST_DURATIONS = {
+  SECOND: 1000,
+  MIN: 60 * 1000,
+  MIN5: 5 * 60 * 1000,
+  HOUR: 60 * 60 * 1000,
+  DAY: 24 * 60 * 60 * 1000,
+  WEEK: 7 * 24 * 60 * 60 * 1000,
+  MONTH: 30 * 24 * 60 * 60 * 1000,
+  YEAR: 365 * 24 * 60 * 60 * 1000,
+};
