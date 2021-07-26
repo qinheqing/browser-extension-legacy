@@ -28,6 +28,9 @@ import storeHistory from '../../store/storeHistory';
 import storeChain from '../../store/storeChain';
 import storeStorage from '../../store/storeStorage';
 import storeApp from '../../store/storeApp';
+import walletFactory from '../../wallets/walletFactory';
+import OneAccountInfo from '../../classes/OneAccountInfo';
+import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
 
 const HomeTopActionsBar = observer(function () {
   const [copied, handleCopy] = useCopyToClipboard();
@@ -198,6 +201,10 @@ const HomeAssetsList = observer(function () {
 function PageHome() {
   const history = useHistory();
   const [copied, handleCopy] = useCopyToClipboard();
+
+  useEffect(() => {
+    storeAccount.initFirstAccount();
+  }, []);
 
   useEffect(() => {
     storeToken.fetchCurrentAccountTokens();
