@@ -18,12 +18,12 @@ import TransferConfirmDialog from '../../components/TransferConfirmDialog';
 import OneInput from '../../components/OneInput';
 import OneCellItem from '../../components/OneCellItem';
 import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
-import TokenIcon from '../../components/TokenIcon';
 import {
   OneField,
   OneFieldInputItem,
   OneFieldItem,
 } from '../../components/OneField';
+import { TokenLogoIcon } from '../../components/LogoIcon';
 
 function PageTransfer() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -68,7 +68,7 @@ function PageTransfer() {
             <div className="flex items-center leading-none">
               <span>{token.symbolDisplay}</span>
               <span className="ml-2 u-leading-0">
-                <TokenIcon tokenInfo={token} size="sm" />
+                <TokenLogoIcon tokenInfo={token} size="sm" />
               </span>
             </div>
           }

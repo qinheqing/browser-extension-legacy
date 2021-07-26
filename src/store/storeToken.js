@@ -7,7 +7,7 @@ import {
   action,
   makeObservable,
 } from 'mobx';
-import { toLower, debounce, cloneDeep, merge } from 'lodash';
+import { toLower, debounce, cloneDeep, merge, isNil } from 'lodash';
 import OneTokenInfo from '../classes/OneTokenInfo';
 import { ROUTE_TX_HISTORY } from '../routes/routeUrls';
 import BaseStore from './BaseStore';
@@ -18,6 +18,7 @@ import storeTx from './storeTx';
 import storeHistory from './storeHistory';
 import storeStorage from './storeStorage';
 import storePrice from './storePrice';
+import storeBalance from './storeBalance';
 
 class StoreToken extends BaseStore {
   constructor(props) {
@@ -27,12 +28,12 @@ class StoreToken extends BaseStore {
     makeObservable(this);
 
     autorun(() => {
-      // TODO same address but different chainKey
       const address = storeAccount.currentAccountAddress;
+      const chainKey = storeAccount.currentAccountChainKey;
       untracked(() => {
         if (
-          storeStorage.currentTokensRaw.ownerAddress &&
-          storeStorage.currentTokensRaw.ownerAddress !== address
+          storeStorage.currentTokensRaw?.chainKey !== chainKey ||
+          storeStorage.currentTokensRaw?.ownerAddress !== address
         ) {
           storeStorage.currentTokensRaw.tokens = [];
         }
@@ -104,13 +105,18 @@ class StoreToken extends BaseStore {
 
   @action.bound
   async setCurrentTokens({
+    chainKey,
     ownerAddress,
     tokens,
     forceUpdateTokenMeta = false,
   }) {
-    if (ownerAddress === storeAccount.currentAccount.address) {
+    if (
+      chainKey === storeAccount.currentAccount.chainKey &&
+      ownerAddress === storeAccount.currentAccount.address
+    ) {
       // TODO update token balance to storeBalance
       storeStorage.currentTokensRaw = {
+        chainKey,
         ownerAddress,
         tokens,
       };
@@ -133,7 +139,7 @@ class StoreToken extends BaseStore {
   }
 
   _buildTokenMetaKey({ token }) {
-    return `${token.chainKey}-${token.contractAddress}`;
+    return `${token.chainKey} => ${token.contractAddress}`;
   }
 
   getTokenMeta({ token }) {
@@ -149,6 +155,7 @@ class StoreToken extends BaseStore {
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i];
       const key = this._buildTokenMetaKey({ token });
+      // TODO check lastUpdate
       if (!storeStorage.tokenMetasRaw?.[key]) {
         result = true;
         break;
@@ -170,7 +177,10 @@ class StoreToken extends BaseStore {
       );
       const key = this._buildTokenMetaKey({ token });
       // give default empty object, so that shouldReloadTokenMetas() can work correctly.
-      metas[key] = tokenMeta || {};
+      metas[key] = {
+        ...tokenMeta,
+        lastUpdate: new Date().getTime(),
+      };
     });
     storeStorage.tokenMetasRaw = {
       ...storeStorage.tokenMetasRaw,
@@ -241,6 +251,16 @@ class StoreToken extends BaseStore {
       return txid;
     }
     return '';
+  }
+
+  getTokenDecimals(token) {
+    let { decimals } = token;
+    if (isNil(decimals)) {
+      // TODO fetch decimals by rpc fallback if cache is null
+      const balanceInfo = storeBalance.getTokenBalanceInfoInCache(token);
+      decimals = balanceInfo.decimals;
+    }
+    return decimals;
   }
 }
 

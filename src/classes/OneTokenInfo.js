@@ -16,6 +16,8 @@ class OneTokenInfo {
     ownerAddress = '', // account address to which token belongs
     contractAddress = '', // token contract address, mintAddress in SOL
     associatedAddress = '',
+    tokenId,
+    platformId,
     ...others
   }) {
     Object.assign(this, others);
@@ -39,13 +41,17 @@ class OneTokenInfo {
       });
     this.associatedAddress = associatedAddress;
     this.chainKey = chainKey;
+    this.tokenId = tokenId || others?.extensions?.coingeckoId;
+    this.platformId = platformId;
     this.key = key || this.generateKey();
   }
 
+  // TODO _buildTokenMetaKey, _buildTokenPriceKey, _buildTokenKey in tokenController
   generateKey() {
     // TODO use tokenController.newTokenInfo() .generateTokenKey()
-    //    because the key schema should be different in other chains
-    return `${this.chainKey}-${this.address}`;
+    //    or pass wallet instance to constructor()
+    //    because the key schema should be different in different chains
+    return `${this.chainKey} => ${this.address}`;
   }
 }
 

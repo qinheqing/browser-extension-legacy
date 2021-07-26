@@ -26,21 +26,24 @@ class StoreStorage extends BaseStore {
     makeObservable(this);
 
     Promise.all([
-      this.autosave('allAccountsRaw'),
-      this.autosave('currentAccountRaw'),
-      this.autosave('currentChainKey'),
-      this.autosave('accountsGroupFilter'),
-      this.autosave('pendingTxid'),
-      this.autosave('currentTokensRaw'),
-      this.autosave('tokenMetasRaw'),
-      // TODO rename allBalanceRaw
-      this.autosave('currentBalanceRaw'),
       // homeType should be sync loaded, check bgHelpers.isAtNewApp();
       this.autosave('homeType', { useLocalStorage: true }),
+      this.autosave('maskAssetBalance'),
+
+      this.autosave('currentAccountRaw'),
+      this.autosave('currentChainKey'),
+      this.autosave('currentTokensRaw'),
+      this.autosave('currentPendingTxid'),
+
+      this.autosave('accountsGroupFilter'),
+      this.autosave('allAccountsRaw'),
+
+      this.autosave('tokenMetasRaw'),
+      this.autosave('tokenBalancesRaw'),
+      this.autosave('tokenPricesRaw'),
+
       this.autosave('chainsCustomRaw'),
       this.autosave('chainsSortKeys'),
-      this.autosave('pricesMapRaw'),
-      this.autosave('maskAssetBalance'),
     ]).then(() => {
       this.storageReady = true;
     });
@@ -120,7 +123,9 @@ class StoreStorage extends BaseStore {
   @observable
   storageReady = false; // DO NOT autosave this field
 
-  // allAccounts
+  // Why array but NOT object?
+  //      because PageWalletSelect should group accounts by chain\hardware\wallet
+  //      so array is more convenience
   // TODO auto clean data if chain has been deleted
   @observable
   allAccountsRaw = [
@@ -148,13 +153,14 @@ class StoreStorage extends BaseStore {
   };
 
   @observable
-  pendingTxid = [
+  currentPendingTxid = [
     // txid, txid, txid
   ];
 
   // TODO custom token added by user (ETH)
   @observable
   currentTokensRaw = {
+    chainKey: '',
     ownerAddress: '',
     tokens: [],
   };
@@ -165,7 +171,7 @@ class StoreStorage extends BaseStore {
   };
 
   @observable
-  currentBalanceRaw = {
+  tokenBalancesRaw = {
     // TODO move decimals to AccountInfo and TokenInfo
     // key: { balance, decimals, lastUpdate }
   };
@@ -192,7 +198,7 @@ class StoreStorage extends BaseStore {
   ];
 
   @observable.ref
-  pricesMapRaw = {};
+  tokenPricesRaw = {};
 }
 
 global._storeStorage = new StoreStorage();

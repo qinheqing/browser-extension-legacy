@@ -273,6 +273,7 @@ class WalletBase {
 
     let tx = null;
     if (isToken) {
+      // transfer token
       tx = await this.createTransferTokenTxObject({
         accountInfo,
         from: _from,
@@ -282,6 +283,7 @@ class WalletBase {
         contract,
       });
     } else {
+      // transfer native token
       tx = await this.createTransferTxObject({
         accountInfo,
         to,

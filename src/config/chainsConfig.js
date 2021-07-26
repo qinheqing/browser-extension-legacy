@@ -82,7 +82,14 @@ const SOL_TEST = {
   ],
   platformId: 'solana',
   nativeToken: {
-    tokenId: 'solana',
+    tokenId: 'solana', // TODO same to .extensions?.coingeckoId;
+    symbol: 'SOL',
+    name: 'Solana',
+    chainId: null,
+    logoURI: '', // TODO replace root."currencyIcon"
+    address: '', // token contract address
+    decimals: 18,
+    precision: 8, // UI display precision
   },
   logo: 'images/chains/solana.svg',
   currencyIcon:
