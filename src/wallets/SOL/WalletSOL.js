@@ -1,5 +1,12 @@
 import assert from 'assert';
 import bs58 from 'bs58';
+import {
+  Transaction,
+  PublicKey,
+  SystemProgram,
+  TransactionInstruction,
+  LAMPORTS_PER_SOL,
+} from 'vendors/solanaWeb3';
 import WalletBase from '../WalletBase';
 import { CONST_CHAIN_KEYS } from '../../consts/consts';
 import connectMockSOL from '../../utils/connectMockSOL';
@@ -10,16 +17,9 @@ import HdKeyProvider from './modules/HdKeyProvider';
 import KeyringSOL from './KeyringSOL';
 import helpersSOL from './modules/helpersSOL';
 import TokenController from './modules/TokenController';
-
+import { decodeSolTransactionMessage } from './utils/utilsTransactionsSOL';
 // TODO remove
 global.$$connectMockSOL = connectMockSOL;
-const {
-  Transaction,
-  PublicKey,
-  SystemProgram,
-  TransactionInstruction,
-  LAMPORTS_PER_SOL,
-} = global.solanaWeb3;
 
 class WalletSOL extends WalletBase {
   get hdCoin() {
@@ -160,7 +160,10 @@ class WalletSOL extends WalletBase {
 
   async requestAirdrop() {
     const address = new PublicKey(this.accountInfo.address);
-    return this.chainProvider.solWeb3.requestAirdrop(address, LAMPORTS_PER_SOL);
+    return this.chainProvider.solWeb3Connection.requestAirdrop(
+      address,
+      LAMPORTS_PER_SOL,
+    );
   }
 
   isValidAddress({ address }) {
@@ -196,6 +199,15 @@ class WalletSOL extends WalletBase {
       return utilsApp.formatTemplate(browserLinks.block, { block });
     }
     return browserLinks.home || utilsApp.throwToBeImplemented(this);
+  }
+
+  async decodeTransactionData({ address, data }) {
+    const txBuffer = bs58.decode(data);
+    return decodeSolTransactionMessage(
+      this.chainProvider.solWeb3Connection,
+      new PublicKey(address),
+      txBuffer,
+    );
   }
 }
 
