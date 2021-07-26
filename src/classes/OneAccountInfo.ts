@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { CONSTS_ACCOUNT_TYPES } from '../consts/consts';
 
 // TODO rename folder to models
@@ -49,6 +50,8 @@ class OneAccountInfo {
   decimals = 9;
 
   currency = ''; // BNB
+
+  _abced = '9833';
 
   // TODO some secret fields
   // privateKey = '';

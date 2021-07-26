@@ -2,6 +2,14 @@ import nacl from 'tweetnacl';
 import bs58 from 'bs58';
 import ethUtil from 'ethereumjs-util';
 import * as BufferLayout from 'buffer-layout';
+import {
+  Transaction,
+  TransactionInstruction,
+  SystemProgram,
+  PublicKey,
+  Account,
+  SYSVAR_RENT_PUBKEY,
+} from 'vendors/solanaWeb3';
 import { CONST_TEST_MNEMONIC, CONST_TX_TYPES } from '../consts/consts';
 import {
   HdKeyProviderEd25519,
@@ -9,15 +17,6 @@ import {
 } from '../wallets/HdKeyProvider';
 import helpersSOL from '../wallets/SOL/modules/helpersSOL';
 import utilsApp from './utilsApp';
-
-const {
-  Transaction,
-  TransactionInstruction,
-  SystemProgram,
-  PublicKey,
-  Account,
-  SYSVAR_RENT_PUBKEY,
-} = global.solanaWeb3;
 
 const LAYOUT = BufferLayout.union(BufferLayout.u8('instruction'));
 LAYOUT.addVariant(
@@ -274,7 +273,7 @@ function convertToSOLAddressFromDerivePublicKey(publicKeyBytes) {
     publicKeyBytes32,
   });
   const publicKeyStr = bs58.encode(publicKeyBytes32);
-  const solAddress = new global.solanaWeb3.PublicKey(publicKeyStr);
+  const solAddress = new PublicKey(publicKeyStr);
   return solAddress.toString('hex');
 }
 
@@ -309,9 +308,7 @@ async function getAccountBase({ deriveFunc, seed, path }) {
   const account = new Account(
     nacl.sign.keyPair.fromSeed(dpath.privateKeyBytes).secretKey,
   );
-  const address1 = new global.solanaWeb3.PublicKey(
-    account.publicKey,
-  ).toString();
+  const address1 = new PublicKey(account.publicKey).toString();
 
   const address2 = convertToSOLAddressFromDerivePublicKey(dpath.publicKeyBytes);
 

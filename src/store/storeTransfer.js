@@ -95,7 +95,7 @@ class StoreTransfer extends BaseStore {
       return null;
     }
 
-    // * TODO transfer token, but SOL balance is insufficient
+    // * TODO transfer token, but nativeToken (SOL) balance is insufficient
 
     const decimals = storeToken.getTokenDecimals(token);
 
