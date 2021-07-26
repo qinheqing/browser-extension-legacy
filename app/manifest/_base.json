@@ -2,7 +2,7 @@
   "author": "https://www.onekey.so",
   "background": {
     "scripts": [
-      "solana-web3.js",
+      "solana-web3.min.js",
       "globalthis.js",
       "initSentry.js",
       "lockdown.js",

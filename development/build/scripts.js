@@ -18,6 +18,7 @@ const sourcemaps = require('gulp-sourcemaps');
 const terser = require('gulp-terser-js');
 const cssModulesify = require('css-modulesify');
 const scssify = require('scssify2');
+const tsify = require('tsify');
 
 const conf = require('rc')('metamask', {
   INFURA_PROJECT_ID: process.env.INFURA_PROJECT_ID,
@@ -317,7 +318,10 @@ function createScriptTasks({ browserPlatforms, livereload }) {
       transform: [],
       debug: true,
       fullPaths: opts.devMode,
-      paths: [path.resolve(__dirname, '../..')],
+      paths: [
+        path.resolve(__dirname, '../..'),
+        path.resolve(__dirname, '../../src'),
+      ],
     });
 
     if (!opts.buildLib) {
@@ -340,7 +344,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
     // https://stackoverflow.com/questions/40029113/syntaxerror-import-and-export-may-appear-only-with-sourcetype-module-g
     let bundler = browserify(browserifyOpts)
       .transform(unflowify)
-      .transform(babelify)
+      .transform(babelify, {})
 
       // [scssify] is conflict by [cssModulesify], will finally output by [cssModulesify], use gulp instead.
       // .transform(scssify, configs.scssifyConfig)
@@ -438,6 +442,8 @@ function createScriptTasks({ browserPlatforms, livereload }) {
           : cssModulesify.generateShortName,
       });
     }
+
+    bundler.plugin(tsify, { noImplicitAny: true });
 
     return bundler;
   }
