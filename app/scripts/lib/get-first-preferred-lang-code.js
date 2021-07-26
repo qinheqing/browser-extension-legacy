@@ -1,19 +1,9 @@
 import extension from 'extensionizer';
 import promisify from 'pify';
-import allLocales from '../../_locales/index.json';
 
 const getPreferredLocales = extension.i18n
   ? promisify(extension.i18n.getAcceptLanguages, { errorFirst: false })
   : async () => [];
-
-// mapping some browsers return hyphen instead underscore in locale codes (e.g. zh_TW -> zh-tw)
-const existingLocaleCodes = {};
-allLocales.forEach((locale) => {
-  if (locale && locale.code) {
-    existingLocaleCodes[locale.code.toLowerCase().replace('_', '-')] =
-      locale.code;
-  }
-});
 
 /**
  * Returns a preferred language code, based on settings within the user's browser. If we have no translations for the
@@ -37,12 +27,17 @@ export default async function getFirstPreferredLangCode() {
   if (!userPreferredLocaleCodes) {
     userPreferredLocaleCodes = [];
   }
+  // userPreferredLocaleCodes = ["en", "zh-CN", "en-US"]
+  let preferred = 'en';
 
-  const firstPreferredLangCode = userPreferredLocaleCodes
-    .map((code) => code.toLowerCase().replace('_', '-').split('-')[0])
-    .find((code) =>
-      Object.prototype.hasOwnProperty.call(existingLocaleCodes, code),
-    );
+  for (let i = 0; i < userPreferredLocaleCodes.length; i++) {
+    const item = userPreferredLocaleCodes[i];
+    const lang = item.split('-')[0];
+    if (lang === 'en' || lang === 'zh') {
+      preferred = lang === 'zh' ? 'zh_CN' : 'en';
+      break;
+    }
+  }
 
-  return existingLocaleCodes[firstPreferredLangCode] || 'en';
+  return preferred;
 }

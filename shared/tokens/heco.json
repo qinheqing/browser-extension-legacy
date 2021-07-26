@@ -1076,6 +1076,14 @@
       "decimals": 18,
       "chainId": 128,
       "logoURI": "https://mdex.com/token-icons/heco/0x765277eebeca2e31912c9946eae1021199b39c61.png"
+    },
+    {
+      "name": "COCO Token",
+      "address": "0x8871da134f113f6819ba106df2b95af5bac90eb8",
+      "symbol": "COCO",
+      "decimals": 18,
+      "chainId": 128,
+      "logoURI": "https://hecoinfo.com/token/images/cocoswap_32.png"
     }
   ],
   "version": {

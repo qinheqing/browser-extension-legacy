@@ -54,6 +54,7 @@ async function startApp(metamaskState, backgroundConnection, opts) {
     ? await fetchLocale(metamaskState.currentLocale)
     : {};
   const enLocaleMessages = await fetchLocale('en');
+  const zhLocaleMessages = await fetchLocale('zh_CN');
 
   await loadRelativeTimeFormatLocaleData('en');
   if (metamaskState.currentLocale) {
@@ -76,21 +77,20 @@ async function startApp(metamaskState, backgroundConnection, opts) {
     localeMessages: {
       current: currentLocaleMessages,
       en: enLocaleMessages,
+      zh_CN: zhLocaleMessages,
+      zh: zhLocaleMessages, // fallback
     },
   };
 
   if (getEnvironmentType() === ENVIRONMENT_TYPE_POPUP) {
     const { origin } = draftInitialState.activeTab;
-    const permittedAccountsForCurrentTab = getPermittedAccountsForCurrentTab(
-      draftInitialState,
-    );
+    const permittedAccountsForCurrentTab =
+      getPermittedAccountsForCurrentTab(draftInitialState);
     const selectedAddress = getSelectedAddress(draftInitialState);
-    const unconnectedAccountAlertShownOrigins = getUnconnectedAccountAlertShown(
-      draftInitialState,
-    );
-    const unconnectedAccountAlertIsEnabled = getUnconnectedAccountAlertEnabledness(
-      draftInitialState,
-    );
+    const unconnectedAccountAlertShownOrigins =
+      getUnconnectedAccountAlertShown(draftInitialState);
+    const unconnectedAccountAlertIsEnabled =
+      getUnconnectedAccountAlertEnabledness(draftInitialState);
 
     if (
       origin &&

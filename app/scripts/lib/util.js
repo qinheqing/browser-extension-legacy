@@ -192,8 +192,8 @@ function stringifyBalance(balance, bnDecimals) {
   }
 
   const bal = balance.toString();
-  const val = String(bal / 10 ** decimals);
-  return val;
+  const val = bal / 10 ** decimals;
+  return String(val.toFixed(4));
 }
 
 async function timeout(ms) {

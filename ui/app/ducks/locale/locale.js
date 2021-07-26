@@ -14,5 +14,4 @@ export default function reduceLocaleMessages(state = {}, { type, value }) {
 
 export const getCurrentLocaleMessages = (state) => state.localeMessages.current;
 
-export const getDefaultLocaleMessages = (state) => state.localeMessages.zh;
-
+export const getDefaultLocaleMessages = (state) => state.localeMessages.en;
