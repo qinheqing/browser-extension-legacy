@@ -3,7 +3,7 @@ import { Observer, observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
 import URI from 'urijs';
 import bs58 from 'bs58';
-import { useHistory } from 'react-router-dom';
+import { Message } from 'vendors/solanaWeb3';
 import AppPageLayout from '../../components/AppPageLayout';
 import { CONST_DAPP_MESSAGE_TYPES } from '../../consts/consts';
 import storeAccount from '../../store/storeAccount';
@@ -18,8 +18,6 @@ import AppIcons from '../../components/AppIcons';
 import OneDetailItem from '../../components/OneDetailItem';
 import storeTransfer from '../../store/storeTransfer';
 import utilsUrl from '../../utils/utilsUrl';
-
-const { Transaction, PublicKey, Message } = global.solanaWeb3;
 
 function ApproveDappSiteInfo({ query, title, showAccountInfo = false }) {
   const account = storeAccount.currentAccount;
@@ -90,7 +88,6 @@ const CurrentBalanceView = observer(function () {
 });
 
 const ApproveConnection = observer(function ({ onApprove, query }) {
-  const history = useHistory();
   const account = storeAccount.currentAccount;
   return (
     <ApprovePageLayout
@@ -123,7 +120,19 @@ const ApproveConnection = observer(function ({ onApprove, query }) {
   );
 });
 
+async function decodeTx(txStr) {
+  const txDecoded = await storeWallet.currentWallet.decodeTransactionData({
+    address: storeAccount.currentAccountAddress,
+    data: txStr,
+  });
+  console.log('txDecoded', txDecoded);
+  return txDecoded;
+}
+
 function TransactionItemView({ txStr }) {
+  useEffect(() => {
+    decodeTx(txStr);
+  }, [txStr]);
   if (!txStr) {
     return null;
   }

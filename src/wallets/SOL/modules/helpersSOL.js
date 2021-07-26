@@ -1,13 +1,14 @@
 import * as BufferLayout from 'buffer-layout';
-
-const { Connection, clusterApiUrl, PublicKey } = global.solanaWeb3;
-const {
+import {
+  Connection,
+  clusterApiUrl,
+  PublicKey,
   Transaction,
   TransactionInstruction,
   SystemProgram,
   Account,
   SYSVAR_RENT_PUBKEY,
-} = global.solanaWeb3;
+} from 'vendors/solanaWeb3';
 
 const SYSTEM_PROGRAM_ID = new PublicKey('11111111111111111111111111111111');
 
