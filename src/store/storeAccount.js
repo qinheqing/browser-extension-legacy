@@ -166,7 +166,7 @@ class StoreAccount extends BaseStore {
   }
 
   addAccounts(accounts = []) {
-    // TODO auto generate account name
+    // TODO auto generate account name here
     storeStorage.allAccountsRaw = uniqBy(
       [...storeStorage.allAccountsRaw, ...accounts],
       (item) => item.chainKey + item.address,
@@ -220,11 +220,12 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   async initFirstAccount() {
-    const accountsInCurrentChain = this.getAccountsByChainKey(
-      this.accountsGroupFilter.chainKey,
-    );
+    const getAccountsInCurrentChain = () =>
+      this.getAccountsByChainKey(storeChain.currentChainKey);
 
-    if (!this.currentAccount && accountsInCurrentChain.length === 0) {
+    const accounts = getAccountsInCurrentChain();
+
+    if (accounts.length === 0) {
       const chainInfo = storeChain.currentChainInfo;
       const _wallet = walletFactory.createWallet({
         chainInfo,
@@ -236,10 +237,14 @@ class StoreAccount extends BaseStore {
         indexes: [0],
       });
       addresses[0].name = _wallet.chainInfo.generateAccountName({
-        index: accountsInCurrentChain.length + 1,
+        index: accounts.length + 1,
       });
       this.addAccounts(addresses);
-      this.setCurrentAccount({ account: addresses[0] });
+    }
+
+    if (!this.currentAccount) {
+      const _accounts = getAccountsInCurrentChain();
+      _accounts[0] && this.setCurrentAccount({ account: _accounts[0] });
     }
   }
 }

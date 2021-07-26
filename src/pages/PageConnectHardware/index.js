@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Observer, observer } from 'mobx-react-lite';

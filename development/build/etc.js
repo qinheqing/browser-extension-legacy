@@ -1,4 +1,5 @@
 const { promises: fs } = require('fs');
+const fse = require('fs-extra');
 const gulp = require('gulp');
 const gulpZip = require('gulp-zip');
 const del = require('del');
@@ -46,18 +47,34 @@ function createZipTask(target) {
   };
 }
 
+function rewriteJsonFile(file, processHandler) {
+  const json = fse.readJsonSync(file);
+  processHandler(json);
+  fse.writeJsonSync(file, json, { spaces: 2 });
+}
+
 function createModuleFixTask() {
   return createTask('moduleFix', async () => {
-    // @heroicons/react missing main field will cause browserify error:
-    //        Cannot find module '@heroicons/react'
-    //              at /node_modules/browser-resolve/node_modules/resolve/lib/async.js:46:17
-    // eslint-disable-next-line node/global-require
-    const heroiconsJson = require('@heroicons/react/package.json');
-    heroiconsJson.main = heroiconsJson.main || 'outline/index.js';
-    await fs.writeFile(
+    /*
+    @heroicons/react missing main field will cause browserify error:
+       Cannot find module '@heroicons/react'
+          at /node_modules/browser-resolve/node_modules/resolve/lib/async.js:46:17
+    */
+    rewriteJsonFile(
       'node_modules/@heroicons/react/package.json',
-      JSON.stringify(heroiconsJson, null, 2),
-      'utf8',
+      (json) => (json.main = json.main || 'outline/index.js'),
     );
+
+    /*
+    SyntaxError: 'import' and 'export' may appear only with 'sourceType: module' (1:0)
+        while parsing node_modules/@solana/web3.js/lib/index.browser.esm.js
+        while parsing file: node_modules/@solana/web3.js/lib/index.browser.esm.js
+
+     NOT working: index.cjs.js has fetch() error.
+     */
+    // rewriteJsonFile(
+    //   'node_modules/@solana/web3.js/package.json',
+    //   (json) => delete json.browser,
+    // );
   });
 }
