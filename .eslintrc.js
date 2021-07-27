@@ -38,6 +38,7 @@ module.exports = {
     'test/e2e/send-eth-with-private-key-test/**',
     'nyc_output/**',
     '.vscode/**',
+    'src/**/*.d.ts',
   ],
 
   extends: [
@@ -222,7 +223,7 @@ module.exports = {
   settings: {
     'import/resolver': {
       node: {
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        extensions: ['.js', '.jsx'],
       },
     },
     react: {

@@ -1,5 +1,4 @@
 import assert from 'assert';
-import * as BufferLayout from 'buffer-layout';
 import bs58 from 'bs58';
 import { isBuffer, uniqBy, isNil } from 'lodash';
 import { Connection, clusterApiUrl, PublicKey } from 'vendors/solanaWeb3';

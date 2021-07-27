@@ -13,9 +13,12 @@ import {
   u128,
   u64,
   VersionedLayout,
-} from './utilsLayoutSOL';
+} from './layouts';
 
 const { TOKEN_PROGRAM_ID } = helpersSOL;
+
+// https://github.com/project-serum/serum-ts/blob/master/packages/serum/src/instructions.js
+// ----------------------------------------------
 
 // NOTE: Update these if the position of arguments for the settleFunds instruction changes
 export const SETTLE_FUNDS_BASE_WALLET_INDEX = 5;
