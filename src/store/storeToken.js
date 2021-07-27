@@ -242,6 +242,7 @@ class StoreToken extends BaseStore {
   }
 
   async addAssociateToken({ contract }) {
+    // TODO check token contract.address is valid mint address
     const txid = await storeWallet.currentWallet.addAssociateToken({
       contract,
     });

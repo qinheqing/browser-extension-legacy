@@ -44,7 +44,7 @@ const SOL = {
     chainId: null,
     logoURI: '', // TODO replace root."currencyIcon"
     address: '', // token contract address
-    decimals: 18,
+    decimals: 9,
     precision: 8, // UI display precision
   },
   currencyIcon:
@@ -89,7 +89,7 @@ const SOL_TEST = {
     chainId: null,
     logoURI: '', // TODO replace root."currencyIcon"
     address: '', // token contract address
-    decimals: 18,
+    decimals: 9,
     precision: 8, // UI display precision
   },
   logo: 'images/chains/solana.svg',
