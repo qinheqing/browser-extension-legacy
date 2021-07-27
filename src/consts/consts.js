@@ -48,6 +48,7 @@ export const CONST_DAPP_MESSAGE_TYPES = {
 export const BACKGROUND_PROXY_MODULE_NAMES = {
   hardware: 'hardware',
   keyring: 'keyring',
+  misc: 'misc',
 };
 
 export const CONST_DURATIONS = {
