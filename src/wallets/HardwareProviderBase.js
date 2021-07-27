@@ -3,13 +3,13 @@
 import OneKeyConnect from '@onekeyhq/connect';
 import { toLower } from 'lodash';
 import utilsApp from '../utils/utilsApp';
-import { UiBackgroundProxy } from './bg/UiBackgroundProxy';
+import uiBackgroundProxy from './bg/uiBackgroundProxy';
 
 class HardwareProviderBase {
   // Why use proxy, not use connect directly:
   //     old ui and new ui should call connect at the same bg process,
   //     otherwise the second ui connect hardware will not work
-  bgProxy = new UiBackgroundProxy();
+  bgProxy = uiBackgroundProxy;
 
   _connectInternal = OneKeyConnect; // DO NOT use this, use OneKeyBackgroundProxy to invoke connect functions
 
