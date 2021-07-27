@@ -6,7 +6,9 @@ function ReactJsonView({ src, ...others }) {
     <div>
       <button
         onClick={() => {
-          console.log('ReactJsonView', src);
+          const globalVarName = `ReactJsonView_${new Date().getTime()}`;
+          console.log(`window.${globalVarName} = `, src);
+          global[globalVarName] = src;
         }}
       >
         print json

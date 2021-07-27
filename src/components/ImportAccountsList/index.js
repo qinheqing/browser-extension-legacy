@@ -18,6 +18,7 @@ import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
 import OneButton from '../OneButton';
 import storeChain from '../../store/storeChain';
 import AppIcons from '../AppIcons';
+import storeHistory from '../../store/storeHistory';
 
 // const ComponentSample = observer(ComponentSamplePure);
 
@@ -34,11 +35,15 @@ function ImportAccountItem({
     chainKey: account.chainKey,
     symbol: storeChain.currentChainInfo?.currency,
   });
+  const displayIndex = account.hdPathIndex + 1;
   return (
     <div
       className="bg-white py-3 px-4 -mx-4 border-b flex items-center"
       key={account.address}
     >
+      <strong className="bg-gray-300 p-1 mr-2 rounded leading-none text-xs">
+        {displayIndex}
+      </strong>
       <input
         className="transform scale-150 mr-4"
         defaultChecked={defaultChecked}
@@ -57,7 +62,15 @@ function ImportAccountItem({
             showUnit
             updateBalanceThrottle={60 * 1000}
           />
-          <AppIcons.ExternalLinkIcon role="button" className="w-4" />
+          <AppIcons.ExternalLinkIcon
+            onClick={() =>
+              storeHistory.openBlockBrowserLink({
+                account: account.address,
+              })
+            }
+            role="button"
+            className="w-4"
+          />
         </div>
       </div>
     </div>
