@@ -13,6 +13,7 @@ import utilsApp from '../utils/utilsApp';
 import BaseStore from './BaseStore';
 import storeStorage from './storeStorage';
 import storeChain from './storeChain';
+import storeApp from './storeApp';
 
 /*  coingecko api
 
@@ -123,7 +124,8 @@ class StorePrice extends BaseStore {
   }
 
   getTokenPrice({ token }) {
-    const currency = 'usd';
+    const { currentCurrency } = storeApp;
+    const currency = currentCurrency.toLowerCase();
     return this.getTokenPriceInfo(token)?.[currency] || 0;
   }
 
