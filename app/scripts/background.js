@@ -42,7 +42,10 @@ import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import backgroundSolana from '../../src/wallets/SOL/modules/dappProvider/background';
 import backgroundContainer from './backgroundContainer';
+import errorsGlobalHandler from './errorsGlobalHandler';
 /* eslint-enable import/first */
+
+errorsGlobalHandler.init();
 
 const { sentry } = global;
 const firstTimeState = { ...rawFirstTimeState };
@@ -50,6 +53,7 @@ const firstTimeState = { ...rawFirstTimeState };
 log.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn');
 
 const platform = new ExtensionPlatform();
+global.$$extensionPlatform = platform;
 
 const notificationManager = new NotificationManager();
 global.METAMASK_NOTIFIER = notificationManager;
