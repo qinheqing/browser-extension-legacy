@@ -8,7 +8,7 @@ index fe15421..9e53b77 100644
      }
 -    getPricingURL(currentCurrency, nativeCurrency, includeUSDRate) {
 +    getPricingURL(currentCurrency, _nativeCurrency, includeUSDRate) {
-+        var nativeCurrency = _nativeCurrency.toUpperCase() === 'XDAI' ? 'DAI': nativeCurrency
++        var nativeCurrency = _nativeCurrency.toUpperCase() === 'XDAI' ? 'DAI': _nativeCurrency
          return (`https://min-api.cryptocompare.com/data/price?fsym=` +
              `${nativeCurrency.toUpperCase()}&tsyms=${currentCurrency.toUpperCase()}` +
              `${includeUSDRate && currentCurrency.toUpperCase() !== 'USD' ? ',USD' : ''}`);
