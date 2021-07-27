@@ -1,5 +1,5 @@
 diff --git a/node_modules/@metamask/controllers/dist/assets/CurrencyRateController.js b/node_modules/@metamask/controllers/dist/assets/CurrencyRateController.js
-index fe15421..9e53b77 100644
+index fe15421..c1b7d82 100644
 --- a/node_modules/@metamask/controllers/dist/assets/CurrencyRateController.js
 +++ b/node_modules/@metamask/controllers/dist/assets/CurrencyRateController.js
 @@ -54,7 +54,8 @@ class CurrencyRateController extends BaseController_1.default {
