@@ -30,7 +30,12 @@ import storeStorage from '../../store/storeStorage';
 import storeApp from '../../store/storeApp';
 import walletFactory from '../../wallets/walletFactory';
 import OneAccountInfo from '../../classes/OneAccountInfo';
-import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
+import {
+  BACKGROUND_PROXY_MODULE_NAMES,
+  CONSTS_ACCOUNT_TYPES,
+} from '../../consts/consts';
+import uiGetBgControllerAsync from '../../wallets/bg/uiGetBgControllerAsync';
+import uiBackgroundProxy from '../../wallets/bg/uiBackgroundProxy';
 
 const HomeTopActionsBar = observer(function () {
   const [copied, handleCopy] = useCopyToClipboard();
@@ -60,8 +65,13 @@ const HomeTopActionsBar = observer(function () {
       <HomeTopActionButton
         text="公告"
         icon={AppIcons.BellIcon}
-        onClick={() => {
+        onClick={async () => {
           console.log('Notice button click');
+          uiBackgroundProxy.baseProxyCall({
+            module: BACKGROUND_PROXY_MODULE_NAMES.misc,
+            method: 'throwErrorTest',
+            params: { name: 'zyz' },
+          });
           global.testGlobalError.testGlobalErrorField = 1;
         }}
       />

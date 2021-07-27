@@ -47,11 +47,6 @@ class ChainProvider extends ChainProviderBase {
    * @return {OneAccountInfo}
    */
   normalizeAccountUpdatesInfo(solAccountInfo) {
-    console.log(
-      'normalizeAccountInfo',
-      solAccountInfo,
-      solAccountInfo?.data?.parsed?.info,
-    );
     const isToken = this.isTokenAddress(solAccountInfo.owner);
     let balance = solAccountInfo?.lamports;
     let decimals = 0;
