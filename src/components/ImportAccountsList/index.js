@@ -41,17 +41,20 @@ function ImportAccountItem({
       className="bg-white py-3 px-4 -mx-4 border-b flex items-center"
       key={account.address}
     >
-      <strong className="bg-gray-300 p-1 mr-2 rounded leading-none text-xs">
-        {displayIndex}
-      </strong>
-      <input
-        className="transform scale-150 mr-4"
-        defaultChecked={defaultChecked}
-        type="checkbox"
-        disabled={disabled}
-        checked={disabled ? true : undefined}
-        onChange={onChange}
-      />
+      <div className="self-start flex flex-col items-center mr-4">
+        <span className="text-center bg-gray-300 p-1 mb-2 rounded leading-none text-xs min-w-[18px]">
+          {displayIndex}
+        </span>
+        <input
+          className="transform scale-150"
+          defaultChecked={defaultChecked}
+          type="checkbox"
+          disabled={disabled}
+          checked={disabled ? true : undefined}
+          onChange={onChange}
+        />
+      </div>
+
       <div className="ImportAccountsList_itemContent">
         <div className="break-all text-sm leading-none">{account.address}</div>
         <small className="text-gray-400 text-xs">{account.path}</small>
@@ -65,6 +68,7 @@ function ImportAccountItem({
           <AppIcons.ExternalLinkIcon
             onClick={() =>
               storeHistory.openBlockBrowserLink({
+                wallet,
                 account: account.address,
               })
             }
