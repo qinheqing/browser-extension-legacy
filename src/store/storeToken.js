@@ -54,9 +54,18 @@ class StoreToken extends BaseStore {
 
   @computed
   get currentTokens() {
+    const { tokens } = storeStorage.currentTokensRaw;
+    const balances = storeStorage.tokenBalancesRaw;
+    const tokenSorted = tokens.slice().sort(function (a, b) {
+      const balance0 = balances[a.key] || 0;
+      const balance1 = balances[b.key] || 0;
+      const price0 = storePrice.getTokenPrice({ token: a });
+      const price1 = storePrice.getTokenPrice({ token: b });
+      return balance0 * price0 > balance1 * price1 ? -1 : 1;
+    });
     return [
       this.currentNativeToken,
-      ...storeStorage.currentTokensRaw.tokens.map((tokenRaw) => {
+      ...tokenSorted.map((tokenRaw) => {
         const tokenMeta = this.getTokenMeta({ token: tokenRaw });
         const { decimals, name, symbol, logoURI, extensions } = tokenMeta || {};
 

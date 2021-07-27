@@ -51,6 +51,12 @@ class StoreApp extends BaseStore {
     return this.homeType === 'NEW';
   }
 
+  @computed
+  get currentCurrency() {
+    const current = this.legacyState.currentCurrency;
+    return current.toUpperCase() === 'CNY' ? 'CNY' : 'USD';
+  }
+
   toggleAssetBalanceVisible() {
     storeStorage.maskAssetBalance = !storeStorage.maskAssetBalance;
   }
@@ -68,6 +74,7 @@ class StoreApp extends BaseStore {
     isUnlocked: false,
     selectedAddress: '',
     hwOnlyMode: false,
+    currentCurrency: 'usd',
   };
 }
 
