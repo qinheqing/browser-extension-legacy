@@ -19,5 +19,5 @@ export const ROUTE_TX_HISTORY = `${ROUTE_PREFIX}/tx-history`;
 export const ROUTE_TOKEN_DETAIL = `${ROUTE_PREFIX}/token-detail`;
 // /app/token-add
 export const ROUTE_TOKEN_ADD = `${ROUTE_PREFIX}/token-add`;
-
+// /app/account-detail
 export const ROUTE_ACCOUNT_DETAIL = `${ROUTE_PREFIX}/account-detail`;

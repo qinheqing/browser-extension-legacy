@@ -17,7 +17,7 @@ import HdKeyProvider from './modules/HdKeyProvider';
 import KeyringSOL from './KeyringSOL';
 import helpersSOL from './modules/helpersSOL';
 import TokenController from './modules/TokenController';
-import { decodeSolTransactionMessage } from './utils/utilsTransactionsSOL';
+
 // TODO remove
 global.$$connectMockSOL = connectMockSOL;
 
@@ -31,7 +31,7 @@ class WalletSOL extends WalletBase {
       // TODO move to chainInfo
       // https://solana-labs.github.io/solana-web3.js/modules.html#commitment
       defaultCommitment: helpersSOL.COMMITMENT_TYPES.processed, // processed, confirmed, finalized
-      balanceDecimals: 9,
+      balanceDecimals: 9, // chainInfo.nativeToken.decimals
       hdPathTemplate: `m/44'/501'/{{index}}'/0'`,
     };
   }
@@ -202,10 +202,14 @@ class WalletSOL extends WalletBase {
   }
 
   async decodeTransactionData({ address, data }) {
+    // use lazy import, as utilsSolTransactions includes huge logic and data
+    const utilsSolTransactions = await import('./utils/utilsSolTransactions');
     const txBuffer = bs58.decode(data);
-    return decodeSolTransactionMessage(
+    return utilsSolTransactions.decodeSolTransactionMessage(
       this.chainProvider.solWeb3Connection,
-      new PublicKey(address),
+      {
+        publicKey: new PublicKey(address),
+      },
       txBuffer,
     );
   }

@@ -8,7 +8,7 @@ function showExtensionNotification(error) {
     showNotification &&
     msg &&
     showNotification(
-      'Uncaught Error',
+      'OneKey Error',
       msg,
       // 'OneKey background global error handler', // notification id
     )

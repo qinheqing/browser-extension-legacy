@@ -10,10 +10,15 @@ export default function AmountText({
   precision = 8, // TODO read from chainInfo config
   roundMode = 'round', // floor,ceil,round
 }) {
-  return utilsNumber.toNormalNumber({
+  const num = utilsNumber.toNormalNumber({
     value,
     decimals,
     precision,
     roundMode,
   });
+  return (
+    <span data-value={value} data-decimals={decimals}>
+      {num}
+    </span>
+  );
 }
