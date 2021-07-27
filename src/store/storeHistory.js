@@ -93,10 +93,11 @@ class StoreHistory extends BaseStore {
     replace ? this.replace(ROUTE_TOKEN_DETAIL) : this.push(ROUTE_TOKEN_DETAIL);
   }
 
-  async openBlockBrowserLink({ tx, account, token, block, ...others }) {
+  async openBlockBrowserLink({ wallet, tx, account, token, block, ...others }) {
     const storeWallet = (await import('./storeWallet')).default;
-
-    const link = storeWallet.currentWallet.getBlockBrowserLink({
+    // eslint-disable-next-line no-param-reassign
+    wallet = wallet || storeWallet.currentWallet;
+    const link = wallet.getBlockBrowserLink({
       tx,
       account,
       token,
