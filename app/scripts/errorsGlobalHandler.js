@@ -4,7 +4,15 @@ function showExtensionNotification(error) {
   const msg = isString(error) ? error : error.message;
 
   const showNotification = global?.$$extensionPlatform?._showNotification;
-  return showNotification && msg && showNotification('Uncaught Error', msg);
+  return (
+    showNotification &&
+    msg &&
+    showNotification(
+      'Uncaught Error',
+      msg,
+      // 'OneKey background global error handler', // notification id
+    )
+  );
 }
 
 function init() {
