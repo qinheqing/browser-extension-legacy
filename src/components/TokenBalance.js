@@ -95,6 +95,7 @@ function TokenBalance({
       _wallet.chainProvider.removeAccountChangeListener(listenerId);
     };
   }, [address]);
+  console.log('token balance render:', { address, balance, decimals });
   return (
     <>
       <span className={className}>

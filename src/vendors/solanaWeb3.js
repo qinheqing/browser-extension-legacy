@@ -20,6 +20,9 @@ const {
   StakeInstruction,
   StakeProgram,
   SystemInstruction,
+  AccountInfo,
+  Commitment,
+  TransactionSignature,
 } = global.solanaWeb3;
 
 export {
@@ -36,4 +39,7 @@ export {
   StakeInstruction,
   StakeProgram,
   SystemInstruction,
+  AccountInfo,
+  Commitment,
+  TransactionSignature,
 };

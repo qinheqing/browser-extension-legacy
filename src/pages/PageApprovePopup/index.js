@@ -130,9 +130,6 @@ async function decodeTx(txStr) {
 }
 
 function TransactionItemView({ txStr }) {
-  useEffect(() => {
-    decodeTx(txStr);
-  }, [txStr]);
   if (!txStr) {
     return null;
   }
@@ -153,6 +150,13 @@ function TransactionItemView({ txStr }) {
 }
 
 const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
+  const txStr = query?.request?.params?.message;
+  const [txDecoded, setTxDecoded] = useState({});
+  useEffect(() => {
+    if (txStr) {
+      decodeTx(txStr).then((tx) => setTxDecoded(tx));
+    }
+  }, [txStr]);
   useEffect(() => {
     storeTransfer.fetchTransactionFee();
   }, []);
@@ -160,7 +164,6 @@ const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
   if (!account) {
     return <div>Current wallet account not found</div>;
   }
-  const txStr = query?.request?.params?.message;
   return (
     <ApprovePageLayout
       title="授权交易"
@@ -179,6 +182,7 @@ const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
     >
       <div className="">
         <ApproveDappSiteInfo title="是否授权该网站的交易请求" query={query} />
+        <ReactJsonView src={txDecoded} />
         <div className="divide-y px-4">
           <OneDetailItem title="手续费">
             {storeTransfer.fee} {storeTransfer.feeSymbol}
