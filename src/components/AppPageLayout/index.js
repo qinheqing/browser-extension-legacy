@@ -13,6 +13,7 @@ export default function AppPageLayout({
   children,
   footer,
 }) {
+  console.log('AppPageLayout render');
   return (
     <div className={styles.root}>
       <div

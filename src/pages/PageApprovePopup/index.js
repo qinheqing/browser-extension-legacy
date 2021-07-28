@@ -3,7 +3,9 @@ import { Observer, observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
 import URI from 'urijs';
 import bs58 from 'bs58';
-import { Message } from 'vendors/solanaWeb3';
+import { Message, PublicKey } from 'vendors/solanaWeb3';
+import { isString, isNumber, isDate } from 'lodash';
+import BN from 'bn.js';
 import AppPageLayout from '../../components/AppPageLayout';
 import { CONST_DAPP_MESSAGE_TYPES } from '../../consts/consts';
 import storeAccount from '../../store/storeAccount';
@@ -15,12 +17,23 @@ import TokenBalance from '../../components/TokenBalance';
 import storeToken from '../../store/storeToken';
 import OneButton from '../../components/OneButton';
 import AppIcons from '../../components/AppIcons';
-import OneDetailItem from '../../components/OneDetailItem';
+import OneDetailItem, {
+  OneDetailItemGroup,
+} from '../../components/OneDetailItem';
 import storeTransfer from '../../store/storeTransfer';
 import utilsUrl from '../../utils/utilsUrl';
+import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
+import utilsApp from '../../utils/utilsApp';
+import { OneField } from '../../components/OneField';
+import OneCellItem from '../../components/OneCellItem';
+import OneArrow from '../../components/OneArrow';
+import { ChainLogoIcon } from '../../components/LogoIcon';
 
 function ApproveDappSiteInfo({ query, title, showAccountInfo = false }) {
   const account = storeAccount.currentAccount;
+  if (useDataRequiredOrRedirect(account)) {
+    return null;
+  }
   const connectAccountInfo = account && (
     <>
       <AppIcons.SwitchVerticalIcon className="w-10 my-4 text-green-one-500" />
@@ -31,14 +44,6 @@ function ApproveDappSiteInfo({ query, title, showAccountInfo = false }) {
             {storeAccount.currentAccountAddressShort}
           </div>
         </>
-      )}
-      {!account && (
-        <div>
-          <div>请先选择一个账户进行操作</div>
-          <OneButton onClick={() => history.push(ROUTE_WALLET_SELECT)}>
-            选择账户
-          </OneButton>
-        </div>
       )}
     </>
   );
@@ -52,10 +57,10 @@ function ApproveDappSiteInfo({ query, title, showAccountInfo = false }) {
   );
 }
 
-function ApprovePageLayout({ title, actions, ...others }) {
+function ApprovePageLayout({ title, actions, whiteBg = true, ...others }) {
   return (
     <AppPageLayout
-      whiteBg
+      whiteBg={whiteBg}
       navLeft={null}
       title={title}
       footer={
@@ -129,29 +134,79 @@ async function decodeTx(txStr) {
   return txDecoded;
 }
 
-function TransactionItemView({ txStr }) {
-  if (!txStr) {
+function TransactionAccountsListView({ txDecoded }) {
+  const rawTx = txDecoded?.rawTx;
+  if (!rawTx || !txDecoded) {
     return null;
   }
-  const tx = Message.from(bs58.decode(txStr));
-  const accountKeys = tx?.accountKeys || [];
+  const accountKeys = rawTx?.accountKeys || [];
   return (
     <>
-      {accountKeys.map((k, index) => (
-        <OneDetailItem
-          alignY
-          title="交易账户"
-          key={index}
-          content={<div className="break-all">{k.toString()}</div>}
-        />
-      ))}
+      <OneDetailItem
+        title="交易账户"
+        content={
+          <div className="break-all">
+            {accountKeys.map((k, index) => (
+              <div key={index}>{utilsApp.shortenAddress(k.toString())}</div>
+            ))}
+          </div>
+        }
+      />
     </>
   );
 }
 
+function InstructionDataValueViewSOL({ value }) {
+  let content = value;
+
+  if (content?.toBase58) {
+    content = utilsApp.shortenAddress(content.toBase58());
+  }
+
+  return utilsApp.reactSafeRender(content) || '-';
+}
+
+function TxInstructionCardSOL({ instruction }) {
+  if (!instruction) {
+    return null;
+  }
+  const dataArr = Object.entries(instruction?.data || {});
+  return (
+    <div className="bg-white border rounded mx-4 my-2">
+      <div className="border-b px-2 py-1.5 font-bold flex items-center">
+        <span>{utilsApp.changeCase.capitalCase(instruction.type)}</span>
+        <div className="flex-1" />
+        <OneArrow />
+      </div>
+      <OneDetailItemGroup divide={false} className="px-2 py-2">
+        {dataArr.map(([k, v]) => {
+          return (
+            <OneDetailItem
+              compact
+              key={k}
+              title={utilsApp.changeCase.capitalCase(k)}
+              content={<InstructionDataValueViewSOL value={v} />}
+            />
+          );
+        })}
+      </OneDetailItemGroup>
+    </div>
+  );
+}
+
+function TransactionItemView({ txDecoded }) {
+  if (!txDecoded) {
+    return null;
+  }
+  const instructions = txDecoded?.instructions || [];
+  return instructions.map((instruction, index) => (
+    <TxInstructionCardSOL key={index} instruction={instruction} />
+  ));
+}
+
 const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
   const txStr = query?.request?.params?.message;
-  const [txDecoded, setTxDecoded] = useState({});
+  const [txDecoded, setTxDecoded] = useState(null);
   useEffect(() => {
     if (txStr) {
       decodeTx(txStr).then((tx) => setTxDecoded(tx));
@@ -166,10 +221,12 @@ const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
   }
   return (
     <ApprovePageLayout
+      whiteBg={false}
       title="授权交易"
+      navRight={<ChainLogoIcon />}
       actions={
         <>
-          {/* TODO window close trigger onReject()*/}
+          {/* TODO beforeunload window close trigger onReject() */}
           <OneButton block type="white" onClick={() => onReject()}>
             拒绝
           </OneButton>
@@ -182,13 +239,25 @@ const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
     >
       <div className="">
         <ApproveDappSiteInfo title="是否授权该网站的交易请求" query={query} />
-        <ReactJsonView src={txDecoded} />
-        <div className="divide-y px-4">
+
+        <TransactionItemView txDecoded={txDecoded} />
+
+        <div
+          className="bg-white divide-y px-4"
+          onClick={() => console.log('txDecoded', txDecoded)}
+        >
+          <OneDetailItem title="授权账户">
+            <div className="flex items-center">
+              <ChainLogoIcon size="sm" className="mr-2" />
+              {storeAccount.currentAccountAddressShort}
+            </div>
+          </OneDetailItem>
           <OneDetailItem title="手续费">
             {storeTransfer.fee} {storeTransfer.feeSymbol}
           </OneDetailItem>
-          <TransactionItemView txStr={txStr} />
-          <OneDetailItem alignY title="交易原始数据">
+
+          {/* <TransactionAccountsListView txDecoded={txDecoded} /> */}
+          <OneDetailItem alignY title="原始数据">
             <div className="break-all">{txStr}</div>
           </OneDetailItem>
         </div>
@@ -286,7 +355,7 @@ function PageApprovePopup() {
           messageDisplay: request.params.display === 'utf8' ? 'utf8' : 'hex',
         };
       default:
-        throw new Error(`Unexpected method > ${request.method}`);
+        throw new Error(`Unexpected approve method > ${request.method}`);
     }
   }, [request]);
 
@@ -387,6 +456,7 @@ function PageApprovePopup() {
 
   return (
     <AppPageLayout>
+      <h1>method=[{request.method}] is not correct.</h1>
       <ReactJsonView collapsed={false} src={query} />
     </AppPageLayout>
   );
