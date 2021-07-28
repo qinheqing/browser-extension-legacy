@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { getEnvironmentType } from '../../../../../app/scripts/lib/util';
 import Identicon from '../../ui/identicon';
+import { MESSAGE_TYPE } from '../../../../../shared/constants/app';
 import Header from './signature-request-header';
 import Footer from './signature-request-footer';
 import Message from './signature-request-message';
@@ -14,6 +15,7 @@ export default class SignatureRequest extends PureComponent {
       address: PropTypes.string.isRequired,
       balance: PropTypes.string,
       name: PropTypes.string,
+      accountType: PropTypes.string,
     }).isRequired,
 
     clearConfirmTransaction: PropTypes.func.isRequired,
@@ -55,6 +57,7 @@ export default class SignatureRequest extends PureComponent {
     const {
       fromAccount,
       txData: {
+        type,
         msgParams: { data, origin },
       },
       cancel,
@@ -62,6 +65,9 @@ export default class SignatureRequest extends PureComponent {
     } = this.props;
     const { address: fromAddress } = fromAccount;
     const { message, domain = {} } = JSON.parse(data);
+    const disabled =
+      fromAccount.accountType === 'hardware' &&
+      type === MESSAGE_TYPE.ETH_SIGN_TYPED_DATA;
 
     return (
       <div className="signature-request page-container">
@@ -86,7 +92,7 @@ export default class SignatureRequest extends PureComponent {
           </div>
         </div>
         <Message data={message} />
-        <Footer cancelAction={cancel} signAction={sign} />
+        <Footer cancelAction={cancel} signAction={sign} disabled={disabled} />
       </div>
     );
   }
