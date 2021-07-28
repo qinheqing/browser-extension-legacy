@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { matchPath, Route, Switch } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 
@@ -70,60 +70,13 @@ import {
   UniversalRoutesWrapper,
 } from '../../../../src/components/AppRootView';
 
-export default class Routes extends Component {
+class AllRoutesComponents extends PureComponent {
   static propTypes = {
-    currentCurrency: PropTypes.string,
-    setCurrentCurrencyToUSD: PropTypes.func,
-    isLoading: PropTypes.bool,
-    loadingMessage: PropTypes.string,
-    alertMessage: PropTypes.string,
-    textDirection: PropTypes.string,
-    network: PropTypes.string,
-    provider: PropTypes.object,
-    frequentRpcListDetail: PropTypes.array,
-    sidebar: PropTypes.object,
-    alertOpen: PropTypes.bool,
-    hideSidebar: PropTypes.func,
-    isUnlocked: PropTypes.bool,
-    setLastActiveTime: PropTypes.func,
-    history: PropTypes.object,
-    location: PropTypes.object,
-    lockMetaMask: PropTypes.func,
-    submittedPendingTransactions: PropTypes.array,
-    isMouseUser: PropTypes.bool,
-    setMouseUserState: PropTypes.func,
-    providerId: PropTypes.string,
     autoLockTimeLimit: PropTypes.number,
-    pageChanged: PropTypes.func.isRequired,
-    prepareToLeaveSwaps: PropTypes.func,
+    setLastActiveTime: PropTypes.func,
   };
 
-  static contextTypes = {
-    t: PropTypes.func,
-    metricsEvent: PropTypes.func,
-  };
-
-  constructor(props) {
-    super(props);
-    global.onekeyHistory = props.history;
-  }
-
-  UNSAFE_componentWillMount() {
-    const { currentCurrency, pageChanged, setCurrentCurrencyToUSD } =
-      this.props;
-
-    if (!currentCurrency) {
-      setCurrentCurrencyToUSD();
-    }
-
-    this.props.history.listen((locationObj, action) => {
-      if (action === 'PUSH') {
-        pageChanged(locationObj.pathname);
-      }
-    });
-  }
-
-  renderRoutes() {
+  render() {
     const { autoLockTimeLimit, setLastActiveTime } = this.props;
     let routes = (
       <Switch>
@@ -206,6 +159,60 @@ export default class Routes extends Component {
     }
 
     return routes;
+  }
+}
+
+export default class Routes extends PureComponent {
+  static propTypes = {
+    currentCurrency: PropTypes.string,
+    setCurrentCurrencyToUSD: PropTypes.func,
+    isLoading: PropTypes.bool,
+    loadingMessage: PropTypes.string,
+    alertMessage: PropTypes.string,
+    textDirection: PropTypes.string,
+    network: PropTypes.string,
+    provider: PropTypes.object,
+    frequentRpcListDetail: PropTypes.array,
+    sidebar: PropTypes.object,
+    alertOpen: PropTypes.bool,
+    hideSidebar: PropTypes.func,
+    isUnlocked: PropTypes.bool,
+    setLastActiveTime: PropTypes.func,
+    history: PropTypes.object,
+    location: PropTypes.object,
+    lockMetaMask: PropTypes.func,
+    submittedPendingTransactions: PropTypes.array,
+    isMouseUser: PropTypes.bool,
+    setMouseUserState: PropTypes.func,
+    providerId: PropTypes.string,
+    autoLockTimeLimit: PropTypes.number,
+    pageChanged: PropTypes.func.isRequired,
+    prepareToLeaveSwaps: PropTypes.func,
+  };
+
+  static contextTypes = {
+    t: PropTypes.func,
+    metricsEvent: PropTypes.func,
+  };
+
+  constructor(props) {
+    super(props);
+    global.onekeyHistory = props.history;
+  }
+
+  UNSAFE_componentWillMount() {
+    const { currentCurrency, pageChanged, setCurrentCurrencyToUSD } =
+      this.props;
+
+    if (!currentCurrency) {
+      setCurrentCurrencyToUSD();
+    }
+
+    this.props.history.listen((locationObj, action) => {
+      if (action === 'PUSH') {
+        pageChanged(locationObj.pathname);
+      }
+    });
   }
 
   onInitializationUnlockPage() {
@@ -375,7 +382,7 @@ export default class Routes extends Component {
         <div className={classnames('main-container-wrapper')}>
           {isLoading && <Loading loadingMessage={loadMessage} />}
           {!isLoading && isLoadingNetwork && <LoadingNetwork />}
-          {this.renderRoutes()}
+          <AllRoutesComponents />
         </div>
         {isUnlocked ? <Alerts history={this.props.history} /> : null}
       </div>
