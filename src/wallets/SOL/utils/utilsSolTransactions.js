@@ -96,12 +96,16 @@ const toInstruction = async (
   index,
 ) => {
   const { accounts = [], data = '', programIdIndex } = instruction || {};
-  // get instruction data
+  // get instruction data ( Buffer type )
   const dataDecoded = data && bs58.decode(data);
   const programId =
     programIdIndex && getAccountByIndex([programIdIndex], accountKeys, 0);
 
   const instructionCommon = {
+    data: {
+      programId,
+      data, // data as String type
+    },
     accountMetas: accounts.map((index) => {
       const publicKey = accountKeys[index];
       return {
@@ -114,8 +118,8 @@ const toInstruction = async (
     programIdStr: programId ? programId.toString() : '',
   };
   const unknownInstruction = {
-    type: 'Unknown',
     ...instructionCommon,
+    type: 'unknown',
   };
 
   if (!programId) {
@@ -197,8 +201,8 @@ const toInstruction = async (
 
 function handleAssociateTokenInstruction({ instructionCommon }) {
   return {
-    type: 'createTokenAccount',
     ...instructionCommon,
+    type: 'createTokenAccount',
   };
 }
 
