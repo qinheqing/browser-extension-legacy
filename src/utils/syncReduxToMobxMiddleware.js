@@ -5,8 +5,10 @@ const syncReduxToMobxMiddleware = (store) => (next) => (action) => {
 
   // eslint-disable-next-line node/callback-return
   const result = next(action);
-
   const newState = store.getState();
+
+  // console.log('Redux action dispatch: ', action, newState);
+
   if (newState.metamask) {
     const { isUnlocked, selectedAddress, hwOnlyMode, currentCurrency } =
       newState.metamask;
