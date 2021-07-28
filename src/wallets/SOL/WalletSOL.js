@@ -202,6 +202,7 @@ class WalletSOL extends WalletBase {
   }
 
   async decodeTransactionData({ address, data }) {
+    // throw new Error('Simulate decode tx error');
     // use lazy import, as utilsSolTransactions includes huge logic and data
     const utilsSolTransactions = await import('./utils/utilsSolTransactions');
     const txBuffer = bs58.decode(data);
