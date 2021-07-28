@@ -28,6 +28,7 @@ import storeHistory from '../../store/storeHistory';
 import storeChain from '../../store/storeChain';
 import storeStorage from '../../store/storeStorage';
 import storeApp from '../../store/storeApp';
+import storePrice from '../../store/storePrice';
 import walletFactory from '../../wallets/walletFactory';
 import OneAccountInfo from '../../classes/OneAccountInfo';
 import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
@@ -178,9 +179,11 @@ const HomeAssetsHeader = observer(function () {
 });
 
 const HomeAssetsList = observer(function () {
+  const tokens = storeToken.currentTokens;
+
   return (
     <div className="py-3 -mx-4 ">
-      {storeToken.currentTokens.map((token, index) => {
+      {tokens.map((token, index) => {
         return (
           <TokenInfoCard
             key={token.contractAddress + index}
