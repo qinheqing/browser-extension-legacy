@@ -9,6 +9,16 @@ const fetchWithTimeout = getFetchWithTimeout(30000);
 // By default, poll every 3 minutes
 const DEFAULT_INTERVAL = 180 * 1000;
 
+const coingeckoAssetPlatforms = {
+  1: 'ethereum',
+  56: 'binance-smart-chain',
+  100: 'xdai',
+  250: 'fantom',
+  128: 'huobi-token',
+  137: 'polygon-pos',
+  66: 'okex-chain',
+};
+
 /**
  * A controller that polls for token exchange
  * rates based on a user's current token list
@@ -19,9 +29,10 @@ export default class TokenRatesController {
    *
    * @param {Object} [config] - Options to configure controller
    */
-  constructor({ preferences, getNativeCurrency } = {}) {
+  constructor({ preferences, getNativeCurrency, getCurrentChainId } = {}) {
     this.store = new ObservableStore();
     this.getNativeCurrency = getNativeCurrency;
+    this.getCurrentChainId = getCurrentChainId;
     this.tokens = preferences.getState().tokens;
     preferences.subscribe(({ tokens = [] }) => {
       this.tokens = tokens;
@@ -34,12 +45,15 @@ export default class TokenRatesController {
   async updateExchangeRates() {
     const contractExchangeRates = {};
     const nativeCurrency = this.getNativeCurrency().toLowerCase();
+    const currentChainId = Number(this.getCurrentChainId());
+    const assetPlatform =
+      coingeckoAssetPlatforms[String(currentChainId)] || 'ethereum';
     const pairs = this._tokens.map((token) => token.address).join(',');
     const query = `contract_addresses=${pairs}&vs_currencies=${nativeCurrency}`;
     if (this._tokens.length > 0) {
       try {
         const response = await fetchWithTimeout(
-          `https://api.coingecko.com/api/v3/simple/token_price/ethereum?${query}`,
+          `https://api.coingecko.com/api/v3/simple/token_price/${assetPlatform}?${query}`,
         );
         const prices = await response.json();
         this._tokens.forEach((token) => {
