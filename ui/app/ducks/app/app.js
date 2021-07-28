@@ -288,11 +288,13 @@ export default function reduceApp(state = {}, action) {
       };
 
     case actionConstants.SET_MOUSE_USER_STATE:
-      return {
-        ...appState,
-        isMouseUser: action.value,
-      };
-
+      if (appState.isMouseUser !== action.value) {
+        return {
+          ...appState,
+          isMouseUser: action.value,
+        };
+      }
+      return appState;
     case actionConstants.GAS_LOADING_STARTED:
       return {
         ...appState,
