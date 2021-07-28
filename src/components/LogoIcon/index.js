@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import AppIcons from '../AppIcons';
+import storeChain from '../../store/storeChain';
 import styles from './index.css';
 
 function LogoIcon({
   src,
-  size = 'md',
+  size = 'md', // md sm
   border = true,
   active = false,
   label = '',
@@ -55,7 +56,14 @@ LogoIcon.propTypes = {
   children: PropTypes.any,
 };
 
-function ChainLogoIcon({ chainInfo, size, className, ...others }) {
+const ChainLogoIcon = observer(function ({
+  chainInfo,
+  size,
+  className,
+  ...others
+}) {
+  // eslint-disable-next-line no-param-reassign
+  chainInfo = chainInfo || storeChain.currentChainInfo;
   const imgSrc = chainInfo?.logo;
   return (
     <LogoIcon
@@ -66,7 +74,7 @@ function ChainLogoIcon({ chainInfo, size, className, ...others }) {
       {...others}
     />
   );
-}
+});
 
 function TokenLogoIcon({ tokenInfo, size = 'md', className, ...others }) {
   const imgSrc = tokenInfo?.logoURI || tokenInfo?.icon;

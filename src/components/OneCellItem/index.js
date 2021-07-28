@@ -4,6 +4,7 @@ import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import TimeAgo from 'react-timeago';
 import AppIcons from '../AppIcons';
+import OneArrow from '../OneArrow';
 import styles from './index.css';
 
 function OneCellItem({
@@ -13,7 +14,7 @@ function OneCellItem({
   content,
   arrow,
   border = true,
-  appearance = 'flat',
+  appearance = 'flat', // flat, card
   children,
   className,
   onClick,
@@ -57,7 +58,7 @@ function OneCellItem({
         {end && (
           <div className="pl-2 u-flex-center text-xs text-gray-400 ">{end}</div>
         )}
-        {arrow && <AppIcons.ChevronRightIcon className="w-4 text-gray-300" />}
+        {arrow && <OneArrow />}
       </div>
     </div>
   );

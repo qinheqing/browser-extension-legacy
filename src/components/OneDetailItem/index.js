@@ -4,18 +4,35 @@ import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import styles from './index.css';
 
+function OneDetailItemGroup({ children, divide = true, className }) {
+  return (
+    <div
+      className={classnames(
+        {
+          'divide-y': divide,
+        },
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
 function OneDetailItem({
   alignY = false,
   title,
   content,
   children,
   bold = false,
+  compact = false,
 }) {
   return (
     <div
       className={classnames(
-        'flex items-start justify-between text-sm py-3',
+        'flex items-start justify-between text-sm ',
         bold && 'font-bold',
+        compact ? 'py-1' : 'py-3',
         {
           'flex-col': alignY,
         },
@@ -37,3 +54,4 @@ function OneDetailItem({
 }
 
 export default OneDetailItem;
+export { OneDetailItemGroup };
