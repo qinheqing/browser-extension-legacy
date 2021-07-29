@@ -1,6 +1,7 @@
 import { createAsyncMiddleware } from 'json-rpc-engine';
 import { ethErrors } from 'eth-rpc-errors';
 import bgHelpers from '../../../../src/wallets/bg/bgHelpers';
+import utilsApp from '../../../../src/utils/utilsApp';
 
 export const MOCK_ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -27,7 +28,7 @@ export default function createPermissionsMethodMiddleware({
   return createAsyncMiddleware(async (req, res, next) => {
     let responseHandler;
 
-    if (bgHelpers.isAtNewApp()) {
+    if (utilsApp.isNewHome()) {
       if (req.method === 'eth_chainId') {
         res.result = MOCK_CHAIN_ID_WHEN_NEW_APP.chainId;
         return;

@@ -28,6 +28,7 @@ import { getBackgroundMetaMetricState } from '../../ui/app/selectors';
 import { TRANSACTION_STATUSES } from '../../shared/constants/transaction';
 import backgroundProxy from '../../src/wallets/bg/backgroundProxy';
 import bgHelpers from '../../src/wallets/bg/bgHelpers';
+import utilsApp from '../../src/utils/utilsApp';
 import AddressKeyring from './lib/eth-address-keyring';
 import ComposableObservableStore from './lib/ComposableObservableStore';
 import AccountTracker from './lib/account-tracker';
@@ -2422,7 +2423,7 @@ export default class MetamaskController extends EventEmitter {
         if (conn.engine) {
           let _payload = getPayload(origin);
           if (
-            bgHelpers.isAtNewApp() &&
+            utilsApp.isNewHome() &&
             _payload.method === NOTIFICATION_NAMES.chainChanged
           ) {
             _payload = {
@@ -2437,7 +2438,7 @@ export default class MetamaskController extends EventEmitter {
   }
 
   notifyChainIdChanged() {
-    if (bgHelpers.isAtNewApp()) {
+    if (utilsApp.isNewHome()) {
       this.notifyAllConnections({
         method: NOTIFICATION_NAMES.chainChanged,
         params: MOCK_CHAIN_ID_WHEN_NEW_APP,

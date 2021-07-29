@@ -9,6 +9,7 @@ import {
 } from 'mobx';
 import { merge } from 'lodash';
 import { Semaphore } from 'async-mutex';
+import utilsApp from '../utils/utilsApp';
 import BaseStore from './BaseStore';
 import storeStorage from './storeStorage';
 
@@ -50,6 +51,10 @@ class StoreBalance extends BaseStore {
 
   fetchBalancePendingQueue = {};
 
+  deletePendingBalanceFetchTask(address) {
+    delete this.fetchBalancePendingQueue[address];
+  }
+
   async fetchBalanceInfo({ wallet, address, tokenInfo }) {
     const tokenKey = tokenInfo.key;
     if (this.fetchBalancePendingQueue[address]) {
@@ -63,7 +68,8 @@ class StoreBalance extends BaseStore {
           return storeStorage.tokenBalancesRaw[tokenKey];
         }
         const result = await wallet.chainProvider.getAccountInfo({ address });
-        delete this.fetchBalancePendingQueue[address];
+        await utilsApp.delay(150);
+        this.deletePendingBalanceFetchTask(address);
         return result;
       });
     // TODO update cache balance here, and View only read balance from cache, not from api

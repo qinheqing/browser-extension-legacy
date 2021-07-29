@@ -1,7 +1,8 @@
 /* eslint import/no-cycle: "error" */
+import assert from 'assert';
 import { autorun, makeObservable, toJS, configure } from 'mobx';
 import { isFunction, isNil } from 'lodash';
-import utilsStorage from '../utils/utilsStorage';
+import utilsApp from '../utils/utilsApp';
 
 configure({
   // https://mobx.js.org/configuration.html#enforceactions
@@ -9,19 +10,15 @@ configure({
 });
 global.__mobxToJS = toJS;
 
-export function getAutoSaveLocalStorageItem(name) {
-  const storageKey = buildAutoSaveStorageKey(name);
-  return utilsStorage.getItem(storageKey);
-}
-
-export function buildAutoSaveStorageKey(name) {
-  return `autosave.storage.${name}`;
-}
-
 class BaseStore {
   constructor(props) {
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
+
+    assert(
+      utilsApp.isUiEnvironment(),
+      'Mobx Store is not allowed in extension background runtime',
+    );
   }
 
   toJS() {

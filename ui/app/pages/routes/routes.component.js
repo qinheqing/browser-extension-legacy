@@ -69,13 +69,14 @@ import {
   OldHomeRootComponents,
   UniversalRoutesWrapper,
 } from '../../../../src/components/AppRootView';
+import utilsApp from '../../../../src/utils/utilsApp';
 
-class AllRoutesComponents extends PureComponent {
-  static propTypes = {
-    autoLockTimeLimit: PropTypes.number,
-    setLastActiveTime: PropTypes.func,
-  };
+const AllRoutesComponentsProps = {
+  autoLockTimeLimit: PropTypes.number,
+  setLastActiveTime: PropTypes.func,
+};
 
+class AllRoutesComponents extends Component {
   render() {
     const { autoLockTimeLimit, setLastActiveTime } = this.props;
     let routes = (
@@ -161,8 +162,16 @@ class AllRoutesComponents extends PureComponent {
     return routes;
   }
 }
+AllRoutesComponents.propTypes = AllRoutesComponentsProps;
 
-export default class Routes extends PureComponent {
+class AllRoutesComponentsPure extends PureComponent {
+  render() {
+    return <AllRoutesComponents {...this.props} />;
+  }
+}
+AllRoutesComponentsPure.propTypes = AllRoutesComponentsProps;
+
+export default class Routes extends Component {
   static propTypes = {
     currentCurrency: PropTypes.string,
     setCurrentCurrencyToUSD: PropTypes.func,
@@ -342,6 +351,7 @@ export default class Routes extends PureComponent {
       <div
         className={classnames('app', { 'mouse-user-styles': isMouseUser })}
         dir={textDirection}
+        // body click re-render
         onClick={() => setMouseUserState(true)}
         onKeyDown={(e) => {
           if (e.keyCode === 9) {
@@ -382,7 +392,13 @@ export default class Routes extends PureComponent {
         <div className={classnames('main-container-wrapper')}>
           {isLoading && <Loading loadingMessage={loadMessage} />}
           {!isLoading && isLoadingNetwork && <LoadingNetwork />}
-          <AllRoutesComponents />
+          {utilsApp.isNewHome() ? (
+            <AllRoutesComponentsPure />
+          ) : (
+            // There are many uncontrolled component in legacy code, so keep use Component,
+            //    PureComponent will cause bugs.
+            <AllRoutesComponents />
+          )}
         </div>
         {isUnlocked ? <Alerts history={this.props.history} /> : null}
       </div>

@@ -68,7 +68,7 @@ function TokenBalance({
     const timerId = setTimeout(updateByRpc, 600);
 
     return () => {
-      delete storeBalance.fetchBalancePendingQueue[address];
+      storeBalance.deletePendingBalanceFetchTask(address);
       clearTimeout(timerId);
     };
   }, [address]);
