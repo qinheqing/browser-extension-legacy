@@ -24,8 +24,13 @@ import {
   ROPSTEN_CHAIN_ID,
   TEST_CHAINS,
   HECO_CHAIN_ID,
+  HECO,
   BSC_CHAIN_ID,
+  BSC,
   MATIC_CHAIN_ID,
+  MATIC,
+  XDAI_CHAIN_ID,
+  XDAI,
 } from '../../../shared/constants/network';
 import { NETWORK_EVENTS } from './network';
 
@@ -47,6 +52,7 @@ const etherscanSupportedNetworks = [
   BSC_CHAIN_ID,
   HECO_CHAIN_ID,
   MATIC_CHAIN_ID,
+  XDAI_CHAIN_ID,
 ];
 
 export default class IncomingTransactionsController {
@@ -73,6 +79,10 @@ export default class IncomingTransactionsController {
         [MAINNET]: null,
         [RINKEBY]: null,
         [ROPSTEN]: null,
+        [BSC]: null,
+        [HECO]: null,
+        [MATIC]: null,
+        [XDAI]: null,
       },
       ...opts.initState,
     };
@@ -230,6 +240,8 @@ export default class IncomingTransactionsController {
       return 'https://api.bscscan.com';
     } else if (chainId === MATIC_CHAIN_ID) {
       return 'https://api.polygonscan.com';
+    } else if (chainId === XDAI_CHAIN_ID) {
+      return 'https://blockscout.com/xdai/mainnet/api';
     }
     const etherscanSubdomain = `api-${CHAIN_ID_TO_TYPE_MAP[chainId]}`;
     return `https://${etherscanSubdomain}.etherscan.io`;

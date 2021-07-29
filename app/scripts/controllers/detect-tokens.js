@@ -8,12 +8,14 @@ import {
   HECO_CHAIN_ID,
   KOVAN_CHAIN_ID,
   MATIC_CHAIN_ID,
+  XDAI_CHAIN_ID,
 } from '../../../shared/constants/network';
 import {
   SINGLE_CALL_BALANCES_ADDRESS,
   SINGLE_CALL_BALANCES_ADDRESS_BSC,
   SINGLE_CALL_BALANCES_ADDRESS_KOVAN,
   SINGLE_CALL_BALANCES_ADDRESS_MATIC,
+  SINGLE_CALL_BALANCES_ADDRESS_XDAI,
 } from '../constants/contracts';
 import { contractMap } from '../../../shared/tokens';
 import { stringifyBalance } from '../lib/util';
@@ -59,6 +61,7 @@ export default class DetectTokensController {
       HECO_CHAIN_ID,
       KOVAN_CHAIN_ID,
       MATIC_CHAIN_ID,
+      XDAI_CHAIN_ID,
     ];
     if (!supportedChainIds.includes(chainId)) {
       return;
@@ -90,6 +93,8 @@ export default class DetectTokensController {
       abiAddress = SINGLE_CALL_BALANCES_ADDRESS_KOVAN;
     } else if (chainId === MATIC_CHAIN_ID) {
       abiAddress = SINGLE_CALL_BALANCES_ADDRESS_MATIC;
+    } else if (chainId === XDAI_CHAIN_ID) {
+      abiAddress = SINGLE_CALL_BALANCES_ADDRESS_XDAI;
     } else {
       abiAddress = SINGLE_CALL_BALANCES_ADDRESS_BSC;
     }
@@ -138,6 +143,7 @@ export default class DetectTokensController {
       HECO_CHAIN_ID,
       KOVAN_CHAIN_ID,
       MATIC_CHAIN_ID,
+      XDAI_CHAIN_ID,
     ];
     if (!supportedChainIds.includes(chainId)) {
       return;
@@ -158,6 +164,8 @@ export default class DetectTokensController {
       abiAddress = SINGLE_CALL_BALANCES_ADDRESS_KOVAN;
     } else if (chainId === MATIC_CHAIN_ID) {
       abiAddress = SINGLE_CALL_BALANCES_ADDRESS_MATIC;
+    } else if (chainId === XDAI_CHAIN_ID) {
+      abiAddress = SINGLE_CALL_BALANCES_ADDRESS_XDAI;
     } else {
       abiAddress = SINGLE_CALL_BALANCES_ADDRESS_BSC;
     }
