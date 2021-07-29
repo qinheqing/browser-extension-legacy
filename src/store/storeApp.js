@@ -41,14 +41,10 @@ class StoreApp extends BaseStore {
     });
   }
 
+  // check homeType, use utilsApp.isNewHome();
   @computed
   get homeType() {
     return storeStorage.homeType;
-  }
-
-  @computed
-  get isNewHome() {
-    return this.homeType === 'NEW';
   }
 
   @computed

@@ -132,8 +132,8 @@ function encodeTokenInstructionData(instruction) {
 }
 
 async function createAssociatedTokenIxAsync({
-  creatorAddress, // creator can add associate token for another account
-  accountAddress,
+  creatorAddress, // creator can add ATA token for other account (accountAddress)
+  accountAddress, // ATA token owner account
   mintAddress,
 }) {
   const associatedTokenAddress = await generateAssociatedTokenAddress(
@@ -142,22 +142,22 @@ async function createAssociatedTokenIxAsync({
   );
   const keys = [
     {
-      pubkey: creatorAddress,
+      pubkey: creatorAddress, // ATA creator
       isSigner: true,
       isWritable: true,
     },
     {
-      pubkey: associatedTokenAddress,
+      pubkey: associatedTokenAddress, // ATA address
       isSigner: false,
       isWritable: true,
     },
     {
-      pubkey: accountAddress,
+      pubkey: accountAddress, // ATA owner
       isSigner: false,
       isWritable: false,
     },
     {
-      pubkey: mintAddress,
+      pubkey: mintAddress, // ATA mint address (contract address)
       isSigner: false,
       isWritable: false,
     },

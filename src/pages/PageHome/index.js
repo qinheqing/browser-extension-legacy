@@ -136,7 +136,7 @@ const HomeAssetsHeader = observer(function () {
       <span>资产</span>
       <div className="flex-1" />
 
-      {utilsApp.isExtensionTypePopup() && (
+      {utilsApp.isPopupEnvironment() && (
         <>
           {/* // Expand*/}
           <OneButton

@@ -87,6 +87,7 @@ const PAGE_SIZE = 5;
 function ImportAccountsList({ wallet, onLoadMore }) {
   const history = useHistory();
   const [accounts, setAccounts] = useState([]);
+  const [updateHook, setUpdateHook] = useState(0);
   const [page, setPage] = useState(1);
   const existsAccounts = useMemo(() => {
     return storeAccount.getAccountsByChainKey(wallet?.chainInfo?.key);
@@ -163,6 +164,7 @@ function ImportAccountsList({ wallet, onLoadMore }) {
         </OneButton>
         <div className="flex-1" />
         <OneButton
+          updateHook={updateHook}
           type="primary"
           disabled={!selectedAccountsLength}
           onClick={confirmImport}
@@ -195,6 +197,9 @@ function ImportAccountsList({ wallet, onLoadMore }) {
               } else {
                 delete selectedAccounts[account.address];
               }
+              // as checkbox is not controlled component
+              // so we need force update parent component
+              setUpdateHook(new Date().getTime());
             }}
           />
         );
