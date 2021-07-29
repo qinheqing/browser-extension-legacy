@@ -51,6 +51,7 @@ module.exports = {
   rules: {
     // Prettier changes and reasoning
 
+    'import/no-anonymous-default-export': 'off',
     'prettier/prettier': 'error',
     'no-unused-vars': 'warn',
 
