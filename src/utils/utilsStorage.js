@@ -7,6 +7,15 @@ function buildFullKey(key) {
   return STORAGE_KEY_PREFIX + key;
 }
 
+function getAutoSaveLocalStorageItem(name) {
+  const storageKey = buildAutoSaveStorageKey(name);
+  return getItem(storageKey);
+}
+
+function buildAutoSaveStorageKey(name) {
+  return `autosave.storage.${name}`;
+}
+
 function setItem(key, value) {
   // TODO use chrome extension local store
   global.localStorage.setItem(buildFullKey(key), JSON.stringify(value));
@@ -35,4 +44,6 @@ export default {
   getItem,
   removeItem,
   clear,
+  getAutoSaveLocalStorageItem,
+  buildAutoSaveStorageKey,
 };
