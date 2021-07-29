@@ -16,8 +16,7 @@ import {
 } from '../consts/consts';
 import utilsStorage from '../utils/utilsStorage';
 import ExtensionStore from '../../app/scripts/lib/local-store';
-import utilsApp from '../utils/utilsApp';
-import BaseStore, { buildAutoSaveStorageKey } from './BaseStore';
+import BaseStore from './BaseStore';
 
 class StoreStorage extends BaseStore {
   constructor(props) {
@@ -26,7 +25,7 @@ class StoreStorage extends BaseStore {
     makeObservable(this);
 
     Promise.all([
-      // homeType should be sync loaded, check bgHelpers.isAtNewApp();
+      // homeType should be sync loaded, check utilsApp.isNewHome();
       this.autosave('homeType', { useLocalStorage: true }),
       this.autosave('maskAssetBalance'),
 
@@ -99,7 +98,7 @@ class StoreStorage extends BaseStore {
   async autosave(storeProp, { useLocalStorage } = {}) {
     // eslint-disable-next-line consistent-this
     const store = this;
-    const storageKey = buildAutoSaveStorageKey(storeProp);
+    const storageKey = utilsStorage.buildAutoSaveStorageKey(storeProp);
 
     // * init from localStorage
     const value = await this.getStorageItemAsync(storageKey, {

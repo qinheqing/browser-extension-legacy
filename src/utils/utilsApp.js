@@ -9,11 +9,13 @@ import {
   isDate,
 } from 'lodash';
 import * as uuidMaker from 'uuid';
-import copyToClipboard from 'copy-to-clipboard';
 import * as changeCase from 'change-case';
 import { getEnvironmentType } from '../../app/scripts/lib/util';
-import { ENVIRONMENT_TYPE_POPUP } from '../../shared/constants/app';
-import { CONNECT_HARDWARE_ROUTE } from '../../ui/app/helpers/constants/routes';
+import {
+  ENVIRONMENT_TYPE_BACKGROUND,
+  ENVIRONMENT_TYPE_POPUP,
+} from '../../shared/constants/app';
+import utilsStorage from './utilsStorage';
 
 function uuid() {
   return uuidMaker.v4().replace(/-/giu, '');
@@ -67,12 +69,20 @@ function shortenAddress(
   return `${headStr}...${tailStr}`;
 }
 
-function isExtensionTypePopup() {
+function isPopupEnvironment() {
   return getEnvironmentType() === ENVIRONMENT_TYPE_POPUP;
 }
 
+function isBackgroundEnvironment() {
+  return getEnvironmentType() === ENVIRONMENT_TYPE_BACKGROUND;
+}
+
+function isUiEnvironment() {
+  return !isBackgroundEnvironment();
+}
+
 function openStandalonePage(routeUrl) {
-  if (isExtensionTypePopup()) {
+  if (isPopupEnvironment()) {
     global.platform.openExtensionInBrowser(routeUrl);
   } else {
     global.onekeyHistory.push(routeUrl);
@@ -151,6 +161,10 @@ function reactSafeRender(content, { tryToString = true, ...others } = {}) {
   return null;
 }
 
+function isNewHome() {
+  return utilsStorage.getAutoSaveLocalStorageItem('homeType') === 'NEW';
+}
+
 export default {
   uuid,
   formatTemplate,
@@ -159,7 +173,10 @@ export default {
   throwToBeImplemented,
   shortenAddress,
   openStandalonePage,
-  isExtensionTypePopup,
+  isPopupEnvironment,
+  isBackgroundEnvironment,
+  isUiEnvironment,
+  isNewHome,
   waitForDataLoaded,
   delay,
   changeCase,
