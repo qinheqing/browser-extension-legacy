@@ -576,6 +576,11 @@ export default class MetamaskController extends EventEmitter {
    * @returns {Object} status
    */
   getState() {
+    // log.debug(`MetamaskController.getState`);
+
+    // when ui call bg method, update error notification count
+    global.$$errorNotificationAvailableCount = 5;
+
     const { vault } = this.keyringController.store.getState();
     const isInitialized = Boolean(vault);
 
@@ -593,6 +598,8 @@ export default class MetamaskController extends EventEmitter {
    * @returns {Object} Object containing API functions.
    */
   getApi() {
+    log.debug(`MetamaskController.getApi`);
+
     const {
       alertController,
       approvalController,

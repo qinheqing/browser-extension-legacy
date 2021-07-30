@@ -39,14 +39,22 @@ import rawFirstTimeState from './first-time-state';
 import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
+import errorsGlobalHandler from './errorsGlobalHandler';
 /* eslint-enable import/first */
+
+log.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn');
 
 const { sentry } = global;
 const firstTimeState = { ...rawFirstTimeState };
 
-log.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn');
-
 const platform = new ExtensionPlatform();
+global.$$extensionPlatform = platform;
+global.$$testThrowError = () => {
+  setTimeout(() => {
+    throw new Error(`Error test: ${new Date().getTime()}`);
+  }, 1000);
+};
+errorsGlobalHandler.init();
 
 const notificationManager = new NotificationManager();
 global.METAMASK_NOTIFIER = notificationManager;
@@ -455,11 +463,11 @@ function setupController(initState, initLangCode) {
     const { unapprovedMsgCount } = controller.messageManager;
     const { unapprovedPersonalMsgCount } = controller.personalMessageManager;
     const { unapprovedDecryptMsgCount } = controller.decryptMessageManager;
-    const {
-      unapprovedEncryptionPublicKeyMsgCount,
-    } = controller.encryptionPublicKeyManager;
+    const { unapprovedEncryptionPublicKeyMsgCount } =
+      controller.encryptionPublicKeyManager;
     const { unapprovedTypedMessagesCount } = controller.typedMessageManager;
-    const pendingApprovalCount = controller.approvalController.getTotalApprovalCount();
+    const pendingApprovalCount =
+      controller.approvalController.getTotalApprovalCount();
     const waitingForUnlockCount =
       controller.appStateController.waitingForUnlock.length;
     const count =

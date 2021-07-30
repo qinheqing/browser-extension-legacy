@@ -20,6 +20,8 @@ import ExtensionPlatform from './platforms/extension';
 import { setupMultiplex } from './lib/stream-utils';
 import { getEnvironmentType } from './lib/util';
 
+log.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn');
+
 start().catch(log.error);
 
 async function start() {
