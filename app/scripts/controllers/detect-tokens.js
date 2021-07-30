@@ -9,13 +9,16 @@ import {
   KOVAN_CHAIN_ID,
   MATIC_CHAIN_ID,
   XDAI_CHAIN_ID,
+  OKEX_CHAIN_ID,
 } from '../../../shared/constants/network';
 import {
   SINGLE_CALL_BALANCES_ADDRESS,
   SINGLE_CALL_BALANCES_ADDRESS_BSC,
+  SINGLE_CALL_BALANCES_ADDRESS_HECO,
   SINGLE_CALL_BALANCES_ADDRESS_KOVAN,
   SINGLE_CALL_BALANCES_ADDRESS_MATIC,
   SINGLE_CALL_BALANCES_ADDRESS_XDAI,
+  SINGLE_CALL_BALANCES_ADDRESS_OKEX,
 } from '../constants/contracts';
 import { contractMap } from '../../../shared/tokens';
 import { stringifyBalance } from '../lib/util';
@@ -23,6 +26,26 @@ import { NETWORK_EVENTS } from './network';
 
 // By default, poll every 3 minutes
 const DEFAULT_INTERVAL = 180 * 1000;
+
+const supportedChainIds = [
+  MAINNET_CHAIN_ID,
+  BSC_CHAIN_ID,
+  HECO_CHAIN_ID,
+  KOVAN_CHAIN_ID,
+  MATIC_CHAIN_ID,
+  XDAI_CHAIN_ID,
+  OKEX_CHAIN_ID,
+];
+
+const contractAddresses = {
+  [MAINNET_CHAIN_ID]: SINGLE_CALL_BALANCES_ADDRESS,
+  [BSC_CHAIN_ID]: SINGLE_CALL_BALANCES_ADDRESS_BSC,
+  [HECO_CHAIN_ID]: SINGLE_CALL_BALANCES_ADDRESS_HECO,
+  [KOVAN_CHAIN_ID]: SINGLE_CALL_BALANCES_ADDRESS_KOVAN,
+  [MATIC_CHAIN_ID]: SINGLE_CALL_BALANCES_ADDRESS_MATIC,
+  [XDAI_CHAIN_ID]: SINGLE_CALL_BALANCES_ADDRESS_XDAI,
+  [OKEX_CHAIN_ID]: SINGLE_CALL_BALANCES_ADDRESS_OKEX,
+};
 
 /**
  * A controller that polls for token exchange
@@ -55,14 +78,7 @@ export default class DetectTokensController {
     }
 
     const { chainId, type } = this._network.store.getState().provider;
-    const supportedChainIds = [
-      MAINNET_CHAIN_ID,
-      BSC_CHAIN_ID,
-      HECO_CHAIN_ID,
-      KOVAN_CHAIN_ID,
-      MATIC_CHAIN_ID,
-      XDAI_CHAIN_ID,
-    ];
+
     if (!supportedChainIds.includes(chainId)) {
       return;
     }
@@ -84,20 +100,10 @@ export default class DetectTokensController {
         tokensToDetect.push(contractAddress);
       }
     }
-    let result;
-    let abiAddress;
 
-    if (chainId === MAINNET_CHAIN_ID) {
-      abiAddress = SINGLE_CALL_BALANCES_ADDRESS;
-    } else if (chainId === KOVAN_CHAIN_ID) {
-      abiAddress = SINGLE_CALL_BALANCES_ADDRESS_KOVAN;
-    } else if (chainId === MATIC_CHAIN_ID) {
-      abiAddress = SINGLE_CALL_BALANCES_ADDRESS_MATIC;
-    } else if (chainId === XDAI_CHAIN_ID) {
-      abiAddress = SINGLE_CALL_BALANCES_ADDRESS_XDAI;
-    } else {
-      abiAddress = SINGLE_CALL_BALANCES_ADDRESS_BSC;
-    }
+    let result;
+    const abiAddress =
+      contractAddresses[chainId] || SINGLE_CALL_BALANCES_ADDRESS;
 
     try {
       result = await this._getTokenBalances(tokensToDetect, abiAddress);
@@ -137,14 +143,7 @@ export default class DetectTokensController {
       return;
     }
     const { chainId, type } = this._network.store.getState().provider;
-    const supportedChainIds = [
-      MAINNET_CHAIN_ID,
-      BSC_CHAIN_ID,
-      HECO_CHAIN_ID,
-      KOVAN_CHAIN_ID,
-      MATIC_CHAIN_ID,
-      XDAI_CHAIN_ID,
-    ];
+
     if (!supportedChainIds.includes(chainId)) {
       return;
     }
@@ -157,18 +156,8 @@ export default class DetectTokensController {
     this.web3.setProvider(this._network._provider);
 
     let result;
-    let abiAddress;
-    if (chainId === MAINNET_CHAIN_ID) {
-      abiAddress = SINGLE_CALL_BALANCES_ADDRESS;
-    } else if (chainId === KOVAN_CHAIN_ID) {
-      abiAddress = SINGLE_CALL_BALANCES_ADDRESS_KOVAN;
-    } else if (chainId === MATIC_CHAIN_ID) {
-      abiAddress = SINGLE_CALL_BALANCES_ADDRESS_MATIC;
-    } else if (chainId === XDAI_CHAIN_ID) {
-      abiAddress = SINGLE_CALL_BALANCES_ADDRESS_XDAI;
-    } else {
-      abiAddress = SINGLE_CALL_BALANCES_ADDRESS_BSC;
-    }
+    const abiAddress =
+      contractAddresses[chainId] || SINGLE_CALL_BALANCES_ADDRESS;
 
     const userTokens = this._preferences.store.getState().tokens;
     const currentTokens = cloneDeep(userTokens);

@@ -4,6 +4,7 @@ import EthTokensList from './eth.json';
 import KovanTokensList from './kovan.json';
 import MaticTokenList from './matic.json';
 import XdaiTokenList from './xdai.json';
+import OkexTokenList from './okex.json';
 
 function toMap(tokens) {
   return tokens.reduce(function (result, item) {
@@ -20,6 +21,7 @@ export const contractTokens = {
   kovan: KovanTokensList.tokens,
   matic: MaticTokenList.tokens,
   xdai: XdaiTokenList.tokens,
+  okex: OkexTokenList.tokens,
 };
 
 export const contractMap = {
@@ -30,4 +32,5 @@ export const contractMap = {
   kovan: toMap(KovanTokensList.tokens),
   matic: toMap(MaticTokenList.tokens),
   xdai: toMap(XdaiTokenList.tokens),
+  okex: toMap(OkexTokenList.tokens),
 };
