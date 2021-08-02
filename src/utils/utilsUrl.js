@@ -27,7 +27,10 @@ function addQuery({ url, query = {}, arrayToCommaString = true }) {
   return uri.toString();
 }
 
-export default {
+const utilsUrl = {
+  toUriObject,
   getQuery,
   addQuery,
 };
+global.$$utilsUrl = utilsUrl;
+export default utilsUrl;

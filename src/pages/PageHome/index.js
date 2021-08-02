@@ -64,7 +64,7 @@ const HomeTopActionsBar = observer(function () {
       />
 
       <HomeTopActionButton
-        text="公告"
+        text="交易"
         icon={AppIcons.BellIcon}
         onClick={async () => {
           console.log('Notice button click');
