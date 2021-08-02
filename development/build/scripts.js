@@ -183,7 +183,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
     isExternalDeps,
   }) {
     const standardBundles = [
-      // 'background',
+      'background',
       'ui',
       'phishing-detect',
       'initSentry',
