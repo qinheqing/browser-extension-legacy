@@ -211,10 +211,8 @@ export default class AdvancedTab extends PureComponent {
 
   renderShowConversionInTestnets() {
     const { t } = this.context;
-    const {
-      showFiatInTestnets,
-      setShowFiatConversionOnTestnetsPreference,
-    } = this.props;
+    const { showFiatInTestnets, setShowFiatConversionOnTestnetsPreference } =
+      this.props;
 
     return (
       <div
@@ -477,6 +475,7 @@ export default class AdvancedTab extends PureComponent {
         {this.renderAutoLockTimeLimit()}
         {this.renderThreeBoxControl()}
         {this.renderIpfsGatewayControl()}
+        {/* {this.renderMobileSync()} */}
       </div>
     );
   }

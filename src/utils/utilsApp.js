@@ -5,12 +5,17 @@ import {
   isEmpty,
   isArray,
   isPlainObject,
+  isBoolean,
+  isDate,
 } from 'lodash';
 import * as uuidMaker from 'uuid';
-import copyToClipboard from 'copy-to-clipboard';
+import * as changeCase from 'change-case';
 import { getEnvironmentType } from '../../app/scripts/lib/util';
-import { ENVIRONMENT_TYPE_POPUP } from '../../shared/constants/app';
-import { CONNECT_HARDWARE_ROUTE } from '../../ui/app/helpers/constants/routes';
+import {
+  ENVIRONMENT_TYPE_BACKGROUND,
+  ENVIRONMENT_TYPE_POPUP,
+} from '../../shared/constants/app';
+import utilsStorage from './utilsStorage';
 
 function uuid() {
   return uuidMaker.v4().replace(/-/giu, '');
@@ -56,18 +61,28 @@ function shortenAddress(
   address = '',
   { size = 6, head = true, tail = true } = {},
 ) {
+  // eslint-disable-next-line no-param-reassign
+  address = address || '';
   // TODO if size > address.length
   const headStr = head ? address.substr(0, size) : '';
   const tailStr = tail ? address.substr(address.length - size) : '';
   return `${headStr}...${tailStr}`;
 }
 
-function isExtensionTypePopup() {
+function isPopupEnvironment() {
   return getEnvironmentType() === ENVIRONMENT_TYPE_POPUP;
 }
 
+function isBackgroundEnvironment() {
+  return getEnvironmentType() === ENVIRONMENT_TYPE_BACKGROUND;
+}
+
+function isUiEnvironment() {
+  return !isBackgroundEnvironment();
+}
+
 function openStandalonePage(routeUrl) {
-  if (isExtensionTypePopup()) {
+  if (isPopupEnvironment()) {
     global.platform.openExtensionInBrowser(routeUrl);
   } else {
     global.onekeyHistory.push(routeUrl);
@@ -114,6 +129,42 @@ async function waitForDataLoaded({ data, log }) {
   }
 }
 
+function reactSafeRender(content, { tryToString = true, ...others } = {}) {
+  // Error
+  // Objects are not valid as a React child (found: object with keys {hello}). If you meant to render a collection of children, use an array instead.
+  // render object will fail, and can NOT catch.
+  //        <div> { {name:1} } </div>
+
+  const options = {
+    tryToString,
+    ...others,
+  };
+  let safeRenderStr = content;
+  if (isArray(safeRenderStr)) {
+    return safeRenderStr.map((item) => reactSafeRender(item, options));
+  }
+  if (tryToString && safeRenderStr?.toString) {
+    safeRenderStr = safeRenderStr.toString();
+  }
+  if (isString(safeRenderStr) || isNumber(safeRenderStr)) {
+    return safeRenderStr;
+  }
+  // render to null types:
+  //    Boolean, NaN, null, undefined
+
+  // CAN NOT render types:
+  //    PlainObject, Date, Regex, Function (warning only)
+  console.warn(
+    'reactSafeRenderChildren() is an [Object], please check your code',
+    content,
+  );
+  return null;
+}
+
+function isNewHome() {
+  return utilsStorage.getAutoSaveLocalStorageItem('homeType') === 'NEW';
+}
+
 export default {
   uuid,
   formatTemplate,
@@ -122,7 +173,12 @@ export default {
   throwToBeImplemented,
   shortenAddress,
   openStandalonePage,
-  isExtensionTypePopup,
+  isPopupEnvironment,
+  isBackgroundEnvironment,
+  isUiEnvironment,
+  isNewHome,
   waitForDataLoaded,
   delay,
+  changeCase,
+  reactSafeRender,
 };

@@ -5,7 +5,7 @@ import utilsApp from '../utils/utilsApp';
 import ChainProviderBase from './ChainProviderBase';
 import HardwareProviderBase from './HardwareProviderBase';
 import { HdKeyProviderBase } from './HdKeyProvider';
-import { UiBackgroundProxy } from './bg/UiBackgroundProxy';
+import uiBackgroundProxy from './bg/uiBackgroundProxy';
 import KeyringBase from './KeyringBase';
 
 class WalletBase {
@@ -49,7 +49,7 @@ class WalletBase {
 
   keyring = new KeyringBase(this.options);
 
-  bgProxy = new UiBackgroundProxy();
+  bgProxy = uiBackgroundProxy;
 
   // TODO rename to hdkeyProvider
   hdkey = null; // new HDKey()

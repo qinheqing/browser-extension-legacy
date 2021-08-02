@@ -34,7 +34,7 @@ function TokenDepositQrcode({ tokenInfo, children }) {
           __html: qrImage && qrImage.createTableTag(4),
         }}
       />
-      <div className="text-xs text-gray-400 mb-2">钱包地址</div>
+      <div className="text-xs text-gray-400 mb-2">账户地址</div>
       <div className="text-xs break-all text-center">
         <CopyHandle text={tokenInfo.depositAddress}>
           {tokenInfo.depositAddress}

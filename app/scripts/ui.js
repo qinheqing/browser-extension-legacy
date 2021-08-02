@@ -25,6 +25,7 @@ start().catch(log.error);
 async function start() {
   // create platform global
   global.platform = new ExtensionPlatform();
+  global.$$extensionPlatform = global.platform;
 
   // identify window type (popup, notification)
   const windowType = getEnvironmentType();

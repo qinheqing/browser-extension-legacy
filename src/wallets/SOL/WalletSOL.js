@@ -1,5 +1,12 @@
 import assert from 'assert';
 import bs58 from 'bs58';
+import {
+  Transaction,
+  PublicKey,
+  SystemProgram,
+  TransactionInstruction,
+  LAMPORTS_PER_SOL,
+} from 'vendors/solanaWeb3';
 import WalletBase from '../WalletBase';
 import { CONST_CHAIN_KEYS } from '../../consts/consts';
 import connectMockSOL from '../../utils/connectMockSOL';
@@ -13,13 +20,6 @@ import TokenController from './modules/TokenController';
 
 // TODO remove
 global.$$connectMockSOL = connectMockSOL;
-const {
-  Transaction,
-  PublicKey,
-  SystemProgram,
-  TransactionInstruction,
-  LAMPORTS_PER_SOL,
-} = global.solanaWeb3;
 
 class WalletSOL extends WalletBase {
   get hdCoin() {
@@ -31,7 +31,7 @@ class WalletSOL extends WalletBase {
       // TODO move to chainInfo
       // https://solana-labs.github.io/solana-web3.js/modules.html#commitment
       defaultCommitment: helpersSOL.COMMITMENT_TYPES.processed, // processed, confirmed, finalized
-      balanceDecimals: 9,
+      balanceDecimals: 9, // chainInfo.nativeToken.decimals
       hdPathTemplate: `m/44'/501'/{{index}}'/0'`,
     };
   }
@@ -160,7 +160,10 @@ class WalletSOL extends WalletBase {
 
   async requestAirdrop() {
     const address = new PublicKey(this.accountInfo.address);
-    return this.chainProvider.solWeb3.requestAirdrop(address, LAMPORTS_PER_SOL);
+    return this.chainProvider.solWeb3Connection.requestAirdrop(
+      address,
+      LAMPORTS_PER_SOL,
+    );
   }
 
   isValidAddress({ address }) {
@@ -196,6 +199,20 @@ class WalletSOL extends WalletBase {
       return utilsApp.formatTemplate(browserLinks.block, { block });
     }
     return browserLinks.home || utilsApp.throwToBeImplemented(this);
+  }
+
+  async decodeTransactionData({ address, data }) {
+    // throw new Error('Simulate decode tx error');
+    // use lazy import, as utilsSolTransactions includes huge logic and data
+    const utilsSolTransactions = await import('./utils/utilsSolTransactions');
+    const txBuffer = bs58.decode(data);
+    return utilsSolTransactions.decodeSolTransactionMessage(
+      this.chainProvider.solWeb3Connection,
+      {
+        publicKey: new PublicKey(address),
+      },
+      txBuffer,
+    );
   }
 }
 

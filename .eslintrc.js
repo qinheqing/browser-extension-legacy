@@ -38,6 +38,7 @@ module.exports = {
     'test/e2e/send-eth-with-private-key-test/**',
     'nyc_output/**',
     '.vscode/**',
+    'src/**/*.d.ts',
   ],
 
   extends: [
@@ -63,6 +64,7 @@ module.exports = {
     'no-debugger': 'warn',
     'import/no-anonymous-default-export': 'off',
     'react/prop-types': 'warn',
+    'yield-star-spacing': 'off',
 
     // Our eslint config has the default setting for this as error. This
     // include beforeBlockComment: true, but in order to match the prettier
@@ -219,6 +221,11 @@ module.exports = {
   ],
 
   settings: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx'],
+      },
+    },
     react: {
       version: 'detect',
     },

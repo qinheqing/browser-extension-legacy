@@ -27,9 +27,6 @@ export default function promiseToCallback(promise) {
         setImmediateShim(cb, null, data);
       },
       function (err) {
-        // print the error object at bg console
-        console.error(err);
-
         // create plain error object, so that ui console can view the stack detail
         const errObj = {
           message: err.message,
@@ -37,6 +34,11 @@ export default function promiseToCallback(promise) {
         };
 
         setImmediateShim(cb, errObj);
+
+        // print the error object at bg console
+        // console.error(err);
+        // throw out the error at bg, so that global error handler can handle it
+        throw err;
       },
     );
   };

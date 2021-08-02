@@ -18,7 +18,9 @@ const createStyleTasks = require('./styles');
 const createStaticAssetTasks = require('./static');
 const createEtcTasks = require('./etc');
 
-const browserPlatforms = ['firefox', 'chrome', 'brave', 'opera'];
+let browserPlatforms =
+  process.env.ENV_BUILD_BROWSER_PLATFORMS || 'firefox,chrome,brave,opera';
+browserPlatforms = browserPlatforms.split(',').map((item) => item.trim());
 
 const moduleCssFile = 'src/styles/tailwind.module.css';
 childProcess.execSync(`touch ${moduleCssFile}`);
@@ -31,7 +33,7 @@ function defineAllTasks() {
   const manifestTasks = createManifestTasks({ browserPlatforms });
   const styleTasks = createStyleTasks({ livereload });
   const scriptTasks = createScriptTasks({ livereload, browserPlatforms });
-  const { clean, reload, zip, moduleFix } = createEtcTasks({
+  const { clean, reload, zip, moduleFix, sourcemapServer } = createEtcTasks({
     livereload,
     browserPlatforms,
   });
@@ -45,7 +47,12 @@ function defineAllTasks() {
       // dev build: style build must before js build, as livereload will block
       styleTasks.dev,
       staticTasks.dev,
-      composeParallel(scriptTasks.dev, manifestTasks.dev, reload),
+      composeParallel(
+        scriptTasks.dev,
+        manifestTasks.dev,
+        reload,
+        sourcemapServer,
+      ),
     ),
   );
 

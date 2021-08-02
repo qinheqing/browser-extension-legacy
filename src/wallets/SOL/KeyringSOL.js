@@ -1,5 +1,6 @@
 import nacl from 'tweetnacl';
 import bs58 from 'bs58';
+import { Account, PublicKey } from 'vendors/solanaWeb3';
 import KeyringBase from '../KeyringBase';
 import HdKeyProvider from './modules/HdKeyProvider';
 
@@ -10,16 +11,12 @@ class KeyringSOL extends KeyringBase {
   }
 
   _solAccountFromPrivateKey({ privateKey }) {
-    return new global.solanaWeb3.Account(
-      nacl.sign.keyPair.fromSeed(privateKey).secretKey,
-    );
+    return new Account(nacl.sign.keyPair.fromSeed(privateKey).secretKey);
   }
 
   privateKeyToAddress({ privateKey }) {
     const account = this._solAccountFromPrivateKey({ privateKey });
-    const address = new global.solanaWeb3.PublicKey(
-      account.publicKey,
-    ).toString();
+    const address = new PublicKey(account.publicKey).toString();
     return address;
   }
 

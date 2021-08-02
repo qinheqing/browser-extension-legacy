@@ -2,7 +2,7 @@ import { BACKGROUND_PROXY_MODULE_NAMES } from '../../consts/consts';
 import uiGetBgControllerAsync from './uiGetBgControllerAsync';
 
 // TODO change to global singleton
-export class UiBackgroundProxy {
+class UiBackgroundProxy {
   async baseProxyCall({ module, options = {}, method, params = {} }) {
     console.log('OneKeyBackgroundProxy call: ', module, method, params);
     const bg = await uiGetBgControllerAsync();
@@ -59,3 +59,7 @@ export class UiBackgroundProxy {
     return this.hardwareProxyCall({ method: 'getPublicKey', params });
   }
 }
+
+const uiBackgroundProxy = new UiBackgroundProxy();
+global.$$uiBackgroundProxy = uiBackgroundProxy;
+export default uiBackgroundProxy;

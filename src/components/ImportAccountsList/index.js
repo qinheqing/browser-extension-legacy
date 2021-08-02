@@ -18,6 +18,7 @@ import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
 import OneButton from '../OneButton';
 import storeChain from '../../store/storeChain';
 import AppIcons from '../AppIcons';
+import storeHistory from '../../store/storeHistory';
 
 // const ComponentSample = observer(ComponentSamplePure);
 
@@ -34,19 +35,26 @@ function ImportAccountItem({
     chainKey: account.chainKey,
     symbol: storeChain.currentChainInfo?.currency,
   });
+  const displayIndex = account.hdPathIndex + 1;
   return (
     <div
       className="bg-white py-3 px-4 -mx-4 border-b flex items-center"
       key={account.address}
     >
-      <input
-        className="transform scale-150 mr-4"
-        defaultChecked={defaultChecked}
-        type="checkbox"
-        disabled={disabled}
-        checked={disabled ? true : undefined}
-        onChange={onChange}
-      />
+      <div className="self-start flex flex-col items-center mr-4">
+        <span className="text-center bg-gray-300 p-1 mb-2 rounded leading-none text-xs min-w-[18px]">
+          {displayIndex}
+        </span>
+        <input
+          className="transform scale-150"
+          defaultChecked={defaultChecked}
+          type="checkbox"
+          disabled={disabled}
+          checked={disabled ? true : undefined}
+          onChange={onChange}
+        />
+      </div>
+
       <div className="ImportAccountsList_itemContent">
         <div className="break-all text-sm leading-none">{account.address}</div>
         <small className="text-gray-400 text-xs">{account.path}</small>
@@ -57,7 +65,16 @@ function ImportAccountItem({
             showUnit
             updateBalanceThrottle={60 * 1000}
           />
-          <AppIcons.ExternalLinkIcon role="button" className="w-4" />
+          <AppIcons.ExternalLinkIcon
+            onClick={() =>
+              storeHistory.openBlockBrowserLink({
+                wallet,
+                account: account.address,
+              })
+            }
+            role="button"
+            className="w-4"
+          />
         </div>
       </div>
     </div>
@@ -70,6 +87,7 @@ const PAGE_SIZE = 5;
 function ImportAccountsList({ wallet, onLoadMore }) {
   const history = useHistory();
   const [accounts, setAccounts] = useState([]);
+  const [updateHook, setUpdateHook] = useState(0);
   const [page, setPage] = useState(1);
   const existsAccounts = useMemo(() => {
     return storeAccount.getAccountsByChainKey(wallet?.chainInfo?.key);
@@ -146,6 +164,7 @@ function ImportAccountsList({ wallet, onLoadMore }) {
         </OneButton>
         <div className="flex-1" />
         <OneButton
+          updateHook={updateHook}
           type="primary"
           disabled={!selectedAccountsLength}
           onClick={confirmImport}
@@ -178,6 +197,9 @@ function ImportAccountsList({ wallet, onLoadMore }) {
               } else {
                 delete selectedAccounts[account.address];
               }
+              // as checkbox is not controlled component
+              // so we need force update parent component
+              setUpdateHook(new Date().getTime());
             }}
           />
         );

@@ -44,13 +44,14 @@ const SOL = {
     chainId: null,
     logoURI: '', // TODO replace root."currencyIcon"
     address: '', // token contract address
-    decimals: 18,
+    decimals: 9,
     precision: 8, // UI display precision
   },
   currencyIcon:
     'https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png',
 
   isTestNet: false,
+  tokenAddMode: 'soft', // soft, hard
 };
 const SOL_TEST = {
   key: CONST_CHAIN_KEYS.SOL_TEST_NET,
@@ -88,7 +89,7 @@ const SOL_TEST = {
     chainId: null,
     logoURI: '', // TODO replace root."currencyIcon"
     address: '', // token contract address
-    decimals: 18,
+    decimals: 9,
     precision: 8, // UI display precision
   },
   logo: 'images/chains/solana.svg',

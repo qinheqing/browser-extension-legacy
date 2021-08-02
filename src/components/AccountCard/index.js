@@ -103,7 +103,7 @@ function AccountCard({
           chainInfo={chainInfo}
           size="md"
           border={false}
-          className="bg-opacity-25 bg-black"
+          className="!bg-opacity-25 !bg-black"
         />
       </footer>
     </div>

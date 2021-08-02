@@ -1,6 +1,6 @@
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { matchPath, Route, Switch } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 
@@ -69,61 +69,15 @@ import {
   OldHomeRootComponents,
   UniversalRoutesWrapper,
 } from '../../../../src/components/AppRootView';
+import utilsApp from '../../../../src/utils/utilsApp';
 
-export default class Routes extends Component {
-  static propTypes = {
-    currentCurrency: PropTypes.string,
-    setCurrentCurrencyToUSD: PropTypes.func,
-    isLoading: PropTypes.bool,
-    loadingMessage: PropTypes.string,
-    alertMessage: PropTypes.string,
-    textDirection: PropTypes.string,
-    network: PropTypes.string,
-    provider: PropTypes.object,
-    frequentRpcListDetail: PropTypes.array,
-    sidebar: PropTypes.object,
-    alertOpen: PropTypes.bool,
-    hideSidebar: PropTypes.func,
-    isUnlocked: PropTypes.bool,
-    setLastActiveTime: PropTypes.func,
-    history: PropTypes.object,
-    location: PropTypes.object,
-    lockMetaMask: PropTypes.func,
-    submittedPendingTransactions: PropTypes.array,
-    isMouseUser: PropTypes.bool,
-    setMouseUserState: PropTypes.func,
-    providerId: PropTypes.string,
-    autoLockTimeLimit: PropTypes.number,
-    pageChanged: PropTypes.func.isRequired,
-    prepareToLeaveSwaps: PropTypes.func,
-  };
+const AllRoutesComponentsProps = {
+  autoLockTimeLimit: PropTypes.number,
+  setLastActiveTime: PropTypes.func,
+};
 
-  static contextTypes = {
-    t: PropTypes.func,
-    metricsEvent: PropTypes.func,
-  };
-
-  constructor(props) {
-    super(props);
-    global.onekeyHistory = props.history;
-  }
-
-  UNSAFE_componentWillMount() {
-    const { currentCurrency, pageChanged, setCurrentCurrencyToUSD } =
-      this.props;
-
-    if (!currentCurrency) {
-      setCurrentCurrencyToUSD();
-    }
-
-    this.props.history.listen((locationObj, action) => {
-      if (action === 'PUSH') {
-        pageChanged(locationObj.pathname);
-      }
-    });
-  }
-
-  renderRoutes() {
+class AllRoutesComponents extends Component {
+  render() {
     const { autoLockTimeLimit, setLastActiveTime } = this.props;
     let routes = (
       <Switch>
@@ -206,6 +160,68 @@ export default class Routes extends Component {
     }
 
     return routes;
+  }
+}
+AllRoutesComponents.propTypes = AllRoutesComponentsProps;
+
+class AllRoutesComponentsPure extends PureComponent {
+  render() {
+    return <AllRoutesComponents {...this.props} />;
+  }
+}
+AllRoutesComponentsPure.propTypes = AllRoutesComponentsProps;
+
+export default class Routes extends Component {
+  static propTypes = {
+    currentCurrency: PropTypes.string,
+    setCurrentCurrencyToUSD: PropTypes.func,
+    isLoading: PropTypes.bool,
+    loadingMessage: PropTypes.string,
+    alertMessage: PropTypes.string,
+    textDirection: PropTypes.string,
+    network: PropTypes.string,
+    provider: PropTypes.object,
+    frequentRpcListDetail: PropTypes.array,
+    sidebar: PropTypes.object,
+    alertOpen: PropTypes.bool,
+    hideSidebar: PropTypes.func,
+    isUnlocked: PropTypes.bool,
+    setLastActiveTime: PropTypes.func,
+    history: PropTypes.object,
+    location: PropTypes.object,
+    lockMetaMask: PropTypes.func,
+    submittedPendingTransactions: PropTypes.array,
+    isMouseUser: PropTypes.bool,
+    setMouseUserState: PropTypes.func,
+    providerId: PropTypes.string,
+    autoLockTimeLimit: PropTypes.number,
+    pageChanged: PropTypes.func.isRequired,
+    prepareToLeaveSwaps: PropTypes.func,
+  };
+
+  static contextTypes = {
+    t: PropTypes.func,
+    metricsEvent: PropTypes.func,
+  };
+
+  constructor(props) {
+    super(props);
+    global.onekeyHistory = props.history;
+  }
+
+  UNSAFE_componentWillMount() {
+    const { currentCurrency, pageChanged, setCurrentCurrencyToUSD } =
+      this.props;
+
+    if (!currentCurrency) {
+      setCurrentCurrencyToUSD();
+    }
+
+    this.props.history.listen((locationObj, action) => {
+      if (action === 'PUSH') {
+        pageChanged(locationObj.pathname);
+      }
+    });
   }
 
   onInitializationUnlockPage() {
@@ -335,6 +351,7 @@ export default class Routes extends Component {
       <div
         className={classnames('app', { 'mouse-user-styles': isMouseUser })}
         dir={textDirection}
+        // body click re-render
         onClick={() => setMouseUserState(true)}
         onKeyDown={(e) => {
           if (e.keyCode === 9) {
@@ -375,7 +392,13 @@ export default class Routes extends Component {
         <div className={classnames('main-container-wrapper')}>
           {isLoading && <Loading loadingMessage={loadMessage} />}
           {!isLoading && isLoadingNetwork && <LoadingNetwork />}
-          {this.renderRoutes()}
+          {utilsApp.isNewHome() ? (
+            <AllRoutesComponentsPure />
+          ) : (
+            // There are many uncontrolled component in legacy code, so keep use Component,
+            //    PureComponent will cause bugs.
+            <AllRoutesComponents />
+          )}
         </div>
         {isUnlocked ? <Alerts history={this.props.history} /> : null}
       </div>

@@ -9,7 +9,7 @@ const { createTask, composeSeries } = require('./task');
 module.exports = createManifestTasks;
 
 const scriptsToExcludeFromBackgroundDevBuild = {
-  'bg-libs.js': true,
+  'bg-libs.js': !process.env.ENV_DEV_BUILD_LIBS,
 };
 
 function createManifestTasks({ browserPlatforms }) {

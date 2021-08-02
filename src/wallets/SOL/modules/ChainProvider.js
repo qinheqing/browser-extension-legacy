@@ -1,14 +1,12 @@
 import assert from 'assert';
-import * as BufferLayout from 'buffer-layout';
 import bs58 from 'bs58';
 import { isBuffer, uniqBy, isNil } from 'lodash';
+import { Connection, clusterApiUrl, PublicKey } from 'vendors/solanaWeb3';
 import ChainProviderBase from '../../ChainProviderBase';
 import utilsApp from '../../../utils/utilsApp';
 import OneAccountInfo from '../../../classes/OneAccountInfo';
 import helpersSOL from './helpersSOL';
-
 // https://solana-labs.github.io/solana-web3.js
-const { Connection, clusterApiUrl, PublicKey } = global.solanaWeb3;
 
 class ChainProvider extends ChainProviderBase {
   constructor(options) {
@@ -18,7 +16,7 @@ class ChainProvider extends ChainProviderBase {
     const rpcUrl = options?.chainInfo?.rpc?.[0];
 
     // https://solana-labs.github.io/solana-web3.js/classes/connection.html#constructor
-    this.solWeb3 = new Connection(rpcUrl, this.defaultCommitment);
+    this.solWeb3Connection = new Connection(rpcUrl, this.defaultCommitment);
 
     // TODO remove
     global.$$chainSOL = this;
@@ -29,9 +27,8 @@ class ChainProvider extends ChainProviderBase {
   }
 
   async getRecentBlockHash() {
-    const { feeCalculator, blockhash } = await this.solWeb3.getRecentBlockhash(
-      this.defaultCommitment,
-    );
+    const { feeCalculator, blockhash } =
+      await this.solWeb3Connection.getRecentBlockhash(this.defaultCommitment);
     return {
       feeCalculator,
       blockhash,
@@ -49,11 +46,6 @@ class ChainProvider extends ChainProviderBase {
    * @return {OneAccountInfo}
    */
   normalizeAccountUpdatesInfo(solAccountInfo) {
-    console.log(
-      'normalizeAccountInfo',
-      solAccountInfo,
-      solAccountInfo?.data?.parsed?.info,
-    );
     const isToken = this.isTokenAddress(solAccountInfo.owner);
     let balance = solAccountInfo?.lamports;
     let decimals = 0;
@@ -96,7 +88,7 @@ class ChainProvider extends ChainProviderBase {
     skipPreflight = false,
     preflightCommitment = 'single',
   }) {
-    return await this.solWeb3.sendRawTransaction(rawTransaction, {
+    return await this.solWeb3Connection.sendRawTransaction(rawTransaction, {
       skipPreflight,
       preflightCommitment,
     });
@@ -106,13 +98,16 @@ class ChainProvider extends ChainProviderBase {
   addAccountChangeListener(address, handler) {
     // https://solana-labs.github.io/solana-web3.js/modules.html#accountchangecallback
     // TODO normalizeAccountInfo
-    return this.solWeb3.onAccountChange(new PublicKey(address), (info) => {
-      handler(this.normalizeAccountUpdatesInfo({ ...info, address }));
-    });
+    return this.solWeb3Connection.onAccountChange(
+      new PublicKey(address),
+      (info) => {
+        handler(this.normalizeAccountUpdatesInfo({ ...info, address }));
+      },
+    );
   }
 
   removeAccountChangeListener(id) {
-    return this.solWeb3.removeAccountChangeListener(id);
+    return this.solWeb3Connection.removeAccountChangeListener(id);
   }
 
   async getAccountInfo({ address }) {
@@ -122,7 +117,9 @@ class ChainProvider extends ChainProviderBase {
      *    value: {data: Uint8Array(0), executable:false, lamports:48752, owner: PublicKey, rentEpoch: 201}
      *  }
      */
-    const res = await this.solWeb3.getParsedAccountInfo(new PublicKey(address));
+    const res = await this.solWeb3Connection.getParsedAccountInfo(
+      new PublicKey(address),
+    );
 
     /*
     - getParsedAccountInfo:
@@ -174,7 +171,7 @@ class ChainProvider extends ChainProviderBase {
     const accountPublicKey = new PublicKey(ownerAddress);
 
     const programId = helpersSOL.TOKEN_PROGRAM_ID;
-    const resp = await this.solWeb3.getParsedTokenAccountsByOwner(
+    const resp = await this.solWeb3Connection.getParsedTokenAccountsByOwner(
       accountPublicKey,
       {
         programId,
@@ -227,7 +224,7 @@ class ChainProvider extends ChainProviderBase {
 
   async getAddAssociateTokenFee() {
     // https://solana-labs.github.io/solana-web3.js/classes/connection.html#getminimumbalanceforrentexemption
-    const fee = await this.solWeb3.getMinimumBalanceForRentExemption(
+    const fee = await this.solWeb3Connection.getMinimumBalanceForRentExemption(
       helpersSOL.ACCOUNT_LAYOUT.span,
     );
     return fee;
@@ -235,7 +232,7 @@ class ChainProvider extends ChainProviderBase {
 
   async getTransactionFee() {
     // { blockhash,feeCalculator }
-    const res = await this.solWeb3.getRecentBlockhash();
+    const res = await this.solWeb3Connection.getRecentBlockhash();
     return res?.feeCalculator?.lamportsPerSignature;
   }
 
@@ -243,7 +240,7 @@ class ChainProvider extends ChainProviderBase {
     const pubKey = new PublicKey(address);
     const commitment = helpersSOL.COMMITMENT_TYPES.confirmed;
 
-    const res = await this.solWeb3.getConfirmedSignaturesForAddress2(
+    const res = await this.solWeb3Connection.getConfirmedSignaturesForAddress2(
       pubKey,
       {
         before: undefined,
@@ -272,7 +269,7 @@ class ChainProvider extends ChainProviderBase {
   async getTransactions({ ids = [] }) {
     const commitment = helpersSOL.COMMITMENT_TYPES.confirmed;
 
-    const items = await this.solWeb3.getParsedConfirmedTransactions(
+    const items = await this.solWeb3Connection.getParsedConfirmedTransactions(
       ids,
       commitment,
     );
@@ -289,7 +286,10 @@ class ChainProvider extends ChainProviderBase {
   async confirmTransaction({ txid }) {
     const commitment = helpersSOL.COMMITMENT_TYPES.confirmed;
 
-    const res = await this.solWeb3.confirmTransaction(txid, commitment);
+    const res = await this.solWeb3Connection.confirmTransaction(
+      txid,
+      commitment,
+    );
     return res;
   }
 }

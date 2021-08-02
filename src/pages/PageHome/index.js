@@ -31,7 +31,12 @@ import storeApp from '../../store/storeApp';
 import storePrice from '../../store/storePrice';
 import walletFactory from '../../wallets/walletFactory';
 import OneAccountInfo from '../../classes/OneAccountInfo';
-import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
+import {
+  BACKGROUND_PROXY_MODULE_NAMES,
+  CONSTS_ACCOUNT_TYPES,
+} from '../../consts/consts';
+import uiGetBgControllerAsync from '../../wallets/bg/uiGetBgControllerAsync';
+import uiBackgroundProxy from '../../wallets/bg/uiBackgroundProxy';
 
 const HomeTopActionsBar = observer(function () {
   const [copied, handleCopy] = useCopyToClipboard();
@@ -59,10 +64,15 @@ const HomeTopActionsBar = observer(function () {
       />
 
       <HomeTopActionButton
-        text="公告"
+        text="交易"
         icon={AppIcons.BellIcon}
-        onClick={() => {
+        onClick={async () => {
           console.log('Notice button click');
+          uiBackgroundProxy.baseProxyCall({
+            module: BACKGROUND_PROXY_MODULE_NAMES.misc,
+            method: 'throwErrorTest',
+            params: { name: 'zyz' },
+          });
           global.testGlobalError.testGlobalErrorField = 1;
         }}
       />
@@ -126,7 +136,7 @@ const HomeAssetsHeader = observer(function () {
       <span>资产</span>
       <div className="flex-1" />
 
-      {utilsApp.isExtensionTypePopup() && (
+      {utilsApp.isPopupEnvironment() && (
         <>
           {/* // Expand*/}
           <OneButton
