@@ -19,6 +19,7 @@ const terser = require('gulp-terser-js');
 const cssModulesify = require('css-modulesify');
 const scssify = require('scssify2');
 const tsify = require('tsify');
+const bifyModuleGroups = require('bify-module-groups');
 
 const conf = require('rc')('metamask', {
   INFURA_PROJECT_ID: process.env.INFURA_PROJECT_ID,
@@ -45,8 +46,15 @@ module.exports = createScriptTasks;
 const dependencies = Object.keys(
   (packageJSON && packageJSON.dependencies) || {},
 );
+const ignoreDeps = ['tailwindcss', 'readable-stream'];
+const commonDeps = ['lodash'];
 const materialUIDependencies = ['@material-ui/core'];
 const metamaskDepenendencies = [
+  'mobx',
+  'ethjs',
+  'ethjs-ens',
+  'web3',
+  'ethjs-contract',
   'eth-block-tracker',
   'eth-ens-namehash',
   'eth-json-rpc-filters',
@@ -59,6 +67,11 @@ const metamaskDepenendencies = [
   'ethers',
   'json-rpc-middleware-stream',
   'safe-event-emitter',
+  'rpc-cap',
+  'ethereumjs-wallet',
+  '@zxing/library',
+  '@formatjs/intl-relativetimeformat',
+  '@onekeyhq/eth-onekey-keyring',
   '@metamask/contract-metadata',
   '@metamask/eth-token-tracker',
   '@metamask/jazzicon',
@@ -67,18 +80,25 @@ const metamaskDepenendencies = [
 const reactDepenendencies = dependencies.filter((dep) => dep.match(/react/u));
 
 const externalDependenciesMap = {
-  background: [
-    '3box',
-    'eth-keyring-controller',
-    '@metamask/obs-store',
-    '@metamask/controllers',
-  ],
-  ui: [
+  background: filterAvailableDeps([...commonDeps, '3box']),
+  ui: filterAvailableDeps([
+    ...commonDeps,
     ...materialUIDependencies,
     ...reactDepenendencies,
     ...metamaskDepenendencies,
-  ],
+    // ...dependencies,
+  ]),
 };
+
+// console.log('------ externalDependenciesMap -----');
+// console.log(externalDependenciesMap);
+
+function filterAvailableDeps(deps = []) {
+  // return deps;
+  return deps.filter(
+    (item) => dependencies.includes(item) && !ignoreDeps.includes(item),
+  );
+}
 
 function createScriptTasks({ browserPlatforms, livereload }) {
   // internal tasks
@@ -87,6 +107,8 @@ function createScriptTasks({ browserPlatforms, livereload }) {
     dev: createTasksForBuildJsExtension({
       taskPrefix: 'scripts:core:dev',
       devMode: true,
+      // isExternalDeps: false,
+      isExternalDeps: Boolean(process.env.ENV_DEV_BUILD_LIBS),
     }),
     testDev: createTasksForBuildJsExtension({
       taskPrefix: 'scripts:core:test-live',
@@ -101,44 +123,81 @@ function createScriptTasks({ browserPlatforms, livereload }) {
     // production
     prod: createTasksForBuildJsExtension({ taskPrefix: 'scripts:core:prod' }),
   };
-  const deps = {
-    background: createTasksForBuildJsDeps({
-      filename: 'bg-libs',
-      key: 'background',
-    }),
-    ui: createTasksForBuildJsDeps({ filename: 'ui-libs', key: 'ui' }),
-  };
+  const deps = createDepsTask({ devMode: false });
+  const depsDev = createDepsTask({ devMode: true });
 
   // high level tasks
 
   const prod = composeParallel(deps.background, deps.ui, core.prod);
 
-  const { dev, testDev } = core;
+  /*
+  should comment
+     manifest.js#scriptsToExcludeFromBackgroundDevBuild
+        'bg-libs.js': true,
+  should set scripts:core:dev
+     isExternalDeps: true;
+  */
+  const dev = process.env.ENV_DEV_BUILD_LIBS
+    ? composeParallel(depsDev.background, depsDev.ui, core.dev)
+    : core.dev;
+
+  const { testDev } = core;
 
   const test = composeParallel(deps.background, deps.ui, core.test);
 
   return { prod, dev, testDev, test };
 
-  function createTasksForBuildJsDeps({ key, filename }) {
+  function createDepsTask({ devMode }) {
+    const _deps = {
+      background: createTasksForBuildJsDeps({
+        filename: 'bg-libs',
+        key: 'background',
+        devMode,
+      }),
+      ui: createTasksForBuildJsDeps({
+        filename: 'ui-libs',
+        key: 'ui',
+        devMode,
+      }),
+    };
+    return _deps;
+  }
+
+  function createTasksForBuildJsDeps({ key, filename, devMode = false }) {
     return createTask(
-      `scripts:deps:${key}`,
+      `scripts:deps:${key}${devMode ? ':DEV' : ''}`,
       bundleTask({
         label: filename,
         filename: `${filename}.js`,
         buildLib: true,
         dependenciesToBundle: externalDependenciesMap[key],
-        devMode: false,
+        devMode,
       }),
     );
   }
 
-  function createTasksForBuildJsExtension({ taskPrefix, devMode, testing }) {
+  function createTasksForBuildJsExtension({
+    taskPrefix,
+    devMode,
+    testing,
+    isExternalDeps,
+  }) {
     const standardBundles = [
-      'background',
+      // 'background',
       'ui',
       'phishing-detect',
       'initSentry',
     ];
+
+    const standardSubtask = createTask(
+      `${taskPrefix}:standardBundles`,
+      createBundleTaskForBuildJsExtensionNormal({
+        filename: standardBundles,
+        devMode,
+        testing,
+        isExternalDeps,
+      }),
+    );
 
     const standardSubtasks = standardBundles.map((filename) => {
       return createTask(
@@ -147,6 +206,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
           filename,
           devMode,
           testing,
+          isExternalDeps,
         }),
       );
     });
@@ -155,13 +215,21 @@ function createScriptTasks({ browserPlatforms, livereload }) {
     // because inpage bundle result is included inside contentscript
     const contentscriptSubtask = createTask(
       `${taskPrefix}:contentscript`,
-      createTaskForBuildJsExtensionContentscript({ devMode, testing }),
+      createTaskForBuildJsExtensionContentscript({
+        devMode,
+        testing,
+        isExternalDeps,
+      }),
     );
 
     // this can run whenever
     const disableConsoleSubtask = createTask(
       `${taskPrefix}:disable-console`,
-      createTaskForBuildJsExtensionDisableConsole({ devMode }),
+      createTaskForBuildJsExtensionDisableConsole({
+        devMode,
+        testing,
+        isExternalDeps,
+      }),
     );
 
     // task for initiating livereload
@@ -183,6 +251,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
     // make each bundle run in a separate process
     const allSubtasks = [
       ...standardSubtasks,
+      // standardSubtask,
       contentscriptSubtask,
       disableConsoleSubtask,
     ].map((subtask) => runInChildProcess(subtask));
@@ -191,18 +260,32 @@ function createScriptTasks({ browserPlatforms, livereload }) {
     return composeParallel(initiateLiveReload, ...allSubtasks);
   }
 
+  function getExternalDependencies(
+    externalDependencies,
+    { devMode, isExternalDeps, testing },
+  ) {
+    const _deps = isExternalDeps || !devMode ? externalDependencies : undefined;
+    return _deps;
+  }
+
   function createBundleTaskForBuildJsExtensionNormal({
     filename,
     devMode,
     testing,
+    isExternalDeps,
   }) {
     return bundleTask({
       label: filename,
       filename: `${filename}.js`,
       filepath: `./app/scripts/${filename}.js`,
-      externalDependencies: devMode
-        ? undefined
-        : externalDependenciesMap[filename],
+      externalDependencies: getExternalDependencies(
+        externalDependenciesMap[filename],
+        {
+          devMode,
+          testing,
+          isExternalDeps,
+        },
+      ),
       devMode,
       testing,
     });
@@ -218,7 +301,11 @@ function createScriptTasks({ browserPlatforms, livereload }) {
     });
   }
 
-  function createTaskForBuildJsExtensionContentscript({ devMode, testing }) {
+  function createTaskForBuildJsExtensionContentscript({
+    devMode,
+    testing,
+    isExternalDeps,
+  }) {
     const inpage = 'inpage';
     const contentscript = 'contentscript';
     return composeSeries(
@@ -226,9 +313,14 @@ function createScriptTasks({ browserPlatforms, livereload }) {
         label: inpage,
         filename: `${inpage}.js`,
         filepath: `./app/scripts/${inpage}.js`,
-        externalDependencies: devMode
-          ? undefined
-          : externalDependenciesMap[inpage],
+        externalDependencies: getExternalDependencies(
+          externalDependenciesMap[inpage],
+          {
+            devMode,
+            testing,
+            isExternalDeps,
+          },
+        ),
         devMode,
         testing,
       }),
@@ -236,9 +328,14 @@ function createScriptTasks({ browserPlatforms, livereload }) {
         label: contentscript,
         filename: `${contentscript}.js`,
         filepath: `./app/scripts/${contentscript}.js`,
-        externalDependencies: devMode
-          ? undefined
-          : externalDependenciesMap[contentscript],
+        externalDependencies: getExternalDependencies(
+          externalDependenciesMap[contentscript],
+          {
+            devMode,
+            testing,
+            isExternalDeps,
+          },
+        ),
         devMode,
         testing,
       }),
@@ -262,7 +359,11 @@ function createScriptTasks({ browserPlatforms, livereload }) {
       const buildPipeline = [
         bundler.bundle(),
         // convert bundle stream to gulp vinyl stream
+        // source(opts.filename),
         source(opts.filename),
+
+        // bifyModuleGroups.groupBySize({ sizeLimit: 2000 * 1000 }),
+
         // Initialize Source Maps
         buffer(),
         // loads map from browserify file
@@ -288,7 +389,16 @@ function createScriptTasks({ browserPlatforms, livereload }) {
         // Use inline source maps for development due to Chrome DevTools bug
         // https://bugs.chromium.org/p/chromium/issues/detail?id=931675
         // note: sourcemaps call arity is important
-        buildPipeline.push(sourcemaps.write());
+
+        // TODO inline source maps lowest speed
+        // buildPipeline.push(sourcemaps.write()); // inline sourcemap
+
+        // external file sourcemap not working in extension
+        buildPipeline.push(
+          sourcemaps.write('../sourcemaps', {
+            sourceMappingURLPrefix: () => 'http://localhost:3131',
+          }),
+        );
       } else {
         buildPipeline.push(sourcemaps.write('../sourcemaps'));
       }
@@ -326,7 +436,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
 
     if (!opts.buildLib) {
       if (opts.devMode && opts.filename === 'ui.js') {
-        browserifyOpts.entries = [opts.filepath];
+        browserifyOpts.entries = [].concat(opts.filepath);
         // we can toggle react-devtools on or off by env
         if (process.env.ENV_REACT_DEVTOOLS_ON) {
           browserifyOpts.entries.unshift(
@@ -334,7 +444,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
           );
         }
       } else {
-        browserifyOpts.entries = [opts.filepath];
+        browserifyOpts.entries = [].concat(opts.filepath);
       }
     }
 
@@ -343,7 +453,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
      */
     // https://stackoverflow.com/questions/40029113/syntaxerror-import-and-export-may-appear-only-with-sourcetype-module-g
     let bundler = browserify(browserifyOpts)
-      .transform(unflowify)
+      // .transform(unflowify)
       .transform(babelify, {})
 
       // [scssify] is conflict by [cssModulesify], will finally output by [cssModulesify], use gulp instead.
@@ -419,6 +529,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
       bundler = watchify(bundler);
       // on any file update, re-runs the bundler
       bundler.on('update', () => {
+        console.log('watchify changed, restart performBundle');
         performBundle();
       });
     }
@@ -444,6 +555,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
     }
 
     bundler.plugin(tsify, { noImplicitAny: true });
+    // bundler.plugin(bifyModuleGroups.plugin);
 
     return bundler;
   }

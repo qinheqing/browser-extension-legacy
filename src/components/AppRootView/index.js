@@ -21,12 +21,7 @@ function NewHomeRootComponents() {
   return (
     <>
       <Helmet>
-        <link
-          rel="stylesheet"
-          type="text/css"
-          href="./tailwind.css"
-          title="ltr"
-        />
+        <link rel="stylesheet" type="text/css" href="./tailwind.css" />
       </Helmet>
       {/* LoadingScreen*/}
       <PreloadScreen />
@@ -38,6 +33,7 @@ function OldHomeRootComponents() {
   return (
     <>
       <Helmet>
+        <link rel="stylesheet" type="text/css" href="./tailwind.css" />
         <link rel="stylesheet" type="text/css" href="./index.css" title="ltr" />
         <link
           rel="stylesheet"

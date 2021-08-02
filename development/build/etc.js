@@ -5,6 +5,7 @@ const gulpZip = require('gulp-zip');
 const del = require('del');
 const pify = require('pify');
 const pump = pify(require('pump'));
+const httpServer = require('http-server');
 const baseManifest = require('../../app/manifest/_base.json');
 const { createTask, composeParallel } = require('./task');
 
@@ -12,7 +13,7 @@ module.exports = createEtcTasks;
 
 function createEtcTasks({ browserPlatforms, livereload }) {
   const clean = createTask('clean', async function clean() {
-    await del(['./dist/*', './ui/app/css/output/*']);
+    await del(['./dist/*', './builds/*', './ui/app/css/output/*']);
     await Promise.all(
       browserPlatforms.map(async (platform) => {
         await fs.mkdir(`./dist/${platform}`, { recursive: true });
@@ -29,19 +30,27 @@ function createEtcTasks({ browserPlatforms, livereload }) {
     'zip',
     composeParallel(
       ...browserPlatforms.map((platform) => createZipTask(platform)),
+      createZipTask('sourcemaps', `sourcemaps-${baseManifest.version}.zip`),
     ),
   );
 
   const moduleFix = createModuleFixTask();
 
-  return { clean, reload, zip, moduleFix };
+  const sourcemapServer = createTask('sourcemapServer', async function () {
+    const server = httpServer.createServer({
+      root: './dist',
+    });
+    server.listen(3131);
+  });
+
+  return { clean, reload, zip, moduleFix, sourcemapServer };
 }
 
-function createZipTask(target) {
+function createZipTask(target, filename) {
   return async () => {
     await pump(
       gulp.src(`dist/${target}/**`),
-      gulpZip(`onekey-${target}-${baseManifest.version}.zip`),
+      gulpZip(filename || `onekey-${target}-${baseManifest.version}.zip`),
       gulp.dest('builds'),
     );
   };
