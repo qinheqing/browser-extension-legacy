@@ -9,7 +9,7 @@ import {
   PublicKey,
   Account,
   SYSVAR_RENT_PUBKEY,
-} from 'vendors/solanaWeb3';
+} from '@solana/web3.js';
 import { CONST_TEST_MNEMONIC, CONST_TX_TYPES } from '../consts/consts';
 import {
   HdKeyProviderEd25519,

@@ -1,7 +1,7 @@
 import assert from 'assert';
 import bs58 from 'bs58';
 import { isBuffer, uniqBy, isNil } from 'lodash';
-import { Connection, clusterApiUrl, PublicKey } from 'vendors/solanaWeb3';
+import { Connection, clusterApiUrl, PublicKey } from '@solana/web3.js';
 import ChainProviderBase from '../../ChainProviderBase';
 import utilsApp from '../../../utils/utilsApp';
 import OneAccountInfo from '../../../classes/OneAccountInfo';

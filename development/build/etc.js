@@ -6,7 +6,7 @@ const del = require('del');
 const pify = require('pify');
 const pump = pify(require('pump'));
 const httpServer = require('http-server');
-const baseManifest = require('../../app/manifest/_base.json');
+const { version } = require('../../package.json');
 const { createTask, composeParallel } = require('./task');
 
 module.exports = createEtcTasks;
@@ -30,7 +30,7 @@ function createEtcTasks({ browserPlatforms, livereload }) {
     'zip',
     composeParallel(
       ...browserPlatforms.map((platform) => createZipTask(platform)),
-      createZipTask('sourcemaps', `sourcemaps-${baseManifest.version}.zip`),
+      createZipTask('sourcemaps', `sourcemaps-${version}.zip`),
     ),
   );
 
@@ -40,7 +40,7 @@ function createEtcTasks({ browserPlatforms, livereload }) {
     const server = httpServer.createServer({
       root: './dist',
     });
-    server.listen(3131);
+    server.listen(31317);
   });
 
   return { clean, reload, zip, moduleFix, sourcemapServer };
@@ -50,7 +50,7 @@ function createZipTask(target, filename) {
   return async () => {
     await pump(
       gulp.src(`dist/${target}/**`),
-      gulpZip(filename || `onekey-${target}-${baseManifest.version}.zip`),
+      gulpZip(filename || `onekey-${target}-${version}.zip`),
       gulp.dest('builds'),
     );
   };

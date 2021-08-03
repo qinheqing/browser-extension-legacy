@@ -20,6 +20,8 @@ import extension from 'extensionizer';
 import { storeAsStream, storeTransformStream } from '@metamask/obs-store';
 import PortStream from 'extension-port-stream';
 import { captureException } from '@sentry/browser';
+import { autorun } from 'mobx';
+import { observer } from 'mobx-react-lite';
 
 import {
   ENVIRONMENT_TYPE_POPUP,
@@ -46,6 +48,11 @@ import errorsGlobalHandler from './errorsGlobalHandler';
 /* eslint-enable import/first */
 
 errorsGlobalHandler.init();
+
+const mboxReferences = {
+  autorun,
+  observer,
+};
 
 const { sentry } = global;
 const firstTimeState = { ...rawFirstTimeState };

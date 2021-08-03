@@ -3,14 +3,11 @@ const path = require('path');
 const { merge, cloneDeep } = require('lodash');
 
 const baseManifest = require('../../app/manifest/_base.json');
+const { version } = require('../../package.json');
 
 const { createTask, composeSeries } = require('./task');
 
 module.exports = createManifestTasks;
-
-const scriptsToExcludeFromBackgroundDevBuild = {
-  'bg-libs.js': !process.env.ENV_DEV_BUILD_LIBS,
-};
 
 function createManifestTasks({ browserPlatforms }) {
   // merge base manifest with per-platform manifests
@@ -27,7 +24,13 @@ function createManifestTasks({ browserPlatforms }) {
             `${platform}.json`,
           ),
         );
-        const result = merge(cloneDeep(baseManifest), platformModifications);
+
+        const result = merge(
+          cloneDeep(baseManifest),
+          { version },
+          platformModifications,
+        );
+
         if (
           process.env.GITHUB_TAG &&
           // tag should like: v1.0.3-beta.1
@@ -37,6 +40,7 @@ function createManifestTasks({ browserPlatforms }) {
           // convenience to identify different version for multiple extension testing
           result.description = `${result.description} (${process.env.GITHUB_TAG})`;
         }
+
         const dir = path.join('.', 'dist', platform);
         await fs.mkdir(dir, { recursive: true });
         await writeJson(result, path.join(dir, 'manifest.json'));
@@ -44,30 +48,14 @@ function createManifestTasks({ browserPlatforms }) {
     );
   };
 
-  // dev: remove bg-libs, add chromereload, add perms
+  // dev: add perms
   const envDev = createTaskForModifyManifestForEnvironment((manifest) => {
-    const scripts = manifest.background.scripts.filter(
-      (scriptName) => !scriptsToExcludeFromBackgroundDevBuild[scriptName],
-    );
-    scripts.push('chromereload.js');
-    manifest.background = {
-      ...manifest.background,
-      scripts,
-    };
     manifest.description = `${manifest.description} (## DEV_VERSION ##)`;
     manifest.permissions = [...manifest.permissions, 'webRequestBlocking'];
   });
 
-  // testDev: remove bg-libs, add perms
+  // testDev: add perms
   const envTestDev = createTaskForModifyManifestForEnvironment((manifest) => {
-    const scripts = manifest.background.scripts.filter(
-      (scriptName) => !scriptsToExcludeFromBackgroundDevBuild[scriptName],
-    );
-    scripts.push('chromereload.js');
-    manifest.background = {
-      ...manifest.background,
-      scripts,
-    };
     manifest.permissions = [
       ...manifest.permissions,
       'webRequestBlocking',

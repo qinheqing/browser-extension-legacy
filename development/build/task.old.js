@@ -23,7 +23,7 @@ function detectAndRunEntryTask() {
   if (!taskName) {
     throw new Error(`MetaMask build: No task name specified`);
   }
-  const skipStats = process.argv.includes('--skip-stats');
+  const skipStats = process.argv[3] === '--skip-stats';
 
   runTask(taskName, { skipStats });
 }
@@ -68,21 +68,9 @@ function runInChildProcess(task) {
     );
   }
   return instrumentForTaskStats(taskName, async () => {
-    let childProcess;
-    // don't run subprocesses in lavamoat for dev mode if main process not run in lavamoat
-    if (
-      process.env.npm_lifecycle_event === 'build:dev' ||
-      (taskName.includes('scripts:core:dev') &&
-        !process.argv[0].includes('lavamoat'))
-    ) {
-      childProcess = spawn('yarn', ['build:dev', taskName, '--skip-stats'], {
-        env: process.env,
-      });
-    } else {
-      childProcess = spawn('yarn', ['build', taskName, '--skip-stats'], {
-        env: process.env,
-      });
-    }
+    const childProcess = spawn('yarn', ['build', taskName, '--skip-stats'], {
+      env: process.env,
+    });
     // forward logs to main process
     // skip the first stdout event (announcing the process command)
     childProcess.stdout.once('data', () => {
@@ -95,7 +83,7 @@ function runInChildProcess(task) {
     );
     // await end of process
     await new Promise((resolve, reject) => {
-      const handleExit = (errCode) => {
+      childProcess.once('close', (errCode) => {
         if (errCode !== 0) {
           reject(
             new Error(
@@ -105,9 +93,7 @@ function runInChildProcess(task) {
           return;
         }
         resolve();
-      };
-      childProcess.once('exit', handleExit);
-      childProcess.once('close', handleExit);
+      });
     });
   });
 }

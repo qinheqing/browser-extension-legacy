@@ -25,8 +25,6 @@ import BigNumber from 'bignumber.js';
 
 import ethUtil, { stripHexPrefix } from 'ethereumjs-util';
 
-const { BN } = ethUtil;
-
 // Big Number Constants
 const BIG_NUMBER_WEI_MULTIPLIER = new BigNumber('1000000000000000000');
 const BIG_NUMBER_GWEI_MULTIPLIER = new BigNumber('1000000000');
@@ -51,7 +49,7 @@ const toSpecifiedDenomination = {
 const baseChange = {
   hex: (n) => n.toString(16),
   dec: (n) => new BigNumber(n).toString(10),
-  BN: (n) => new BN(n.toString(16)),
+  BN: (n) => new ethUtil.BN(n.toString(16)),
 };
 
 // Utility function for checking base types
