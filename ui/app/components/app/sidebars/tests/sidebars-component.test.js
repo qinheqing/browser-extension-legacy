@@ -2,7 +2,7 @@ import assert from 'assert';
 import React from 'react';
 import { shallow } from 'enzyme';
 import sinon from 'sinon';
-import ReactCSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
+import { CSSTransition } from 'react-transition-group';
 import Sidebar from '../sidebar.component';
 
 import CustomizeGas from '../../gas-customization/gas-modal-page-container';
@@ -75,7 +75,7 @@ describe('Sidebar Component', function () {
     });
 
     it('should render the ReactCSSTransitionGroup without any children', function () {
-      assert(wrapper.children().at(0).is(ReactCSSTransitionGroup));
+      assert(wrapper.children().at(0).is(CSSTransition));
       assert.strictEqual(wrapper.children().at(0).children().length, 0);
     });
 

@@ -4,7 +4,7 @@ import {
   PublicKey,
   SYSVAR_RENT_PUBKEY,
   TransactionInstruction,
-} from 'vendors/solanaWeb3';
+} from '@solana/web3.js';
 import { option, publicKey, rustEnum, u64, struct, u8 } from './borsh';
 
 export const TOKEN_PROGRAM_ID = new PublicKey(

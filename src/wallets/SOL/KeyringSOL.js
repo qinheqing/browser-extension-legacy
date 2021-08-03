@@ -1,6 +1,6 @@
 import nacl from 'tweetnacl';
 import bs58 from 'bs58';
-import { Account, PublicKey } from 'vendors/solanaWeb3';
+import { Account, PublicKey } from '@solana/web3.js';
 import KeyringBase from '../KeyringBase';
 import HdKeyProvider from './modules/HdKeyProvider';
 

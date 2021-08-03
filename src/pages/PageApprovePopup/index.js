@@ -3,7 +3,7 @@ import { Observer, observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
 import URI from 'urijs';
 import bs58 from 'bs58';
-import { Message, PublicKey } from 'vendors/solanaWeb3';
+import { Message, PublicKey } from '@solana/web3.js';
 import { isString, isNumber, isDate } from 'lodash';
 import BN from 'bn.js';
 import AppPageLayout from '../../components/AppPageLayout';

@@ -1,6 +1,6 @@
 import { bits, Blob, Layout, u32, UInt } from 'buffer-layout';
 import BN from 'bn.js';
-import { PublicKey } from 'vendors/solanaWeb3';
+import { PublicKey } from '@solana/web3.js';
 
 class Zeros extends Blob {
   decode(b, offset) {
