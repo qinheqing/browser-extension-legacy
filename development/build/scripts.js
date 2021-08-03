@@ -65,7 +65,16 @@ const metamaskDepenendencies = [
 const reactDepenendencies = dependencies.filter((dep) => dep.match(/react/u));
 
 const externalDependenciesMap = {
-  background: ['3box'],
+  background: [
+    '3box',
+    'json-rpc-engine',
+    'json-rpc-middleware-stream',
+    'eth-json-rpc-filters',
+    'eth-json-rpc-infura',
+    'eth-json-rpc-middleware',
+    'eth-keyring-controller',
+    '@metamask/contract-metadata',
+  ],
   ui: [
     ...materialUIDependencies,
     ...reactDepenendencies,
