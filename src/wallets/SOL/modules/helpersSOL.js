@@ -8,7 +8,7 @@ import {
   SystemProgram,
   Account,
   SYSVAR_RENT_PUBKEY,
-} from 'vendors/solanaWeb3';
+} from '@solana/web3.js';
 
 const SYSTEM_PROGRAM_ID = new PublicKey('11111111111111111111111111111111');
 

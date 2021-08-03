@@ -1,8 +1,6 @@
 const childProcess = require('child_process');
 const pify = require('pify');
 const gulp = require('gulp');
-const sass = require('gulp-sass');
-sass.compiler = require('sass');
 const autoprefixer = require('gulp-autoprefixer');
 const gulpStylelint = require('gulp-stylelint');
 const watch = require('gulp-watch');
@@ -13,7 +11,7 @@ const pump = pify(require('pump'));
 const { createTask } = require('./task');
 const configs = require('./configs');
 
-const exec = pify(childProcess.exec, { multiArgs: true });
+let sass;
 
 // scss compilation and autoprefixing tasks
 module.exports = createStyleTasks;
@@ -104,6 +102,14 @@ function createStyleTasks({ livereload }) {
 }
 
 async function buildScssPipeline(src, dest, devMode, rtl) {
+  if (!sass) {
+    // eslint-disable-next-line node/global-require
+    sass = require('gulp-dart-sass');
+    // use our own compiler which runs sass in its own process
+    // in order to not pollute the intrinsics
+    // eslint-disable-next-line node/global-require
+    sass.compiler = require('./sass-compiler');
+  }
   await pump(
     ...[
       // pre-process

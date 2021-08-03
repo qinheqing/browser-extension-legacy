@@ -125,10 +125,11 @@ class StoreAccount extends BaseStore {
   @action.bound
   setFirstChainKeyAsDefaultFilter() {
     if (!storeStorage.accountsGroupFilter.chainKey) {
-      storeStorage.accountsGroupFilter = {
+      const data = {
         ...storeStorage.accountsGroupFilter,
         chainKey: storeChain.chainsKeys[0],
       };
+      storeStorage.accountsGroupFilter = data;
     }
   }
 

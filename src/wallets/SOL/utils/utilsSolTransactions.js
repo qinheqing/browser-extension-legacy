@@ -10,7 +10,7 @@ import {
   StakeProgram,
   SystemInstruction,
   SystemProgram,
-} from 'vendors/solanaWeb3';
+} from '@solana/web3.js';
 import helpersSOL from '../modules/helpersSOL';
 import {
   decodeInstruction,

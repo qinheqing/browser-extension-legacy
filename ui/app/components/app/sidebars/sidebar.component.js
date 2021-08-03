@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ReactCSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
+import { CSSTransition } from 'react-transition-group';
 import CustomizeGas from '../gas-customization/gas-modal-page-container';
 
 export default class Sidebar extends Component {
@@ -54,15 +54,16 @@ export default class Sidebar extends Component {
 
     return (
       <div>
-        <ReactCSSTransitionGroup
-          transitionName={transitionName}
-          transitionEnterTimeout={300}
-          transitionLeaveTimeout={200}
+        <CSSTransition
+          classNames={transitionName}
+          timeout={{ exit: 200, enter: 300 }}
         >
-          {sidebarOpen && !sidebarShouldClose
-            ? this.renderSidebarContent()
-            : null}
-        </ReactCSSTransitionGroup>
+          <>
+            {sidebarOpen && !sidebarShouldClose
+              ? this.renderSidebarContent()
+              : null}
+          </>
+        </CSSTransition>
         {sidebarOpen && !sidebarShouldClose ? this.renderOverlay() : null}
       </div>
     );
