@@ -2296,8 +2296,5 @@
   },
   "watched": {
     "message": "watched"
-  },
-  "notSupportSignTypedData": {
-    "message": "Not supported on this device"
   }
 }

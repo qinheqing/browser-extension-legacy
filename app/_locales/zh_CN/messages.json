@@ -2268,8 +2268,5 @@
   },
   "watched": {
     "message": "观察"
-  },
-  "notSupportSignTypedData": {
-    "message": "当前硬件不支持该签名方法"
   }
 }
