@@ -162,8 +162,16 @@ class StoreToken extends BaseStore {
   }
 
   getTokenMeta({ token }) {
+    const { chainKey, isNative } = token;
     const key = this._buildTokenMetaKey({ token });
-    return cloneDeep(storeStorage.tokenMetasRaw[key]);
+    let tokenMeta = cloneDeep(storeStorage.tokenMetasRaw[key]);
+
+    // * try to get nativeTokenMeta (which is NOT included by tokenList)
+    if (!tokenMeta && isNative) {
+      const chainInfo = storeChain.getChainInfoByKey(chainKey);
+      tokenMeta = cloneDeep(chainInfo?.nativeToken);
+    }
+    return tokenMeta;
   }
 
   shouldReloadTokenMetas(tokens) {
@@ -275,6 +283,14 @@ class StoreToken extends BaseStore {
 
   getTokenDecimals(token) {
     let { decimals } = token;
+
+    // * get decimals from tokenMeta (tokenList)
+    if (isNil(decimals)) {
+      const tokenMeta = this.getTokenMeta({ token });
+      decimals = tokenMeta?.decimals;
+    }
+
+    // * get decimals from tokenBalanceInfo
     if (isNil(decimals)) {
       // TODO fetch decimals by rpc fallback if cache is null
       const balanceInfo = storeBalance.getTokenBalanceInfoInCache(token);
