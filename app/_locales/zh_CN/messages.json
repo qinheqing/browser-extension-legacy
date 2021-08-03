@@ -246,7 +246,7 @@
     "message": "您的浏览器不支持该功能……"
   },
   "bsc": {
-    "message": "币安智能链 BSC 主网"
+    "message": " BSC 币安智能链主网"
   },
   "bsc_test": {
     "message": "BSC 测试网络"
@@ -371,19 +371,19 @@
     "message": "正在连接 $1"
   },
   "connectingToBsc": {
-    "message": "正在连接到 币安智能链 BSC 主网"
+    "message": "正在连接到 BSC 币安智能链主网"
   },
   "connectingToGoerli": {
     "message": "正在连接 Goerli 测试网络"
   },
   "connectingToHeco": {
-    "message": "正在连接到 火币生态链 HECO 主网"
+    "message": "正在连接到 HECO 火币生态链主网"
   },
   "connectingToKovan": {
     "message": "正在连接到 Kovan 测试网络"
   },
   "connectingToMainnet": {
-    "message": "正在连接到以太坊 Ethereum 主网"
+    "message": "正在连接到 Ethereum 以太坊主网"
   },
   "connectingToMatic": {
     "message": "正在连接到 Polygon 主网"
@@ -828,7 +828,7 @@
     "message": "连接出现问题？"
   },
   "heco": {
-    "message": "火币生态链 HECO 主网"
+    "message": "HECO 火币生态链主网"
   },
   "here": {
     "message": "这里",
@@ -958,7 +958,7 @@
     "message": "此操作将编辑已经在您的钱包中列出的代币，有可能被用来欺骗您。只有确定要更改这些代币的内容时，才通过此操作。"
   },
   "kovan": {
-    "message": "Kovan 测试网络"
+    "message": "Kovan 测试网"
   },
   "lastConnected": {
     "message": "最后连接"
@@ -997,7 +997,7 @@
     "message": "锁定时间过长"
   },
   "mainnet": {
-    "message": "以太坊 Ethereum 主网络"
+    "message": "Ethereum 以太坊主网"
   },
   "matic": {
     "message": "Polygon 主网"
@@ -1417,10 +1417,10 @@
     "message": "不要对任何人展示此账户助记词！"
   },
   "rinkeby": {
-    "message": "Rinkeby 测试网络"
+    "message": "Rinkeby 测试网"
   },
   "ropsten": {
-    "message": "Ropsten 测试网络"
+    "message": "Ropsten 测试网"
   },
   "rpcUrl": {
     "message": "新增 RPC URL"
@@ -2237,7 +2237,7 @@
     "message": "xDai 主网"
   },
   "fantom": {
-    "message": "FANTOM 主网"
+    "message": "Fantom 主网"
   },
   "xOfYPending": {
     "message": "$1 of $2 进行中"
@@ -2255,7 +2255,7 @@
     "description": "$1 is a clickable link with text defined by the 'mismatchedChainLinkText' key"
   },
   "okex": {
-    "message": "OKEx 主网"
+    "message": "OEC 欧易交易链主网"
   },
   "symbolRequired": {
     "message": "代币符号不能为空"

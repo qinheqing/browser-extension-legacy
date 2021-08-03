@@ -2,9 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Button from '../../button';
+import {
+  INSUFFICIENT_FUNDS_ERROR_KEY,
+  GAS_LIMIT_TOO_LOW_ERROR_KEY,
+} from '../../../../helpers/constants/error-keys';
 
 export default class PageContainerFooter extends Component {
   static propTypes = {
+    errorKey: PropTypes.string,
     children: PropTypes.node,
     onCancel: PropTypes.func,
     cancelText: PropTypes.string,
@@ -37,10 +42,18 @@ export default class PageContainerFooter extends Component {
       buttonSizeLarge = false,
       footerClassName,
       footerButtonClassName,
+      errorKey,
     } = this.props;
 
     return (
       <div className={classnames('page-container__footer', footerClassName)}>
+        {errorKey && (
+          <div className="page-container__footer-disable-reason">
+            {errorKey === INSUFFICIENT_FUNDS_ERROR_KEY
+              ? this.context.t('insufficientFunds')
+              : this.context.t('gasLimitTooLow')}
+          </div>
+        )}
         <footer>
           {!hideCancel && (
             <Button

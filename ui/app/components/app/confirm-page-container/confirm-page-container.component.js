@@ -167,6 +167,7 @@ export default class ConfirmPageContainer extends Component {
         )}
         {contentComponent && (
           <PageContainerFooter
+            errorKey={errorKey}
             onCancel={onCancel}
             cancelText={this.context.t('reject')}
             onSubmit={onSubmit}

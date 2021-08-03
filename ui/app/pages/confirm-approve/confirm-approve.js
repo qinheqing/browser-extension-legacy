@@ -25,10 +25,8 @@ import ConfirmApproveContent from './confirm-approve-content';
 export default function ConfirmApprove() {
   const dispatch = useDispatch();
   const { id: paramsTransactionId } = useParams();
-  const {
-    id: transactionId,
-    txParams: { to: tokenAddress, data } = {},
-  } = useSelector(txDataSelector);
+  const { id: transactionId, txParams: { to: tokenAddress, data } = {} } =
+    useSelector(txDataSelector);
 
   const currentCurrency = useSelector(getCurrentCurrency);
   const nativeCurrency = useSelector(getNativeCurrency);
@@ -47,13 +45,13 @@ export default function ConfirmApprove() {
   const currentToken = (tokens &&
     tokens.find(({ address }) => tokenAddress === address)) || {
     address: tokenAddress,
-    symbol: ""
+    symbol: '',
   };
 
   const { tokensWithBalances } = useTokenTracker([currentToken]);
   const tokenTrackerBalance = tokensWithBalances[0]?.balance || '';
 
-  const tokenSymbol = currentToken?.symbol;
+  const tokenSymbol = currentToken?.symbol || nativeCurrency;
   const decimals = Number(currentToken?.decimals);
   const tokenData = getTokenData(data);
   const tokenValue = getTokenValueParam(tokenData);

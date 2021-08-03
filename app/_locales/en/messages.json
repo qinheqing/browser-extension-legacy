@@ -2264,7 +2264,7 @@
     "message": "xDai Mainnet"
   },
   "fantom": {
-    "message": "Fantom Opera"
+    "message": "Fantom Mainnet"
   },
   "xOfYPending": {
     "message": "$1 of $2 pending",
@@ -2283,7 +2283,7 @@
     "description": "$1 is a clickable link with text defined by the 'mismatchedChainLinkText' key"
   },
   "okex": {
-    "message": "OKExChain Mainnet"
+    "message": "OEC Mainnet"
   },
   "symbolRequired": {
     "message": "Symbol required"

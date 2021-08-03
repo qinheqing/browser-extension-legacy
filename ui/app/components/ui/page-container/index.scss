@@ -82,6 +82,14 @@
       }
     }
   }
+
+  &__footer-disable-reason {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 0;
+    color: #d73a49;
+  }
   
   &__footer-button {
     margin-right: 16px;
