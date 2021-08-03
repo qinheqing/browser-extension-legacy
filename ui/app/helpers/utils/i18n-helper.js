@@ -60,10 +60,10 @@ export const getMessage = (localeCode, localeMessages, key, substitutions) => {
 
   // perform substitutions
   if (hasSubstitutions) {
-    const parts = phrase.split(/(\$\d)/gu);
+    const parts = phrase.split(/(\{\{\d\}\})/gu);
 
     const substitutedParts = parts.map((part) => {
-      const subMatch = part.match(/\$(\d)/u);
+      const subMatch = part.match(/\{\{(\d)\}\}/u);
       if (!subMatch) {
         return part;
       }
