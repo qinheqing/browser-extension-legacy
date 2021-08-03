@@ -10,6 +10,7 @@ import {
 import { toLower, debounce, cloneDeep, merge, isNil } from 'lodash';
 import OneTokenInfo from '../classes/OneTokenInfo';
 import { ROUTE_TX_HISTORY } from '../routes/routeUrls';
+import utilsNumber from '../utils/utilsNumber';
 import BaseStore from './BaseStore';
 import storeAccount from './storeAccount';
 import storeChain from './storeChain';
@@ -55,33 +56,42 @@ class StoreToken extends BaseStore {
   @computed
   get currentTokens() {
     const { tokens } = storeStorage.currentTokensRaw;
-    const balances = storeStorage.tokenBalancesRaw;
-    const tokenSorted = tokens.slice().sort(function (a, b) {
-      const balance0 = balances[a.key] || 0;
-      const balance1 = balances[b.key] || 0;
-      const price0 = storePrice.getTokenPrice({ token: a });
-      const price1 = storePrice.getTokenPrice({ token: b });
-      return balance0 * price0 > balance1 * price1 ? -1 : 1;
+    const tokenInfoList = tokens.map((tokenRaw) => {
+      const tokenMeta = this.getTokenMeta({ token: tokenRaw });
+      const { decimals, name, symbol, logoURI, extensions } = tokenMeta || {};
+
+      const tokenInfo = new OneTokenInfo(
+        merge({}, tokenRaw, {
+          decimals,
+          name,
+          symbol,
+          logoURI,
+          extensions,
+        }),
+      );
+
+      return tokenInfo;
     });
-    return [
-      this.currentNativeToken,
-      ...tokenSorted.map((tokenRaw) => {
-        const tokenMeta = this.getTokenMeta({ token: tokenRaw });
-        const { decimals, name, symbol, logoURI, extensions } = tokenMeta || {};
+    const tokenSorted = tokenInfoList.slice().sort((a, b) => {
+      const balance0 = storeBalance.getTokenBalanceInfoInCache(a).balance;
+      const price0 = storePrice.getTokenPrice({ token: a });
+      const decimals0 = this.getTokenDecimals(a);
+      const fiat0 = utilsNumber.toNormalNumber({
+        value: balance0 * price0,
+        decimals: decimals0,
+      });
 
-        const tokenInfo = new OneTokenInfo(
-          merge({}, tokenRaw, {
-            decimals,
-            name,
-            symbol,
-            logoURI,
-            extensions,
-          }),
-        );
+      const balance1 = storeBalance.getTokenBalanceInfoInCache(b).balance;
+      const price1 = storePrice.getTokenPrice({ token: b });
+      const decimals1 = this.getTokenDecimals(b);
+      const fiat1 = utilsNumber.toNormalNumber({
+        value: balance1 * price1,
+        decimals: decimals1,
+      });
 
-        return tokenInfo;
-      }),
-    ];
+      return fiat0 > fiat1 ? -1 : 1;
+    });
+    return [this.currentNativeToken, ...tokenSorted];
   }
 
   newTokenInfo() {
