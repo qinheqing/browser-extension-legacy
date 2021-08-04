@@ -6,7 +6,11 @@
     <script src="./globalthis.js" type="text/javascript" charset="utf-8"></script>
     <script src="./lockdown-install.js" type="text/javascript" charset="utf-8"></script>
     <script src="./lockdown-run.js" type="text/javascript" charset="utf-8"></script>
-    <script src="./phishing-detect.js"></script>
+
+    {{@each(it.jsBundles) => val}}
+      <script src="{{val}}" type="text/javascript" charset="utf-8"></script>
+    {{/each}}
+
     <link rel="stylesheet" type="text/css" href="./index.css" title="ltr">
     <link rel="stylesheet" type="text/css" href="./index-rtl.css" title="rtl" disabled>
 
@@ -29,7 +33,7 @@
       .content__header img       { margin-bottom: 3em; width: 160px; }
       .content__body             { background-color: rgb(245, 245, 245); font-size: 12pt; }
       .content__body p           { margin: 2em; }
-      .content__body p a         { text-decoration: underline; color: inherit; cursor: pointer; }
+      .content__body p a         { text-decoration: underline; color: rgb(217, 88, 70); cursor: pointer; }
     </style>
   </head>
   <body>
