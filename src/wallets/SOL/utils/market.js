@@ -9,7 +9,7 @@ import {
   PublicKey,
   SystemProgram,
   Transaction,
-} from 'vendors/solanaWeb3';
+} from '@solana/web3.js';
 import { accountFlagsLayout, publicKeyLayout, u128, u64 } from './layouts';
 import { SLAB_LAYOUT } from './slab';
 import { DexInstructions } from './instructions';

@@ -1,3 +1,5 @@
+const path = require('path');
+
 const sassConfig = {
   includePaths: ['src', 'ui'],
 
@@ -44,7 +46,39 @@ const scssifyConfig = {
   },
 };
 
+const browserifyPaths = [
+  path.resolve(__dirname, '../..'),
+  path.resolve(__dirname, '../../src'),
+];
+
+const browserifyAlias = {
+  aliases: {
+    lodash000: './shims/d3.js',
+  },
+  verbose: true,
+};
+
+const browserifyHtmlInjectJs = [
+  // 'external-libs',
+  // ----------------------------------------------
+  // 1. globalShim   2. package.json#browser   3. renderHtmlFile
+  'vendor/mobx',
+  'vendor/solana-web3',
+];
+
+const browserifyGlobalShim = {
+  // why use global mobx?
+  //    bify cause error:
+  //        Uncaught TypeError: Cannot assign to read only property 'concat' of object '[object Object]'
+  'mobx': 'mobx', // convert:    require('mobx'); => window.mobx;
+  '@solana/web3.js': 'solanaWeb3',
+};
+
 module.exports = {
   sassConfig,
   scssifyConfig,
+  browserifyPaths,
+  browserifyAlias,
+  browserifyGlobalShim,
+  browserifyHtmlInjectJs,
 };

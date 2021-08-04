@@ -33,6 +33,7 @@ module.exports = {
     'docs/**',
     'coverage/',
     'app/scripts/chromereload.js',
+    'development/chromereload.js',
     'app/vendor/**',
     'app/vendor-js/**',
     'test/e2e/send-eth-with-private-key-test/**',
@@ -43,13 +44,13 @@ module.exports = {
 
   extends: [
     '@metamask/eslint-config',
-    '@metamask/eslint-config/config/nodejs',
-    '@metamask/eslint-config/config/mocha',
+    '@metamask/eslint-config-nodejs',
+    '@metamask/eslint-config-mocha',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
   ],
 
-  plugins: ['@babel', 'react', 'import', 'prettier', 'react-flow'],
+  plugins: ['@babel', 'react', 'import', 'prettier'],
 
   globals: {
     document: 'readonly',
@@ -103,7 +104,7 @@ module.exports = {
     // Prettier handles all indentation automagically. it can be configured here
     // https://prettier.io/docs/en/options.html#tab-width but the default matches our
     // style.
-    indent: 'off',
+    'indent': 'off',
     // This rule conflicts with the way that prettier breaks code across multiple lines when
     // it exceeds the maximum length. Prettier optimizes for readability while simultaneously
     // maximizing the amount of code per line.
@@ -157,7 +158,7 @@ module.exports = {
     'import/no-unresolved': 'off',
 
     // prettier handles these
-    semi: 'off',
+    'semi': 'off',
     '@babel/semi': 'off',
 
     'mocha/no-setup-in-describe': 'off',
@@ -207,7 +208,7 @@ module.exports = {
         'babel.config.js',
         'nyc.config.js',
         'stylelint.config.js',
-        'app/scripts/runLockdown.js',
+        'app/scripts/lockdown-run.js',
         'development/**/*.js',
         'test/e2e/**/*.js',
         'test/lib/wait-until-called.js',
@@ -226,7 +227,7 @@ module.exports = {
         extensions: ['.js', '.jsx'],
       },
     },
-    react: {
+    'react': {
       version: 'detect',
     },
   },

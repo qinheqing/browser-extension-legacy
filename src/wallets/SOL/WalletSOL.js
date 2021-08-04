@@ -6,7 +6,7 @@ import {
   SystemProgram,
   TransactionInstruction,
   LAMPORTS_PER_SOL,
-} from 'vendors/solanaWeb3';
+} from '@solana/web3.js';
 import WalletBase from '../WalletBase';
 import { CONST_CHAIN_KEYS } from '../../consts/consts';
 import connectMockSOL from '../../utils/connectMockSOL';
