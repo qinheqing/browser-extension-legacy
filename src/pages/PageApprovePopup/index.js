@@ -29,6 +29,13 @@ import OneCellItem from '../../components/OneCellItem';
 import OneArrow from '../../components/OneArrow';
 import { ChainLogoIcon } from '../../components/LogoIcon';
 
+const APPROVE_METHODS = {
+  connect: 'connect',
+  sign: 'sign',
+  signTransaction: 'signTransaction',
+  signAllTransactions: 'signAllTransactions',
+};
+
 function ApproveDappSiteInfo({ query, title, showAccountInfo = false }) {
   const account = storeAccount.currentAccount;
   if (useDataRequiredOrRedirect(account)) {
@@ -279,10 +286,23 @@ function PageApprovePopup() {
     const { network, origin, request } = utilsUrl.getQuery({
       url: window.location.hash.slice(1),
     });
+    const requestObj = JSON.parse(request);
+
+    // if method===sign, convert object data to Uint8Array
+    if (requestObj.method === APPROVE_METHODS.sign) {
+      const dataObj = requestObj.params.data;
+      // Deserialize `data` into a Uint8Array
+      if (!dataObj) {
+        throw new Error('Missing "data" params for "sign" request');
+      }
+      requestObj.params._dataRaw = requestObj.params.data;
+      requestObj.params.data = utilsApp.objectToUint8Array(dataObj);
+    }
+
     return {
       network, // chain network
       origin, // dapp origin
-      request: JSON.parse(request),
+      request: requestObj,
     };
   }, [window.location.hash]);
 
@@ -309,14 +329,14 @@ function PageApprovePopup() {
       // check event origin, source, target for safety
       if (e.origin === query.origin && e.source === window.opener) {
         if (
-          e.data.method !== 'signTransaction' &&
-          e.data.method !== 'signAllTransactions' &&
-          e.data.method !== 'sign'
+          e.data.method !== APPROVE_METHODS.signTransaction &&
+          e.data.method !== APPROVE_METHODS.signAllTransactions &&
+          e.data.method !== APPROVE_METHODS.sign
         ) {
           postMessageToBg(
             OneDappMessage.errorMessage({
               id: e.data.id,
-              error: 'Unsupported method',
+              error: `Unsupported approve method > ${e.data.method}`,
             }),
           );
         }
@@ -332,21 +352,21 @@ function PageApprovePopup() {
   const popRequest = () => setRequestsQueue((requests) => requests.slice(1));
 
   const { messages, messageDisplay } = useMemo(() => {
-    if (!request || request.method === 'connect') {
+    if (!request || request.method === APPROVE_METHODS.connect) {
       return { messages: [], messageDisplay: 'tx' };
     }
     switch (request.method) {
-      case 'signTransaction':
+      case APPROVE_METHODS.signTransaction:
         return {
           messages: [request.params.message],
           messageDisplay: 'tx',
         };
-      case 'signAllTransactions':
+      case APPROVE_METHODS.signAllTransactions:
         return {
           messages: request.params.messages.map((m) => m),
           messageDisplay: 'tx',
         };
-      case 'sign':
+      case APPROVE_METHODS.sign:
         if (!(request.params.data instanceof Uint8Array)) {
           throw new Error('Data must be an instance of Uint8Array');
         }
@@ -364,8 +384,8 @@ function PageApprovePopup() {
     return null;
   }
 
-  // TODO signAllTransactions
-  if (request.method === 'signTransaction') {
+  // TODO signAllTransactions, sign
+  if (request.method === APPROVE_METHODS.signTransaction) {
     // debugger;
 
     // async function onApprove()
@@ -412,7 +432,7 @@ function PageApprovePopup() {
     );
   }
 
-  if (request.method === 'connect') {
+  if (request.method === APPROVE_METHODS.connect) {
     // Approve the parent page to connect to this wallet.
     const connect = (autoApprove) => {
       // * setConnectedAccount(wallet.publicKey);
@@ -456,7 +476,7 @@ function PageApprovePopup() {
 
   return (
     <AppPageLayout>
-      <h1>method=[{request.method}] is not correct.</h1>
+      <h1>approve method=[{request.method}] is not supported.</h1>
       <ReactJsonView collapsed={false} src={query} />
     </AppPageLayout>
   );
