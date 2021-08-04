@@ -435,6 +435,12 @@ function createFactoredBuild({
           }
           case 'phishing-detect': {
             renderHtmlFile('phishing', groupSet, commonSet, browserPlatforms);
+            renderHtmlFile(
+              'phishing_en',
+              groupSet,
+              commonSet,
+              browserPlatforms,
+            );
             break;
           }
           case 'background': {
@@ -777,6 +783,7 @@ function renderHtmlFile(htmlName, groupSet, commonSet, browserPlatforms) {
 
   // auto inject js files to html
   const jsBundles = [
+    'runtime-cjs', // this module must be at first
     ...configs.browserifyHtmlInjectJs,
     ...commonSet.values(),
     ...groupSet.values(),

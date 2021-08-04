@@ -231,7 +231,7 @@ function blockedDomainCheck() {
 /**
  * Redirects the current page to a phishing information page
  */
-function redirectToPhishingWarning({ currentLocale = 'zh' }) {
+function redirectToPhishingWarning({ currentLocale = 'zh' } = {}) {
   console.debug('MetaMask: Routing to Phishing Warning component.');
   const filename = currentLocale.includes('en')
     ? 'phishing_en.html'
@@ -242,5 +242,13 @@ function redirectToPhishingWarning({ currentLocale = 'zh' }) {
     href: window.location.href,
   })}`;
 }
+
+// test on site:  window.postMessage({type: 'ONEKEY_PHISHING_WARNING'});
+window.addEventListener('message', (event) => {
+  const type = event?.data?.type;
+  if (type === 'ONEKEY_PHISHING_WARNING') {
+    redirectToPhishingWarning();
+  }
+});
 
 contentscriptSolana.init();

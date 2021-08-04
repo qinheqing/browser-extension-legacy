@@ -165,6 +165,14 @@ function isNewHome() {
   return utilsStorage.getAutoSaveLocalStorageItem('homeType') === 'NEW';
 }
 
+function objectToUint8Array(dataObj = {}) {
+  const data = new Uint8Array(Object.keys(dataObj).length);
+  for (const [index, value] of Object.entries(dataObj)) {
+    data[index] = value;
+  }
+  return data;
+}
+
 export default {
   uuid,
   formatTemplate,
@@ -181,4 +189,5 @@ export default {
   delay,
   changeCase,
   reactSafeRender,
+  objectToUint8Array,
 };
