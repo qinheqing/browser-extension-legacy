@@ -20,6 +20,7 @@ export default class AppHeader extends PureComponent {
     disableNetworkIndicator: PropTypes.bool,
     isAccountMenuOpen: PropTypes.bool,
     onClick: PropTypes.func,
+    accounts: PropTypes.array,
   };
 
   static contextTypes = {
@@ -64,6 +65,7 @@ export default class AppHeader extends PureComponent {
       selectedAddress,
       disabled,
       isAccountMenuOpen,
+      accounts,
     } = this.props;
 
     return (
@@ -88,7 +90,7 @@ export default class AppHeader extends PureComponent {
         >
           <Identicon address={selectedAddress} diameter={20} addBorder />
           <span className="account-menu__address">
-            {selectedAddress.slice(-4)}
+            {accounts && accounts.length > 0 ? selectedAddress.slice(-4) : ''}
           </span>
           <span className="app-header__network-down-arrow app-header__account-down-arrow"></span>
         </div>
