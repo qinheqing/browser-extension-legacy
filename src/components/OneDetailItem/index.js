@@ -42,7 +42,7 @@ function OneDetailItem({
         {title}
       </div>
       <div
-        className={classnames('text-black ', {
+        className={classnames('text-black u-break-words', {
           'ml-4 text-right': !alignY,
           'mt-1': alignY,
         })}

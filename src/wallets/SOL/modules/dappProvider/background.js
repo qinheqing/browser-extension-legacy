@@ -12,6 +12,7 @@ function launchPopup(message, sender, sendResponse) {
 
   // TODO consolidate popup dimensions
   window.chrome.windows.getLastFocused((focusedWindow) => {
+    // open new chrome window
     window.chrome.windows.create({
       url: `notification.html#app/approve-popup/?${searchParams.toString()}`,
       type: 'popup',

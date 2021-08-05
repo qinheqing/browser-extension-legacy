@@ -66,4 +66,11 @@
   .u-leading-0 {
     line-height: 0;
   }
+
+  /* text-wrap */
+  .u-break-words {
+    word-break: break-word;
+
+    @apply break-words;
+  }
 }
