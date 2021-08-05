@@ -313,7 +313,6 @@ class NetworkDropdown extends Component {
             {this.context.t('defaultNetwork')}
           </div>
         </div>
-        {this.renderNewAppEntry()}
         {this.renderNetworkEntry('mainnet')}
         {this.renderNetworkEntry('bsc')}
         {this.renderNetworkEntry('heco')}
@@ -321,6 +320,7 @@ class NetworkDropdown extends Component {
         {this.renderNetworkEntry('matic')}
         {this.renderNetworkEntry('fantom')}
         {this.renderNetworkEntry('xdai')}
+        {this.renderNewAppEntry()}
         {this.renderNetworkEntry('ropsten')}
         {this.renderNetworkEntry('kovan')}
         {this.renderNetworkEntry('rinkeby')}

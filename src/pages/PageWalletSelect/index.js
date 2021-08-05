@@ -15,6 +15,7 @@ import walletFactory from '../../wallets/walletFactory';
 import utilsApp from '../../utils/utilsApp';
 import OneButton from '../../components/OneButton';
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../../ui/app/helpers/constants/common';
+import storeHistory from '../../store/storeHistory';
 
 const AccountsList = observer(function () {
   const history = useHistory();
@@ -37,8 +38,11 @@ const AccountsList = observer(function () {
             wallet={wallet}
             onClick={() => {
               storeAccount.setCurrentAccount({ account });
-              // TODO check history length, if zero, then replace()
-              history.goBack();
+              if (window.history.length <= 1) {
+                storeHistory.replaceToHome();
+              } else {
+                storeHistory.goBack();
+              }
             }}
             showBalance
             account={account}

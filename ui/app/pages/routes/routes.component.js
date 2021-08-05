@@ -79,7 +79,7 @@ const AllRoutesComponentsProps = {
 class AllRoutesComponents extends Component {
   render() {
     const { autoLockTimeLimit, setLastActiveTime } = this.props;
-    let routes = (
+    const routes = (
       <Switch>
         <Route path={ROUTE_PREFIX}>
           <AppRoutes />
@@ -149,7 +149,6 @@ class AllRoutesComponents extends Component {
         </Route>
       </Switch>
     );
-    routes = <UniversalRoutesWrapper>{routes}</UniversalRoutesWrapper>;
 
     if (autoLockTimeLimit > 0) {
       return (
@@ -392,13 +391,15 @@ export default class Routes extends Component {
         <div className={classnames('main-container-wrapper')}>
           {isLoading && <Loading loadingMessage={loadMessage} />}
           {!isLoading && isLoadingNetwork && <LoadingNetwork />}
-          {utilsApp.isNewHome() ? (
-            <AllRoutesComponentsPure />
-          ) : (
-            // There are many uncontrolled component in legacy code, so keep use Component,
-            //    PureComponent will cause bugs.
-            <AllRoutesComponents />
-          )}
+          <UniversalRoutesWrapper>
+            {utilsApp.isNewHome() ? (
+              <AllRoutesComponentsPure />
+            ) : (
+              // There are many uncontrolled component in legacy code, so keep use Component,
+              //    PureComponent will cause bugs.
+              <AllRoutesComponents />
+            )}
+          </UniversalRoutesWrapper>
         </div>
         {isUnlocked ? <Alerts history={this.props.history} /> : null}
       </div>
