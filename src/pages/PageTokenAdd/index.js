@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Observer, observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import LazyLoad from 'react-lazyload';
 import AppPageLayout from '../../components/AppPageLayout';
 import OneInput from '../../components/OneInput';
 import storeWallet from '../../store/storeWallet';
@@ -60,7 +61,11 @@ function PageTokenAdd() {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [tokenToAdd, setTokenToAdd] = useState({});
   const [fee, setFee] = useState(null);
+  const scrollContainer = useRef(null);
   useEffect(() => {
+    scrollContainer.current = document.querySelector(
+      '.OneKey-AppPageLayoutBody',
+    );
     storeToken.fetchAllTokenListMeta();
     storeWallet.currentWallet.chainProvider
       .getAddAssociateTokenFee()
@@ -87,16 +92,25 @@ function PageTokenAdd() {
       <div>
         {tokenListFiltered && !tokenListFiltered.length && <NoDataView />}
         {/* TODO lazy load or pagination, fixed px height, title overflow ellipse */}
-        {tokens.map((token) => (
-          <TokenAddItem
-            key={token.address}
-            token={token}
-            onAddClick={(_token) => {
-              setTokenToAdd(_token);
-              setAddDialogOpen(true);
-            }}
-          />
-        ))}
+        {scrollContainer.current &&
+          tokens.map((token) => (
+            <LazyLoad
+              // scrollContainer={scrollContainer.current}
+              key={token.address}
+              height={65}
+              once
+              overflow
+            >
+              <TokenAddItem
+                key={token.address}
+                token={token}
+                onAddClick={(_token) => {
+                  setTokenToAdd(_token);
+                  setAddDialogOpen(true);
+                }}
+              />
+            </LazyLoad>
+          ))}
       </div>
       <OneDialog
         open={addDialogOpen}

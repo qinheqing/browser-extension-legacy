@@ -29,7 +29,11 @@ export default function AppPageLayout({
 
       <div
         data-name="AppPageLayoutBody"
-        className={classnames(styles.body, whiteBg && 'bg-white')}
+        className={classnames(
+          'OneKey-AppPageLayoutBody',
+          styles.body,
+          whiteBg && 'bg-white',
+        )}
       >
         {children}
       </div>
