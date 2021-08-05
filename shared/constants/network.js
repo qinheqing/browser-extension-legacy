@@ -50,12 +50,12 @@ export const RINKEBY_DISPLAY_NAME = 'Rinkeby';
 export const KOVAN_DISPLAY_NAME = 'Kovan';
 export const MAINNET_DISPLAY_NAME = 'Ethereum Mainnet';
 export const GOERLI_DISPLAY_NAME = 'Goerli';
-export const HECO_DISPLAY_NAME = 'Heco Mainnet';
-export const BSC_DISPLAY_NAME = 'Bsc Mainnet';
+export const HECO_DISPLAY_NAME = 'HECO Mainnet';
+export const BSC_DISPLAY_NAME = 'BSC Mainnet';
 export const XDAI_DISPLAY_NAME = 'xDai Mainnet';
 export const MATIC_DISPLAY_NAME = 'Polygon Mainnet';
 export const FANTOM_DISPLAY_NAME = 'Fantom Opera';
-export const OKEX_DISPLAY_NAME = 'OKExChain Mainnet';
+export const OKEX_DISPLAY_NAME = 'OEC Mainnet';
 
 export const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET, GOERLI];
 export const BUILDINT_PROVIDER_TYPES = [

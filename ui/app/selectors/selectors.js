@@ -194,9 +194,12 @@ export function getSelectedAccountCachedBalance(state) {
 }
 
 export function getSelectedAccount(state) {
-  const accounts = getMetaMaskAccounts(state);
+  const accountsOrdered = getMetaMaskAccountsOrdered(state);
   const selectedAddress = getSelectedAddress(state);
-
+  const accounts = accountsOrdered.reduce((res, acc) => {
+    res[acc.address] = acc;
+    return res;
+  }, {});
   return accounts[selectedAddress];
 }
 
