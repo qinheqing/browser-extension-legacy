@@ -58,20 +58,55 @@ const browserifyAlias = {
   verbose: true,
 };
 
-const browserifyHtmlInjectJs = [
-  // 'external-libs',
-  // ----------------------------------------------
-  // 1. globalShim   2. package.json#browser   3. renderHtmlFile
-  'vendor/mobx',
-  'vendor/solana-web3',
+/*
+  1. copyFiles
+  2. htmlInjectJs
+  3. globalShim
+  4. package.json #browser filed
+
+  // https://github.com/browserify/browserify#browser-field
+ */
+const externalModulesCopyFiles = [
+  {
+    // why use global mobx?
+    //    bify cause mobx error:
+    //        Uncaught TypeError: Cannot assign to read only property 'concat' of object '[object Object]'
+    src: `./node_modules/mobx/dist/mobx.umd.production.min.js`,
+    dest: `vendor/external-js/mobx.js`,
+  },
+  {
+    /*
+    Uncaught EvalError: Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src 'self' blob: filesystem:".
+
+     use patch-package remove 'use strict';
+     */
+    src: `./node_modules/@solana/web3.js/lib/index.iife.js`,
+    dest: `vendor/external-js/solana-web3.js`,
+  },
 ];
 
-const browserifyGlobalShim = {
-  // why use global mobx?
-  //    bify cause error:
-  //        Uncaught TypeError: Cannot assign to read only property 'concat' of object '[object Object]'
-  'mobx': 'mobx', // convert:    require('mobx'); => window.mobx;
+const externalModulesHtmlInjectJs = [
+  // 'external-libs',
+  // ----------------------------------------------
+  'vendor/external-js/mobx',
+  'vendor/external-js/solana-web3',
+];
+
+const externalModulesGlobalShim = {
+  //  import mobx from 'mobx';
+  //      ->  const mobx = window.mobx;
+  'mobx': 'mobx',
+  //  import solanaWeb3 from '@solana/web3.js';
+  //      ->  const solanaWeb3 = window.solanaWeb3;
   '@solana/web3.js': 'solanaWeb3',
+};
+
+// THIS IS NOT WORKING
+//    please update:   package.json #browser field
+const externalModulesBrowserField = {
+  // mobx-react-lite should be out of node_modules folder,
+  //    so that the deps "mobx" can be resolved as global var.
+  'mobx-react-lite': './app/vendor/mobx-react-lite.js',
 };
 
 module.exports = {
@@ -79,6 +114,8 @@ module.exports = {
   scssifyConfig,
   browserifyPaths,
   browserifyAlias,
-  browserifyGlobalShim,
-  browserifyHtmlInjectJs,
+  externalModulesCopyFiles,
+  externalModulesHtmlInjectJs,
+  externalModulesGlobalShim,
+  externalModulesBrowserField,
 };

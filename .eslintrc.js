@@ -26,6 +26,7 @@ module.exports = {
 
   ignorePatterns: [
     '!.eslintrc.js',
+    '!.prettierrc.js',
     'node_modules/**',
     'dist/**',
     'builds/**',
