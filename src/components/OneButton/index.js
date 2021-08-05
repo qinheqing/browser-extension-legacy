@@ -55,23 +55,23 @@ function OneButton({
         'p-0.5': rounded,
         'px-1.5 py-1 ': !rounded,
       }),
-      xs: classnames('text-xs font-medium rounded', {
+      'xs': classnames('text-xs font-medium rounded', {
         'p-1': rounded,
         'px-2.5 py-1.5 ': !rounded,
       }),
-      sm: classnames('text-sm leading-4 font-medium rounded-md', {
+      'sm': classnames('text-sm leading-4 font-medium rounded-md', {
         'p-1.5': rounded,
         'px-3 py-2 ': !rounded,
       }),
-      md: classnames(' text-sm font-medium rounded-md', {
+      'md': classnames(' text-sm font-medium rounded-md', {
         'p-2': rounded,
         'px-4 py-2': !rounded,
       }),
-      lg: classnames(' text-base font-medium rounded-md', {
+      'lg': classnames(' text-base font-medium rounded-md', {
         'p-2': rounded,
         'px-4 py-2': !rounded,
       }),
-      xl: classnames(' text-base font-medium rounded-md', {
+      'xl': classnames(' text-base font-medium rounded-md', {
         'p-2.5': rounded,
         'px-4.5 py-2.5': !rounded,
       }),

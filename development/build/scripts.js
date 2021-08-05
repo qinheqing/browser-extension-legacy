@@ -32,6 +32,9 @@ const vfs = require('vinyl-fs');
 
 // https://github.com/browserify/browserify#browserifyfiles--opts
 
+// TODO tree shaking
+//      https://github.com/browserify/common-shakeify
+
 const bifyModuleGroups = require('bify-module-groups');
 
 const metamaskrc = require('rc')('metamask', {

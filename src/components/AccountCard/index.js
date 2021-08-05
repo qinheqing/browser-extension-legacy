@@ -26,6 +26,7 @@ function HardwareTypeTag() {
 function AccountCard({
   wallet,
   account,
+  showMaskAssetBalanceEye = false,
   showBalance = false,
   watchBalanceChange = false,
   maskAssetBalance = false,
@@ -65,13 +66,15 @@ function AccountCard({
         )}
         <span className={classnames(styles.AccountCard__name)}>
           {account.name || 'ACCOUNT_NAME'}
-          <span onClick={onToggle}>
-            {maskAssetBalance ? (
-              <AppIcons.EyeOffIcon role="button" className="w-4 ml-1 " />
-            ) : (
-              <AppIcons.EyeIcon role="button" className="w-4 ml-1 " />
-            )}
-          </span>
+          {showMaskAssetBalanceEye && (
+            <span onClick={onToggle}>
+              {maskAssetBalance ? (
+                <AppIcons.EyeOffIcon role="button" className="w-4 ml-1 " />
+              ) : (
+                <AppIcons.EyeIcon role="button" className="w-4 ml-1 " />
+              )}
+            </span>
+          )}
         </span>
         {account.type === CONSTS_ACCOUNT_TYPES.Hardware && <HardwareTypeTag />}
       </header>
