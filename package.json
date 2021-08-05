@@ -7,9 +7,7 @@
     "url": ""
   },
   "browser": {
-    "mobx": "./app/vendor/mobx.js",
-    "mobx-react-lite": "./app/vendor/mobx-react-lite.js",
-    "@solana/web3.js": "./app/vendor/solana-web3.js"
+    "mobx-react-lite": "./app/vendor/mobx-react-lite.js"
   },
   "scripts": {
     "prepare": "husky install",
@@ -135,7 +133,7 @@
     "@sentry/integrations": "^6.2.5",
     "@sentry/tracing": "^6.2.5",
     "@solana/spl-token-registry": "^0.2.172",
-    "@solana/web3.js": "^1.22.0",
+    "@solana/web3.js": "1.22.0",
     "@zxing/library": "^0.8.0",
     "abortcontroller-polyfill": "^1.4.0",
     "analytics-node": "^3.4.0-beta.3",

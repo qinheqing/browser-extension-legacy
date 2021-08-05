@@ -539,7 +539,7 @@ function setupBundlerDefaults(
 
   // eslint-disable-next-line node/global-require
   const globalShim = require('browserify-global-shim').configure(
-    configs.browserifyGlobalShim,
+    configs.externalModulesGlobalShim,
   );
 
   Object.assign(bundlerOpts, {
@@ -783,8 +783,11 @@ function renderHtmlFile(htmlName, groupSet, commonSet, browserPlatforms) {
 
   // auto inject js files to html
   const jsBundles = [
-    'runtime-cjs', // this module must be at first
-    ...configs.browserifyHtmlInjectJs,
+    // fixed modules ahead ----------------------------------------------
+    ...configs.externalModulesHtmlInjectJs,
+    'lockdown-run', // secure ES module, which cause mobx, solanaWeb3 init fail.
+    'runtime-cjs',
+    // ----------------------------------------------
     ...commonSet.values(),
     ...groupSet.values(),
   ].map((label) => `./${label}.js?_t=${new Date().getTime()}`);

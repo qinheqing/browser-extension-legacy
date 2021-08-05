@@ -1,0 +1,10 @@
+diff --git a/node_modules/@solana/web3.js/lib/index.iife.js b/node_modules/@solana/web3.js/lib/index.iife.js
+index 310cd1a..53c5d92 100644
+--- a/node_modules/@solana/web3.js/lib/index.iife.js
++++ b/node_modules/@solana/web3.js/lib/index.iife.js
+@@ -1,5 +1,4 @@
+ var solanaWeb3 = (function (exports) {
+-  'use strict';
+ 
+   function _defineProperty(obj, key, value) {
+     if (key in obj) {

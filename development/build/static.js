@@ -2,14 +2,15 @@ const path = require('path');
 const fs = require('fs-extra');
 const watch = require('gulp-watch');
 const glob = require('fast-glob');
-
 const locales = require('../../app/_locales/index.json');
+const configs = require('./configs');
 
 const { createTask, composeSeries } = require('./task');
 
 module.exports = createStaticAssetTasks;
 
 const copyTargets = [
+  ...configs.externalModulesCopyFiles,
   {
     src: `./app/_locales/`,
     dest: `_locales`,
