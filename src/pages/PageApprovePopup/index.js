@@ -173,20 +173,20 @@ function InstructionDataValueViewSOL({ value }) {
   return utilsApp.reactSafeRender(content) || '-';
 }
 
-function TxInstructionCardSOL({ instruction }) {
+function TxInstructionCardSOL({ instruction, onClick }) {
   if (!instruction) {
     return null;
   }
-  const dataArr = Object.entries(instruction?.data || {});
+  const ixDataEntries = Object.entries(instruction?.data || {});
   return (
     <div className="bg-white border rounded mx-4 my-2">
       <div className="border-b px-2 py-1.5 font-bold flex items-center">
         <span>{utilsApp.changeCase.capitalCase(instruction.type)}</span>
         <div className="flex-1" />
-        <OneArrow />
+        {onClick && <OneArrow />}
       </div>
       <OneDetailItemGroup divide={false} className="px-2 py-2">
-        {dataArr.map(([k, v]) => {
+        {ixDataEntries.map(([k, v]) => {
           return (
             <OneDetailItem
               compact
@@ -218,6 +218,7 @@ const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
     if (txStr) {
       decodeTx(txStr).then((tx) => setTxDecoded(tx));
     }
+    global.$$decodeTx = decodeTx;
   }, [txStr]);
   useEffect(() => {
     storeTransfer.fetchTransactionFee();

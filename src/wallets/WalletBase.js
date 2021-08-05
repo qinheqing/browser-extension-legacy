@@ -310,6 +310,18 @@ class WalletBase {
 
   // ----------------------------------------------
 
+  async getAccountPrivateKey({ path, ...others }) {
+    if (this.accountType === CONSTS_ACCOUNT_TYPES.Wallet) {
+      return this.keyringProxyCall({
+        method: 'getAccountPrivateKey',
+        params: { path, ...others },
+      });
+    }
+    throw new Error(
+      `getAccountPrivateKey is NOT supported. (accountType=${this.accountType})`,
+    );
+  }
+
   async requestAirdrop() {
     return utilsApp.throwToBeImplemented(this);
   }

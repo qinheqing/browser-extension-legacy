@@ -14,6 +14,8 @@ function OneInputIcon({ name }) {
 }
 
 function OneInput({
+  value,
+  onChange,
   start,
   end,
   icon,
@@ -52,6 +54,8 @@ function OneInput({
             className,
           )}
           placeholder={placeholder}
+          value={value}
+          onChange={onChange}
           {...others}
         />
         {/* TODO clearable button */}

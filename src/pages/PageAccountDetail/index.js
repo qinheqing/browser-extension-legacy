@@ -9,6 +9,14 @@ import CopyHandle from '../../components/CopyHandle';
 import OneDialog from '../../components/OneDialog';
 import EditableLabel from '../../components/EditableLabel';
 import utilsToast from '../../utils/utilsToast';
+import { ChainLogoIcon } from '../../components/LogoIcon';
+import storeChain from '../../store/storeChain';
+import OneButton from '../../components/OneButton';
+import {
+  ROUTE_PRIVATE_KEY_EXPORT,
+  ROUTE_TX_HISTORY,
+} from '../../routes/routeUrls';
+import { REVEAL_SEED_ROUTE } from '../../../ui/app/helpers/constants/routes';
 
 function PageAccountDetail() {
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -23,7 +31,7 @@ function PageAccountDetail() {
       title="账户详情"
       whiteBg={false}
       navRight={
-        <AppIcons.LinkIcon
+        <AppIcons.ExternalLinkIcon
           role="button"
           className="w-6"
           onClick={() =>
@@ -36,7 +44,8 @@ function PageAccountDetail() {
     >
       <div>
         <div className="flex flex-col h-40 justify-center items-center">
-          <img src="images/chains/solana.svg" className="w-10 h-10" />
+          <ChainLogoIcon chainInfo={storeChain.currentChainInfo} />
+
           <EditableLabel
             className="pt-2"
             defaultValue={storeAccount.currentAccount.name}
@@ -61,10 +70,36 @@ function PageAccountDetail() {
               <div>类型</div>
               <div>{storeAccount.currentAccountTypeText}</div>
             </li>
+            <li className="px-4 py-4 sm:px-6 flex justify-between items-center">
+              <div>私钥</div>
+              <div>
+                <OneButton
+                  onClick={() => {
+                    storeHistory.push(ROUTE_PRIVATE_KEY_EXPORT);
+                  }}
+                  size="2xs"
+                >
+                  导出私钥
+                </OneButton>
+              </div>
+            </li>
+            <li className="px-4 py-4 sm:px-6 flex justify-between items-center">
+              <div>助记词</div>
+              <div>
+                <OneButton
+                  onClick={() => {
+                    storeHistory.push(REVEAL_SEED_ROUTE);
+                  }}
+                  size="2xs"
+                >
+                  导出助记词
+                </OneButton>
+              </div>
+            </li>
           </ul>
         </div>
         {storeStorage.allAccountsRaw.length > 1 ? (
-          <div className="mt-20 px-3">
+          <div className="mt-10 px-3">
             <button
               onClick={() => setDialogVisible(true)}
               type="button"

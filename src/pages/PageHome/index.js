@@ -64,20 +64,6 @@ const HomeTopActionsBar = observer(function () {
       />
 
       <HomeTopActionButton
-        text="交易"
-        icon={AppIcons.BellIcon}
-        onClick={async () => {
-          console.log('Notice button click');
-          uiBackgroundProxy.baseProxyCall({
-            module: BACKGROUND_PROXY_MODULE_NAMES.misc,
-            method: 'throwErrorTest',
-            params: { name: 'zyz' },
-          });
-          global.testGlobalError.testGlobalErrorField = 1;
-        }}
-      />
-
-      <HomeTopActionButton
         text="锁屏"
         icon={AppIcons.LockClosedIcon}
         onClick={storeApp.lockScreen}
@@ -255,6 +241,7 @@ function PageHome() {
       {storeAccount.currentAccount && (
         <>
           <AccountCard
+            showMaskAssetBalanceEye
             maskAssetBalance={storeStorage.maskAssetBalance}
             account={storeAccount.currentAccount}
             showBalance

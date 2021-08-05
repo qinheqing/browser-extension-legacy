@@ -69,6 +69,10 @@ class KeyringBase {
   privateKeySign({ privateKey, tx }) {
     return utilsApp.throwToBeImplemented(this);
   }
+
+  async getAccountPrivateKey({ seed, path }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
 }
 
 export default KeyringBase;
