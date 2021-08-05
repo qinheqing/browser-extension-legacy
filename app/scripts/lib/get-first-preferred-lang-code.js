@@ -28,7 +28,7 @@ export default async function getFirstPreferredLangCode() {
     userPreferredLocaleCodes = [];
   }
   // userPreferredLocaleCodes = ["en", "zh-CN", "en-US"]
-  let preferred = 'en';
+  let preferred = 'zh_CN';
 
   for (let i = 0; i < userPreferredLocaleCodes.length; i++) {
     const item = userPreferredLocaleCodes[i];
