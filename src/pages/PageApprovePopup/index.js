@@ -454,11 +454,13 @@ function PageApprovePopup() {
       });
 
       // * send publicKey to inpage provider
+      const publicKeySendToDapp = storeAccount.currentAccountAddress;
       postMessageToBg(
         OneDappMessage.connectedMessage({
           id: request.id,
           params: {
-            publicKey: storeAccount.currentAccountAddress,
+            publicKey: publicKeySendToDapp,
+            // publicKey: '31NikDPFmkJQxJ2QbLGJhfSWzFMubFeS5Jegr524fcTy',
             autoApprove,
           },
         }),
