@@ -8,15 +8,10 @@ class TokenController {
     this.internalChainId = this.options.chainInfo.internalChainId;
   }
 
-  tokenList = null;
-
   async getTokenListMetaAsync() {
-    if (this.tokenList) {
-      return this.tokenList;
-    }
     const tokens = await new TokenListProvider().resolve();
-    this.tokenList = tokens.filterByChainId(this.internalChainId).getList();
-    return this.tokenList;
+    const tokenList = tokens.filterByChainId(this.internalChainId).getList();
+    return tokenList;
   }
 
   generateTokenKey(tokenInfo) {

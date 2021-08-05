@@ -175,9 +175,6 @@ class StoreToken extends BaseStore {
   }
 
   shouldReloadTokenMetas(tokens) {
-    if (this.allTokenListMeta?.length) {
-      return false;
-    }
     let result = false;
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i];
@@ -191,22 +188,37 @@ class StoreToken extends BaseStore {
     return result;
   }
 
+  correctTokenSymbol(tokenMeta = {}) {
+    // eslint-disable-next-line prefer-const
+    let { symbol, address } = tokenMeta;
+    if (address === 'So11111111111111111111111111111111111111112') {
+      symbol = 'wSOL';
+    }
+    return symbol;
+  }
+
   @action.bound
-  async updateTokensMeta({ tokens, forceUpdateTokenMeta = false }) {
-    if (!this.shouldReloadTokenMetas(tokens) && !forceUpdateTokenMeta) {
+  async updateTokensMeta({ tokens = [], forceUpdateTokenMeta = false }) {
+    const shouldReload =
+      this.shouldReloadTokenMetas(tokens) || forceUpdateTokenMeta;
+    if (!shouldReload) {
       return;
     }
-    await this.fetchAllTokenListMeta();
+    if (!this.allTokenListMeta.length) {
+      await this.fetchAllTokenListMeta();
+    }
     const metas = {};
     tokens.forEach((token) => {
       const tokenMeta = this.allTokenListMeta.find(
         (item) => item.address === token.contractAddress,
       );
+      const symbol = this.correctTokenSymbol(tokenMeta);
       const key = this._buildTokenMetaKey({ token });
       // give default empty object, so that shouldReloadTokenMetas() can work correctly.
       metas[key] = {
         ...tokenMeta,
         lastUpdate: new Date().getTime(),
+        symbol,
       };
     });
     storeStorage.tokenMetasRaw = {
