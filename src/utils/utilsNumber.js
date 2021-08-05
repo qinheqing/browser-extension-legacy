@@ -49,6 +49,9 @@ function toNormalNumber({ value, decimals, precision, roundMode = 'round' }) {
   if (result === 'NaN') {
     return '-';
   }
+  if (num.equals(0)) {
+    return '0';
+  }
   return result;
 }
 
