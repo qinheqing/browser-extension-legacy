@@ -85,6 +85,10 @@ function PageTokenAdd() {
           onChange={(event) => {
             storeToken.filterTokenList({
               text: event.target.value,
+              callback: () =>
+                scrollContainer.current &&
+                // trigger container scroll event to force lazyload refresh.
+                scrollContainer.current.dispatchEvent(new Event('scroll')),
             });
           }}
         />
@@ -92,25 +96,28 @@ function PageTokenAdd() {
       <div>
         {tokenListFiltered && !tokenListFiltered.length && <NoDataView />}
         {/* TODO lazy load or pagination, fixed px height, title overflow ellipse */}
-        {scrollContainer.current &&
-          tokens.map((token) => (
-            <LazyLoad
-              // scrollContainer={scrollContainer.current}
-              key={token.address}
-              height={65}
-              once
-              overflow
-            >
-              <TokenAddItem
+        {scrollContainer.current && (
+          <div>
+            {tokens.map((token) => (
+              <LazyLoad
+                // scrollContainer={scrollContainer.current}
                 key={token.address}
-                token={token}
-                onAddClick={(_token) => {
-                  setTokenToAdd(_token);
-                  setAddDialogOpen(true);
-                }}
-              />
-            </LazyLoad>
-          ))}
+                height={65}
+                once={false}
+                overflow
+              >
+                <TokenAddItem
+                  key={token.address}
+                  token={token}
+                  onAddClick={(_token) => {
+                    setTokenToAdd(_token);
+                    setAddDialogOpen(true);
+                  }}
+                />
+              </LazyLoad>
+            ))}
+          </div>
+        )}
       </div>
       <OneDialog
         open={addDialogOpen}
