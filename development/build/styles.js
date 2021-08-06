@@ -10,6 +10,7 @@ const rename = require('gulp-rename');
 const pump = pify(require('pump'));
 const { createTask } = require('./task');
 const configs = require('./configs');
+const buildUtils = require('./buildUtils');
 
 let sass;
 
@@ -34,11 +35,13 @@ function createStyleTasks({ livereload }) {
       devMode: true,
       pattern: [
         '!src/styles/tailwind.output.css',
+        '!ui/app/css/output/tailwind.css',
         'ui/app/**/*.scss',
         'src/**/*.scss',
       ],
       tailWindPattern: [
         '!src/styles/tailwind.output.css',
+        '!ui/app/css/output/tailwind.css',
         'src/**/*.css',
         'tailwind.config.js',
       ],
@@ -66,23 +69,22 @@ function createStyleTasks({ livereload }) {
     return async function () {
       if (devMode) {
         watch(pattern, async (event) => {
+          console.log(`[styles] gulp-watch file changed: ${event.path}`);
           await buildScss();
           livereload.changed(event.path);
         });
-        watch(
-          tailWindPattern,
-          {
-            events: ['add', 'change'],
-            ignoreInitial: true,
-            readDelay: 10,
-            atomic: 1500,
-            interval: 1500,
-          },
-          async (event) => {
-            await buildTailwind();
-            livereload.changed(event.path);
-          },
-        );
+        const watchOpts = {
+          events: ['add', 'change'],
+          ignoreInitial: true,
+          readDelay: 10,
+          atomic: 1500,
+          interval: 1500,
+        };
+        watch(tailWindPattern, async (event) => {
+          console.log(`[styles] gulp-watch file changed: ${event.path}`);
+          await buildTailwind();
+          livereload.changed(event.path);
+        });
       }
       await buildTailwind();
       await buildScss();

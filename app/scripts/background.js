@@ -52,6 +52,7 @@ log.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn');
 const mboxReferences = {
   autorun,
   observer,
+  name:1,
 };
 
 const { sentry } = global;

@@ -8,6 +8,7 @@ const pump = pify(require('pump'));
 const httpServer = require('http-server');
 const { version } = require('../../package.json');
 const { createTask, composeParallel } = require('./task');
+const buildUtils = require('./buildUtils');
 
 module.exports = createEtcTasks;
 
