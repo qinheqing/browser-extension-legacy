@@ -593,7 +593,11 @@ function setupBundlerDefaults(
   });
 
   // ensure react-devtools are not included in non-dev builds
-  if (!devMode) {
+  if (!devMode || !process.env.ENV_REACT_DEVTOOLS_ON) {
+    // if react-devtools enabled, please start devtools server:
+    //    ERROR: WebSocket connection to 'ws://localhost:8097/' failed
+    //        1. process.env.ENV_REACT_DEVTOOLS_ON = true
+    //        2. yarn devtools:react
     bundlerOpts.manualIgnore.push('react-devtools');
   }
 
