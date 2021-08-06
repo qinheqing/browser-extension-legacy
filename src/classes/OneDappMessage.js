@@ -30,10 +30,13 @@ class OneDappMessage {
     });
   }
 
-  static signedMessage({ id, result: { signature, publicKey } }) {
+  static signedMessage({
+    id,
+    result: { signatures, signature, publicKey, ...others },
+  }) {
     return new OneDappMessage({
       id,
-      result: { signature, publicKey },
+      result: { signatures, signature, publicKey, ...others },
     });
   }
 

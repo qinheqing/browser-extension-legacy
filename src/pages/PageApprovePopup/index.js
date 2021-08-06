@@ -28,6 +28,7 @@ import { OneField } from '../../components/OneField';
 import OneCellItem from '../../components/OneCellItem';
 import OneArrow from '../../components/OneArrow';
 import { ChainLogoIcon } from '../../components/LogoIcon';
+import CopyHandle from '../../components/CopyHandle';
 
 const APPROVE_METHODS = {
   connect: 'connect',
@@ -215,7 +216,7 @@ const ApproveSign = observer(function ({ query, origin, onReject, onApprove }) {
   );
 });
 
-async function decodeTx(txStr) {
+async function decodeTxAsync(txStr) {
   const txDecoded = await storeWallet.currentWallet.decodeTransactionData({
     address: storeAccount.currentAccountAddress,
     data: txStr,
@@ -250,10 +251,21 @@ function InstructionDataValueViewSOL({ value }) {
   let content = value;
 
   if (content?.toBase58) {
-    content = utilsApp.shortenAddress(content.toBase58());
+    const address = content.toBase58();
+    content = (
+      <CopyHandle text={address}>{utilsApp.shortenAddress(address)}</CopyHandle>
+    );
+    return content;
   }
 
   return utilsApp.reactSafeRender(content) || '-';
+}
+
+function safeCapitalCase(str) {
+  if (!isString(str)) {
+    return '';
+  }
+  return utilsApp.changeCase.capitalCase(str);
 }
 
 function TxInstructionCardSOL({ instruction, onClick }) {
@@ -264,7 +276,7 @@ function TxInstructionCardSOL({ instruction, onClick }) {
   return (
     <div className="bg-white border rounded mx-4 my-2">
       <div className="border-b px-2 py-1.5 font-bold flex items-center">
-        <span>{utilsApp.changeCase.capitalCase(instruction.type)}</span>
+        <span>{safeCapitalCase(instruction?.type)}</span>
         <div className="flex-1" />
         {onClick && <OneArrow />}
       </div>
@@ -274,7 +286,7 @@ function TxInstructionCardSOL({ instruction, onClick }) {
             <OneDetailItem
               compact
               key={k}
-              title={utilsApp.changeCase.capitalCase(k)}
+              title={safeCapitalCase(k)}
               content={<InstructionDataValueViewSOL value={v} />}
             />
           );
@@ -284,26 +296,42 @@ function TxInstructionCardSOL({ instruction, onClick }) {
   );
 }
 
-function TransactionItemView({ txDecoded }) {
+function TransactionItemView({ txDecoded, index, showHeader = false }) {
   if (!txDecoded) {
     return null;
   }
   const instructions = txDecoded?.instructions || [];
-  return instructions.map((instruction, index) => (
-    <TxInstructionCardSOL key={index} instruction={instruction} />
-  ));
+  return (
+    <div>
+      {showHeader && <div className="px-5 text-xl pt-2">交易 {index + 1}</div>}
+      {instructions.map((instruction, i) => (
+        <TxInstructionCardSOL key={i} instruction={instruction} />
+      ))}
+    </div>
+  );
 }
 
-const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
+const ApproveTransaction = observer(function ({
+  onReject,
+  onApprove,
+  query,
+  isBatch = false,
+}) {
   // messages
-  const txStr = query.request.params.message;
-  const [txDecoded, setTxDecoded] = useState(null);
+  const messageToSign = isBatch
+    ? query.request.params.messages
+    : query.request.params.message;
+  const txStrList = [].concat(messageToSign);
+  const [txListDecoded, setTxListDecoded] = useState([]);
   useEffect(() => {
-    if (txStr) {
-      decodeTx(txStr).then((tx) => setTxDecoded(tx));
-    }
-    global.$$decodeTx = decodeTx;
-  }, [txStr]);
+    Promise.all(txStrList.map(async (txStr) => decodeTxAsync(txStr))).then(
+      (txs) => setTxListDecoded(txs),
+    );
+    global.$$decodeTxAsync = decodeTxAsync;
+  }, [
+    // DO NOT use txStrList, cause infinite render
+    messageToSign,
+  ]);
   useEffect(() => {
     storeTransfer.fetchTransactionFee();
   }, []);
@@ -327,7 +355,9 @@ const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
           <OneButton
             block
             type="primary"
-            onClick={() => onApprove({ autoApprove: false, message: txStr })}
+            onClick={() =>
+              onApprove({ autoApprove: false, message: txStrList, isBatch })
+            }
           >
             {/* 交易授权*/}
             确认授权
@@ -338,11 +368,18 @@ const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
       <div className="">
         <ApproveDappSiteInfo title="是否授权该网站的交易请求" query={query} />
 
-        <TransactionItemView txDecoded={txDecoded} />
+        {txListDecoded.map((txDecoded, index) => (
+          <TransactionItemView
+            key={index}
+            showHeader={isBatch}
+            index={index}
+            txDecoded={txDecoded}
+          />
+        ))}
 
         <div
           className="bg-white divide-y px-4"
-          onClick={() => console.log('txDecoded', txDecoded)}
+          onClick={() => console.log('txListDecoded', txListDecoded)}
         >
           <OneDetailItem title="授权账户">
             <div className="flex items-center">
@@ -356,7 +393,17 @@ const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
 
           {/* <TransactionAccountsListView txDecoded={txDecoded} /> */}
           <OneDetailItem alignY title="原始数据">
-            <div className="break-all">{txStr}</div>
+            <div className="break-all divide-y w-full">
+              {txStrList.map((txStr, i) => (
+                <div className="py-2" key={i}>
+                  <CopyHandle text={txStr}>
+                    {utilsApp.shortenAddress(txStr, {
+                      size: 35,
+                    })}
+                  </CopyHandle>
+                </div>
+              ))}
+            </div>
           </OneDetailItem>
         </div>
       </div>
@@ -365,7 +412,7 @@ const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
 });
 
 // message from popup -> bg -> content -> inpage -> dapp
-function postMessageToBg(message) {
+function sendMessageToBg(message) {
   global.chrome.runtime.sendMessage(
     OneDappMessage.extensionRuntimeMessage({
       channel: CONST_DAPP_MESSAGE_TYPES.CHANNEL_POPUP_TO_BG,
@@ -421,7 +468,7 @@ function PageApprovePopup() {
           e.data.method !== APPROVE_METHODS.signAllTransactions &&
           e.data.method !== APPROVE_METHODS.sign
         ) {
-          postMessageToBg(
+          sendMessageToBg(
             OneDappMessage.errorMessage({
               id: e.data.id,
               error: `Unsupported approve method > ${e.data.method}`,
@@ -435,7 +482,7 @@ function PageApprovePopup() {
     window.addEventListener('message', messageHandler);
     global.$$getApproveQuery = () => console.log(query);
     return () => window.removeEventListener('message', messageHandler);
-  }, [query.origin, postMessageToBg]);
+  }, [query.origin, sendMessageToBg]);
 
   const request = requestsQueue[0];
   const popRequest = () => setRequestsQueue((requests) => requests.slice(1));
@@ -473,22 +520,37 @@ function PageApprovePopup() {
     return null;
   }
 
-  const onApprove = async ({ autoApprove = false, message } = {}) => {
-    // TODO read [query.request.params.message] directly
-    const txMessage = message || messages[0];
+  const onApprove = async ({
+    autoApprove = false,
+    message,
+    isBatch = false,
+  } = {}) => {
+    // const txMessage = messages[0];
+    const txMessageList = [].concat(message);
 
     // TODO check connectedWallets of this origin is matched with current selected Account
-
-    const signature = await storeWallet.currentWallet.signTx(txMessage);
+    const signatures = [];
+    for (let i = 0; i < txMessageList.length; i++) {
+      const txMessage = txMessageList[i];
+      const signature = await storeWallet.currentWallet.signTx(txMessage);
+      signatures.push(signature);
+    }
 
     // https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L187
     // https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L49
 
-    postMessageToBg(
+    const payload = {};
+    if (isBatch) {
+      payload.signatures = signatures;
+    } else {
+      payload.signature = signatures[0];
+    }
+
+    sendMessageToBg(
       OneDappMessage.signedMessage({
         id: request.id,
         result: {
-          signature,
+          ...payload,
           publicKey: storeAccount.currentAccountAddress,
         },
       }),
@@ -498,7 +560,7 @@ function PageApprovePopup() {
   };
 
   const onReject = () => {
-    postMessageToBg(
+    sendMessageToBg(
       OneDappMessage.errorMessage({
         id: request.id,
         error: 'Transaction cancelled',
@@ -508,12 +570,16 @@ function PageApprovePopup() {
     popRequest();
   };
 
-  // TODO signAllTransactions
-  if (request.method === APPROVE_METHODS.signTransaction) {
+  if (
+    request.method === APPROVE_METHODS.signTransaction ||
+    request.method === APPROVE_METHODS.signAllTransactions
+  ) {
+    const isBatch = request.method === APPROVE_METHODS.signAllTransactions;
     // debugger;
     return (
       <ApproveTransaction
         query={query}
+        isBatch={isBatch}
         onApprove={onApprove}
         onReject={onReject}
       />
@@ -548,12 +614,12 @@ function PageApprovePopup() {
 
       // * send publicKey to inpage provider
       const publicKeySendToDapp = storeAccount.currentAccountAddress;
-      postMessageToBg(
+      sendMessageToBg(
         OneDappMessage.connectedMessage({
           id: request.id,
           params: {
             publicKey: publicKeySendToDapp,
-            // publicKey: '31NikDPFmkJQxJ2QbLGJhfSWzFMubFeS5Jegr524fcTy',
+            // publicKey: '31NikDPFmkJQxJ2QbLGJhfSWzFMubFeS5Jegr524fcTy', // mock address to dapp
             autoApprove,
           },
         }),
