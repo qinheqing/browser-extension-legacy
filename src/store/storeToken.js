@@ -244,6 +244,9 @@ class StoreToken extends BaseStore {
   @observable.ref
   tokenListFiltered = null;
 
+  @observable.ref
+  tokenListFilteredText = '';
+
   @action.bound
   async fetchAllTokenListMeta() {
     const tokenController = storeWallet.currentWallet?.tokenController;
@@ -253,13 +256,14 @@ class StoreToken extends BaseStore {
     }
   }
 
-  filterTokenList({ text = '' }) {
+  filterTokenList({ text = '', callback }) {
+    this.tokenListFilteredText = text;
     if (!text) {
       this.tokenListFiltered = null;
       return;
     }
     let tokens = this.allTokenListMeta.filter((item) => {
-      // TODO do not show SOL ATA token
+      // TODO sort priority, name, symbol, address
       return (
         toLower(item.name).includes(toLower(text)) ||
         toLower(item.symbol).includes(toLower(text)) ||
@@ -278,6 +282,7 @@ class StoreToken extends BaseStore {
       }
     }
     this.tokenListFiltered = tokens;
+    callback && callback();
   }
 
   async addAssociateToken({ contract }) {
