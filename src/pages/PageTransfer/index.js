@@ -50,10 +50,10 @@ function PageTransfer() {
     <AppPageLayout title="转账">
       <OneField>
         <OneFieldItem
-          arrow
           onClick={() => setSwitchDialogOpen(true)}
           titleWrapped
           title="资产"
+          arrow
           end={
             <div className="flex items-center leading-none">
               <span>{token.symbolDisplay}</span>
