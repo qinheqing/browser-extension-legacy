@@ -219,6 +219,7 @@ class StoreToken extends BaseStore {
         ...tokenMeta,
         lastUpdate: new Date().getTime(),
         symbol,
+        isEditable: !tokenMeta,
       };
     });
     storeStorage.tokenMetasRaw = {

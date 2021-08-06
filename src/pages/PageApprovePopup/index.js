@@ -64,11 +64,28 @@ function ApproveDappSiteInfo({ query, title, showAccountInfo = false }) {
   );
 }
 
-function ApprovePageLayout({ title, actions, whiteBg = true, ...others }) {
+function ApprovePageLayout({
+  query,
+  title,
+  actions,
+  whiteBg = true,
+  ...others
+}) {
+  useEffect(() => {
+    // brings window to front when we receive new instructions
+    // this needs to be executed from wallet instead of adapter
+    // to ensure chrome brings window to front
+    window.focus();
+  }, []);
   return (
     <AppPageLayout
       whiteBg={whiteBg}
-      navLeft={null}
+      navLeft={
+        <div
+          className="w-6 h-6 cursor-pointer"
+          onClick={() => console.log('Approve query: ', query)}
+        />
+      }
       title={title}
       footer={
         <div className="bg-white px-4 py-2 flex items-center">{actions}</div>
@@ -99,10 +116,11 @@ const CurrentBalanceView = observer(function () {
   );
 });
 
-const ApproveConnection = observer(function ({ onApprove, query }) {
+const ApproveConnection = observer(function ({ onConnect, query }) {
   const account = storeAccount.currentAccount;
   return (
     <ApprovePageLayout
+      query={query}
       title="连接账户"
       actions={
         <>
@@ -112,7 +130,7 @@ const ApproveConnection = observer(function ({ onApprove, query }) {
                 取消
               </OneButton>
               <div className="w-4" />
-              <OneButton block type="primary" onClick={() => onApprove(false)}>
+              <OneButton block type="primary" onClick={() => onConnect()}>
                 连接
               </OneButton>
             </>
@@ -128,6 +146,71 @@ const ApproveConnection = observer(function ({ onApprove, query }) {
         />
       </div>
       {/* <ReactJsonView collapsed={false} src={query} />*/}
+    </ApprovePageLayout>
+  );
+});
+
+function toHex(buffer) {
+  return Array.prototype.map
+    .call(buffer, (x) => `00${x.toString(16)}`.slice(-2))
+    .join('');
+}
+
+function decodeSignMessage({ data, display }) {
+  let messageTxt;
+  switch (display) {
+    case 'utf8':
+      messageTxt = new TextDecoder().decode(data);
+      break;
+    case 'hex':
+      messageTxt = `0x${toHex(data)}`;
+      break;
+    default:
+      throw new Error(`Unexpected message type: ${display}`);
+  }
+  return messageTxt;
+}
+
+const ApproveSign = observer(function ({ query, origin, onReject, onApprove }) {
+  const account = storeAccount.currentAccount;
+  const signText = decodeSignMessage(query.request.params);
+  const signMessage = bs58.encode(query.request.params.data);
+  // TODO hex data sign warning
+  //    Be especially cautious when signing arbitrary data, you must trust the requester.
+  return (
+    <ApprovePageLayout
+      query={query}
+      title="签名授权"
+      actions={
+        <>
+          {/* TODO beforeunload window close trigger onReject() */}
+          <OneButton block type="white" onClick={() => onReject()}>
+            拒绝
+          </OneButton>
+          <div className="w-4" />
+          <OneButton
+            block
+            type="primary"
+            onClick={() =>
+              onApprove({ autoApprove: false, message: signMessage })
+            }
+          >
+            {/* 签名授权 */}
+            确认授权
+          </OneButton>
+        </>
+      }
+    >
+      <div className="pt-8">
+        <ApproveDappSiteInfo
+          title="是否允许该网站的签名请求"
+          query={query}
+          showAccountInfo
+        />
+      </div>
+      <div className="p-4 u-break-words text-center border rounded m-4 bg-gray-50">
+        {signText}
+      </div>
     </ApprovePageLayout>
   );
 });
@@ -212,7 +295,8 @@ function TransactionItemView({ txDecoded }) {
 }
 
 const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
-  const txStr = query?.request?.params?.message;
+  // messages
+  const txStr = query.request.params.message;
   const [txDecoded, setTxDecoded] = useState(null);
   useEffect(() => {
     if (txStr) {
@@ -229,8 +313,9 @@ const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
   }
   return (
     <ApprovePageLayout
+      query={query}
       whiteBg={false}
-      title="授权交易"
+      title="交易授权"
       navRight={<ChainLogoIcon />}
       actions={
         <>
@@ -239,7 +324,12 @@ const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
             拒绝
           </OneButton>
           <div className="w-4" />
-          <OneButton block type="primary" onClick={() => onApprove(false)}>
+          <OneButton
+            block
+            type="primary"
+            onClick={() => onApprove({ autoApprove: false, message: txStr })}
+          >
+            {/* 交易授权*/}
             确认授权
           </OneButton>
         </>
@@ -273,6 +363,16 @@ const ApproveTransaction = observer(function ({ onReject, onApprove, query }) {
     </ApprovePageLayout>
   );
 });
+
+// message from popup -> bg -> content -> inpage -> dapp
+function postMessageToBg(message) {
+  global.chrome.runtime.sendMessage(
+    OneDappMessage.extensionRuntimeMessage({
+      channel: CONST_DAPP_MESSAGE_TYPES.CHANNEL_POPUP_TO_BG,
+      data: message,
+    }),
+  );
+}
 
 function PageApprovePopup() {
   const query = useMemo(() => {
@@ -310,19 +410,6 @@ function PageApprovePopup() {
   // dapp rpc requests queue
   const [requestsQueue, setRequestsQueue] = useState([query.request]);
 
-  // message from popup -> bg -> content -> inpage -> dapp
-  const postMessageToBg = useCallback(
-    (message) => {
-      global.chrome.runtime.sendMessage(
-        OneDappMessage.extensionRuntimeMessage({
-          channel: CONST_DAPP_MESSAGE_TYPES.CHANNEL_POPUP_TO_BG,
-          data: message,
-        }),
-      );
-    },
-    [query.origin],
-  );
-
   // Push requests from the parent window (opener) postMessage into a queue.
   //    TODO requestsQueue may only works at sollet Web Wallet
   useEffect(() => {
@@ -346,6 +433,7 @@ function PageApprovePopup() {
       }
     }
     window.addEventListener('message', messageHandler);
+    global.$$getApproveQuery = () => console.log(query);
     return () => window.removeEventListener('message', messageHandler);
   }, [query.origin, postMessageToBg]);
 
@@ -372,7 +460,7 @@ function PageApprovePopup() {
           throw new Error('Data must be an instance of Uint8Array');
         }
         return {
-          messages: [request.params.data],
+          messages: [bs58.encode(request.params.data)],
           messageDisplay: request.params.display === 'utf8' ? 'utf8' : 'hex',
         };
       default:
@@ -385,45 +473,44 @@ function PageApprovePopup() {
     return null;
   }
 
-  // TODO signAllTransactions, sign
+  const onApprove = async ({ autoApprove = false, message } = {}) => {
+    // TODO read [query.request.params.message] directly
+    const txMessage = message || messages[0];
+
+    // TODO check connectedWallets of this origin is matched with current selected Account
+
+    const signature = await storeWallet.currentWallet.signTx(txMessage);
+
+    // https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L187
+    // https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L49
+
+    postMessageToBg(
+      OneDappMessage.signedMessage({
+        id: request.id,
+        result: {
+          signature,
+          publicKey: storeAccount.currentAccountAddress,
+        },
+      }),
+    );
+
+    popRequest();
+  };
+
+  const onReject = () => {
+    postMessageToBg(
+      OneDappMessage.errorMessage({
+        id: request.id,
+        error: 'Transaction cancelled',
+      }),
+    );
+
+    popRequest();
+  };
+
+  // TODO signAllTransactions
   if (request.method === APPROVE_METHODS.signTransaction) {
     // debugger;
-
-    // async function onApprove()
-    const onApprove = async () => {
-      // TODO read [query.request.params.message] directly
-      const txMessage = messages[0];
-
-      // TODO check connectedWallets of this origin is matched with current selected Account
-
-      const signature = await storeWallet.currentWallet.signTx(txMessage);
-
-      // https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L187
-      // https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L49
-
-      postMessageToBg(
-        OneDappMessage.signedMessage({
-          id: request.id,
-          result: {
-            signature,
-            publicKey: storeAccount.currentAccountAddress,
-          },
-        }),
-      );
-
-      popRequest();
-    };
-
-    const onReject = () => {
-      popRequest();
-      postMessageToBg(
-        OneDappMessage.errorMessage({
-          id: request.id,
-          error: 'Transaction cancelled',
-        }),
-      );
-    };
-
     return (
       <ApproveTransaction
         query={query}
@@ -433,9 +520,15 @@ function PageApprovePopup() {
     );
   }
 
+  if (request.method === APPROVE_METHODS.sign) {
+    return (
+      <ApproveSign query={query} onApprove={onApprove} onReject={onReject} />
+    );
+  }
+
   if (request.method === APPROVE_METHODS.connect) {
     // Approve the parent page to connect to this wallet.
-    const connect = (autoApprove) => {
+    const onConnect = ({ autoApprove = false } = {}) => {
       // * setConnectedAccount(wallet.publicKey);
       // * save to storage
       global.chrome.storage.local.get('connectedWallets', (result) => {
@@ -472,7 +565,7 @@ function PageApprovePopup() {
       <ApproveConnection
         origin={query.origin}
         query={query}
-        onApprove={connect}
+        onConnect={onConnect}
       />
     );
   }
