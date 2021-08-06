@@ -6,6 +6,7 @@ const baseManifest = require('../../app/manifest/_base.json');
 const { version } = require('../../package.json');
 
 const { createTask, composeSeries } = require('./task');
+const buildUtils = require('./buildUtils');
 
 module.exports = createManifestTasks;
 

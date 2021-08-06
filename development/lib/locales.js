@@ -20,6 +20,10 @@ function getLocalePath(code) {
 
 async function getLocale(code) {
   try {
+    if (code === 'zh') {
+      // eslint-disable-next-line no-param-reassign
+      code = 'zh_CN';
+    }
     const localeFilePath = getLocalePath(code);
     const fileContents = await readFile(localeFilePath, 'utf8');
     return JSON.parse(fileContents);

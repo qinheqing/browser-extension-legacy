@@ -17,6 +17,7 @@ const createScriptTasks = require('./scripts');
 const createStyleTasks = require('./styles');
 const createStaticAssetTasks = require('./static');
 const createEtcTasks = require('./etc');
+const buildUtils = require('./buildUtils');
 
 // packages required dynamically via browserify configuration in dependencies
 require('loose-envify');

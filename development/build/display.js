@@ -1,5 +1,6 @@
 const randomColor = require('randomcolor');
 const chalk = require('chalk');
+const buildUtils = require('./buildUtils');
 
 module.exports = { setupTaskDisplay, displayChart };
 

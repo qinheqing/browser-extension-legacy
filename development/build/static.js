@@ -4,6 +4,7 @@ const watch = require('gulp-watch');
 const glob = require('fast-glob');
 const locales = require('../../app/_locales/index.json');
 const configs = require('./configs');
+const buildUtils = require('./buildUtils');
 
 const { createTask, composeSeries } = require('./task');
 
@@ -14,6 +15,10 @@ const copyTargets = [
   {
     src: `./app/_locales/`,
     dest: `_locales`,
+  },
+  {
+    src: `./app/_locales/zh_CN/messages.json`,
+    dest: `_locales/zh/messages.json`,
   },
   {
     src: `./app/images/`,
@@ -140,6 +145,7 @@ function createStaticAssetTasks({ livereload, browserPlatforms }) {
   async function setupLiveCopy(target) {
     const pattern = target.pattern || '/**/*';
     watch(target.src + pattern, (event) => {
+      console.log(`[static] gulp-watch file changed: ${event.path}`);
       livereload.changed(event.path);
       performCopy(target);
     });

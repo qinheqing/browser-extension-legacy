@@ -3,6 +3,7 @@ const { callbackify } = require('util');
 const path = require('path');
 const { writeFileSync, readFileSync } = require('fs');
 const EventEmitter = require('events');
+const assert = require('assert');
 const gulp = require('gulp');
 const watch = require('gulp-watch');
 const source = require('vinyl-source-stream');
@@ -49,6 +50,7 @@ const metamaskrc = require('rc')('metamask', {
 const { version } = require('../../package.json');
 const { streamFlatMap } = require('../stream-flat-map');
 const baseManifest = require('../../app/manifest/_base.json');
+const buildUtils = require('./buildUtils');
 const externalLibs = require('./externalLibs');
 const {
   createTask,
@@ -59,6 +61,8 @@ const {
 const configs = require('./configs');
 
 module.exports = createScriptTasks;
+
+const { IS_LEGACY_BUILD } = configs;
 
 const noop = () => {
   // console
@@ -126,6 +130,7 @@ function createTasksForBuildJsExtension({
   const standardSubtask = createTask(
     `${taskPrefix}:standardEntryPoints`,
     createFactoredBuild({
+      standardEntryPoints,
       entryFiles: standardEntryPoints.map(
         (label) => `./app/scripts/${label}.js`,
       ),
@@ -173,6 +178,7 @@ function createTasksForBuildJsExtension({
       // - build tasks never "complete" when run with livereload + child process
       setTimeout(() => {
         watch('./dist/*/*.js', (event) => {
+          console.log(`[scripts] gulp-watch file changed: ${event.path}`);
           livereload.changed(event.path);
         });
       }, 75e3);
@@ -181,12 +187,14 @@ function createTasksForBuildJsExtension({
 
   // make each bundle run in a separate process
   const allSubtasks = [
-    // externalLibsSubtask,
+    IS_LEGACY_BUILD && externalLibsSubtask,
     standardSubtask,
     contentscriptSubtask,
     disableConsoleSubtask,
     installSentrySubtask,
-  ].map((subtask) => runInChildProcess(subtask));
+  ]
+    .filter(Boolean)
+    .map((subtask) => runInChildProcess(subtask));
   // make a parent task that runs each task in a child thread
   return composeParallel(initiateLiveReload, ...allSubtasks);
 }
@@ -214,7 +222,7 @@ function createTaskForBundleDisableConsole({ devMode, browserPlatforms }) {
 }
 
 function createTaskForBundleSentry({ devMode, browserPlatforms }) {
-  const label = 'sentry-install'; // initSentry.js -> sentry-install.js
+  const label = 'sentry-install'; // initSentry.js => sentry-install.js
   return createNormalBundle({
     label,
     entryFilepath: `./app/scripts/${label}.js`,
@@ -323,11 +331,27 @@ function pipeLavaPackWrappedStream({ pipeline }) {
 }
 
 function createFactoredBuild({
+  standardEntryPoints,
   entryFiles,
   devMode,
   testing,
   browserPlatforms,
 }) {
+  if (IS_LEGACY_BUILD) {
+    const normalBundles = standardEntryPoints.map((label) => {
+      return createNormalBundle({
+        label,
+        entryFilepath: `./app/scripts/${label}.js`,
+        destFilepath: `${label}.js`,
+        externalLibsModules: externalLibs,
+        devMode,
+        testing,
+        browserPlatforms,
+      });
+    });
+    return composeSeries(...normalBundles);
+  }
+
   return async function () {
     // create bundler setup and apply defaults
     const buildConfiguration = createBuildConfiguration();
@@ -424,36 +448,12 @@ function createFactoredBuild({
           continue;
         }
 
-        switch (groupLabel) {
-          case 'ui': {
-            renderHtmlFile('popup', groupSet, commonSet, browserPlatforms);
-            renderHtmlFile(
-              'notification',
-              groupSet,
-              commonSet,
-              browserPlatforms,
-            );
-            renderHtmlFile('home', groupSet, commonSet, browserPlatforms);
-            break;
-          }
-          case 'phishing-detect': {
-            renderHtmlFile('phishing', groupSet, commonSet, browserPlatforms);
-            renderHtmlFile(
-              'phishing_en',
-              groupSet,
-              commonSet,
-              browserPlatforms,
-            );
-            break;
-          }
-          case 'background': {
-            renderHtmlFile('background', groupSet, commonSet, browserPlatforms);
-            break;
-          }
-          default: {
-            throw new Error(`buildsys - unknown groupLabel "${groupLabel}"`);
-          }
-        }
+        buildAllHtmlFiles({
+          groupLabel,
+          groupSet,
+          commonSet,
+          browserPlatforms,
+        });
       }
     });
 
@@ -469,6 +469,7 @@ function createNormalBundle({
   entryFilepath,
   extraEntries = [],
   modulesToExpose, // buildLib, dependenciesToBundle
+  externalLibsModules = [],
   devMode,
   testing,
   browserPlatforms,
@@ -501,16 +502,40 @@ function createNormalBundle({
       bundlerOpts.require = bundlerOpts.require.concat(modulesToExpose);
     }
 
+    if (externalLibsModules) {
+      bundlerOpts.manualExternal = [
+        ...bundlerOpts.manualExternal,
+        ...externalLibsModules,
+      ];
+    }
+
+    bundlerOpts.plugin = [
+      ...bundlerOpts.plugin,
+      // only build css-module in ui task, avoid rewriting of output files
+      label === 'ui' && createCssModulePlugin({ devMode }),
+    ].filter(Boolean);
+
     // instrument pipeline
     events.on('configurePipeline', ({ pipeline }) => {
       // convert bundle stream to gulp vinyl stream
       // and ensure file contents are buffered
+      assert(destFilepath, 'createNormalBundle => destFilepath is required.');
       pipeline.get('vinyl').push(source(destFilepath));
       pipeline.get('vinyl').push(buffer());
       // setup bundle destination
       browserPlatforms.forEach((platform) => {
         const dest = `./dist/${platform}/`;
         pipeline.get('dest').push(gulp.dest(dest));
+      });
+    });
+
+    events.on('bundleDone', () => {
+      buildAllHtmlFiles({
+        groupLabel: label,
+        groupSet: new Set([label]),
+        commonSet: new Set(),
+        browserPlatforms,
+        failOnUnknownLabel: false,
       });
     });
 
@@ -559,7 +584,7 @@ function setupBundlerDefaults(
       globalShim,
       // inline `fs.readFileSync` files
       brfs,
-    ],
+    ].filter(Boolean),
     // use entryFilepath for moduleIds, easier to determine origin file
     fullPaths: devMode,
     paths: configs.browserifyPaths,
@@ -646,12 +671,20 @@ function setupMinification(buildConfiguration) {
 
 function setupSourcemaps(buildConfiguration, { devMode }) {
   const { events } = buildConfiguration;
-  let writeSourceMapDev = () =>
-    sourcemaps.write('../sourcemaps', {
-      addComment: false,
-      sourceMappingURLPrefix: () => 'http://localhost:31317',
-    });
-  writeSourceMapDev = () => sourcemaps.write();
+
+  // factoredBuild support inline sourcemaps only
+  let writeSourceMapDev = () => sourcemaps.write();
+
+  if (IS_LEGACY_BUILD) {
+    writeSourceMapDev = () =>
+      sourcemaps.write('../sourcemaps', {
+        // add sourceMappingURL comment to the end
+        //      # sourceMappingURL=http://localhost:31317/sourcemaps/ui.js.map
+        addComment: true,
+        sourceMappingURLPrefix: () => 'http://localhost:31317',
+      });
+    // writeSourceMapDev = () => sourcemaps.write();
+  }
   events.on('configurePipeline', ({ pipeline }) => {
     pipeline.get('sourcemaps:init').push(sourcemaps.init({ loadMaps: true }));
     pipeline
@@ -661,7 +694,7 @@ function setupSourcemaps(buildConfiguration, { devMode }) {
       .push(
         devMode
           ? writeSourceMapDev()
-          : sourcemaps.write('../sourcemaps', { addComment: false }),
+          : sourcemaps.write('../sourcemaps', { addComment: true }),
       );
   });
 }
@@ -681,7 +714,10 @@ async function bundleIt(buildConfiguration) {
   // output build logs to terminal
   bundler.on('log', log);
   // forward update event (used by watchify)
-  bundler.on('update', () => performBundle());
+  bundler.on('update', () => {
+    console.log('[scripts] watchify changed, restart performBundle()');
+    performBundle();
+  });
 
   console.log(`bundle start: "${label}"`);
   await performBundle();
@@ -780,6 +816,37 @@ function getEnvironment({ devMode, testing }) {
   return 'other';
 }
 
+function buildAllHtmlFiles({
+  failOnUnknownLabel = true,
+  groupLabel,
+  groupSet,
+  commonSet,
+  browserPlatforms,
+}) {
+  switch (groupLabel) {
+    case 'ui': {
+      renderHtmlFile('popup', groupSet, commonSet, browserPlatforms);
+      renderHtmlFile('notification', groupSet, commonSet, browserPlatforms);
+      renderHtmlFile('home', groupSet, commonSet, browserPlatforms);
+      break;
+    }
+    case 'phishing-detect': {
+      renderHtmlFile('phishing', groupSet, commonSet, browserPlatforms);
+      renderHtmlFile('phishing_en', groupSet, commonSet, browserPlatforms);
+      break;
+    }
+    case 'background': {
+      renderHtmlFile('background', groupSet, commonSet, browserPlatforms);
+      break;
+    }
+    default: {
+      if (failOnUnknownLabel) {
+        throw new Error(`buildsys - unknown groupLabel "${groupLabel}"`);
+      }
+    }
+  }
+}
+
 function renderHtmlFile(htmlName, groupSet, commonSet, browserPlatforms) {
   const htmlFilePath = `./app/${htmlName}.html`;
   const htmlTemplate = readFileSync(htmlFilePath, 'utf8');
@@ -789,17 +856,22 @@ function renderHtmlFile(htmlName, groupSet, commonSet, browserPlatforms) {
     // fixed modules ahead ----------------------------------------------
     ...configs.externalModulesHtmlInjectJs,
     'lockdown-run', // secure ES module, which cause mobx, solanaWeb3 init fail.
-    'runtime-cjs',
+    !IS_LEGACY_BUILD && 'runtime-cjs',
     // ----------------------------------------------
     ...commonSet.values(),
     ...groupSet.values(),
-  ].map((label) => `./${label}.js?_t=${new Date().getTime()}`);
+  ]
+    .filter(Boolean)
+    .map((label) => `./${label}.js?_t=${new Date().getTime()}.00000`);
 
   const htmlOutput = Sqrl.render(htmlTemplate, { jsBundles });
   browserPlatforms.forEach((platform) => {
     const dest = `./dist/${platform}/${htmlName}.html`;
+    const dest2 = `./dist/${platform}/${htmlName}.bak.html`;
+    // console.log('htmlOutput', htmlOutput);
     // we dont have a way of creating async events atm
     writeFileSync(dest, htmlOutput);
+    writeFileSync(dest2, htmlOutput);
   });
 }
 

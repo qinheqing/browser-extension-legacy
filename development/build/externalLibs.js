@@ -5,11 +5,33 @@ const allDependencies = Object.keys(
   (packageJSON && packageJSON.dependencies) || {},
 );
 
-const ignoreDeps = ['tailwindcss', 'readable-stream'];
-const commonDeps = ['lodash', 'mobx', 'mobx-react-lite'];
+const ignoreDeps = [
+  'tailwindcss',
+  'readable-stream',
+  'mobx',
+  'mobx-react-lite',
+  '@solana/web3.js',
+  // ignore modules below, cause background error:
+  //    Cannot find module '/onekey-extension/node_modules/ethereumjs-wallet/index.js'
+  'ethereumjs-wallet',
+  'eth-json-rpc-infura',
+  'eth-json-rpc-filters',
+  'json-rpc-engine',
+];
+const commonDeps = ['lodash'];
 const reactDeps = allDependencies.filter((dep) => dep.match(/react/u));
 const onekeyDeps = [
+  '3box',
+  '@onekeyhq/eth-onekey-keyring ',
+  '@metamask/controllers',
+  '@formatjs/intl-relativetimeformat',
+  '@solana/spl-token-registry',
+  '@metamask/eth-token-tracker',
+  '@ensdomains/content-hash',
   '@material-ui/core',
+  'ethers',
+  'rpc-cap',
+  'eth-keyring-controller',
   // 'ethjs',
   // 'ethjs-ens',
   // 'web3',
@@ -44,8 +66,9 @@ const onekeyDeps = [
 
 const externalLibs = filterAvailableDeps([
   ...commonDeps,
-  // ...reactDeps,
-  // ...onekeyDeps,
+  ...reactDeps,
+  ...onekeyDeps,
+  ...allDependencies,
 ]);
 
 // console.log('------ externalDependenciesMap -----');

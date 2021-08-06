@@ -1,5 +1,7 @@
 const path = require('path');
 
+const IS_LEGACY_BUILD = process.env.ENV_LEGACY_BUILD;
+
 const sassConfig = {
   includePaths: ['src', 'ui'],
 
@@ -86,18 +88,17 @@ const externalModulesCopyFiles = [
 ];
 
 const externalModulesHtmlInjectJs = [
-  // 'external-libs',
-  // ----------------------------------------------
   'vendor/external-js/mobx',
   'vendor/external-js/solana-web3',
-];
+  IS_LEGACY_BUILD && 'external-libs',
+].filter(Boolean);
 
 const externalModulesGlobalShim = {
   //  import mobx from 'mobx';
-  //      ->  const mobx = window.mobx;
+  //        const mobx = window.mobx;
   'mobx': 'mobx',
   //  import solanaWeb3 from '@solana/web3.js';
-  //      ->  const solanaWeb3 = window.solanaWeb3;
+  //        const solanaWeb3 = window.solanaWeb3;
   '@solana/web3.js': 'solanaWeb3',
 };
 
@@ -110,6 +111,7 @@ const externalModulesBrowserField = {
 };
 
 module.exports = {
+  IS_LEGACY_BUILD,
   sassConfig,
   scssifyConfig,
   browserifyPaths,

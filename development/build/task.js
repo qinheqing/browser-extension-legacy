@@ -14,6 +14,7 @@ module.exports = {
   composeParallel,
   runInChildProcess,
 };
+const buildUtils = require('./buildUtils');
 
 const { setupTaskDisplay } = require('./display');
 
@@ -24,7 +25,6 @@ function detectAndRunEntryTask() {
     throw new Error(`MetaMask build: No task name specified`);
   }
   const skipStats = process.argv.includes('--skip-stats');
-
   runTask(taskName, { skipStats });
 }
 
@@ -87,11 +87,15 @@ function runInChildProcess(task) {
     // skip the first stdout event (announcing the process command)
     childProcess.stdout.once('data', () => {
       childProcess.stdout.on('data', (data) =>
-        process.stdout.write(`${taskName}: ${data}`),
+        process.stdout.write(
+          `[${buildUtils.currentTime()}] >> ${taskName}\r\n\t ${data}`,
+        ),
       );
     });
     childProcess.stderr.on('data', (data) =>
-      process.stderr.write(`${taskName}: ${data}`),
+      process.stderr.write(
+        `[${buildUtils.currentTime()}] >> ${taskName}\r\n\t ${data}`,
+      ),
     );
     // await end of process
     await new Promise((resolve, reject) => {
