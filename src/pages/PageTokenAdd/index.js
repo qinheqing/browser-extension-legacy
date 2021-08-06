@@ -16,6 +16,7 @@ import TokenBalance from '../../components/TokenBalance';
 import AmountText from '../../components/AmountText';
 import storeAccount from '../../store/storeAccount';
 import { TokenLogoIcon } from '../../components/LogoIcon';
+import CopyHandle from '../../components/CopyHandle';
 import styles from './index.css';
 
 const TokenAddItem = observer(function ({ token, onAddClick }) {
@@ -41,7 +42,11 @@ const TokenAddItem = observer(function ({ token, onAddClick }) {
           {symbol || '未知币种'} {token.name && <span>({token.name})</span>}
         </span>
       }
-      content={utilsApp.shortenAddress(token.address)}
+      content={
+        <CopyHandle text={token.address}>
+          {utilsApp.shortenAddress(token.address)}
+        </CopyHandle>
+      }
       end={
         hasAdded ? (
           <OneButton disabled size="xs">

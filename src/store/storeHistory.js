@@ -1,4 +1,4 @@
-/* eslint import/no-cycle: "error" */
+/* eslint import/no-cycle: "warn" */
 import {
   observable,
   computed,
