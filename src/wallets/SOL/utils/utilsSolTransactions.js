@@ -96,6 +96,10 @@ const toInstruction = async (
   index,
 ) => {
   const { accounts = [], data = '', programIdIndex } = instruction || {};
+  // debugger for unknown types
+  if (data && ['LdbVWE', '6vx8P', '121So', '1VmNmK4tTS5ngxf'].includes(data)) {
+    // debugger;
+  }
   // get instruction data ( Buffer type )
   const dataDecoded = data && bs58.decode(data);
   const programId =
@@ -128,23 +132,34 @@ const toInstruction = async (
   try {
     // CreateTokenAccount [Program Id]
     if (programId.equals(ASSOCIATED_TOKEN_PROGRAM_ID)) {
-      return handleAssociateTokenInstruction({
-        instructionCommon,
-        publicKey,
-        instruction,
-        accountKeys,
-        connection,
-      });
+      return (
+        handleAssociateTokenInstruction({
+          instructionCommon,
+          publicKey,
+          instruction,
+          accountKeys,
+          connection,
+        }) || unknownInstruction
+      );
     }
     if (programId.equals(SystemProgram.programId)) {
       console.log(`[${index}] Handled as system instruction`);
-      return handleSystemInstruction(publicKey, instruction, accountKeys);
+      return (
+        handleSystemInstruction(publicKey, instruction, accountKeys) ||
+        unknownInstruction
+      );
     } else if (programId.equals(StakeProgram.programId)) {
       console.log(`[${index}] Handled as stake instruction`);
-      return handleStakeInstruction(publicKey, instruction, accountKeys);
+      return (
+        handleStakeInstruction(publicKey, instruction, accountKeys) ||
+        unknownInstruction
+      );
     } else if (programId.equals(TOKEN_PROGRAM_ID)) {
       console.log(`[${index}] Handled as token instruction`);
-      return handleTokenInstruction(publicKey, instruction, accountKeys);
+      return (
+        handleTokenInstruction(publicKey, instruction, accountKeys) ||
+        unknownInstruction
+      );
     } else if (
       MARKETS.some(
         (market) => market.programId && market.programId.equals(programId),
@@ -152,29 +167,35 @@ const toInstruction = async (
     ) {
       console.log(`[${index}] Handled as dex instruction`);
       const decodedInstruction = decodeInstruction(dataDecoded);
-      return await handleDexInstruction(
-        connection,
-        instruction,
-        accountKeys,
-        decodedInstruction,
+      return (
+        (await handleDexInstruction(
+          connection,
+          instruction,
+          accountKeys,
+          decodedInstruction,
+        )) || unknownInstruction
       );
     } else if (programId.equals(RAYDIUM_STAKE_PROGRAM_ID)) {
       console.log(`[${index}] Handled as raydium stake instruction`);
       const decodedInstruction = decodeStakeInstruction(dataDecoded);
-      return await handleRayStakeInstruction(
-        connection,
-        instruction,
-        accountKeys,
-        decodedInstruction,
+      return (
+        (await handleRayStakeInstruction(
+          connection,
+          instruction,
+          accountKeys,
+          decodedInstruction,
+        )) || unknownInstruction
       );
     } else if (programId.equals(RAYDIUM_LP_PROGRAM_ID)) {
       console.log(`[${index}] Handled as raydium lp instruction`);
       const decodedInstruction = decodeLpInstruction(dataDecoded);
-      return await handleRayLpInstruction(
-        connection,
-        instruction,
-        accountKeys,
-        decodedInstruction,
+      return (
+        (await handleRayLpInstruction(
+          connection,
+          instruction,
+          accountKeys,
+          decodedInstruction,
+        )) || unknownInstruction
       );
     } else if (
       programId.equals(MANGO_PROGRAM_ID) ||
@@ -182,11 +203,13 @@ const toInstruction = async (
     ) {
       console.log(`[${index}] Handled as mango markets instruction`);
       const decodedInstruction = decodeMangoInstruction(dataDecoded);
-      return await handleMangoInstruction(
-        connection,
-        instruction,
-        accountKeys,
-        decodedInstruction,
+      return (
+        (await handleMangoInstruction(
+          connection,
+          instruction,
+          accountKeys,
+          decodedInstruction,
+        )) || unknownInstruction
       );
     }
     console.log('Instruction is unknown', unknownInstruction);
@@ -384,8 +407,8 @@ const handleSystemInstruction = (publicKey, instruction, accountKeys) => {
       return;
   }
   if (
-    !decoded ||
-    (decoded.fromPubkey && !publicKey.equals(decoded.fromPubkey))
+    !decoded
+    // || (decoded.fromPubkey && !publicKey.equals(decoded.fromPubkey))
   ) {
     return;
   }
