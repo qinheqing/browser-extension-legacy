@@ -15,6 +15,7 @@ import AmountText from '../../components/AmountText';
 import storeToken from '../../store/storeToken';
 import utilsNumber from '../../utils/utilsNumber';
 import TransferConfirmDialog from '../../components/TransferConfirmDialog';
+import TokenSwitchDialog from '../../components/TokenSwitchDialog';
 import OneInput from '../../components/OneInput';
 import OneCellItem from '../../components/OneCellItem';
 import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
@@ -27,6 +28,7 @@ import { TokenLogoIcon } from '../../components/LogoIcon';
 
 function PageTransfer() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [switchDialogOpen, setSwitchDialogOpen] = useState(false);
   const [txid, setTxid] = useState('');
   // add associate token
   const [contract, setContract] = useState(
@@ -47,6 +49,23 @@ function PageTransfer() {
   return (
     <AppPageLayout title="转账">
       <OneField>
+        <OneFieldItem
+          titleWrapped
+          title="资产"
+          end={
+            <div
+              className="flex items-center leading-none"
+              onClick={() => setSwitchDialogOpen(true)}
+            >
+              <span>{token.symbolDisplay}</span>
+              <span className="ml-2 u-leading-0">
+                <TokenLogoIcon tokenInfo={token} size="sm" />
+              </span>
+            </div>
+          }
+        />
+      </OneField>
+      <OneField>
         <OneFieldItem titleWrapped title="收款账号" />
         <OneFieldInputItem
           value={storeTransfer.toAddress}
@@ -61,18 +80,7 @@ function PageTransfer() {
       </OneField>
 
       <OneField>
-        <OneFieldItem
-          titleWrapped
-          title="数量"
-          end={
-            <div className="flex items-center leading-none">
-              <span>{token.symbolDisplay}</span>
-              <span className="ml-2 u-leading-0">
-                <TokenLogoIcon tokenInfo={token} size="sm" />
-              </span>
-            </div>
-          }
-        />
+        <OneFieldItem titleWrapped title="数量" />
         <OneFieldInputItem
           border
           value={storeTransfer.amount}
@@ -121,7 +129,10 @@ function PageTransfer() {
           发送
         </OneButton>
       </div>
-
+      <TokenSwitchDialog
+        open={switchDialogOpen}
+        onOpenChange={setSwitchDialogOpen}
+      />
       <TransferConfirmDialog
         open={confirmDialogOpen}
         onOpenChange={setConfirmDialogOpen}
