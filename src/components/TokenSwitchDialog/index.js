@@ -41,12 +41,10 @@ function TokenSwitchDialog({ open, onOpenChange }) {
 
   const [selectedAddress, setSelectedAddress] = useState(fromToken.address);
 
-  const onConfirm = () => {
-    const selected = tokens.filter(
-      (token) => token.address === selectedAddress,
-    )[0];
+  const onConfirm = (selected) => {
     if (selected) {
       storeTransfer.fromToken = cloneDeep(selected);
+      onOpenChange(false);
     }
   };
 
@@ -57,7 +55,7 @@ function TokenSwitchDialog({ open, onOpenChange }) {
       title="选择资产"
       confirmText="确认"
       onOpenChange={onOpenChange}
-      onConfirm={onConfirm}
+      actionsView={<span />}
     >
       <div className="py-3 -mx-4 ">
         {tokens.map((token, index) => {
@@ -65,8 +63,8 @@ function TokenSwitchDialog({ open, onOpenChange }) {
             <TokenOption
               key={token.contractAddress + index}
               token={token}
-              onClick={(e) => setSelectedAddress(e.address)}
-              checked={selectedAddress === token.address}
+              onClick={(e) => onConfirm(e)}
+              checked={fromToken.address === token.address}
             />
           );
         })}

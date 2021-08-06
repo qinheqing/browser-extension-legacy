@@ -50,13 +50,12 @@ function PageTransfer() {
     <AppPageLayout title="转账">
       <OneField>
         <OneFieldItem
+          onClick={() => setSwitchDialogOpen(true)}
           titleWrapped
           title="资产"
+          arrow
           end={
-            <div
-              className="flex items-center leading-none"
-              onClick={() => setSwitchDialogOpen(true)}
-            >
+            <div className="flex items-center leading-none">
               <span>{token.symbolDisplay}</span>
               <span className="ml-2 u-leading-0">
                 <TokenLogoIcon tokenInfo={token} size="sm" />
