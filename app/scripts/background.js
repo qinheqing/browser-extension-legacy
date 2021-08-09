@@ -5,6 +5,7 @@
 /* eslint-disable import/first,import/order */
 import setupFetchDebugging from './lib/setupFetchDebugging';
 /* eslint-enable import/order */
+/* eslint-disable */
 
 setupFetchDebugging();
 
@@ -19,6 +20,8 @@ import extension from 'extensionizer';
 import { storeAsStream, storeTransformStream } from '@metamask/obs-store';
 import PortStream from 'extension-port-stream';
 import { captureException } from '@sentry/browser';
+import { autorun } from 'mobx';
+import { observer } from 'mobx-react-lite';
 
 import {
   ENVIRONMENT_TYPE_POPUP,
@@ -40,9 +43,17 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import errorsGlobalHandler from './errorsGlobalHandler';
+import backgroundSolana from '../../src/wallets/SOL/modules/dappProvider/background';
+import backgroundContainer from './backgroundContainer';
 /* eslint-enable import/first */
 
 log.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn');
+
+const mboxReferences = {
+  autorun,
+  observer,
+  name:1,
+};
 
 const { sentry } = global;
 const firstTimeState = { ...rawFirstTimeState };
@@ -73,6 +84,7 @@ let versionedData;
 if (inTest || process.env.METAMASK_DEBUG) {
   // set global localStore for debug
   global.onekeyLocalStore = localStore;
+  global.onekeyLocalStore_ENV_IN_TEST = process.env.IN_TEST;
   global.onekeyLocalStore.clear = async (callback) => {
     await localStore.set({ data: {}, meta: {} });
     console.log(JSON.stringify(await localStore.get(), null, 4));
@@ -81,7 +93,7 @@ if (inTest || process.env.METAMASK_DEBUG) {
       // eslint-disable-next-line node/callback-return
       callback && callback();
       setTimeout(() => {
-        window.location.reload();
+        global.location.reload();
       }, 500);
     }, 2000);
   };
@@ -217,7 +229,9 @@ async function loadStateFromPersistence() {
 
   // write to disk
   if (localStore.isSupported) {
-    localStore.set(versionedData);
+    // MUST only update {data,meta} field defined by MM, Otherwise it will overwrite fields defined elsewhere
+    const { data, meta } = versionedData;
+    localStore.set({ data, meta });
   } else {
     // throw in setTimeout so as to not block boot
     setTimeout(() => {
@@ -264,6 +278,12 @@ function setupController(initState, initLangCode) {
     },
   });
 
+  backgroundContainer.setRootController(controller);
+
+  if (inTest || process.env.METAMASK_DEBUG) {
+    global.$$metamaskController = controller;
+  }
+
   setupEnsIpfsResolver({
     getCurrentChainId: controller.networkController.getCurrentChainId.bind(
       controller.networkController,
@@ -306,7 +326,9 @@ function setupController(initState, initLangCode) {
     }
     if (localStore.isSupported) {
       try {
-        await localStore.set(state);
+        // MUST only update {data,meta} field defined by MM, Otherwise it will overwrite fields defined elsewhere
+        const { data, meta } = state;
+        await localStore.set({ data, meta });
         if (dataPersistenceFailing) {
           dataPersistenceFailing = false;
         }
@@ -546,3 +568,5 @@ extension.runtime.onInstalled.addListener(({ reason }) => {
     platform.openExtensionInBrowser();
   }
 });
+
+backgroundSolana.init();

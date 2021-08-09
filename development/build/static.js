@@ -2,17 +2,23 @@ const path = require('path');
 const fs = require('fs-extra');
 const watch = require('gulp-watch');
 const glob = require('fast-glob');
-
 const locales = require('../../app/_locales/index.json');
+const configs = require('./configs');
+const buildUtils = require('./buildUtils');
 
 const { createTask, composeSeries } = require('./task');
 
 module.exports = createStaticAssetTasks;
 
 const copyTargets = [
+  ...configs.externalModulesCopyFiles,
   {
     src: `./app/_locales/`,
     dest: `_locales`,
+  },
+  {
+    src: `./app/_locales/zh_CN/messages.json`,
+    dest: `_locales/zh/messages.json`,
   },
   {
     src: `./app/images/`,
@@ -40,8 +46,12 @@ const copyTargets = [
     dest: ``,
   },
   {
-    src: `./app/`,
-    pattern: `*.html`,
+    src: `./app/loading.html`,
+    dest: `loading.html`,
+  },
+  {
+    src: `./app/vendor-js/`,
+    pattern: `*.js`,
     dest: ``,
   },
   {
@@ -50,12 +60,16 @@ const copyTargets = [
   },
   {
     src: `./node_modules/ses/dist/lockdown.cjs`,
-    dest: `lockdown.js`,
+    dest: `lockdown-install.js`,
   },
   {
-    src: `./app/scripts/`,
-    pattern: `runLockdown.js`,
-    dest: ``,
+    src: `./app/scripts/lockdown-run.js`,
+    dest: `lockdown-run.js`, // runLockdown.js
+  },
+  {
+    // eslint-disable-next-line node/no-extraneous-require
+    src: require.resolve('@lavamoat/lavapack/src/runtime-cjs.js'),
+    dest: `runtime-cjs.js`,
   },
 ];
 
@@ -76,9 +90,31 @@ for (const tag of languageTags) {
 const copyTargetsDev = [
   ...copyTargets,
   {
-    src: './app/scripts/',
+    src: './development',
     pattern: '/chromereload.js',
     dest: ``,
+  },
+  // empty files to suppress missing file errors
+  {
+    src: './development/empty.js',
+    dest: `bg-libs.js`,
+  },
+  {
+    src: './development/empty.js',
+    dest: `ui-libs.js`,
+  },
+  // {
+  //   src: './development/empty.js',
+  //   dest: `external-libs.js`,
+  // },
+];
+
+const copyTargetsProd = [
+  ...copyTargets,
+  // empty files to suppress missing file errors
+  {
+    src: './development/empty.js',
+    dest: `chromereload.js`,
   },
 ];
 
@@ -86,7 +122,7 @@ function createStaticAssetTasks({ livereload, browserPlatforms }) {
   const prod = createTask(
     'static:prod',
     composeSeries(
-      ...copyTargets.map((target) => {
+      ...copyTargetsProd.map((target) => {
         return async function copyStaticAssets() {
           await performCopy(target);
         };
@@ -109,6 +145,7 @@ function createStaticAssetTasks({ livereload, browserPlatforms }) {
   async function setupLiveCopy(target) {
     const pattern = target.pattern || '/**/*';
     watch(target.src + pattern, (event) => {
+      console.log(`[static] gulp-watch file changed: ${event.path}`);
       livereload.changed(event.path);
       performCopy(target);
     });

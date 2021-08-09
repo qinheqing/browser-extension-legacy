@@ -8,7 +8,7 @@ import {
   addHexPrefix,
   getEnvironmentType,
 } from '../../../../app/scripts/lib/util';
-import { CONST_ACCOUNT_TYPES } from '../constants/common';
+import { WALLET_ACCOUNT_TYPES } from '../constants/common';
 import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
 import { CONNECT_HARDWARE_ROUTE } from '../constants/routes';
 
@@ -42,10 +42,21 @@ const valueTable = {
   gether: '0.000000001',
   tether: '0.000000000001',
 };
-const bnTable = {};
-Object.keys(valueTable).forEach((currency) => {
-  bnTable[currency] = new ethUtil.BN(valueTable[currency], 10);
-});
+let _bnTable = null;
+
+function getBnTable() {
+  if (!_bnTable) {
+    const _table = {};
+    Object.keys(valueTable).forEach((currency) => {
+      const _ethUtil = ethUtil;
+      const { BN } = _ethUtil;
+      _table[currency] = new BN(valueTable[currency], 10);
+    });
+    _bnTable = _table;
+  }
+  return _bnTable;
+}
+global.$$getBnTable = getBnTable;
 
 export function isEthNetwork(netId) {
   if (
@@ -233,6 +244,7 @@ export function shortenBalance(balance, decimalsToKeep = 1) {
 // returns a BN in wei
 export function normalizeToWei(amount, currency) {
   try {
+    const bnTable = getBnTable();
     return amount.mul(bnTable.wei).div(bnTable[currency]);
   } catch (e) {
     return amount;
@@ -241,6 +253,7 @@ export function normalizeToWei(amount, currency) {
 
 export function normalizeEthStringToWei(str) {
   const parts = str.split('.');
+  const bnTable = getBnTable();
   let eth = new ethUtil.BN(parts[0], 10).mul(bnTable.wei);
   if (parts[1]) {
     let decimal = parts[1];
@@ -256,8 +269,8 @@ export function normalizeEthStringToWei(str) {
   return eth;
 }
 
-const multiple = new ethUtil.BN('10000', 10);
 export function normalizeNumberToWei(n, currency) {
+  const multiple = new ethUtil.BN('10000', 10);
   const enlarged = n * 10000;
   const amount = new ethUtil.BN(String(enlarged), 10);
   return normalizeToWei(amount, currency).div(multiple);
@@ -490,13 +503,13 @@ export function keyringTypeToAccountType(keyringType) {
   switch (keyringType) {
     case 'Trezor Hardware':
     case 'Ledger Hardware':
-      return CONST_ACCOUNT_TYPES.HARDWARE;
+      return WALLET_ACCOUNT_TYPES.HARDWARE;
     case 'Simple Key Pair':
-      return CONST_ACCOUNT_TYPES.IMPORTED;
+      return WALLET_ACCOUNT_TYPES.IMPORTED;
     case 'Watch Account':
-      return CONST_ACCOUNT_TYPES.WATCHED;
+      return WALLET_ACCOUNT_TYPES.WATCHED;
     default:
-      return CONST_ACCOUNT_TYPES.DEFAULT;
+      return WALLET_ACCOUNT_TYPES.DEFAULT;
   }
 }
 
@@ -535,7 +548,7 @@ export function filterAccountsByHwOnly({ accounts, hwOnlyMode }) {
     return accounts.filter(
       (account) =>
         account.accountType &&
-        account.accountType === CONST_ACCOUNT_TYPES.HARDWARE,
+        account.accountType === WALLET_ACCOUNT_TYPES.HARDWARE,
     );
   }
   return accounts;

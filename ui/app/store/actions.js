@@ -31,7 +31,8 @@ import {
 import { switchedToUnconnectedAccount } from '../ducks/alerts/unconnected-account';
 import { getUnconnectedAccountAlertEnabledness } from '../ducks/metamask/metamask';
 import { LISTED_CONTRACT_ADDRESSES } from '../../../shared/constants/tokens';
-import { CONST_ACCOUNT_TYPES } from '../helpers/constants/common';
+import { WALLET_ACCOUNT_TYPES } from '../helpers/constants/common';
+import utilsApp from '../../../src/utils/utilsApp';
 import * as actionConstants from './actionConstants';
 
 let background = null;
@@ -1251,10 +1252,8 @@ export function updateMetamaskState(newState) {
     const { metamask: currentState } = getState();
 
     const { currentLocale, selectedAddress } = currentState;
-    const {
-      currentLocale: newLocale,
-      selectedAddress: newSelectedAddress,
-    } = newState;
+    const { currentLocale: newLocale, selectedAddress: newSelectedAddress } =
+      newState;
 
     if (currentLocale && newLocale && currentLocale !== newLocale) {
       dispatch(updateCurrentLocale(newLocale));
@@ -1270,7 +1269,7 @@ export function updateMetamaskState(newState) {
   };
 }
 
-const backgroundSetLocked = () => {
+export const backgroundSetLocked = () => {
   return new Promise((resolve, reject) => {
     background.setLocked((error) => {
       if (error) {
@@ -1333,14 +1332,12 @@ export function showAccountDetail(address) {
     log.debug(`background.setSelectedAddress`);
 
     const state = getState();
-    const unconnectedAccountAccountAlertIsEnabled = getUnconnectedAccountAlertEnabledness(
-      state,
-    );
+    const unconnectedAccountAccountAlertIsEnabled =
+      getUnconnectedAccountAlertEnabledness(state);
     const activeTabOrigin = state.activeTab.origin;
     const selectedAddress = getSelectedAddress(state);
-    const permittedAccountsForCurrentTab = getPermittedAccountsForCurrentTab(
-      state,
-    );
+    const permittedAccountsForCurrentTab =
+      getPermittedAccountsForCurrentTab(state);
     const currentTabIsConnectedToPreviousAddress =
       Boolean(activeTabOrigin) &&
       permittedAccountsForCurrentTab.includes(selectedAddress);
@@ -1424,7 +1421,7 @@ export function actionAutoSelectHwAccountInHwOnlyModeAsync() {
 
     // * Select first hardware account if current account is NOT hardware
     if (
-      selectedAccount?.accountType !== CONST_ACCOUNT_TYPES.HARDWARE &&
+      selectedAccount?.accountType !== WALLET_ACCOUNT_TYPES.HARDWARE &&
       hardwareAccounts[0]?.address
     ) {
       await dispatch(showAccountDetail(hardwareAccounts[0]?.address));
@@ -2404,13 +2401,11 @@ export function setSwapsLiveness(swapsFeatureIsLive) {
 
 export function fetchAndSetQuotes(fetchParams, fetchParamsMetaData) {
   return async (dispatch) => {
-    const [
-      quotes,
-      selectedAggId,
-    ] = await promisifiedBackground.fetchAndSetQuotes(
-      fetchParams,
-      fetchParamsMetaData,
-    );
+    const [quotes, selectedAggId] =
+      await promisifiedBackground.fetchAndSetQuotes(
+        fetchParams,
+        fetchParamsMetaData,
+      );
     await forceUpdateMetamaskState(dispatch);
     return [quotes, selectedAggId];
   };
@@ -2914,7 +2909,8 @@ export function setRequestAccountTabIds(requestAccountTabIds) {
 
 export function getRequestAccountTabIds() {
   return async (dispatch) => {
-    const requestAccountTabIds = await promisifiedBackground.getRequestAccountTabIds();
+    const requestAccountTabIds =
+      await promisifiedBackground.getRequestAccountTabIds();
     dispatch(setRequestAccountTabIds(requestAccountTabIds));
   };
 }
@@ -2928,7 +2924,8 @@ export function setOpenMetamaskTabsIDs(openMetaMaskTabIDs) {
 
 export function getOpenMetamaskTabsIds() {
   return async (dispatch) => {
-    const openMetaMaskTabIDs = await promisifiedBackground.getOpenMetamaskTabsIds();
+    const openMetaMaskTabIDs =
+      await promisifiedBackground.getOpenMetamaskTabsIds();
     dispatch(setOpenMetamaskTabsIDs(openMetaMaskTabIDs));
   };
 }
@@ -2971,4 +2968,27 @@ export function trackMetaMetricsEvent(payload, options) {
  */
 export function trackMetaMetricsPage(payload, options) {
   return promisifiedBackground.trackMetaMetricsPage(payload, options);
+}
+
+// If you need the return value of a background method call
+export async function getBackgroundInstanceAsync() {
+  await utilsApp.waitForDataLoaded({
+    data: () => Boolean(promisifiedBackground),
+    log: 'getBackgroundInstanceAsync',
+  });
+  return promisifiedBackground;
+}
+
+// background method call will be always undefined
+export function getBackgroundInstance() {
+  return background;
+}
+
+let store = null;
+export function setStore(_store) {
+  store = _store;
+}
+
+export function getStore() {
+  return store;
 }

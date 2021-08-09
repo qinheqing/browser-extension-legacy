@@ -4,6 +4,7 @@ import LocalMessageDuplexStream from 'post-message-stream';
 import ObjectMultiplex from 'obj-multiplex';
 import extension from 'extensionizer';
 import PortStream from 'extension-port-stream';
+import contentscriptSolana from '../../src/wallets/SOL/modules/dappProvider/contentscript';
 // import { obj as createThoughStream } from 'through2';
 
 // These require calls need to use require to be statically recognized by browserify
@@ -230,7 +231,7 @@ function blockedDomainCheck() {
 /**
  * Redirects the current page to a phishing information page
  */
-function redirectToPhishingWarning({ currentLocale = 'zh' }) {
+function redirectToPhishingWarning({ currentLocale = 'zh' } = {}) {
   console.debug('MetaMask: Routing to Phishing Warning component.');
   const filename = currentLocale.includes('en')
     ? 'phishing_en.html'
@@ -241,3 +242,13 @@ function redirectToPhishingWarning({ currentLocale = 'zh' }) {
     href: window.location.href,
   })}`;
 }
+
+// test on site:  window.postMessage({type: 'ONEKEY_PHISHING_WARNING'});
+window.addEventListener('message', (event) => {
+  const type = event?.data?.type;
+  if (type === 'ONEKEY_PHISHING_WARNING') {
+    redirectToPhishingWarning();
+  }
+});
+
+contentscriptSolana.init();

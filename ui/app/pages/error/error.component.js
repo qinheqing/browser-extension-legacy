@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { getEnvironmentType } from '../../../../app/scripts/lib/util';
 import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
+import { ROUTE_HOME_OLD } from '../../../../src/routes/routeUrls';
 
 class ErrorPage extends PureComponent {
   static contextTypes = {
@@ -41,6 +42,14 @@ class ErrorPage extends PureComponent {
         <h2 className="error-page__subheader">
           {isPopup ? t('errorPagePopupMessage') : t('errorPageMessage')}
         </h2>
+        <button
+          onClick={() => {
+            window.location.href = `#${ROUTE_HOME_OLD}`;
+            window.location.reload();
+          }}
+        >
+          {t('back')}
+        </button>
         <section className="error-page__details">
           <details>
             <summary>{t('errorDetails')}</summary>

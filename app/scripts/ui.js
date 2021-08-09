@@ -2,6 +2,9 @@
 import 'abortcontroller-polyfill/dist/polyfill-patch-fetch';
 import '@formatjs/intl-relativetimeformat/polyfill';
 
+// dev only, "react-devtools" import is skipped in prod builds
+import 'react-devtools';
+
 import { EventEmitter } from 'events';
 import PortStream from 'extension-port-stream';
 import extension from 'extensionizer';
@@ -27,6 +30,7 @@ start().catch(log.error);
 async function start() {
   // create platform global
   global.platform = new ExtensionPlatform();
+  global.$$extensionPlatform = global.platform;
 
   // identify window type (popup, notification)
   const windowType = getEnvironmentType();

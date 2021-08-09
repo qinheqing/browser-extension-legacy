@@ -1,5 +1,11 @@
 module.exports = {
   root: true,
+  env: {
+    browser: true,
+    node: true,
+    es6: true,
+    es2017: true,
+  },
   parser: '@babel/eslint-parser',
   parserOptions: {
     sourceType: 'module',
@@ -20,6 +26,7 @@ module.exports = {
 
   ignorePatterns: [
     '!.eslintrc.js',
+    '!.prettierrc.js',
     'node_modules/**',
     'dist/**',
     'builds/**',
@@ -27,16 +34,19 @@ module.exports = {
     'docs/**',
     'coverage/',
     'app/scripts/chromereload.js',
+    'development/chromereload.js',
     'app/vendor/**',
+    'app/vendor-js/**',
     'test/e2e/send-eth-with-private-key-test/**',
     'nyc_output/**',
     '.vscode/**',
+    'src/**/*.d.ts',
   ],
 
   extends: [
     '@metamask/eslint-config',
-    '@metamask/eslint-config/config/nodejs',
-    '@metamask/eslint-config/config/mocha',
+    '@metamask/eslint-config-nodejs',
+    '@metamask/eslint-config-mocha',
     'plugin:react/recommended',
     'plugin:react-hooks/recommended',
   ],
@@ -54,6 +64,10 @@ module.exports = {
     'import/no-anonymous-default-export': 'off',
     'prettier/prettier': 'error',
     'no-unused-vars': 'warn',
+    'no-debugger': 'warn',
+    'import/no-anonymous-default-export': 'off',
+    'react/prop-types': 'warn',
+    'yield-star-spacing': 'off',
 
     // Our eslint config has the default setting for this as error. This
     // include beforeBlockComment: true, but in order to match the prettier
@@ -92,7 +106,7 @@ module.exports = {
     // Prettier handles all indentation automagically. it can be configured here
     // https://prettier.io/docs/en/options.html#tab-width but the default matches our
     // style.
-    indent: 'off',
+    'indent': 'off',
     // This rule conflicts with the way that prettier breaks code across multiple lines when
     // it exceeds the maximum length. Prettier optimizes for readability while simultaneously
     // maximizing the amount of code per line.
@@ -110,6 +124,7 @@ module.exports = {
     'import/no-unassigned-import': 'off',
     'import/no-cycle': 'warn',
     'prefer-object-spread': 'error',
+    'react/self-closing-comp': 'warn',
     'react/no-unused-prop-types': 'warn',
     'react/no-unused-state': 'error',
     'react/jsx-boolean-value': 'error',
@@ -145,7 +160,7 @@ module.exports = {
     'import/no-unresolved': 'off',
 
     // prettier handles these
-    semi: 'off',
+    'semi': 'off',
     '@babel/semi': 'off',
 
     'mocha/no-setup-in-describe': 'off',
@@ -195,7 +210,7 @@ module.exports = {
         'babel.config.js',
         'nyc.config.js',
         'stylelint.config.js',
-        'app/scripts/runLockdown.js',
+        'app/scripts/lockdown-run.js',
         'development/**/*.js',
         'test/e2e/**/*.js',
         'test/lib/wait-until-called.js',
@@ -209,7 +224,12 @@ module.exports = {
   ],
 
   settings: {
-    react: {
+    'import/resolver': {
+      node: {
+        extensions: ['.js', '.jsx'],
+      },
+    },
+    'react': {
       version: 'detect',
     },
   },

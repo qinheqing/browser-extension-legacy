@@ -1,9 +1,3 @@
-/**
- * Created by zuozhuo on 2021/6/2.
- */
-
-'use strict';
-
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { actionAutoSelectHwAccountInHwOnlyModeAsync } from '../store/actions';

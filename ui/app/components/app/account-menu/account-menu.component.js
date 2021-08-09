@@ -10,7 +10,7 @@ import Identicon from '../../ui/identicon';
 import SiteIcon from '../../ui/site-icon';
 import UserPreferencedCurrencyDisplay from '../user-preferenced-currency-display';
 import {
-  CONST_ACCOUNT_TYPES,
+  WALLET_ACCOUNT_TYPES,
   IS_ENV_IN_TEST_OR_DEBUG,
   PRIMARY,
 } from '../../../helpers/constants/common';
@@ -30,6 +30,7 @@ import {
   clearBackgroundLocalStore,
   goToPageConnectHardware,
 } from '../../../helpers/utils/util';
+import { ROUTE_HOME } from '../../../../../src/routes/routeUrls';
 
 export function AccountMenuItem(props) {
   const { icon, children, text, subText, className, onClick } = props;
@@ -234,13 +235,13 @@ export default class AccountMenu extends Component {
     let label;
 
     switch (accountType) {
-      case CONST_ACCOUNT_TYPES.HARDWARE:
+      case WALLET_ACCOUNT_TYPES.HARDWARE:
         label = t('hardware');
         break;
-      case CONST_ACCOUNT_TYPES.IMPORTED:
+      case WALLET_ACCOUNT_TYPES.IMPORTED:
         label = t('imported');
         break;
-      case CONST_ACCOUNT_TYPES.WATCHED:
+      case WALLET_ACCOUNT_TYPES.WATCHED:
         label = t('watched');
         break;
       default:

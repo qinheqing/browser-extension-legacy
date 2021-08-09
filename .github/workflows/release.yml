@@ -6,7 +6,7 @@ on:
       - 'v*' # push tag like "v1.0.3-beta.1" "v1.0.3-rc.1" "v1.0.3"
 
 jobs:
-  pre-release:
+  release:
     runs-on: "ubuntu-latest"
 
     steps:

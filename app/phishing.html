@@ -4,12 +4,17 @@
     <title>区块链嗅探检测 - OneKey</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+
     <script src="./globalthis.js" type="text/javascript" charset="utf-8"></script>
-    <script src="./lockdown.js" type="text/javascript" charset="utf-8"></script>
-    <script src="./runLockdown.js" type="text/javascript" charset="utf-8"></script>
-    <script src="./phishing-detect.js"></script>
+    <script src="./lockdown-install.js" type="text/javascript" charset="utf-8"></script>
+
+    {{@each(it.jsBundles) => val}}
+      <script src="{{val}}" type="text/javascript" charset="utf-8"></script>
+    {{/each}}
+
     <link rel="stylesheet" type="text/css" href="./index.css" title="ltr">
     <link rel="stylesheet" type="text/css" href="./index-rtl.css" title="rtl" disabled>
+
     <style>
       *                          { margin: 0; padding: 0; box-sizing: border-box; }
       body, html                 { background-color: rgb(217, 88, 70);
@@ -29,7 +34,7 @@
       .content__header img       { margin-bottom: 3em; width: 160px; }
       .content__body             { background-color: rgb(245, 245, 245); font-size: 12pt; }
       .content__body p           { margin: 2em; }
-      .content__body p a         { text-decoration: underline; color: inherit; cursor: pointer; }
+      .content__body p a         { text-decoration: underline; color: rgb(217, 88, 70); cursor: pointer; }
     </style>
   </head>
   <body>
@@ -50,19 +55,19 @@
         <p>
           我们的警告列表是从其他广泛使用的行业列表中整理而来的，域名出现在我们的警告列表中有很多原因，
           这些原因可能包括已知的欺诈或安全风险, 比如
-          <a href="https://github.com/metamask/eth-phishing-detect">区块链嗅探</a>认为有风险.
+          <a href="https://github.com/metamask/eth-phishing-detect">区块链嗅探</a> 认为有风险.
           这些警告列表中的域名可能包括完全恶意的网站和被恶意行为者破坏的合法网站。
         </p>
-        <p>为了了解更多关于该站点的信息 <a id="csdbLink">请在CryptoScamDB上搜索该域名</a>.</p>
+        <p>为了了解更多关于该站点的信息 <a id="csdbLink">请在CryptoScamDB上搜索该域名</a> .</p>
         <p>
           请注意，此警告列表是在自愿的基础上编制的。此列表可能不准确或不完整。
           不能因为一个域名不在列表上，就证明它是有安全的。反之亦然。
           一如既往，你的交易是你自己的责任。如果您希望与我们警告列表中的任何域名进行交互,
-          你可以自担风险<a id="unsafe-continue">继续</a>操作.
+          你可以自担风险 <a id="unsafe-continue">继续</a> 操作.
         </p>
         <p>
           如果您认为此域名标记不正确，或者被阻止的合法网站已经解决了其安全问题,
-          <a href="https://github.com/metamask/eth-phishing-detect/issues/new">请告诉我们</a>.
+          <a href="https://github.com/metamask/eth-phishing-detect/issues/new">请告诉我们</a> .
         </p>
       </div>
     </div>

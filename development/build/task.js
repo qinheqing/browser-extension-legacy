@@ -14,6 +14,7 @@ module.exports = {
   composeParallel,
   runInChildProcess,
 };
+const buildUtils = require('./buildUtils');
 
 const { setupTaskDisplay } = require('./display');
 
@@ -23,8 +24,7 @@ function detectAndRunEntryTask() {
   if (!taskName) {
     throw new Error(`MetaMask build: No task name specified`);
   }
-  const skipStats = process.argv[3] === '--skip-stats';
-
+  const skipStats = process.argv.includes('--skip-stats');
   runTask(taskName, { skipStats });
 }
 
@@ -68,22 +68,38 @@ function runInChildProcess(task) {
     );
   }
   return instrumentForTaskStats(taskName, async () => {
-    const childProcess = spawn('yarn', ['build', taskName, '--skip-stats'], {
-      env: process.env,
-    });
+    let childProcess;
+    // don't run subprocesses in lavamoat for dev mode if main process not run in lavamoat
+    if (
+      process.env.npm_lifecycle_event === 'build:dev' ||
+      (taskName.includes('scripts:core:dev') &&
+        !process.argv[0].includes('lavamoat'))
+    ) {
+      childProcess = spawn('yarn', ['build:dev', taskName, '--skip-stats'], {
+        env: process.env,
+      });
+    } else {
+      childProcess = spawn('yarn', ['build', taskName, '--skip-stats'], {
+        env: process.env,
+      });
+    }
     // forward logs to main process
     // skip the first stdout event (announcing the process command)
     childProcess.stdout.once('data', () => {
       childProcess.stdout.on('data', (data) =>
-        process.stdout.write(`${taskName}: ${data}`),
+        process.stdout.write(
+          `[${buildUtils.currentTime()}] >> ${taskName}\r\n\t ${data}`,
+        ),
       );
     });
     childProcess.stderr.on('data', (data) =>
-      process.stderr.write(`${taskName}: ${data}`),
+      process.stderr.write(
+        `[${buildUtils.currentTime()}] >> ${taskName}\r\n\t ${data}`,
+      ),
     );
     // await end of process
     await new Promise((resolve, reject) => {
-      childProcess.once('close', (errCode) => {
+      const handleExit = (errCode) => {
         if (errCode !== 0) {
           reject(
             new Error(
@@ -93,7 +109,9 @@ function runInChildProcess(task) {
           return;
         }
         resolve();
-      });
+      };
+      childProcess.once('exit', handleExit);
+      childProcess.once('close', handleExit);
     });
   });
 }

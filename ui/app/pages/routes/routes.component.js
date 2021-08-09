@@ -1,9 +1,10 @@
 import classnames from 'classnames';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import { matchPath, Route, Switch } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 
+import { Helmet } from 'react-helmet';
 import FirstTimeFlow from '../first-time-flow';
 import SendTransactionScreen from '../send';
 import Swaps from '../swaps';
@@ -55,7 +56,6 @@ import {
   BUILD_QUOTE_ROUTE,
   CONFIRMATION_V_NEXT_ROUTE,
 } from '../../helpers/constants/routes';
-
 import {
   ENVIRONMENT_TYPE_NOTIFICATION,
   ENVIRONMENT_TYPE_POPUP,
@@ -63,6 +63,112 @@ import {
 import { getEnvironmentType } from '../../../../app/scripts/lib/util';
 import { TRANSACTION_STATUSES } from '../../../../shared/constants/transaction';
 import ConfirmationPage from '../confirmation';
+import AppRoutes from '../../../../src/routes/AppRoutes';
+import { ROUTE_PREFIX } from '../../../../src/routes/routeUrls';
+import {
+  OldHomeRootComponents,
+  UniversalRoutesWrapper,
+} from '../../../../src/components/AppRootView';
+import utilsApp from '../../../../src/utils/utilsApp';
+
+const AllRoutesComponentsProps = {
+  autoLockTimeLimit: PropTypes.number,
+  setLastActiveTime: PropTypes.func,
+};
+
+class AllRoutesComponents extends Component {
+  render() {
+    const { autoLockTimeLimit, setLastActiveTime } = this.props;
+    const routes = (
+      <Switch>
+        <Route path={ROUTE_PREFIX}>
+          <AppRoutes />
+        </Route>
+        <Route path={DEFAULT_ROUTE}>
+          <OldHomeRootComponents />
+          <Switch>
+            <Route path={LOCK_ROUTE} component={Lock} exact />
+            <Route path={INITIALIZE_ROUTE} component={FirstTimeFlow} />
+            <Initialized path={UNLOCK_ROUTE} component={UnlockPage} exact />
+            <Initialized
+              path={RESTORE_VAULT_ROUTE}
+              component={RestoreVaultPage}
+              exact
+            />
+            <Authenticated
+              path={REVEAL_SEED_ROUTE}
+              component={RevealSeedConfirmation}
+              exact
+            />
+            <Authenticated
+              path={MOBILE_SYNC_ROUTE}
+              component={MobileSyncPage}
+              exact
+            />
+            <Authenticated path={SETTINGS_ROUTE} component={Settings} />
+            <Authenticated
+              path={`${CONFIRM_TRANSACTION_ROUTE}/:id?`}
+              component={ConfirmTransaction}
+            />
+            <Authenticated
+              path={SEND_ROUTE}
+              component={SendTransactionScreen}
+              exact
+            />
+            <Authenticated path={SWAPS_ROUTE} component={Swaps} />
+            <Authenticated
+              path={ADD_TOKEN_ROUTE}
+              component={AddTokenPage}
+              exact
+            />
+            <Authenticated
+              path={CONFIRM_ADD_TOKEN_ROUTE}
+              component={ConfirmAddTokenPage}
+              exact
+            />
+            <Authenticated
+              path={CONFIRM_ADD_SUGGESTED_TOKEN_ROUTE}
+              component={ConfirmAddSuggestedTokenPage}
+              exact
+            />
+            <Authenticated
+              path={CONFIRMATION_V_NEXT_ROUTE}
+              component={ConfirmationPage}
+            />
+            <Authenticated
+              path={NEW_ACCOUNT_ROUTE}
+              component={CreateAccountPage}
+            />
+            <Authenticated
+              path={`${CONNECT_ROUTE}/:id`}
+              component={PermissionsConnect}
+            />
+            <Authenticated path={`${ASSET_ROUTE}/:asset`} component={Asset} />
+            <Authenticated path={DEFAULT_ROUTE} component={Home} />
+          </Switch>
+        </Route>
+      </Switch>
+    );
+
+    if (autoLockTimeLimit > 0) {
+      return (
+        <IdleTimer onAction={setLastActiveTime} throttle={1000}>
+          {routes}
+        </IdleTimer>
+      );
+    }
+
+    return routes;
+  }
+}
+AllRoutesComponents.propTypes = AllRoutesComponentsProps;
+
+class AllRoutesComponentsPure extends PureComponent {
+  render() {
+    return <AllRoutesComponents {...this.props} />;
+  }
+}
+AllRoutesComponentsPure.propTypes = AllRoutesComponentsProps;
 
 export default class Routes extends Component {
   static propTypes = {
@@ -103,11 +209,8 @@ export default class Routes extends Component {
   }
 
   UNSAFE_componentWillMount() {
-    const {
-      currentCurrency,
-      pageChanged,
-      setCurrentCurrencyToUSD,
-    } = this.props;
+    const { currentCurrency, pageChanged, setCurrentCurrencyToUSD } =
+      this.props;
 
     if (!currentCurrency) {
       setCurrentCurrencyToUSD();
@@ -118,76 +221,6 @@ export default class Routes extends Component {
         pageChanged(locationObj.pathname);
       }
     });
-  }
-
-  renderRoutes() {
-    const { autoLockTimeLimit, setLastActiveTime } = this.props;
-
-    const routes = (
-      <Switch>
-        <Route path={LOCK_ROUTE} component={Lock} exact />
-        <Route path={INITIALIZE_ROUTE} component={FirstTimeFlow} />
-        <Initialized path={UNLOCK_ROUTE} component={UnlockPage} exact />
-        <Initialized
-          path={RESTORE_VAULT_ROUTE}
-          component={RestoreVaultPage}
-          exact
-        />
-        <Authenticated
-          path={REVEAL_SEED_ROUTE}
-          component={RevealSeedConfirmation}
-          exact
-        />
-        <Authenticated
-          path={MOBILE_SYNC_ROUTE}
-          component={MobileSyncPage}
-          exact
-        />
-        <Authenticated path={SETTINGS_ROUTE} component={Settings} />
-        <Authenticated
-          path={`${CONFIRM_TRANSACTION_ROUTE}/:id?`}
-          component={ConfirmTransaction}
-        />
-        <Authenticated
-          path={SEND_ROUTE}
-          component={SendTransactionScreen}
-          exact
-        />
-        <Authenticated path={SWAPS_ROUTE} component={Swaps} />
-        <Authenticated path={ADD_TOKEN_ROUTE} component={AddTokenPage} exact />
-        <Authenticated
-          path={CONFIRM_ADD_TOKEN_ROUTE}
-          component={ConfirmAddTokenPage}
-          exact
-        />
-        <Authenticated
-          path={CONFIRM_ADD_SUGGESTED_TOKEN_ROUTE}
-          component={ConfirmAddSuggestedTokenPage}
-          exact
-        />
-        <Authenticated
-          path={CONFIRMATION_V_NEXT_ROUTE}
-          component={ConfirmationPage}
-        />
-        <Authenticated path={NEW_ACCOUNT_ROUTE} component={CreateAccountPage} />
-        <Authenticated
-          path={`${CONNECT_ROUTE}/:id`}
-          component={PermissionsConnect}
-        />
-        <Authenticated path={`${ASSET_ROUTE}/:asset`} component={Asset} />
-        <Authenticated path={DEFAULT_ROUTE} component={Home} />
-      </Switch>
-    );
-
-    if (autoLockTimeLimit > 0) {
-      return (
-        <IdleTimer onAction={setLastActiveTime} throttle={1000}>
-          {routes}
-        </IdleTimer>
-      );
-    }
-
-    return routes;
   }
 
   onInitializationUnlockPage() {
@@ -248,6 +281,13 @@ export default class Routes extends Component {
       return true;
     }
 
+    const isNewAppRoutesPath = Boolean(
+      matchPath(location.pathname, {
+        path: ROUTE_PREFIX,
+        exact: false,
+      }),
+    );
+
     const isHandlingPermissionsRequest = Boolean(
       matchPath(location.pathname, {
         path: CONNECT_ROUTE,
@@ -262,7 +302,11 @@ export default class Routes extends Component {
       }),
     );
 
-    return isHandlingPermissionsRequest || isHandlingAddEthereumChainRequest;
+    return (
+      isHandlingPermissionsRequest ||
+      isHandlingAddEthereumChainRequest ||
+      isNewAppRoutesPath
+    );
   }
 
   render() {
@@ -306,6 +350,7 @@ export default class Routes extends Component {
       <div
         className={classnames('app', { 'mouse-user-styles': isMouseUser })}
         dir={textDirection}
+        // body click re-render
         onClick={() => setMouseUserState(true)}
         onKeyDown={(e) => {
           if (e.keyCode === 9) {
@@ -346,7 +391,15 @@ export default class Routes extends Component {
         <div className={classnames('main-container-wrapper')}>
           {isLoading && <Loading loadingMessage={loadMessage} />}
           {!isLoading && isLoadingNetwork && <LoadingNetwork />}
-          {this.renderRoutes()}
+          <UniversalRoutesWrapper>
+            {utilsApp.isNewHome() ? (
+              <AllRoutesComponentsPure />
+            ) : (
+              // There are many uncontrolled component in legacy code, so keep use Component,
+              //    PureComponent will cause bugs.
+              <AllRoutesComponents />
+            )}
+          </UniversalRoutesWrapper>
         </div>
         {isUnlocked ? <Alerts history={this.props.history} /> : null}
       </div>

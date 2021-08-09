@@ -26,6 +26,9 @@ import {
 } from '@metamask/controllers';
 import { getBackgroundMetaMetricState } from '../../ui/app/selectors';
 import { TRANSACTION_STATUSES } from '../../shared/constants/transaction';
+import backgroundProxy from '../../src/wallets/bg/backgroundProxy';
+import bgHelpers from '../../src/wallets/bg/bgHelpers';
+import utilsApp from '../../src/utils/utilsApp';
 import AddressKeyring from './lib/eth-address-keyring';
 import ComposableObservableStore from './lib/ComposableObservableStore';
 import AccountTracker from './lib/account-tracker';
@@ -62,6 +65,7 @@ import seedPhraseVerifier from './lib/seed-phrase-verifier';
 import MetaMetricsController from './controllers/metametrics';
 import DetectChainController from './controllers/detect-chain';
 import { segment, segmentLegacy } from './lib/segment';
+import { MOCK_CHAIN_ID_WHEN_NEW_APP } from './controllers/permissions/permissionsMethodMiddleware';
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)
@@ -636,6 +640,7 @@ export default class MetamaskController extends EventEmitter {
       // primary HD keyring management
       addNewAccount: nodeify(this.addNewAccount, this),
       verifySeedPhrase: nodeify(this.verifySeedPhrase, this),
+      getSeedPhraseMnemonic: nodeify(this.getSeedPhraseMnemonic, this),
       resetAccount: nodeify(this.resetAccount, this),
       removeAccount: nodeify(this.removeAccount, this),
       importWatchAccount: nodeify(this.importWatchAccount, this),
@@ -643,6 +648,18 @@ export default class MetamaskController extends EventEmitter {
 
       // hardware wallets
       connectHardware: nodeify(this.connectHardware, this),
+      backgroundProxyCall: nodeify(this.backgroundProxyCall, this),
+      pingPong: nodeify(this.pingPong, this),
+      disconnectAllDomainAccounts: nodeify(
+        this.disconnectAllDomainAccounts,
+        this,
+      ),
+      emitAccountChangedToConnectedDomain: nodeify(
+        this.emitAccountChangedToConnectedDomain,
+        this,
+      ),
+      notifyAllConnections: nodeify(this.notifyAllConnections, this),
+      notifyChainIdChanged: nodeify(this.notifyChainIdChanged, this),
       forgetDevice: nodeify(this.forgetDevice, this),
       checkHardwareStatus: nodeify(this.checkHardwareStatus, this),
       unlockHardwareWalletAccount: nodeify(
@@ -1266,6 +1283,30 @@ export default class MetamaskController extends EventEmitter {
     return keyring;
   }
 
+  async backgroundProxyCall({ module, options, method, params }) {
+    return backgroundProxy.callMethod({
+      module,
+      options,
+      method,
+      params,
+    });
+  }
+
+  async pingPong() {
+    return 'pong';
+  }
+
+  async disconnectAllDomainAccounts() {
+    return this.permissionsController.disconnectAllDomainAccounts();
+  }
+
+  async emitAccountChangedToConnectedDomain(address) {
+    const _address = address || this.preferencesController.getSelectedAddress();
+    if (_address) {
+      await this.permissionsController._handleAccountSelected(_address);
+    }
+  }
+
   /**
    * Fetch account list from a trezor device.
    *
@@ -1382,6 +1423,15 @@ export default class MetamaskController extends EventEmitter {
 
     const { identities } = this.preferencesController.store.getState();
     return { ...keyState, identities };
+  }
+
+  async getSeedPhraseMnemonic() {
+    const primaryKeyring =
+      this.keyringController.getKeyringsByType('HD Key Tree')[0];
+    if (!primaryKeyring) {
+      throw new Error('MetamaskController - No HD Key Tree found');
+    }
+    return primaryKeyring.mnemonic;
   }
 
   /**
@@ -2371,10 +2421,34 @@ export default class MetamaskController extends EventEmitter {
     Object.values(this.connections).forEach((origin) => {
       Object.values(origin).forEach((conn) => {
         if (conn.engine) {
-          conn.engine.emit('notification', getPayload(origin));
+          let _payload = getPayload(origin);
+          if (
+            utilsApp.isNewHome() &&
+            _payload.method === NOTIFICATION_NAMES.chainChanged
+          ) {
+            _payload = {
+              method: NOTIFICATION_NAMES.chainChanged,
+              params: MOCK_CHAIN_ID_WHEN_NEW_APP,
+            };
+          }
+          conn.engine.emit('notification', _payload);
         }
       });
     });
+  }
+
+  notifyChainIdChanged() {
+    if (utilsApp.isNewHome()) {
+      this.notifyAllConnections({
+        method: NOTIFICATION_NAMES.chainChanged,
+        params: MOCK_CHAIN_ID_WHEN_NEW_APP,
+      });
+    } else {
+      this.notifyAllConnections({
+        method: NOTIFICATION_NAMES.chainChanged,
+        params: this.getProviderNetworkState(this.getState()),
+      });
+    }
   }
 
   // handlers

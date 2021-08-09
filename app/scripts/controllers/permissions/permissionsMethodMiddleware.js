@@ -1,5 +1,16 @@
 import { createAsyncMiddleware } from 'json-rpc-engine';
 import { ethErrors } from 'eth-rpc-errors';
+import bgHelpers from '../../../../src/wallets/bg/bgHelpers';
+import utilsApp from '../../../../src/utils/utilsApp';
+
+export const MOCK_ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
+
+export const MOCK_CHAIN_ID_WHEN_NEW_APP = {
+  // chainId: "0x61"
+  // networkVersion: "97"
+  chainId: '0xEEEEEEEE',
+  networkVersion: '4008636142',
+};
 
 /**
  * Create middleware for handling certain methods and preprocessing permissions requests.
@@ -16,6 +27,22 @@ export default function createPermissionsMethodMiddleware({
 
   return createAsyncMiddleware(async (req, res, next) => {
     let responseHandler;
+
+    if (utilsApp.isNewHome()) {
+      if (req.method === 'eth_chainId') {
+        res.result = MOCK_CHAIN_ID_WHEN_NEW_APP.chainId;
+        return;
+      }
+      if (
+        req.method === 'eth_requestAccounts' ||
+        req.method === 'eth_accounts'
+      ) {
+        // pass getAccounts() to permissionsMethodMiddleware, can not be [], will cause UI ask to approve many times
+        // res.result = [MOCK_ZERO_ADDRESS];
+        res.result = [];
+        return;
+      }
+    }
 
     switch (req.method) {
       // Intercepting eth_accounts requests for backwards compatibility:

@@ -246,5 +246,9 @@
   {
     "code": "sai",
     "name": "SAI"
+  },
+  {
+    "code": "cny",
+    "name": "人民币"
   }
 ]

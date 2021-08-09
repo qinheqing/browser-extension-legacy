@@ -1,0 +1,238 @@
+// stylelint-disable
+
+$fz-22: 22PX;
+$fz-20: 20PX;
+$fz-18: 18PX;
+$fz-16: 16PX;
+$fz-14: 14PX;
+$fz-13: 13PX;
+$fz-12: 12PX;
+$fz-10: 10PX;
+
+$color-primary: #FF9534;
+$color-primary-bg: #fbebd8;
+$color-secondary: #484d54;
+$color-black: #000000;
+$color-mute-dark: #959FA1;
+$color-mute: #CDD4D5;
+
+$color-buy-up: #26BB8F;
+$color-buy-up-bg: rgba($color-buy-up, 0.08);
+$color-sell-down: #F36346;
+$color-sell-down-bg: rgba($color-sell-down, 0.08);
+
+$color-warning: #FF9534;
+$color-fail: $color-sell-down;
+$color-danger: $color-fail;
+$color-success: $color-buy-up;
+
+$color-border: #D4D5D7;
+$color-border-bx: #f4f6ff;
+
+$color-bg-root: #F6F6F6;
+$color-bg-content: #fff;
+$color-bg-app-tabbar: white;
+
+$z-index-navbar: 20;
+$z-index-apptabbar: 20;
+$z-index-actionbar: 100;
+
+$border-radius-button: 4PX;
+
+
+$font-family-normal: PingFangSC-Regular, -apple-system, BlinkMacSystemFont, Helvetica Neue, "PingFang SC", "Hiragino Sans GB", Helvetica, Tahoma, Arial, "Microsoft YaHei", 微软雅黑, 黑体, Arial, Heiti, sans-serif, SimSun, 宋体, serif;
+$font-family2: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, 微软雅黑, Arial, sans-serif;
+$font-family-song: 'STSongti-SC', '宋体', serif;
+$font-family-number: sszy, $font-family-normal;
+
+@mixin one-flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin one-flex-item {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+}
+
+@mixin one-absolute-center($x:true,$y:true) {
+  position: absolute;
+  @if ($x) {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  @if ($y) {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  @if ($x and $y) {
+    transform: translate(-50%, -50%);
+  }
+}
+
+@mixin overflow-scrolling($x:true,$y:true) {
+  -webkit-overflow-scrolling: touch;
+  @if ($x) {
+    overflow-x: auto;
+  }
+  @if ($y) {
+    overflow-y: auto;
+  }
+}
+
+@mixin arrow-down($size: 5, $color: $color-mute-dark) {
+  border-width: $size;
+  border-color: $color transparent transparent transparent;
+  border-style: solid;
+  width: 0;
+}
+
+@mixin arrow-up($size: 5, $color: $color-mute-dark) {
+  border-width: $size;
+  border-color: transparent transparent $color transparent;
+  border-style: solid;
+  width: 0;
+}
+
+@mixin one-text-wrap() {
+  word-break: break-word;
+  white-space: normal;
+}
+
+@mixin disable-mouse-events {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+@mixin one-hairline-border($position: all, $radius: 0, $color: $color-border, $size: 1px, $pseudo: before, $style: solid) {
+  position: relative;
+  @if ($position==left or $position==right) {
+    &:#{$pseudo} {
+      @include disable-mouse-events;
+      box-sizing: border-box;
+      content: '';
+      position: absolute;
+      height: 200%;
+      top: 0;
+      border-left: $size $style $color;
+      transform: scaleY(0.5);
+      transform-origin: 50% 0;
+      #{$position}: 0;
+      z-index: 0;
+    }
+  }
+  @if ($position==top or $position==bottom) {
+    &:#{$pseudo} {
+      @include disable-mouse-events;
+      box-sizing: border-box;
+      content: '';
+      position: absolute;
+      width: 100%;
+      left: 0;
+      border-top: $size $style $color;
+      transform: scaleY(0.5);
+      transform-origin: 50% 100%;
+      #{$position}: 0;
+      z-index: 0;
+    }
+  }
+  @if ($position==all) {
+    border-radius: $radius;
+    &:#{$pseudo} {
+      @include disable-mouse-events;
+      box-sizing: border-box;
+      content: '';
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      border: $size $style $color;
+      transform: scale(0.5);
+      transform-origin: 0 0;
+      left: 0;
+      top: 0;
+      z-index: 0;
+      @if (unit($radius) == '%') {
+        border-radius: $radius;
+      } @else {
+        border-radius: 2 * $radius;
+      }
+    }
+  }
+}
+
+@mixin one-bottom-safe-area($prop: padding-bottom, $value: null) {
+  @if ($value) {
+    #{$prop}: $value;
+    #{$prop}: calc(#{$value} + constant(safe-area-inset-bottom));
+    #{$prop}: calc(#{$value} + env(safe-area-inset-bottom));
+  } @else {
+    #{$prop}: constant(safe-area-inset-bottom);
+    #{$prop}: env(safe-area-inset-bottom);
+  }
+}
+
+$dialog-btn-color: $color-primary;
+@mixin dialog-btn {
+  height: 40PX;
+  border-radius: $border-radius-button;
+  font-size: 16PX;
+  box-sizing: border-box;
+  @include one-flex-center;
+}
+
+@mixin dialog-btn-primary() {
+  @include dialog-btn;
+  border: 1px solid $dialog-btn-color;
+  background-color: $dialog-btn-color;
+  color: white;
+  &:not(.disabled):active {
+    background: rgba($dialog-btn-color, 0.8);
+  }
+  &.warning {
+    color: white !important;
+    background-color: $color-danger;
+    border-color: $color-danger;
+  }
+}
+
+@mixin dialog-btn-secondary() {
+  @include dialog-btn;
+  border: 1px solid $color-primary-bg;
+  background-color: $color-primary-bg;
+  color: $dialog-btn-color;
+  &.warning {
+    color: white !important;
+    background-color: $color-danger;
+    border-color: $color-danger;
+  }
+}
+
+@mixin one-button-border($radius: 0, $color: null) {
+  @if ($color) {
+    @include one-hairline-border(all, $radius, $color);
+  }
+  border-radius: $radius;
+  &:after {
+    border-radius: $radius * 2;
+  }
+}
+
+@mixin one-button-background($color) {
+  background-color: $color;
+  &.default.active:active {
+    background-color: rgba($color, 0.6);
+  }
+}
+
+@mixin theme-box-field-item($bg-color: $color-bg-root, $radius: 4PX) {
+  @include one-hairline-border(all, $radius);
+  background: $bg-color;
+}
+
+@mixin one-circle($size) {
+  width: $size;
+  height: $size;
+  border-radius: $size;
+}

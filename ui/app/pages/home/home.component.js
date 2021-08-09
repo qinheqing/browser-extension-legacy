@@ -28,10 +28,15 @@ import {
   VIEW_QUOTE_ROUTE,
   CONFIRMATION_V_NEXT_ROUTE,
   CONNECT_HARDWARE_ROUTE,
+  DEFAULT_ROUTE,
 } from '../../helpers/constants/routes';
-import { CONST_ACCOUNT_TYPES } from '../../helpers/constants/common';
+import { WALLET_ACCOUNT_TYPES } from '../../helpers/constants/common';
 import { getEnvironmentType } from '../../../../app/scripts/lib/util';
 import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
+import storeApp from '../../../../src/store/storeApp';
+import { ROUTE_HOME } from '../../../../src/routes/routeUrls';
+import storeStorage from '../../../../src/store/storeStorage';
+import utilsApp from '../../../../src/utils/utilsApp';
 
 const LEARN_MORE_URL =
   'https://metamask.zendesk.com/hc/en-us/articles/360045129011-Intro-to-MetaMask-v8-extension';
@@ -98,6 +103,12 @@ export default class Home extends PureComponent {
       swapsFetchParams,
       pendingApprovals,
     } = this.props;
+
+    // if Dapp create approve window (isNotification=true), do NOT redirect to new home
+    if (!isNotification && utilsApp.isNewHome()) {
+      history.replace(ROUTE_HOME);
+      return;
+    }
 
     this.setState({ mounted: true });
     if (isNotification && totalUnapprovedCount === 0) {
@@ -312,7 +323,7 @@ export default class Home extends PureComponent {
     if (
       hwOnlyMode &&
       accountType &&
-      accountType !== CONST_ACCOUNT_TYPES.HARDWARE
+      accountType !== WALLET_ACCOUNT_TYPES.HARDWARE
     ) {
       return (
         <div className="home__container home__connect-hw">

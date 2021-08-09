@@ -5,6 +5,8 @@ import Identicon from '../../ui/identicon';
 import MetaFoxLogo from '../../ui/metafox-logo';
 import { DEFAULT_ROUTE } from '../../../helpers/constants/routes';
 import NetworkDisplay from '../network-display';
+import { ROUTE_HOME } from '../../../../../src/routes/routeUrls';
+import storeApp from '../../../../../src/store/storeApp';
 
 export default class AppHeader extends PureComponent {
   static propTypes = {
