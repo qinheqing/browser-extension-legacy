@@ -27,8 +27,8 @@
 
 .AccountCard__name {
   font-size: 16px;
-
-  @apply flex items-center flex-1;
+  
+  @apply flex items-center;
 }
 
 .AccountCard__typeTag {

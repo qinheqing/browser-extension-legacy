@@ -65,7 +65,9 @@ function AccountCard({
           <span className={classnames(styles.AccountCard__activeBadge)} />
         )}
         <span className={classnames(styles.AccountCard__name)}>
-          {account.name || 'ACCOUNT_NAME'}
+          <span className="max-w-[200px] truncate">
+            {account.name || 'ACCOUNT_NAME'}
+          </span>
           {showMaskAssetBalanceEye && (
             <span onClick={onToggle}>
               {maskAssetBalance ? (

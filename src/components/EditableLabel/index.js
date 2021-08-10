@@ -8,6 +8,11 @@ class EditableLabel extends Component {
     onSubmit: PropTypes.func.isRequired,
     defaultValue: PropTypes.string,
     className: PropTypes.string,
+    maxLength: PropTypes.number,
+  };
+
+  static defaultProps = {
+    maxLength: 10,
   };
 
   state = {
@@ -18,7 +23,7 @@ class EditableLabel extends Component {
   handleSubmit() {
     const { value } = this.state;
 
-    if (value === '') {
+    if (value.trim() === '') {
       return;
     }
 
@@ -29,6 +34,7 @@ class EditableLabel extends Component {
 
   renderEditing() {
     const { value } = this.state;
+    const { maxLength } = this.props;
 
     return [
       <input
@@ -36,6 +42,7 @@ class EditableLabel extends Component {
         type="text"
         required
         dir="auto"
+        maxLength={maxLength}
         value={this.state.value}
         onKeyPress={(event) => {
           if (event.key === 'Enter') {
@@ -43,9 +50,12 @@ class EditableLabel extends Component {
           }
         }}
         onChange={(event) => this.setState({ value: event.target.value })}
-        className={classnames('pr-2 border border-solid', {
-          'border-red-500': value === '',
-        })}
+        className={classnames(
+          'p-2 border border-solid h-9 mr-2 text-center focus:outline-none',
+          {
+            'border-red-500': value === '',
+          },
+        )}
         autoFocus
       />,
       <AppIcons.CheckIcon
@@ -79,13 +89,15 @@ class EditableLabel extends Component {
     const { className } = this.props;
 
     return (
-      <div
-        className={classnames(
-          'flex flex-row justify-center items-center',
-          className,
-        )}
-      >
-        {isEditing ? this.renderEditing() : this.renderReadonly()}
+      <div>
+        <div
+          className={classnames(
+            'flex flex-row justify-center items-center',
+            className,
+          )}
+        >
+          {isEditing ? this.renderEditing() : this.renderReadonly()}
+        </div>
       </div>
     );
   }

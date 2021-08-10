@@ -112,7 +112,7 @@ function PageAccountDetail() {
       </div>
       <OneDialog
         title="删除账户"
-        content="你确认要删除账户，删除后不能恢复"
+        content="你确认要删除账户"
         confirmText="删除"
         onConfirm={onDeleteAccount}
         open={dialogVisible}
