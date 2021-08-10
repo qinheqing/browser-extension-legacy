@@ -41,6 +41,14 @@ function init() {
   });
 }
 
+// ignore list
+/*
+{
+  code: -32603,
+  message: 'Internal JSON-RPC error.'
+}
+ */
+
 export default {
   init,
 };
