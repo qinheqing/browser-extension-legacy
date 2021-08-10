@@ -23,13 +23,16 @@ function PageCreateAccount() {
     });
   }, []);
 
-  const generateAccounts = useCallback(async ({ start, limit }) => {
-    const addresses = await _wallet.getAddresses({
-      indexes: range(start, start + limit),
-    });
-    console.log('Generate accounts by hdPath', addresses);
-    return addresses;
-  }, []);
+  const generateAccounts = useCallback(
+    async ({ start, limit }) => {
+      const addresses = await _wallet.getAddresses({
+        indexes: range(start, start + limit),
+      });
+      console.log('Generate accounts by hdPath', addresses);
+      return addresses;
+    },
+    [_wallet],
+  );
 
   return (
     <Observer>

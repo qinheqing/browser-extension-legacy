@@ -236,6 +236,9 @@
   "browserNotSupported": {
     "message": "您的浏览器不支持该功能……"
   },
+  "solana": {
+    "message": "Solana 主网"
+  },
   "bsc": {
     "message": " BSC 币安智能链主网"
   },

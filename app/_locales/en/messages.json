@@ -236,6 +236,9 @@
   "browserNotSupported": {
     "message": "Your Browser is not supported..."
   },
+  "solana": {
+    "message": "Solana Mainnet"
+  },
   "bsc": {
     "message": "BSC Mainnet"
   },

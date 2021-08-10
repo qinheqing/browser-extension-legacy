@@ -101,6 +101,9 @@ export default class InfoTab extends PureComponent {
               </div>
               <div className="info-tab__version-number">
                 {this.state.version}
+                {process.env.GITHUB_TAG && (
+                  <span>({process.env.GITHUB_TAG})</span>
+                )}
               </div>
             </div>
             <div className="info-tab__item">

@@ -229,7 +229,7 @@ class NetworkDropdown extends Component {
             color: '#9b9b9b',
           }}
         >
-          Solana
+          {this.context.t('solana')}
         </span>
       </DropdownMenuItem>
     );

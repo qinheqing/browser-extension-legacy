@@ -2146,6 +2146,14 @@ export function setAutoLockTimeLimit(value) {
   return setPreference('autoLockTimeLimit', value);
 }
 
+async function initDefaultAccountOfNewApp() {
+  // eslint-disable-next-line import/no-cycle
+  const storeAccount = (await import('../../../src/store/storeAccount'))
+    .default;
+  // init default account of SOL and other chain accounts
+  await storeAccount.initFirstAccount();
+}
+
 export function setCompletedOnboarding() {
   return async (dispatch) => {
     dispatch(showLoadingIndication());
@@ -2153,6 +2161,7 @@ export function setCompletedOnboarding() {
     try {
       await promisifiedBackground.completeOnboarding();
       dispatch(completeOnboarding());
+      await initDefaultAccountOfNewApp();
     } catch (err) {
       dispatch(displayWarning(err.message));
       throw err;
