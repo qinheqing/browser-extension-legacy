@@ -192,6 +192,10 @@ class StorePrice extends BaseStore {
   async fetchBatchTokensPrice(tokens) {
     const platformId = storeChain.currentChainInfo?.platformId;
     const contractAddresses = tokens.map((t) => t.contractAddress);
+
+    if (!contractAddresses.length) {
+      return;
+    }
     // const platformId = 'binance-smart-chain';
     // const contractAddresses = [
     //   '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82',

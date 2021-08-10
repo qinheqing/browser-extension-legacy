@@ -797,6 +797,7 @@ function getEnvironmentVariables({ devMode, testing }) {
     ENV_ON_BOARDING_START_CHOICE: process.env.ENV_ON_BOARDING_START_CHOICE,
     ENV_DEFAULT_PASSWORD_AUTO_FILLED:
       process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED || '',
+    GITHUB_TAG: process.env.GITHUB_TAG,
   };
 }
 
