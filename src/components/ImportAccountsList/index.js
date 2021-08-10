@@ -126,7 +126,8 @@ function ImportAccountsList({ wallet, onLoadMore }) {
 
     storeAccount.addAccounts(newAccounts);
     storeAccount.setCurrentAccount({ account: newAccounts[0] });
-    history.replace(ROUTE_WALLET_SELECT);
+    // history.replace(ROUTE_WALLET_SELECT);
+    storeHistory.goBack();
   }, []);
 
   const accountsPaged = accounts.slice(
