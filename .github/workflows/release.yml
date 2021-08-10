@@ -26,7 +26,6 @@ jobs:
     env:
       buildEveryTime: 'true'
     steps:
-
       - name: 'Setup ENV 1'
         run: |
           ref="${github_ref////-}"
@@ -40,11 +39,9 @@ jobs:
         env:
           github_ref: ${{ github.ref }}
 
-
       - name: 'Setup ENV 2'
         run: |
           echo "QINIU_PUBLIC_URL=${{ secrets.QINIU_PUBLIC_ORIGIN }}/${{ env.QINIU_UPLOAD_DEST_PATH }}" >> $GITHUB_ENV
-
 
       - name: 'Checkout Source Code'
         uses: actions/checkout@v2
@@ -56,8 +53,6 @@ jobs:
           eval "$(node -e 'const v=require("./package.json").version; console.log("version="+v)')"
           echo $version
           echo "PKG_VERSION=$version" >> $GITHUB_ENV
-
-
 
       - name: 'Setup Node'
         uses: actions/setup-node@v2
@@ -97,22 +92,6 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Linting & Test
-      #   shell: bash
-      #   run: "yarn lint && yarn test"
-
-      - name: 'Building'
-        if: env.buildEveryTime
-        shell: bash
-        run: 'yarn dist'
-        env:
-          CIRCLE_BRANCH: master
-          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-          INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
-          ENV_ON_BOARDING_START_CHOICE: normal,hardware
-
-
-
       - name: 'Auto Create Beta Tag'
         if: github.event_name == 'workflow_dispatch'
         id: auto_create_beta_tag
@@ -131,13 +110,26 @@ jobs:
           if ! [ $tag ]; then
             tag='${{ env.GITHUB_TAG }}';
           fi
-          echo "GITHUB_TAG=$tag" >> $GITHUB_ENV
           filename='onekey-extension__'$tag'__${{ env.PKG_VERSION }}'
+
+          echo "GITHUB_TAG=$tag" >> $GITHUB_ENV
           echo "BUILD_FILE_NAME=$filename" >> $GITHUB_ENV
         env:
           AUTO_CREATE_TAG: ${{ steps.auto_create_beta_tag.outputs.current-tag }}
 
+      #      - name: Linting & Test
+      #        shell: bash
+      #        run: "yarn lint && yarn test"
 
+      - name: 'Building'
+        if: env.buildEveryTime
+        shell: bash
+        run: 'yarn dist'
+        env:
+          CIRCLE_BRANCH: master
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          INFURA_PROJECT_ID: ${{ secrets.INFURA_PROJECT_ID }}
+          ENV_ON_BOARDING_START_CHOICE: normal,hardware
 
       - name: 'Zip dist'
         shell: bash
