@@ -85,7 +85,6 @@ const LOAD_SIZE = 30;
 const PAGE_SIZE = 5;
 
 function ImportAccountsList({ wallet, onLoadMore }) {
-  const history = useHistory();
   const [accounts, setAccounts] = useState([]);
   const [updateHook, setUpdateHook] = useState(0);
   const [page, setPage] = useState(1);
@@ -97,13 +96,16 @@ function ImportAccountsList({ wallet, onLoadMore }) {
   }, []);
   const selectedAccountsLength = Object.keys(selectedAccounts).length;
 
-  const doLoadMore = useCallback(async ({ start = 0, limit = LOAD_SIZE }) => {
-    const _accounts = await onLoadMore({
-      start,
-      limit,
-    });
-    setAccounts((items) => [...items, ..._accounts]);
-  }, []);
+  const doLoadMore = useCallback(
+    async ({ start = 0, limit = LOAD_SIZE }) => {
+      const _accounts = await onLoadMore({
+        start,
+        limit,
+      });
+      setAccounts((items) => [...items, ..._accounts]);
+    },
+    [onLoadMore],
+  );
 
   const confirmImport = useCallback(() => {
     let accountNameIndex = existsAccounts.length;
@@ -128,7 +130,7 @@ function ImportAccountsList({ wallet, onLoadMore }) {
     storeAccount.setCurrentAccount({ account: newAccounts[0] });
     // history.replace(ROUTE_WALLET_SELECT);
     storeHistory.goBack();
-  }, []);
+  }, [existsAccounts.length, selectedAccounts, wallet?.chainInfo]);
 
   const accountsPaged = accounts.slice(
     (page - 1) * PAGE_SIZE,
