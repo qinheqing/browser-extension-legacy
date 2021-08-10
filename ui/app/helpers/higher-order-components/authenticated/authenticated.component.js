@@ -4,8 +4,17 @@ import { Redirect, Route } from 'react-router-dom';
 import { UNLOCK_ROUTE, INITIALIZE_ROUTE } from '../../constants/routes';
 
 export default function Authenticated(props) {
-  const { isUnlocked, completedOnboarding, autoReturn, path, authDisabled } =
-    props;
+  const {
+    isUnlocked,
+    completedOnboarding,
+    autoReturn,
+    path,
+    authDisabled,
+    location,
+  } = props;
+  const { pathname, search } = location;
+
+  const returnUrl = pathname + (search || '');
 
   switch (true) {
     case authDisabled || (isUnlocked && completedOnboarding):
@@ -18,7 +27,7 @@ export default function Authenticated(props) {
           to={{
             pathname: UNLOCK_ROUTE,
             state: {
-              returnRoute: autoReturn ? path : undefined,
+              returnRoute: autoReturn ? returnUrl : undefined,
             },
           }}
         />
