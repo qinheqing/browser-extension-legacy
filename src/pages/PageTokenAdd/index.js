@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Observer, observer } from 'mobx-react-lite';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
@@ -67,18 +73,24 @@ function PageTokenAdd() {
   const [tokenToAdd, setTokenToAdd] = useState({});
   const [fee, setFee] = useState(null);
   const scrollContainer = useRef(null);
+  const triggerScrollEvent = useCallback(() => {
+    scrollContainer.current &&
+      // trigger container scroll event to force lazyload refresh.
+      scrollContainer.current.dispatchEvent(new Event('scroll'));
+  }, []);
+
   useEffect(() => {
     scrollContainer.current = document.querySelector(
       '.OneKey-AppPageLayoutBody',
     );
-    storeToken.fetchAllTokenListMeta();
+    storeToken.fetchAllTokenListMeta().then(triggerScrollEvent);
     storeWallet.currentWallet.chainProvider
       .getAddAssociateTokenFee()
-      .then((_fee) => setFee(_fee));
+      .then(setFee);
     return () => {
       storeToken.tokenListFiltered = null;
     };
-  }, []);
+  }, [triggerScrollEvent]);
   const { tokenListFiltered, allTokenListMeta, recommended } = storeToken;
   const tokens = tokenListFiltered || recommended || allTokenListMeta;
 
@@ -91,10 +103,7 @@ function PageTokenAdd() {
           onChange={(event) => {
             storeToken.filterTokenList({
               text: event.target.value,
-              callback: () =>
-                scrollContainer.current &&
-                // trigger container scroll event to force lazyload refresh.
-                scrollContainer.current.dispatchEvent(new Event('scroll')),
+              callback: triggerScrollEvent,
             });
           }}
         />
@@ -109,7 +118,7 @@ function PageTokenAdd() {
                 // scrollContainer={scrollContainer.current}
                 key={token.address}
                 height={65}
-                once={false}
+                once
                 overflow
               >
                 <TokenAddItem
