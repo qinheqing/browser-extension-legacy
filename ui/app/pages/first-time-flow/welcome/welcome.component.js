@@ -6,15 +6,14 @@ import Mascot from '../../../components/ui/mascot';
 import Button from '../../../components/ui/button';
 import {
   INITIALIZE_CREATE_PASSWORD_ROUTE,
-  INITIALIZE_METAMETRICS_OPT_IN_ROUTE,
   INITIALIZE_SELECT_ACTION_ROUTE,
 } from '../../../helpers/constants/routes';
 import { CONST_FIRST_TIME_FLOW_TYPES } from '../../../helpers/constants/common';
+import { getNextRouteOfFirstTimeFlow } from '../../../selectors';
 
 export default class Welcome extends PureComponent {
   static propTypes = {
     history: PropTypes.object,
-    participateInMetaMetrics: PropTypes.bool,
     welcomeScreenSeen: PropTypes.bool,
     hwOnlyMode: PropTypes.bool,
     setFirstTimeFlowType: PropTypes.func,
@@ -32,11 +31,10 @@ export default class Welcome extends PureComponent {
   }
 
   componentDidMount() {
-    const { history, participateInMetaMetrics, welcomeScreenSeen } = this.props;
+    const { history, welcomeScreenSeen } = this.props;
 
-    if (welcomeScreenSeen && participateInMetaMetrics !== null) {
-      history.push(INITIALIZE_CREATE_PASSWORD_ROUTE);
-    } else if (welcomeScreenSeen) {
+    if (welcomeScreenSeen) {
+      // history.push(INITIALIZE_CREATE_PASSWORD_ROUTE);
       history.push(INITIALIZE_SELECT_ACTION_ROUTE);
     }
   }
@@ -48,8 +46,9 @@ export default class Welcome extends PureComponent {
 
   handleContinueHwOnly = async () => {
     await this.props.actionSetHwOnlyModeAsync(true);
-    this.props.setFirstTimeFlowType(CONST_FIRST_TIME_FLOW_TYPES.CONNECT_HW);
-    this.props.history.push(INITIALIZE_METAMETRICS_OPT_IN_ROUTE);
+    const flowType = CONST_FIRST_TIME_FLOW_TYPES.CONNECT_HW;
+    this.props.setFirstTimeFlowType(flowType);
+    this.props.history.push(getNextRouteOfFirstTimeFlow(flowType));
   };
 
   getOnBoardingStartChoices() {

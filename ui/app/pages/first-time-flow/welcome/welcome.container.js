@@ -10,11 +10,10 @@ import {
 import Welcome from './welcome.component';
 
 const mapStateToProps = ({ metamask }) => {
-  const { welcomeScreenSeen, participateInMetaMetrics, hwOnlyMode } = metamask;
+  const { welcomeScreenSeen, hwOnlyMode } = metamask;
 
   return {
     welcomeScreenSeen,
-    participateInMetaMetrics,
     hwOnlyMode,
   };
 };

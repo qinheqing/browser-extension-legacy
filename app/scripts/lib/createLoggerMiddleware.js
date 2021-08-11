@@ -13,7 +13,9 @@ export default function createLoggerMiddleware(opts) {
   ) {
     next((/** @type {Function} */ cb) => {
       if (res.error) {
-        log.error('Error in RPC response:\n', res);
+        // https://sentry.io/organizations/onekey_hq/issues/2296866142
+        //    this log will send to sentry, display error object directly
+        log.error('Error in RPC response >>> \n', res.error);
       }
       if (req.isMetamaskInternal) {
         return;
