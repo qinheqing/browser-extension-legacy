@@ -273,6 +273,32 @@ class StoreToken extends BaseStore {
     }
   }
 
+  getTokenSortWeight({ token, text }) {
+    const searchText = toLower(text);
+    const name = toLower(token.name);
+    const symbol = toLower(token.symbol);
+    const address = toLower(token.address);
+    if (address === searchText) {
+      return 1000;
+    }
+    if (symbol === searchText) {
+      return 100;
+    }
+    if (name === searchText) {
+      return 90;
+    }
+    if (symbol.includes(searchText)) {
+      return 80;
+    }
+    if (name.includes(searchText)) {
+      return 50;
+    }
+    if (address.includes(searchText)) {
+      return 10;
+    }
+    return 0;
+  }
+
   filterTokenList({ text = '', callback }) {
     this.tokenListFilteredText = text;
     if (!text) {
@@ -298,6 +324,17 @@ class StoreToken extends BaseStore {
         ];
       }
     }
+    tokens = tokens.sort((a, b) => {
+      const w1 = this.getTokenSortWeight({
+        token: a,
+        text,
+      });
+      const w2 = this.getTokenSortWeight({
+        token: b,
+        text,
+      });
+      return w2 - w1;
+    });
     this.tokenListFiltered = tokens;
     callback && callback();
   }
