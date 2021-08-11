@@ -79,8 +79,9 @@ function PageTokenAdd() {
       storeToken.tokenListFiltered = null;
     };
   }, []);
-  const { tokenListFiltered, allTokenListMeta } = storeToken;
-  const tokens = tokenListFiltered || allTokenListMeta;
+  const { tokenListFiltered, allTokenListMeta, recommended } = storeToken;
+  const tokens = tokenListFiltered || recommended || allTokenListMeta;
+
   return (
     <AppPageLayout title="添加代币">
       <div className="px-4 py-2">

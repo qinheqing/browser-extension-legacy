@@ -246,6 +246,9 @@ class StoreToken extends BaseStore {
   tokenListFiltered = null;
 
   @observable.ref
+  recommended = null;
+
+  @observable.ref
   tokenListFilteredText = '';
 
   @action.bound
@@ -253,6 +256,14 @@ class StoreToken extends BaseStore {
     const tokenController = storeWallet.currentWallet?.tokenController;
     if (tokenController?.getTokenListMetaAsync) {
       const list = await tokenController.getTokenListMetaAsync();
+      if (Array.isArray(list) && tokenController?.getRecommendTokenAddresses) {
+        this.recommended = null;
+        const addresses = tokenController.getRecommendTokenAddresses();
+        const recommended = list.filter((item) => addresses[item.address]);
+        if (Array.isArray(recommended) && recommended.length > 0) {
+          this.recommended = recommended;
+        }
+      }
       this.allTokenListMeta = list;
     }
   }
