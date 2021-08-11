@@ -2,6 +2,8 @@ name: Release
 
 on:
   push:
+    branches:
+      - 'master'
     tags:
       - 'v*' # push tag like "v1.0.3-beta.1" "v1.0.3-rc.1" "v1.0.3"
 
@@ -132,6 +134,7 @@ jobs:
           ENV_ON_BOARDING_START_CHOICE: normal,hardware
 
       - name: 'Zip dist'
+        if: env.buildEveryTime
         shell: bash
         run: |
           mkdir -p ./qiniu_upload_dir
@@ -141,6 +144,7 @@ jobs:
           zip -r ../qiniu_upload_dir/${{ env.BUILD_FILE_NAME }}.zip ./
 
       - name: 'Upload to CDN'
+        if: env.buildEveryTime
         uses: onekeyhq/onekey-github-actions/qiniu-upload@main
         with:
           access_key: ${{ secrets.QINIU_ACCESS_KEY }}
@@ -150,11 +154,43 @@ jobs:
           dest_dir: ${{ env.QINIU_UPLOAD_DEST_PATH }}
 
       - name: 'Upload Artifacts'
+        if: env.buildEveryTime
         uses: actions/upload-artifact@v2
         with:
           name: onekey-extension-${{ env.GITHUB_TAG }}
           path: |
             builds
+
+      - name: 'Get PR Info Action'
+        id: pr_info
+        uses: onekeyhq/onekey-github-actions/get-pr-info@main
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: 'Build Change Log Content'
+        id: build_change_log_content
+        run: |
+          changeLog=''
+          inputChangeLog='${{ github.event.inputs.change-log-cn }}'
+          prChangeLog='${{ steps.pr_info.outputs.content_body }}'
+          tagDiffChangeLog='${{ steps.auto_create_beta_tag.outputs.change-log }}'
+          tagDiffChangeLogUrl='${{ steps.auto_create_beta_tag.outputs.change-log-url }}'
+          if [ $inputChangeLog ]; then
+            changeLog=$changeLog' '$inputChangeLog':-:';
+          fi
+          if [ $prChangeLog ]; then
+            changeLog=$changeLog' '$prChangeLog':-:';
+          fi
+          if [ $tagDiffChangeLogUrl ]; then
+            changeLog=$changeLog' <'$tagDiffChangeLogUrl'|Change Log Diff> :-:';
+          fi
+          if [ $tagDiffChangeLog ]; then
+            changeLog=$changeLog' '$tagDiffChangeLog':-:';
+          fi
+
+          echo $changeLog
+          echo '::set-output name=change_log::'$changeLog
+
 
       - name: 'Notify to Slack'
         uses: onekeyhq/onekey-github-actions/notice-slack-app-update@main
@@ -166,7 +202,7 @@ jobs:
           artifact-version-name: '${{ env.PKG_VERSION }}@${{ env.GITHUB_TAG }}'
           artifact-version-code: '${{ env.GITHUB_TAG }}'
           artifact-download-url: ${{ env.QINIU_PUBLIC_URL }}${{ env.BUILD_FILE_NAME }}.zip
-          change-log: '${{ github.event.inputs.change-log-cn }} :-: <${{ steps.auto_create_beta_tag.outputs.change-log-url }}|Change Log Diff> :-: ${{ steps.auto_create_beta_tag.outputs.change-log }} '
-          custom-issue-url: ''
-          # custom-message-title: ''
-          # custom-message-payload: ''
+          change-log: '${{ steps.build_change_log_content.outputs.change_log }}'
+          custom-issue-url: '${{ steps.pr_info.outputs.issue }}'
+          custom-message-title: ''
+          custom-message-payload: ''
