@@ -15,7 +15,7 @@ import 'abortcontroller-polyfill/dist/polyfill-patch-fetch';
 import endOfStream from 'end-of-stream';
 import pump from 'pump';
 import debounce from 'debounce-stream';
-import log from 'loglevel';
+import log from '../../src/log/logger';
 import extension from 'extensionizer';
 import { storeAsStream, storeTransformStream } from '@metamask/obs-store';
 import PortStream from 'extension-port-stream';
@@ -46,8 +46,6 @@ import errorsGlobalHandler from './errorsGlobalHandler';
 import backgroundSolana from '../../src/wallets/SOL/modules/dappProvider/background';
 import backgroundContainer from './backgroundContainer';
 /* eslint-enable import/first */
-
-log.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn');
 
 const mboxReferences = {
   autorun,
