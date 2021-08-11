@@ -122,6 +122,11 @@ class StoreToken extends BaseStore {
     });
   }
 
+  @computed
+  get currentNativeTokenBalance() {
+    return storeBalance.getTokenBalanceInfoInCache(this.currentNativeToken);
+  }
+
   @action.bound
   async setCurrentTokens({
     chainKey,

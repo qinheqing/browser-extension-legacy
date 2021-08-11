@@ -13,7 +13,7 @@ import Dnode from 'dnode';
 import Eth from 'ethjs';
 import EthQuery from 'eth-query';
 import StreamProvider from 'web3-stream-provider';
-import log from 'loglevel';
+import log from '../../src/log/logger';
 import launchMetaMaskUi from '../../ui';
 import {
   ENVIRONMENT_TYPE_FULLSCREEN,
@@ -22,8 +22,6 @@ import {
 import ExtensionPlatform from './platforms/extension';
 import { setupMultiplex } from './lib/stream-utils';
 import { getEnvironmentType } from './lib/util';
-
-log.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn');
 
 start().catch(log.error);
 

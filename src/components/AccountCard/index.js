@@ -43,6 +43,7 @@ function AccountCard({
   }
 
   const chainInfo = storeChain.getChainInfoByKey(account.chainKey);
+  // the account is current selected account
   const isActive =
     storeAccount.currentAccount &&
     storeAccount.currentAccount.chainKey === account.chainKey &&

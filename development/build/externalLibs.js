@@ -11,12 +11,12 @@ const ignoreDeps = [
   'mobx',
   'mobx-react-lite',
   '@solana/web3.js',
-  // ignore modules below, cause background error:
-  //    Cannot find module '/onekey-extension/node_modules/ethereumjs-wallet/index.js'
-  'ethereumjs-wallet',
+  // ignore modules below, cause background error ( only start by "yarn start-legacy" ):
+  'ethereumjs-wallet', // Cannot find module '/ethereumjs-wallet/index.js'
   'eth-json-rpc-infura',
   'eth-json-rpc-filters',
   'json-rpc-engine',
+  'ethereumjs-util', // ethUtil.keccak is not a function
 ];
 const commonDeps = ['lodash'];
 const reactDeps = allDependencies.filter((dep) => dep.match(/react/u));

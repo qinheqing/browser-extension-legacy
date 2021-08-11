@@ -31,15 +31,13 @@ const restoreContextAfterImports = () => {
 cleanContextForImports();
 
 /* eslint-disable import/first */
-import log from 'loglevel';
 import LocalMessageDuplexStream from 'post-message-stream';
 import { initializeProvider } from '@metamask/inpage-provider';
+import log from '../../src/log/logger';
 import inpageSolana from '../../src/wallets/SOL/modules/dappProvider/inpage';
 import inpageSolanaLegacy from '../../src/wallets/SOL/modules/dappProvider/inpageSolanaLegacy';
 
 restoreContextAfterImports();
-
-log.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn');
 
 //
 // setup plugin communication
