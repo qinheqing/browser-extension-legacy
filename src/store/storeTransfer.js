@@ -95,7 +95,14 @@ class StoreTransfer extends BaseStore {
       return null;
     }
 
-    // * TODO transfer token, but nativeToken (SOL) balance is insufficient
+    // * nativeToken (SOL) balance is insufficient
+    if (
+      (storeToken.currentNativeTokenBalance.balance <= 0 && this.fee > 0) ||
+      storeToken.currentNativeTokenBalance.balanceNormalized < this.fee
+    ) {
+      utilsToast.toast.error('手续费余额不足');
+      return null;
+    }
 
     const decimals = storeToken.getTokenDecimals(token);
 

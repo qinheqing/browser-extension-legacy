@@ -10,6 +10,7 @@ import {
 import { merge } from 'lodash';
 import { Semaphore } from 'async-mutex';
 import utilsApp from '../utils/utilsApp';
+import utilsNumber from '../utils/utilsNumber';
 import BaseStore from './BaseStore';
 import storeStorage from './storeStorage';
 
@@ -37,6 +38,10 @@ class StoreBalance extends BaseStore {
           symbol,
           name,
         },
+      });
+      newInfo.balanceNormalized = utilsNumber.toNormalNumber({
+        value: newInfo.balance,
+        decimals: newInfo.decimals,
       });
       storeStorage.tokenBalancesRaw[key] = newInfo;
     }
