@@ -80,7 +80,6 @@ export default class ConfirmTransactionBase extends Component {
     hideSubtitle: PropTypes.bool,
     identiconAddress: PropTypes.string,
     onEdit: PropTypes.func,
-    setMetaMetricsSendCount: PropTypes.func,
     metaMetricsSendCount: PropTypes.number,
     subtitleComponent: PropTypes.node,
     title: PropTypes.string,
@@ -472,7 +471,6 @@ export default class ConfirmTransactionBase extends Component {
       actionKey,
       mostRecentOverviewPage,
       metaMetricsSendCount = 0,
-      setMetaMetricsSendCount,
       methodData = {},
       updateCustomNonce,
     } = this.props;
@@ -505,28 +503,26 @@ export default class ConfirmTransactionBase extends Component {
           },
         });
 
-        setMetaMetricsSendCount(metaMetricsSendCount + 1).then(() => {
-          sendTransaction(txData)
-            .then(() => {
-              clearConfirmTransaction();
-              this.setState(
-                {
-                  submitting: false,
-                },
-                () => {
-                  history.push(mostRecentOverviewPage);
-                  updateCustomNonce('');
-                },
-              );
-            })
-            .catch((error) => {
-              this.setState({
+        sendTransaction(txData)
+          .then(() => {
+            clearConfirmTransaction();
+            this.setState(
+              {
                 submitting: false,
-                submitError: error.message,
-              });
-              updateCustomNonce('');
+              },
+              () => {
+                history.push(mostRecentOverviewPage);
+                updateCustomNonce('');
+              },
+            );
+          })
+          .catch((error) => {
+            this.setState({
+              submitting: false,
+              submitError: error.message,
             });
-        });
+            updateCustomNonce('');
+          });
       },
     );
   }

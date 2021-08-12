@@ -10,7 +10,6 @@ describe('Security Tab', function () {
   const props = {
     revealSeedConfirmation: sinon.spy(),
     showClearApprovalModal: sinon.spy(),
-    setParticipateInMetaMetrics: sinon.spy(),
     displayWarning: sinon.spy(),
     setShowIncomingTransactionsFeatureFlag: sinon.spy(),
     history: {
@@ -56,6 +55,5 @@ describe('Security Tab', function () {
     const metaMetrics = wrapper.find({ type: 'checkbox' }).at(2);
 
     metaMetrics.simulate('click');
-    assert(props.setParticipateInMetaMetrics.calledOnce);
   });
 });

@@ -10,7 +10,6 @@ import {
   cancelTxs,
   updateAndApproveTx,
   showModal,
-  setMetaMetricsSendCount,
   updateTransaction,
   getNextNonce,
   tryReverseResolveAddress,
@@ -116,11 +115,8 @@ const mapStateToProps = (state, ownProps) => {
   const isTxReprice = Boolean(lastGasPrice);
   const transactionStatus = transaction ? transaction.status : '';
 
-  const {
-    hexTransactionAmount,
-    hexTransactionFee,
-    hexTransactionTotal,
-  } = transactionFeeSelector(state, transaction);
+  const { hexTransactionAmount, hexTransactionFee, hexTransactionTotal } =
+    transactionFeeSelector(state, transaction);
 
   if (transaction && transaction.simulationFails) {
     txData.simulationFails = transaction.simulationFails;
@@ -225,7 +221,6 @@ export const mapDispatchToProps = (dispatch) => {
     cancelAllTransactions: (txList) => dispatch(cancelTxs(txList)),
     sendTransaction: (txData) =>
       dispatch(updateAndApproveTx(customNonceMerge(txData))),
-    setMetaMetricsSendCount: (val) => dispatch(setMetaMetricsSendCount(val)),
     getNextNonce: () => dispatch(getNextNonce()),
   };
 };
