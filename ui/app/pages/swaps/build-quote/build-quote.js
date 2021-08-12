@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import classnames from 'classnames';
 import { uniqBy } from 'lodash';
 import { useHistory } from 'react-router-dom';
-import { MetaMetricsContext } from '../../../contexts/metametrics.new';
 import { useTokensToSearch } from '../../../hooks/useTokensToSearch';
 import { useEqualityCheck } from '../../../hooks/useEqualityCheck';
 import { useSwapsEthToken } from '../../../hooks/useSwapsEthToken';
@@ -41,6 +40,7 @@ import { ETH_SWAPS_TOKEN_OBJECT } from '../../../helpers/constants/swaps';
 import { resetSwapsPostFetchState, removeToken } from '../../../store/actions';
 import { fetchTokenPrice, fetchTokenBalance } from '../swaps.util';
 import SwapsFooter from '../swaps-footer';
+import utilsApp from '../../../../../src/utils/utilsApp';
 
 const fuseSearchKeys = [
   { name: 'name', weight: 0.499 },
@@ -61,11 +61,10 @@ export default function BuildQuote({
   const t = useContext(I18nContext);
   const dispatch = useDispatch();
   const history = useHistory();
-  const metaMetricsEvent = useContext(MetaMetricsContext);
+  const metaMetricsEvent = utilsApp.trackEventNoop;
 
-  const [fetchedTokenExchangeRate, setFetchedTokenExchangeRate] = useState(
-    undefined,
-  );
+  const [fetchedTokenExchangeRate, setFetchedTokenExchangeRate] =
+    useState(undefined);
   const [verificationClicked, setVerificationClicked] = useState(false);
 
   const balanceError = useSelector(getBalanceError);

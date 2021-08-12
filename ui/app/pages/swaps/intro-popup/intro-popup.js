@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { setSwapsFromToken } from '../../../ducks/swaps/swaps';
 import { I18nContext } from '../../../contexts/i18n';
 import { BUILD_QUOTE_ROUTE } from '../../../helpers/constants/routes';
-import { useNewMetricEvent } from '../../../hooks/useMetricEvent';
+import { useMetricEvent } from '../../../hooks/useMetricEvent';
 import { useSwapsEthToken } from '../../../hooks/useSwapsEthToken';
 import Button from '../../../components/ui/button';
 import Popover from '../../../components/ui/popover';
@@ -14,20 +14,20 @@ export default function IntroPopup({ onClose }) {
   const dispatch = useDispatch(useDispatch);
   const history = useHistory();
   const t = useContext(I18nContext);
-  const enteredSwapsEvent = useNewMetricEvent({
+  const enteredSwapsEvent = useMetricEvent({
     event: 'Swaps Opened',
     properties: { source: 'Intro popup', active_currency: 'ETH' },
     category: 'swaps',
   });
-  const blogPostVisitedEvent = useNewMetricEvent({
+  const blogPostVisitedEvent = useMetricEvent({
     event: 'Blog Post Visited ',
     category: 'swaps',
   });
-  const contractAuditVisitedEvent = useNewMetricEvent({
+  const contractAuditVisitedEvent = useMetricEvent({
     event: 'Contract Audit Visited',
     category: 'swaps',
   });
-  const productOverviewDismissedEvent = useNewMetricEvent({
+  const productOverviewDismissedEvent = useMetricEvent({
     event: 'Product Overview Dismissed',
     category: 'swaps',
   });

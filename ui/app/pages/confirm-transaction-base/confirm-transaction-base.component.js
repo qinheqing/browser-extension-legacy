@@ -80,7 +80,6 @@ export default class ConfirmTransactionBase extends Component {
     hideSubtitle: PropTypes.bool,
     identiconAddress: PropTypes.string,
     onEdit: PropTypes.func,
-    metaMetricsSendCount: PropTypes.number,
     subtitleComponent: PropTypes.node,
     title: PropTypes.string,
     advancedInlineGasShown: PropTypes.bool,
@@ -470,7 +469,6 @@ export default class ConfirmTransactionBase extends Component {
       history,
       actionKey,
       mostRecentOverviewPage,
-      metaMetricsSendCount = 0,
       methodData = {},
       updateCustomNonce,
     } = this.props;

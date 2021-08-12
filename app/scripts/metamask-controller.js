@@ -911,6 +911,7 @@ export default class MetamaskController extends EventEmitter {
       ),
 
       // MetaMetrics
+      // map to ui/app/store/actions.js #trackMetaMetricsEvent
       trackMetaMetricsEvent: nodeify(this.noop, this),
       trackMetaMetricsPage: nodeify(this.noop, this),
 
@@ -2202,6 +2203,7 @@ export default class MetamaskController extends EventEmitter {
       createMethodMiddleware({
         origin,
         getProviderState: this.getProviderState.bind(this),
+        sendMetrics: this.noop.bind(this),
         handleWatchAssetRequest:
           this.preferencesController.requestWatchAsset.bind(
             this.preferencesController,
@@ -2869,5 +2871,6 @@ export default class MetamaskController extends EventEmitter {
 
   noop() {
     // noop
+    return utilsApp.trackEventNoop();
   }
 }

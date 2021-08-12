@@ -36,12 +36,9 @@ export const SENTRY_STATE = {
     isAccountMenuOpen: true,
     isInitialized: true,
     isUnlocked: true,
-    metaMetricsId: true,
-    metaMetricsSendCount: true,
     nativeCurrency: true,
     network: true,
     nextNonce: true,
-    participateInMetaMetrics: false,
     preferences: true,
     provider: {
       nickname: true,

@@ -15,7 +15,6 @@ const LEGACY_LOCAL_STORAGE_KEYS = [
 ];
 
 /**
- * Migrate metaMetrics state to the new MetaMetrics controller
  */
 export default {
   version,

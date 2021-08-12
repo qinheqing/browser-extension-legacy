@@ -8,10 +8,9 @@ import { I18nContext } from '../../../contexts/i18n';
 import SelectQuotePopover from '../select-quote-popover';
 import { useEthFiatAmount } from '../../../hooks/useEthFiatAmount';
 import { useEqualityCheck } from '../../../hooks/useEqualityCheck';
-import { useNewMetricEvent } from '../../../hooks/useMetricEvent';
+import { useMetricEvent } from '../../../hooks/useMetricEvent';
 import { usePrevious } from '../../../hooks/usePrevious';
 import { useSwapsEthToken } from '../../../hooks/useSwapsEthToken';
-import { MetaMetricsContext } from '../../../contexts/metametrics.new';
 import FeeCard from '../fee-card';
 import {
   FALLBACK_GAS_MULTIPLIER,
@@ -76,13 +75,14 @@ import { useTokenTracker } from '../../../hooks/useTokenTracker';
 import { QUOTES_EXPIRED_ERROR } from '../../../helpers/constants/swaps';
 import CountdownTimer from '../countdown-timer';
 import SwapsFooter from '../swaps-footer';
+import utilsApp from '../../../../../src/utils/utilsApp';
 import ViewQuotePriceDifference from './view-quote-price-difference';
 
 export default function ViewQuote() {
   const history = useHistory();
   const dispatch = useDispatch();
   const t = useContext(I18nContext);
-  const metaMetricsEvent = useContext(MetaMetricsContext);
+  const metaMetricsEvent = utilsApp.trackEventNoop;
 
   const [dispatchedSafeRefetch, setDispatchedSafeRefetch] = useState(false);
   const [submitClicked, setSubmitClicked] = useState(false);
@@ -90,10 +90,8 @@ export default function ViewQuote() {
   const [warningHidden, setWarningHidden] = useState(false);
   const [originalApproveAmount, setOriginalApproveAmount] = useState(null);
 
-  const [
-    acknowledgedPriceDifference,
-    setAcknowledgedPriceDifference,
-  ] = useState(false);
+  const [acknowledgedPriceDifference, setAcknowledgedPriceDifference] =
+    useState(false);
   const priceDifferenceRiskyBuckets = ['high', 'medium'];
 
   const routeState = useSelector(getBackgroundSwapRouteState);
@@ -320,7 +318,7 @@ export default function ViewQuote() {
     available_quotes: numberOfQuotes,
   };
 
-  const allAvailableQuotesOpened = useNewMetricEvent({
+  const allAvailableQuotesOpened = useMetricEvent({
     event: 'All Available Quotes Opened',
     category: 'swaps',
     sensitiveProperties: {
@@ -332,7 +330,7 @@ export default function ViewQuote() {
           : usedQuote?.aggregator,
     },
   });
-  const quoteDetailsOpened = useNewMetricEvent({
+  const quoteDetailsOpened = useMetricEvent({
     event: 'Quote Details Opened',
     category: 'swaps',
     sensitiveProperties: {
@@ -344,7 +342,7 @@ export default function ViewQuote() {
           : usedQuote?.aggregator,
     },
   });
-  const editSpendLimitOpened = useNewMetricEvent({
+  const editSpendLimitOpened = useMetricEvent({
     event: 'Edit Spend Limit Opened',
     category: 'swaps',
     sensitiveProperties: {
@@ -355,7 +353,7 @@ export default function ViewQuote() {
     },
   });
 
-  const bestQuoteReviewedEvent = useNewMetricEvent({
+  const bestQuoteReviewedEvent = useMetricEvent({
     event: 'Best Quote Reviewed',
     category: 'swaps',
     sensitiveProperties: { ...eventObjectBase, network_fees: feeInFiat },

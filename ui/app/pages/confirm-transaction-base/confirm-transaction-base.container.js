@@ -74,7 +74,6 @@ const mapStateToProps = (state, ownProps) => {
     assetImages,
     network,
     unapprovedTxs,
-    metaMetricsSendCount,
     nextNonce,
   } = metamask;
   const { tokenData, txData, tokenProps, nonce } = confirmTransaction;
@@ -180,7 +179,6 @@ const mapStateToProps = (state, ownProps) => {
     insufficientBalance,
     hideSubtitle: !isMainnet && !showFiatInTestnets,
     hideFiatConversion: !isMainnet && !showFiatInTestnets,
-    metaMetricsSendCount,
     transactionCategory,
     nextNonce,
     mostRecentOverviewPage: getMostRecentOverviewPage(state),

@@ -242,7 +242,6 @@ async function addEthereumChainHandler(
         network_name: _chainName,
         // Including network to override the default network
         // property included in all events. For RPC type networks
-        // the MetaMetrics controller uses the rpcUrl for the network
         // property.
         network: firstValidRPCUrl,
         symbol: ticker,

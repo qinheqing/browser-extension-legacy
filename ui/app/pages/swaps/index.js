@@ -61,7 +61,7 @@ import {
   currentNetworkTxListSelector,
   getRpcPrefsForCurrentProvider,
 } from '../../selectors';
-import { useNewMetricEvent } from '../../hooks/useMetricEvent';
+import { useMetricEvent } from '../../hooks/useMetricEvent';
 import { getValueFromWeiHex } from '../../helpers/utils/conversions.util';
 
 import FeatureToggledRoute from '../../helpers/higher-order-components/feature-toggled-route';
@@ -107,10 +107,8 @@ export default function Swap() {
   let swapsErrorKey = useSelector(getSwapsErrorKey);
   const swapsEnabled = useSelector(getSwapsFeatureLiveness);
 
-  const {
-    balance: ethBalance,
-    address: selectedAccountAddress,
-  } = selectedAccount;
+  const { balance: ethBalance, address: selectedAccountAddress } =
+    selectedAccount;
   const fetchParamsFromToken =
     sourceTokenInfo?.symbol === 'ETH'
       ? {
@@ -199,7 +197,7 @@ export default function Swap() {
     };
   }, [dispatch]);
 
-  const exitedSwapsEvent = useNewMetricEvent({
+  const exitedSwapsEvent = useMetricEvent({
     event: 'Exited Swaps',
     category: 'swaps',
     sensitiveProperties: {

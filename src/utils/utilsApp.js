@@ -173,6 +173,10 @@ function objectToUint8Array(dataObj = {}) {
   return data;
 }
 
+function trackEventNoop() {
+  return new Promise((resolve) => resolve());
+}
+
 export default {
   uuid,
   formatTemplate,
@@ -190,4 +194,5 @@ export default {
   changeCase,
   reactSafeRender,
   objectToUint8Array,
+  trackEventNoop,
 };
