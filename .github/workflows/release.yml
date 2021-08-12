@@ -95,13 +95,13 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'Auto Create Beta Tag'
-        if: github.event_name == 'workflow_dispatch'
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
         id: auto_create_beta_tag
         uses: onekeyhq/onekey-github-actions/auto-tag@main
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          prefix: 'v${{ env.PKG_VERSION }}-autobeta'
+          prefix: 'v${{ env.PKG_VERSION }}-build'
           debug: true
           export-change-log: true
           compare-to: ${{ github.event.inputs.compare-to }}
@@ -173,24 +173,37 @@ jobs:
           changeLog=''
           inputChangeLog='${{ github.event.inputs.change-log-cn }}'
           prChangeLog='${{ steps.pr_info.outputs.content_body }}'
+          prUrl='${{ steps.pr_info.outputs.url }}'
           tagDiffChangeLog='${{ steps.auto_create_beta_tag.outputs.change-log }}'
           tagDiffChangeLogUrl='${{ steps.auto_create_beta_tag.outputs.change-log-url }}'
-          if [ $inputChangeLog ]; then
+
+          if [ -n "$inputChangeLog" ]
+          then
             changeLog=$changeLog' '$inputChangeLog':-:';
           fi
-          if [ $prChangeLog ]; then
+
+          if [ -n "$prChangeLog" ]
+          then
             changeLog=$changeLog' '$prChangeLog':-:';
           fi
-          if [ $tagDiffChangeLogUrl ]; then
-            changeLog=$changeLog' <'$tagDiffChangeLogUrl'|Change Log Diff> :-:';
+
+          if [ -n "$prUrl" ]
+          then
+            changeLog=$changeLog' <'$prUrl'| View PR ↗ > :-:';
           fi
-          if [ $tagDiffChangeLog ]; then
+
+          if [ -n "$tagDiffChangeLogUrl" ]
+          then
+            changeLog=$changeLog' <'$tagDiffChangeLogUrl'| Change Log Diff ↗ > :-:';
+          fi
+
+          if [ -n "$tagDiffChangeLog" ]
+          then
             changeLog=$changeLog' '$tagDiffChangeLog':-:';
           fi
 
           echo $changeLog
           echo '::set-output name=change_log::'$changeLog
-
 
       - name: 'Notify to Slack'
         uses: onekeyhq/onekey-github-actions/notice-slack-app-update@main
