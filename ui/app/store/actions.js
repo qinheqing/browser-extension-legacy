@@ -2911,21 +2911,21 @@ export function getCurrentWindowTab() {
 }
 
 /**
- * @param {MetaMetricsEventPayload} payload - details of the event to track
- * @param {MetaMetricsEventOptions} options - options for routing/handling of event
+ * @param {TrackEventPayload} payload - details of the event to track
+ * @param {TrackEventOptions} options - options for routing/handling of event
  * @returns {Promise<void>}
  */
-export function trackMetaMetricsEvent(payload, options) {
-  return promisifiedBackground.trackMetaMetricsEvent(payload, options);
+export function trackEvent(payload, options) {
+  return promisifiedBackground.trackEvent(payload, options);
 }
 
 /**
- * @param {MetaMetricsPagePayload} payload - details of the page viewed
- * @param {MetaMetricsPageOptions} options - options for handling the page view
+ * @param {TrackEventPagePayload} payload - details of the page viewed
+ * @param {TrackEventPageOptions} options - options for handling the page view
  * @returns {void}
  */
-export function trackMetaMetricsPage(payload, options) {
-  return promisifiedBackground.trackMetaMetricsPage(payload, options);
+export function trackEventPage(payload, options) {
+  return promisifiedBackground.trackEventPage(payload, options);
 }
 
 // If you need the return value of a background method call

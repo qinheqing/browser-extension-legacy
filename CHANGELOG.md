@@ -528,7 +528,7 @@
 - [#7434](https://github.com/MetaMask/metamask-extension/pull/7434): Update 512px icon (#7434)
 - [#7410](https://github.com/MetaMask/metamask-extension/pull/7410): Fix sourcemaps for Sentry
 - [#7420](https://github.com/MetaMask/metamask-extension/pull/7420): Adds and end to end test for typed signature requests
-- [#7439](https://github.com/MetaMask/metamask-extension/pull/7439): Add metricsEvent to contextTypes (#7439)
+- [#7439](https://github.com/MetaMask/metamask-extension/pull/7439): Add trackEvent to contextTypes (#7439)
 - [#7419](https://github.com/MetaMask/metamask-extension/pull/7419): Added webRequest.RequestFilter to filter main_frame .eth requests (#7419)
 
 ## 7.5.2 Thu Nov 14 2019

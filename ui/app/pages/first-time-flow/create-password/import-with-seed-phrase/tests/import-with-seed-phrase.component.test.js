@@ -8,7 +8,7 @@ function shallowRender(props = {}, context = {}) {
   return shallow(<ImportWithSeedPhrase {...props} />, {
     context: {
       t: (str) => `${str}_t`,
-      metricsEvent: sinon.spy(),
+      trackEvent: sinon.spy(),
       ...context,
     },
   });

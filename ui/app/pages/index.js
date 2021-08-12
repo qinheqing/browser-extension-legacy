@@ -5,9 +5,9 @@ import { HashRouter } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
 import { I18nProvider, LegacyI18nProvider } from '../contexts/i18n';
 import {
-  MetaMetricsProvider,
-  LegacyMetaMetricsProvider,
-} from '../contexts/metametrics';
+  TrackEventsContextProvider,
+  LegacyTrackEventsContextProvider,
+} from '../contexts/trackEvent';
 import ForceSelectHwAccountProvider from '../contexts/ForceSelectHwAccountProvider';
 import ErrorPage from './error';
 import Routes from './routes';
@@ -42,8 +42,8 @@ class Index extends PureComponent {
     return (
       <Provider store={store}>
         <HashRouter hashType="noslash">
-          <MetaMetricsProvider>
-            <LegacyMetaMetricsProvider>
+          <TrackEventsContextProvider>
+            <LegacyTrackEventsContextProvider>
               <I18nProvider>
                 <LegacyI18nProvider>
                   <ForceSelectHwAccountProvider>
@@ -51,8 +51,8 @@ class Index extends PureComponent {
                   </ForceSelectHwAccountProvider>
                 </LegacyI18nProvider>
               </I18nProvider>
-            </LegacyMetaMetricsProvider>
-          </MetaMetricsProvider>
+            </LegacyTrackEventsContextProvider>
+          </TrackEventsContextProvider>
         </HashRouter>
       </Provider>
     );

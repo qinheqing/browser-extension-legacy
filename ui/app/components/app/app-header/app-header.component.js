@@ -27,7 +27,7 @@ export default class AppHeader extends PureComponent {
 
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   handleNetworkIndicatorClick(event) {
@@ -47,7 +47,7 @@ export default class AppHeader extends PureComponent {
     }
 
     if (networkDropdownOpen === false) {
-      this.context.metricsEvent({
+      this.context.trackEvent({
         eventOpts: {
           category: 'Navigation',
           action: 'Home',
@@ -79,7 +79,7 @@ export default class AppHeader extends PureComponent {
           onClick={() => {
             if (!disabled) {
               !isAccountMenuOpen &&
-                this.context.metricsEvent({
+                this.context.trackEvent({
                   eventOpts: {
                     category: 'Navigation',
                     action: 'Home',
@@ -94,7 +94,7 @@ export default class AppHeader extends PureComponent {
           <span className="account-menu__address">
             {accounts && accounts.length > 0 ? selectedAddress.slice(-4) : ''}
           </span>
-          <span className="app-header__network-down-arrow app-header__account-down-arrow"></span>
+          <span className="app-header__network-down-arrow app-header__account-down-arrow" />
         </div>
       )
     );

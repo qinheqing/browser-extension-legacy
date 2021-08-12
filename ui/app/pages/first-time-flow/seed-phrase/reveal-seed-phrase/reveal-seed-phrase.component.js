@@ -15,7 +15,7 @@ import LoadingScreen from '../../../../components/ui/loading-screen';
 export default class RevealSeedPhrase extends PureComponent {
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   static propTypes = {
@@ -50,7 +50,7 @@ export default class RevealSeedPhrase extends PureComponent {
     const { isShowingSeedPhrase } = this.state;
     const { history } = this.props;
 
-    this.context.metricsEvent({
+    this.context.trackEvent({
       eventOpts: {
         category: 'Onboarding',
         action: 'Seed Phrase Setup',
@@ -73,7 +73,7 @@ export default class RevealSeedPhrase extends PureComponent {
       onboardingInitiator,
     } = this.props;
 
-    this.context.metricsEvent({
+    this.context.trackEvent({
       eventOpts: {
         category: 'Onboarding',
         action: 'Seed Phrase Setup',
@@ -111,7 +111,7 @@ export default class RevealSeedPhrase extends PureComponent {
           <div
             className="reveal-seed-phrase__secret-blocker"
             onClick={() => {
-              this.context.metricsEvent({
+              this.context.trackEvent({
                 eventOpts: {
                   category: 'Onboarding',
                   action: 'Seed Phrase Setup',

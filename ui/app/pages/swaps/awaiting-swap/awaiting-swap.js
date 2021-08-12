@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { I18nContext } from '../../../contexts/i18n';
-import { useMetricEvent } from '../../../hooks/useMetricEvent';
+import { useTrackEvent } from '../../../hooks/useTrackEvent';
 import { getCurrentCurrency, getUSDConversionRate } from '../../../selectors';
 import {
   getUsedQuote,
@@ -48,7 +48,7 @@ export default function AwaitingSwap({
   maxSlippage,
 }) {
   const t = useContext(I18nContext);
-  const metaMetricsEvent = utilsApp.trackEventNoop;
+  const trackEvent = utilsApp.trackEventNoop;
   const history = useHistory();
   const dispatch = useDispatch();
   const animationEventEmitter = useRef(new EventEmitter());
@@ -80,7 +80,7 @@ export default function AwaitingSwap({
     feeinUnformattedFiat = renderableNetworkFees.rawNetworkFees;
   }
 
-  const quotesExpiredEvent = useMetricEvent({
+  const quotesExpiredEvent = useTrackEvent({
     event: 'Quotes Timed Out',
     sensitiveProperties: {
       token_from: sourceTokenInfo?.symbol,
@@ -207,7 +207,7 @@ export default function AwaitingSwap({
                 history,
                 inputValue,
                 maxSlippage,
-                metaMetricsEvent,
+                trackEvent,
               ),
             );
           } else if (errorKey) {

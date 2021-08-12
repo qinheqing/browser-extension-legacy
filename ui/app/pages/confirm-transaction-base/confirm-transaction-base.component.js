@@ -27,7 +27,7 @@ import { getTransactionCategoryTitle } from '../../helpers/utils/transactions.ut
 export default class ConfirmTransactionBase extends Component {
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   static propTypes = {
@@ -205,7 +205,7 @@ export default class ConfirmTransactionBase extends Component {
       methodData = {},
     } = this.props;
 
-    this.context.metricsEvent({
+    this.context.trackEvent({
       eventOpts: {
         category: 'Transactions',
         action: 'Confirm Screen',
@@ -382,7 +382,7 @@ export default class ConfirmTransactionBase extends Component {
       methodData = {},
     } = this.props;
 
-    this.context.metricsEvent({
+    this.context.trackEvent({
       eventOpts: {
         category: 'Transactions',
         action: 'Confirm Screen',
@@ -423,7 +423,7 @@ export default class ConfirmTransactionBase extends Component {
   }
 
   handleCancel() {
-    const { metricsEvent } = this.context;
+    const { trackEvent } = this.context;
     const {
       txData,
       cancelTransaction,
@@ -437,7 +437,7 @@ export default class ConfirmTransactionBase extends Component {
     } = this.props;
 
     this._removeBeforeUnload();
-    metricsEvent({
+    trackEvent({
       eventOpts: {
         category: 'Transactions',
         action: 'Confirm Screen',
@@ -460,7 +460,7 @@ export default class ConfirmTransactionBase extends Component {
   }
 
   handleSubmit() {
-    const { metricsEvent } = this.context;
+    const { trackEvent } = this.context;
     const {
       txData: { origin },
       sendTransaction,
@@ -485,7 +485,7 @@ export default class ConfirmTransactionBase extends Component {
       },
       () => {
         this._removeBeforeUnload();
-        metricsEvent({
+        trackEvent({
           eventOpts: {
             category: 'Transactions',
             action: 'Confirm Screen',
@@ -588,8 +588,8 @@ export default class ConfirmTransactionBase extends Component {
 
   _beforeUnload = () => {
     const { txData: { origin, id } = {}, cancelTransaction } = this.props;
-    const { metricsEvent } = this.context;
-    metricsEvent({
+    const { trackEvent } = this.context;
+    trackEvent({
       eventOpts: {
         category: 'Transactions',
         action: 'Confirm Screen',
@@ -615,8 +615,8 @@ export default class ConfirmTransactionBase extends Component {
       getNextNonce,
       tryReverseResolveAddress,
     } = this.props;
-    const { metricsEvent } = this.context;
-    metricsEvent({
+    const { trackEvent } = this.context;
+    trackEvent({
       eventOpts: {
         category: 'Transactions',
         action: 'Confirm Screen',

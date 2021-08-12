@@ -26,7 +26,7 @@ async function addEthereumChainHandler(
     findCustomRpcBy,
     updateRpcTarget,
     requestUserApproval,
-    sendMetrics,
+    trackEvent,
   },
 ) {
   if (!req.params?.[0] || typeof req.params[0] !== 'object') {
@@ -230,7 +230,7 @@ async function addEthereumChainHandler(
       }),
     );
 
-    sendMetrics({
+    trackEvent({
       event: 'Custom Network Added',
       category: 'Network',
       referrer: {

@@ -7,7 +7,7 @@ import Button from '../../../components/ui/button';
 export default class SecurityTab extends PureComponent {
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   static propTypes = {
@@ -39,7 +39,7 @@ export default class SecurityTab extends PureComponent {
               large
               onClick={(event) => {
                 event.preventDefault();
-                this.context.metricsEvent({
+                this.context.trackEvent({
                   eventOpts: {
                     category: 'Settings',
                     action: 'Reveal Seed Phrase',

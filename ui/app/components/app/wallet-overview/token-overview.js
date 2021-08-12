@@ -8,7 +8,7 @@ import Tooltip from '../../ui/tooltip';
 import CurrencyDisplay from '../../ui/currency-display';
 import { I18nContext } from '../../../contexts/i18n';
 import { SEND_ROUTE } from '../../../helpers/constants/routes';
-import { useMetricEvent } from '../../../hooks/useMetricEvent';
+import { useTrackEvent } from '../../../hooks/useTrackEvent';
 import { useTokenTracker } from '../../../hooks/useTokenTracker';
 import { useTokenFiatAmount } from '../../../hooks/useTokenFiatAmount';
 import { updateSendToken } from '../../../store/actions';
@@ -28,7 +28,7 @@ import WalletOverview from './wallet-overview';
 const TokenOverview = ({ className, token }) => {
   const dispatch = useDispatch();
   const t = useContext(I18nContext);
-  const sendTokenEvent = useMetricEvent({
+  const sendTokenEvent = useTrackEvent({
     eventOpts: {
       category: 'Navigation',
       action: 'Home',
@@ -47,9 +47,10 @@ const TokenOverview = ({ className, token }) => {
     token.symbol,
   );
   const chainId = useSelector(getCurrentChainId);
-  const handleSwap = useCallback(() => openSwap(token.address), [
-    token.address,
-  ]);
+  const handleSwap = useCallback(
+    () => openSwap(token.address),
+    [token.address],
+  );
   const isSwapEnable = [1, 42, 56, 128, 137].includes(Number(chainId));
 
   return (

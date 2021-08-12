@@ -8,13 +8,13 @@ import { getEnvironmentType } from '../../../../../app/scripts/lib/util';
 import { ENVIRONMENT_TYPE_POPUP } from '../../../../../shared/constants/app';
 import { CONNECTED_ACCOUNTS_ROUTE } from '../../../helpers/constants/routes';
 import { useI18nContext } from '../../../hooks/useI18nContext';
-import { useMetricEvent } from '../../../hooks/useMetricEvent';
+import { useTrackEvent } from '../../../hooks/useTrackEvent';
 import { getOriginOfCurrentTab } from '../../../selectors';
 import AccountOptionsMenu from './account-options-menu';
 
 export default function MenuBar() {
   const t = useI18nContext();
-  const openAccountOptionsEvent = useMetricEvent({
+  const openAccountOptionsEvent = useTrackEvent({
     eventOpts: {
       category: 'Navigation',
       action: 'Home',
@@ -22,10 +22,8 @@ export default function MenuBar() {
     },
   });
   const history = useHistory();
-  const [
-    accountOptionsButtonElement,
-    setAccountOptionsButtonElement,
-  ] = useState(null);
+  const [accountOptionsButtonElement, setAccountOptionsButtonElement] =
+    useState(null);
   const [accountOptionsMenuOpen, setAccountOptionsMenuOpen] = useState(false);
   const origin = useSelector(getOriginOfCurrentTab);
 

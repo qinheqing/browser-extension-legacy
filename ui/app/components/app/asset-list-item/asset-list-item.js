@@ -9,7 +9,7 @@ import Tooltip from '../../ui/tooltip';
 import InfoIcon from '../../ui/icon/info-icon.component';
 import Button from '../../ui/button';
 import { useI18nContext } from '../../../hooks/useI18nContext';
-import { useMetricEvent } from '../../../hooks/useMetricEvent';
+import { useTrackEvent } from '../../../hooks/useTrackEvent';
 import { updateSendToken } from '../../../store/actions';
 import { SEND_ROUTE } from '../../../helpers/constants/routes';
 import { SEVERITIES } from '../../../helpers/constants/design-system';
@@ -30,7 +30,7 @@ const AssetListItem = ({
   const t = useI18nContext();
   const dispatch = useDispatch();
   const history = useHistory();
-  const sendTokenEvent = useMetricEvent({
+  const sendTokenEvent = useTrackEvent({
     eventOpts: {
       category: 'Navigation',
       action: 'Home',
@@ -129,26 +129,26 @@ const AssetListItem = ({
 };
 
 AssetListItem.propTypes = {
-  className: PropTypes.string,
+  'className': PropTypes.string,
   'data-testid': PropTypes.string,
-  iconClassName: PropTypes.string,
-  onClick: PropTypes.func.isRequired,
-  tokenAddress: PropTypes.string,
-  tokenSymbol: PropTypes.string,
-  tokenDecimals: PropTypes.number,
-  tokenImage: PropTypes.string,
-  warning: PropTypes.node,
-  primary: PropTypes.string,
-  secondary: PropTypes.string,
+  'iconClassName': PropTypes.string,
+  'onClick': PropTypes.func.isRequired,
+  'tokenAddress': PropTypes.string,
+  'tokenSymbol': PropTypes.string,
+  'tokenDecimals': PropTypes.number,
+  'tokenImage': PropTypes.string,
+  'warning': PropTypes.node,
+  'primary': PropTypes.string,
+  'secondary': PropTypes.string,
 };
 
 AssetListItem.defaultProps = {
-  className: undefined,
+  'className': undefined,
   'data-testid': undefined,
-  iconClassName: undefined,
-  tokenAddress: undefined,
-  tokenImage: undefined,
-  warning: undefined,
+  'iconClassName': undefined,
+  'tokenAddress': undefined,
+  'tokenImage': undefined,
+  'warning': undefined,
 };
 
 export default AssetListItem;

@@ -15,7 +15,7 @@ import NetworkForm from './network-form';
 export default class NetworksTab extends PureComponent {
   static contextTypes = {
     t: PropTypes.func.isRequired,
-    metricsEvent: PropTypes.func.isRequired,
+    trackEvent: PropTypes.func.isRequired,
   };
 
   static propTypes = {
@@ -117,7 +117,8 @@ export default class NetworksTab extends PureComponent {
         />
         <div
           className={classnames('networks-tab__networks-list-name', {
-            'networks-tab__networks-list-name--selected': displayNetworkListItemAsSelected,
+            'networks-tab__networks-list-name--selected':
+              displayNetworkListItemAsSelected,
             'networks-tab__networks-list-name--disabled':
               currentProviderType !== NETWORK_TYPE_RPC &&
               !displayNetworkListItemAsSelected,

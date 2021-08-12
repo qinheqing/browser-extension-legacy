@@ -9,7 +9,7 @@ import TextField from '../../../../components/ui/text-field';
 
 export default class NewAccount extends PureComponent {
   static contextTypes = {
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
     t: PropTypes.func,
   };
 
@@ -27,12 +27,8 @@ export default class NewAccount extends PureComponent {
   };
 
   isValid() {
-    const {
-      password,
-      confirmPassword,
-      passwordError,
-      confirmPasswordError,
-    } = this.state;
+    const { password, confirmPassword, passwordError, confirmPasswordError } =
+      this.state;
 
     if (!password || !confirmPassword || password !== confirmPassword) {
       return false;
@@ -100,7 +96,7 @@ export default class NewAccount extends PureComponent {
     try {
       await onSubmit(password);
 
-      this.context.metricsEvent({
+      this.context.trackEvent({
         eventOpts: {
           category: 'Onboarding',
           action: 'Create Password',
@@ -116,7 +112,7 @@ export default class NewAccount extends PureComponent {
   };
 
   toggleTermsCheck = () => {
-    this.context.metricsEvent({
+    this.context.trackEvent({
       eventOpts: {
         category: 'Onboarding',
         action: 'Create Password',
@@ -151,7 +147,7 @@ export default class NewAccount extends PureComponent {
           <a
             onClick={(e) => {
               e.preventDefault();
-              this.context.metricsEvent({
+              this.context.trackEvent({
                 eventOpts: {
                   category: 'Onboarding',
                   action: 'Create Password',

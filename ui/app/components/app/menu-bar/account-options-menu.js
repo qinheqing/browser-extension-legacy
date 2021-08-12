@@ -15,7 +15,7 @@ import {
   getCurrentChainId,
 } from '../../../selectors';
 import { useI18nContext } from '../../../hooks/useI18nContext';
-import { useMetricEvent } from '../../../hooks/useMetricEvent';
+import { useTrackEvent } from '../../../hooks/useTrackEvent';
 import { getEnvironmentType } from '../../../../../app/scripts/lib/util';
 import { ENVIRONMENT_TYPE_FULLSCREEN } from '../../../../../shared/constants/app';
 
@@ -23,28 +23,28 @@ export default function AccountOptionsMenu({ anchorElement, onClose }) {
   const t = useI18nContext();
   const dispatch = useDispatch();
   const history = useHistory();
-  const openFullscreenEvent = useMetricEvent({
+  const openFullscreenEvent = useTrackEvent({
     eventOpts: {
       category: 'Navigation',
       action: 'Account Options',
       name: 'Clicked Expand View',
     },
   });
-  const viewAccountDetailsEvent = useMetricEvent({
+  const viewAccountDetailsEvent = useTrackEvent({
     eventOpts: {
       category: 'Navigation',
       action: 'Account Options',
       name: 'Viewed Account Details',
     },
   });
-  const viewOnEtherscanEvent = useMetricEvent({
+  const viewOnEtherscanEvent = useTrackEvent({
     eventOpts: {
       category: 'Navigation',
       action: 'Account Options',
       name: 'Clicked View on Etherscan',
     },
   });
-  const openConnectedSitesEvent = useMetricEvent({
+  const openConnectedSitesEvent = useTrackEvent({
     eventOpts: {
       category: 'Navigation',
       action: 'Account Options',

@@ -14,7 +14,7 @@ const { isValidMnemonic } = ethers.utils;
 export default class ImportWithSeedPhrase extends PureComponent {
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   static propTypes = {
@@ -40,7 +40,7 @@ export default class ImportWithSeedPhrase extends PureComponent {
 
   UNSAFE_componentWillMount() {
     this._onBeforeUnload = () =>
-      this.context.metricsEvent({
+      this.context.trackEvent({
         eventOpts: {
           category: 'Onboarding',
           action: 'Import Seed Phrase',
@@ -124,16 +124,12 @@ export default class ImportWithSeedPhrase extends PureComponent {
     }
 
     const { password, seedPhrase } = this.state;
-    const {
-      history,
-      onSubmit,
-      setSeedPhraseBackedUp,
-      initializeThreeBox,
-    } = this.props;
+    const { history, onSubmit, setSeedPhraseBackedUp, initializeThreeBox } =
+      this.props;
 
     try {
       await onSubmit(password, this.parseSeedPhrase(seedPhrase));
-      this.context.metricsEvent({
+      this.context.trackEvent({
         eventOpts: {
           category: 'Onboarding',
           action: 'Import Seed Phrase',
@@ -183,7 +179,7 @@ export default class ImportWithSeedPhrase extends PureComponent {
   };
 
   toggleTermsCheck = () => {
-    this.context.metricsEvent({
+    this.context.trackEvent({
       eventOpts: {
         category: 'Onboarding',
         action: 'Import Seed Phrase',
@@ -217,7 +213,7 @@ export default class ImportWithSeedPhrase extends PureComponent {
           <a
             onClick={(e) => {
               e.preventDefault();
-              this.context.metricsEvent({
+              this.context.trackEvent({
                 eventOpts: {
                   category: 'Onboarding',
                   action: 'Import Seed Phrase',

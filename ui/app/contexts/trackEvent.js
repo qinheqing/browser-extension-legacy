@@ -3,34 +3,34 @@ import PropTypes from 'prop-types';
 import { captureException } from '@sentry/browser';
 import utilsApp from '../../../src/utils/utilsApp';
 
-export const MetaMetricsContext = createContext(() => {
+export const TrackEventsContext = createContext(() => {
   captureException(
     Error(
-      `MetaMetrics context function was called from a react node that is not a descendant of a MetaMetrics context provider`,
+      `TrackEvents context function was called from a react node that is not a descendant of a TrackEvents context provider`,
     ),
   );
 });
 
-export function MetaMetricsProvider({ children }) {
+export function TrackEventsContextProvider({ children }) {
   const trackEvent = useCallback(() => {
     return utilsApp.trackEventNoop();
   }, []);
 
   return (
-    <MetaMetricsContext.Provider
+    <TrackEventsContext.Provider
       value={{
         trackEvent,
         metricsEvent: trackEvent,
       }}
     >
       {children}
-    </MetaMetricsContext.Provider>
+    </TrackEventsContext.Provider>
   );
 }
 
-MetaMetricsProvider.propTypes = { children: PropTypes.node };
+TrackEventsContextProvider.propTypes = { children: PropTypes.node };
 
-export class LegacyMetaMetricsProvider extends Component {
+export class LegacyTrackEventsContextProvider extends Component {
   static propTypes = {
     children: PropTypes.node,
   };
@@ -39,7 +39,7 @@ export class LegacyMetaMetricsProvider extends Component {
     children: undefined,
   };
 
-  static contextType = MetaMetricsContext;
+  static contextType = TrackEventsContext;
 
   static childContextTypes = {
     trackEvent: PropTypes.func,

@@ -14,7 +14,7 @@ const mapStateToProps = (state) => {
   } = state;
 
   return {
-    completionMetaMetricsName: firstTimeFlowTypeNameMap[firstTimeFlowType],
+    completionTrackEventName: firstTimeFlowTypeNameMap[firstTimeFlowType],
     onboardingInitiator: getOnboardingInitiator(state),
   };
 };

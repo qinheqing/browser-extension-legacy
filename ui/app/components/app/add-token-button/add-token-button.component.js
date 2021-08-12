@@ -1,12 +1,12 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { useMetricEvent } from '../../../hooks/useMetricEvent';
+import { useTrackEvent } from '../../../hooks/useTrackEvent';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import { ADD_TOKEN_ROUTE } from '../../../helpers/constants/routes';
 import Button from '../../ui/button';
 
 export default function AddTokenButton() {
-  const addTokenEvent = useMetricEvent({
+  const addTokenEvent = useTrackEvent({
     eventOpts: {
       category: 'Navigation',
       action: 'Token Menu',

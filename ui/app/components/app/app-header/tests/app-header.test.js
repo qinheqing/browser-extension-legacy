@@ -30,7 +30,7 @@ describe('App Header', function () {
     wrapper = shallow(<AppHeader.WrappedComponent {...props} />, {
       context: {
         t: (str) => str,
-        metricsEvent: () => undefined,
+        trackEvent: () => undefined,
       },
     });
   });

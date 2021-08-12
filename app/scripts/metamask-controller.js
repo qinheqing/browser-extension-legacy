@@ -910,10 +910,10 @@ export default class MetamaskController extends EventEmitter {
         swapsController,
       ),
 
-      // MetaMetrics
-      // map to ui/app/store/actions.js #trackMetaMetricsEvent
-      trackMetaMetricsEvent: nodeify(this.noop, this),
-      trackMetaMetricsPage: nodeify(this.noop, this),
+      // trackEvents
+      // map to ui/app/store/actions.js #trackEvent
+      trackEvent: nodeify(this.noop, this),
+      trackEventPage: nodeify(this.noop, this),
 
       // approval controller
       resolvePendingApproval: nodeify(
@@ -2203,7 +2203,7 @@ export default class MetamaskController extends EventEmitter {
       createMethodMiddleware({
         origin,
         getProviderState: this.getProviderState.bind(this),
-        sendMetrics: this.noop.bind(this),
+        trackEvent: this.noop.bind(this),
         handleWatchAssetRequest:
           this.preferencesController.requestWatchAsset.bind(
             this.preferencesController,

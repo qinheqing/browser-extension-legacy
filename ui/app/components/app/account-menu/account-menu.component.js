@@ -65,7 +65,7 @@ AccountMenuItem.propTypes = {
 export default class AccountMenu extends Component {
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   static propTypes = {
@@ -187,7 +187,7 @@ export default class AccountMenu extends Component {
         <div
           className="account-menu__account account-menu__item--clickable"
           onClick={() => {
-            this.context.metricsEvent({
+            this.context.trackEvent({
               eventOpts: {
                 category: 'Navigation',
                 action: 'Main Menu',
@@ -306,7 +306,7 @@ export default class AccountMenu extends Component {
   }
 
   render() {
-    const { t, metricsEvent } = this.context;
+    const { t, trackEvent } = this.context;
     const {
       shouldShowAccountsSearch,
       isAccountMenuOpen,
@@ -369,7 +369,7 @@ export default class AccountMenu extends Component {
             <AccountMenuItem
               onClick={() => {
                 toggleAccountMenu();
-                metricsEvent({
+                trackEvent({
                   eventOpts: {
                     category: 'Navigation',
                     action: 'Main Menu',
@@ -390,7 +390,7 @@ export default class AccountMenu extends Component {
             <AccountMenuItem
               onClick={() => {
                 toggleAccountMenu();
-                metricsEvent({
+                trackEvent({
                   eventOpts: {
                     category: 'Navigation',
                     action: 'Main Menu',
@@ -414,7 +414,7 @@ export default class AccountMenu extends Component {
         <AccountMenuItem
           onClick={() => {
             toggleAccountMenu();
-            metricsEvent({
+            trackEvent({
               eventOpts: {
                 category: 'Navigation',
                 action: 'Main Menu',
@@ -445,7 +445,7 @@ export default class AccountMenu extends Component {
           onClick={() => {
             toggleAccountMenu();
             history.push(SETTINGS_ROUTE);
-            this.context.metricsEvent({
+            this.context.trackEvent({
               eventOpts: {
                 category: 'Navigation',
                 action: 'Main Menu',

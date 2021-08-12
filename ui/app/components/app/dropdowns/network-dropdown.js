@@ -79,7 +79,7 @@ function mapDispatchToProps(dispatch) {
 class NetworkDropdown extends Component {
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   static propTypes = {
@@ -106,9 +106,9 @@ class NetworkDropdown extends Component {
       provider: { type: providerType },
       setProviderType,
     } = this.props;
-    const { metricsEvent } = this.context;
+    const { trackEvent } = this.context;
 
-    metricsEvent({
+    trackEvent({
       eventOpts: {
         category: 'Navigation',
         action: 'Home',

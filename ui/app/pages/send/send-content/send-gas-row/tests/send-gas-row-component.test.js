@@ -33,7 +33,7 @@ describe('SendGasRow Component', function () {
             anotherGasPriceButtonGroupProp: 'bar',
           }}
         />,
-        { context: { t: (str) => `${str}_t`, metricsEvent: () => ({}) } },
+        { context: { t: (str) => `${str}_t`, trackEvent: () => ({}) } },
       );
       wrapper.setProps({ isMainnet: true });
     });

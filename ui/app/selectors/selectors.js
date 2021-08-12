@@ -30,7 +30,7 @@ export function getNetworkIdentifier(state) {
   return nickname || rpcUrl || type;
 }
 
-export function getMetricsNetworkIdentifier(state) {
+export function getProviderNetworkIdentifier(state) {
   const { provider } = state.metamask;
   return provider.type === NETWORK_TYPE_RPC ? provider.rpcUrl : provider.type;
 }

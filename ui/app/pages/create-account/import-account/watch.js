@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { isValidAddress } from "ethereumjs-util"
+import { isValidAddress } from 'ethereumjs-util';
 import * as actions from '../../../store/actions';
 import { getMetaMaskAccounts } from '../../../selectors';
 import Button from '../../../components/ui/button';
@@ -12,7 +12,7 @@ import { getMostRecentOverviewPage } from '../../../ducks/history/history';
 class PrivateKeyImportView extends Component {
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   static propTypes = {
@@ -42,8 +42,8 @@ class PrivateKeyImportView extends Component {
 
     const isValid = isValidAddress(watchAccount);
     if (!isValid) {
-      displayWarning("Error Invalid address format");
-      return 
+      displayWarning('Error Invalid address format');
+      return;
     }
 
     importWatchAccount(watchAccount)

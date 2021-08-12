@@ -115,7 +115,7 @@ class JsonImportSubview extends Component {
       .then(({ selectedAddress }) => {
         if (selectedAddress) {
           history.push(mostRecentOverviewPage);
-          this.context.metricsEvent({
+          this.context.trackEvent({
             eventOpts: {
               category: 'Accounts',
               action: 'Import Account',
@@ -125,7 +125,7 @@ class JsonImportSubview extends Component {
           displayWarning(null);
         } else {
           displayWarning('Error importing account.');
-          this.context.metricsEvent({
+          this.context.trackEvent({
             eventOpts: {
               category: 'Accounts',
               action: 'Import Account',
@@ -178,7 +178,7 @@ const mapDispatchToProps = (dispatch) => {
 
 JsonImportSubview.contextTypes = {
   t: PropTypes.func,
-  metricsEvent: PropTypes.func,
+  trackEvent: PropTypes.func,
 };
 
 export default compose(

@@ -8,7 +8,7 @@ import { DEFAULT_ROUTE } from '../../helpers/constants/routes';
 
 export default class UnlockPage extends Component {
   static contextTypes = {
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
     t: PropTypes.func,
   };
 
@@ -56,7 +56,7 @@ export default class UnlockPage extends Component {
     try {
       await onSubmit(password);
       const newState = await forceUpdateMetamaskState();
-      this.context.metricsEvent({
+      this.context.trackEvent({
         eventOpts: {
           category: 'Navigation',
           action: 'Unlock',
@@ -67,7 +67,7 @@ export default class UnlockPage extends Component {
     } catch ({ message }) {
       if (message === 'Incorrect password') {
         const newState = await forceUpdateMetamaskState();
-        this.context.metricsEvent({
+        this.context.trackEvent({
           eventOpts: {
             category: 'Navigation',
             action: 'Unlock',

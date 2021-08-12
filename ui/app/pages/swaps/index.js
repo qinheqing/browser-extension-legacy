@@ -61,7 +61,7 @@ import {
   currentNetworkTxListSelector,
   getRpcPrefsForCurrentProvider,
 } from '../../selectors';
-import { useMetricEvent } from '../../hooks/useMetricEvent';
+import { useTrackEvent } from '../../hooks/useTrackEvent';
 import { getValueFromWeiHex } from '../../helpers/utils/conversions.util';
 
 import FeatureToggledRoute from '../../helpers/higher-order-components/feature-toggled-route';
@@ -197,7 +197,7 @@ export default function Swap() {
     };
   }, [dispatch]);
 
-  const exitedSwapsEvent = useMetricEvent({
+  const exitedSwapsEvent = useTrackEvent({
     event: 'Exited Swaps',
     category: 'swaps',
     sensitiveProperties: {

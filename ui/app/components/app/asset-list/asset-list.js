@@ -7,13 +7,13 @@ import TokenList from '../token-list';
 import { ADD_TOKEN_ROUTE } from '../../../helpers/constants/routes';
 import AssetListItem from '../asset-list-item';
 import { PRIMARY, SECONDARY } from '../../../helpers/constants/common';
-import { useMetricEvent } from '../../../hooks/useMetricEvent';
+import { useTrackEvent } from '../../../hooks/useTrackEvent';
 import { useUserPreferencedCurrency } from '../../../hooks/useUserPreferencedCurrency';
 import {
   getCurrentAccountWithSendEtherInfo,
   getNativeCurrency,
   getShouldShowFiat,
-  getEtherLogo
+  getEtherLogo,
 } from '../../../selectors';
 import { useCurrencyDisplay } from '../../../hooks/useCurrencyDisplay';
 
@@ -25,14 +25,14 @@ const AssetList = ({ onClickAsset }) => {
   const nativeCurrency = useSelector(getNativeCurrency);
   const showFiat = useSelector(getShouldShowFiat);
   const providerImage = useSelector(getEtherLogo);
-  const selectTokenEvent = useMetricEvent({
+  const selectTokenEvent = useTrackEvent({
     eventOpts: {
       category: 'Navigation',
       action: 'Token Menu',
       name: 'Clicked Token',
     },
   });
-  const addTokenEvent = useMetricEvent({
+  const addTokenEvent = useTrackEvent({
     eventOpts: {
       category: 'Navigation',
       action: 'Token Menu',

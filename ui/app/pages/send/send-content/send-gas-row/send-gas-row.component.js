@@ -30,11 +30,11 @@ export default class SendGasRow extends Component {
 
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   renderAdvancedOptionsButton() {
-    const { metricsEvent } = this.context;
+    const { trackEvent } = this.context;
     const { showCustomizeGasModal, isMainnet } = this.props;
     // Tests should behave in same way as mainnet, but are using Localhost
     if (!isMainnet && !process.env.IN_TEST) {
@@ -44,7 +44,7 @@ export default class SendGasRow extends Component {
       <div
         className="advanced-gas-options-btn"
         onClick={() => {
-          metricsEvent({
+          trackEvent({
             eventOpts: {
               category: 'Transactions',
               action: 'Edit Screen',
@@ -60,13 +60,8 @@ export default class SendGasRow extends Component {
   }
 
   setMaxAmount() {
-    const {
-      balance,
-      gasTotal,
-      sendToken,
-      setAmountToMax,
-      tokenBalance,
-    } = this.props;
+    const { balance, gasTotal, sendToken, setAmountToMax, tokenBalance } =
+      this.props;
 
     setAmountToMax({
       balance,
@@ -93,7 +88,7 @@ export default class SendGasRow extends Component {
       insufficientBalance,
       isMainnet,
     } = this.props;
-    const { metricsEvent } = this.context;
+    const { trackEvent } = this.context;
 
     const gasPriceButtonGroup = (
       <div>
@@ -102,7 +97,7 @@ export default class SendGasRow extends Component {
           showCheck={false}
           {...gasPriceButtonGroupProps}
           handleGasPriceSelection={async (opts) => {
-            metricsEvent({
+            trackEvent({
               eventOpts: {
                 category: 'Transactions',
                 action: 'Edit Screen',
@@ -157,11 +152,8 @@ export default class SendGasRow extends Component {
   }
 
   render() {
-    const {
-      gasFeeError,
-      gasButtonGroupShown,
-      advancedInlineGasShown,
-    } = this.props;
+    const { gasFeeError, gasButtonGroupShown, advancedInlineGasShown } =
+      this.props;
 
     return (
       <>

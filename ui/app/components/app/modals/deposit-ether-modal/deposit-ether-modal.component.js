@@ -6,7 +6,7 @@ import Button from '../../../ui/button';
 export default class DepositEtherModal extends Component {
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func.isRequired,
+    trackEvent: PropTypes.func.isRequired,
   };
 
   static propTypes = {
@@ -88,14 +88,8 @@ export default class DepositEtherModal extends Component {
   }
 
   render() {
-    const {
-      network,
-      toWyre,
-      address,
-      toFaucet,
-      isTestnet,
-      isMainnet,
-    } = this.props;
+    const { network, toWyre, address, toFaucet, isTestnet, isMainnet } =
+      this.props;
     const networkName = getNetworkDisplayName(network);
 
     return (
@@ -131,7 +125,7 @@ export default class DepositEtherModal extends Component {
               text: this.context.t('buyWithWyreDescription'),
               buttonLabel: this.context.t('continueToWyre'),
               onButtonClick: () => {
-                this.context.metricsEvent({
+                this.context.trackEvent({
                   eventOpts: {
                     category: 'Accounts',
                     action: 'Deposit Ether',

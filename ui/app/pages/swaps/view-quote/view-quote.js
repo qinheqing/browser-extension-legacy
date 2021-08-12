@@ -8,7 +8,7 @@ import { I18nContext } from '../../../contexts/i18n';
 import SelectQuotePopover from '../select-quote-popover';
 import { useEthFiatAmount } from '../../../hooks/useEthFiatAmount';
 import { useEqualityCheck } from '../../../hooks/useEqualityCheck';
-import { useMetricEvent } from '../../../hooks/useMetricEvent';
+import { useTrackEvent } from '../../../hooks/useTrackEvent';
 import { usePrevious } from '../../../hooks/usePrevious';
 import { useSwapsEthToken } from '../../../hooks/useSwapsEthToken';
 import FeeCard from '../fee-card';
@@ -82,7 +82,7 @@ export default function ViewQuote() {
   const history = useHistory();
   const dispatch = useDispatch();
   const t = useContext(I18nContext);
-  const metaMetricsEvent = utilsApp.trackEventNoop;
+  const trackEvent = utilsApp.trackEventNoop;
 
   const [dispatchedSafeRefetch, setDispatchedSafeRefetch] = useState(false);
   const [submitClicked, setSubmitClicked] = useState(false);
@@ -318,7 +318,7 @@ export default function ViewQuote() {
     available_quotes: numberOfQuotes,
   };
 
-  const allAvailableQuotesOpened = useMetricEvent({
+  const allAvailableQuotesOpened = useTrackEvent({
     event: 'All Available Quotes Opened',
     category: 'swaps',
     sensitiveProperties: {
@@ -330,7 +330,7 @@ export default function ViewQuote() {
           : usedQuote?.aggregator,
     },
   });
-  const quoteDetailsOpened = useMetricEvent({
+  const quoteDetailsOpened = useTrackEvent({
     event: 'Quote Details Opened',
     category: 'swaps',
     sensitiveProperties: {
@@ -342,7 +342,7 @@ export default function ViewQuote() {
           : usedQuote?.aggregator,
     },
   });
-  const editSpendLimitOpened = useMetricEvent({
+  const editSpendLimitOpened = useTrackEvent({
     event: 'Edit Spend Limit Opened',
     category: 'swaps',
     sensitiveProperties: {
@@ -353,7 +353,7 @@ export default function ViewQuote() {
     },
   });
 
-  const bestQuoteReviewedEvent = useMetricEvent({
+  const bestQuoteReviewedEvent = useTrackEvent({
     event: 'Best Quote Reviewed',
     category: 'swaps',
     sensitiveProperties: { ...eventObjectBase, network_fees: feeInFiat },
@@ -652,7 +652,7 @@ export default function ViewQuote() {
         onSubmit={() => {
           setSubmitClicked(true);
           if (!balanceError) {
-            dispatch(signAndSendTransactions(history, metaMetricsEvent));
+            dispatch(signAndSendTransactions(history, trackEvent));
           } else if (destinationToken.symbol === 'ETH') {
             history.push(DEFAULT_ROUTE);
           } else {

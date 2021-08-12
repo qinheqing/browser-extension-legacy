@@ -23,7 +23,7 @@ describe('Reveal Seed Phrase', function () {
     wrapper = mount(<RevealSeedPhrase.WrappedComponent {...props} />, {
       context: {
         t: (str) => str,
-        metricsEvent: () => undefined,
+        trackEvent: () => undefined,
       },
     });
   });

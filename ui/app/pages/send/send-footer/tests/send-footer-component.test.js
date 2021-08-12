@@ -50,7 +50,7 @@ describe('SendFooter Component', function () {
         sendErrors={{}}
         mostRecentOverviewPage="mostRecentOverviewPage"
       />,
-      { context: { t: (str) => str, metricsEvent: () => ({}) } },
+      { context: { t: (str) => str, trackEvent: () => ({}) } },
     );
   });
 
@@ -113,22 +113,24 @@ describe('SendFooter Component', function () {
         expectedResult: true,
         gasIsLoading: false,
       },
-      'should return true if gasIsLoading is truthy but all other params are falsy': {
-        inError: false,
-        gasTotal: '',
-        sendToken: null,
-        tokenBalance: '',
-        expectedResult: true,
-        gasIsLoading: true,
-      },
-      'should return false if inError is false and all other params are truthy': {
-        inError: false,
-        gasTotal: '0x123',
-        sendToken: { mockProp: 'mockSendTokenProp' },
-        tokenBalance: '123',
-        expectedResult: false,
-        gasIsLoading: false,
-      },
+      'should return true if gasIsLoading is truthy but all other params are falsy':
+        {
+          inError: false,
+          gasTotal: '',
+          sendToken: null,
+          tokenBalance: '',
+          expectedResult: true,
+          gasIsLoading: true,
+        },
+      'should return false if inError is false and all other params are truthy':
+        {
+          inError: false,
+          gasTotal: '0x123',
+          sendToken: { mockProp: 'mockSendTokenProp' },
+          tokenBalance: '123',
+          expectedResult: false,
+          gasIsLoading: false,
+        },
     };
     Object.entries(config).forEach(([description, obj]) => {
       it(description, function () {
@@ -225,7 +227,7 @@ describe('SendFooter Component', function () {
           unapprovedTxs={{}}
           update={propsMethodSpies.update}
         />,
-        { context: { t: (str) => str, metricsEvent: () => ({}) } },
+        { context: { t: (str) => str, trackEvent: () => ({}) } },
       );
     });
 

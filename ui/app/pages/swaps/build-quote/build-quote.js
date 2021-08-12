@@ -61,7 +61,7 @@ export default function BuildQuote({
   const t = useContext(I18nContext);
   const dispatch = useDispatch();
   const history = useHistory();
-  const metaMetricsEvent = utilsApp.trackEventNoop;
+  const trackEvent = utilsApp.trackEventNoop;
 
   const [fetchedTokenExchangeRate, setFetchedTokenExchangeRate] =
     useState(undefined);
@@ -454,7 +454,7 @@ export default function BuildQuote({
               history,
               inputValue,
               maxSlippage,
-              metaMetricsEvent,
+              trackEvent,
             ),
           );
         }}

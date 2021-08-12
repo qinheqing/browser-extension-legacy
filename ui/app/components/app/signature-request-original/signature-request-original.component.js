@@ -18,7 +18,7 @@ import SiteIcon from '../../ui/site-icon';
 export default class SignatureRequestOriginal extends Component {
   static contextTypes = {
     t: PropTypes.func.isRequired,
-    metricsEvent: PropTypes.func.isRequired,
+    trackEvent: PropTypes.func.isRequired,
   };
 
   static propTypes = {
@@ -54,8 +54,8 @@ export default class SignatureRequestOriginal extends Component {
 
   _beforeUnload = (event) => {
     const { clearConfirmTransaction, cancel } = this.props;
-    const { metricsEvent } = this.context;
-    metricsEvent({
+    const { trackEvent } = this.context;
+    trackEvent({
       eventOpts: {
         category: 'Transactions',
         action: 'Sign Request',
@@ -282,7 +282,7 @@ export default class SignatureRequestOriginal extends Component {
           onClick={async (event) => {
             this._removeBeforeUnload();
             await cancel(event);
-            this.context.metricsEvent({
+            this.context.trackEvent({
               eventOpts: {
                 category: 'Transactions',
                 action: 'Sign Request',
@@ -303,7 +303,7 @@ export default class SignatureRequestOriginal extends Component {
           onClick={async (event) => {
             this._removeBeforeUnload();
             await sign(event);
-            this.context.metricsEvent({
+            this.context.trackEvent({
               eventOpts: {
                 category: 'Transactions',
                 action: 'Sign Request',

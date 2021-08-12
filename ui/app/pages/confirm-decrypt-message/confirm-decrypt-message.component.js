@@ -16,7 +16,7 @@ import { conversionUtil } from '../../helpers/utils/conversion-util';
 export default class ConfirmDecryptMessage extends Component {
   static contextTypes = {
     t: PropTypes.func.isRequired,
-    metricsEvent: PropTypes.func.isRequired,
+    trackEvent: PropTypes.func.isRequired,
   };
 
   static propTypes = {
@@ -56,14 +56,11 @@ export default class ConfirmDecryptMessage extends Component {
   };
 
   _beforeUnload = async (event) => {
-    const {
-      clearConfirmTransaction,
-      cancelDecryptMessage,
-      txData,
-    } = this.props;
-    const { metricsEvent } = this.context;
+    const { clearConfirmTransaction, cancelDecryptMessage, txData } =
+      this.props;
+    const { trackEvent } = this.context;
     await cancelDecryptMessage(txData, event);
-    metricsEvent({
+    trackEvent({
       eventOpts: {
         category: 'Messages',
         action: 'Decrypt Message Request',
@@ -83,7 +80,7 @@ export default class ConfirmDecryptMessage extends Component {
 
   copyMessage = () => {
     copyToClipboard(this.state.rawMessage);
-    this.context.metricsEvent({
+    this.context.trackEvent({
       eventOpts: {
         category: 'Messages',
         action: 'Decrypt Message Copy',
@@ -256,7 +253,8 @@ export default class ConfirmDecryptMessage extends Component {
           <div
             className={classnames({
               'request-decrypt-message__message-copy': true,
-              'request-decrypt-message__message-copy--pressed': copyToClipboardPressed,
+              'request-decrypt-message__message-copy--pressed':
+                copyToClipboardPressed,
             })}
             onClick={() => this.copyMessage()}
             onMouseDown={() => this.setState({ copyToClipboardPressed: true })}
@@ -275,7 +273,7 @@ export default class ConfirmDecryptMessage extends Component {
             </Tooltip>
           </div>
         ) : (
-          <div></div>
+          <div />
         )}
       </div>
     );
@@ -290,7 +288,7 @@ export default class ConfirmDecryptMessage extends Component {
       mostRecentOverviewPage,
       txData,
     } = this.props;
-    const { metricsEvent, t } = this.context;
+    const { trackEvent, t } = this.context;
 
     return (
       <div className="request-decrypt-message__footer">
@@ -301,7 +299,7 @@ export default class ConfirmDecryptMessage extends Component {
           onClick={async (event) => {
             this._removeBeforeUnload();
             await cancelDecryptMessage(txData, event);
-            metricsEvent({
+            trackEvent({
               eventOpts: {
                 category: 'Messages',
                 action: 'Decrypt Message Request',
@@ -321,7 +319,7 @@ export default class ConfirmDecryptMessage extends Component {
           onClick={async (event) => {
             this._removeBeforeUnload();
             await decryptMessage(txData, event);
-            metricsEvent({
+            trackEvent({
               eventOpts: {
                 category: 'Messages',
                 action: 'Decrypt Message Request',
