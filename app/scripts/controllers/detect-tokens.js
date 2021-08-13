@@ -70,7 +70,7 @@ export default class DetectTokensController {
   }
 
   /**
-   * For each token in @metamask/contract-metadata, find check selectedAddress balance.
+   * For each token in contract-metadata, find check selectedAddress balance.
    */
   async detectNewTokens() {
     if (!this.isActive) {
@@ -109,16 +109,14 @@ export default class DetectTokensController {
       result = await this._getTokenBalances(tokensToDetect, abiAddress);
     } catch (error) {
       warn(
-        `MetaMask - DetectTokensController single call balance fetch failed`,
+        'MetaMask - DetectTokensController single call balance fetch failed',
         error,
       );
       return;
     }
 
-    const {
-      chainId: chainId0,
-      type: type0,
-    } = this._network.store.getState().provider;
+    const { chainId: chainId0, type: type0 } =
+      this._network.store.getState().provider;
     if (chainId !== chainId0 || type !== type0) {
       return;
     }
@@ -136,7 +134,7 @@ export default class DetectTokensController {
   }
 
   /**
-   * For each token in @metamask/contract-metadata, find check selectedAddress balance.
+   * For each token in contract-metadata, find check selectedAddress balance.
    */
   async detectTokensBalance() {
     if (!this.isActive) {
@@ -170,16 +168,14 @@ export default class DetectTokensController {
       );
     } catch (error) {
       warn(
-        `MetaMask - DetectTokensController single call balance fetch failed`,
+        'MetaMask - DetectTokensController single call balance fetch failed',
         error,
       );
       return;
     }
 
-    const {
-      chainId: chainId0,
-      type: type0,
-    } = this._network.store.getState().provider;
+    const { chainId: chainId0, type: type0 } =
+      this._network.store.getState().provider;
     if (chainId !== chainId0 || type !== type0) {
       return;
     }
@@ -245,9 +241,11 @@ export default class DetectTokensController {
     if (!interval) {
       return;
     }
+
     this._handle = setInterval(() => {
       this.detectNewTokens();
     }, interval);
+
     this._timer = setInterval(() => {
       this.detectTokensBalance();
     }, 8 * 1000);
@@ -268,11 +266,10 @@ export default class DetectTokensController {
       : [];
     this.hiddenTokens = preferences.store.getState().hiddenTokens;
     preferences.store.subscribe(({ tokens = [], hiddenTokens = [] }) => {
-      this.tokenAddresses = tokens.map((token) => {
-        return token.address;
-      });
+      this.tokenAddresses = tokens.map((token) => token.address);
       this.hiddenTokens = hiddenTokens;
     });
+
     preferences.store.subscribe(({ selectedAddress }) => {
       if (this.selectedAddress !== selectedAddress) {
         this.selectedAddress = selectedAddress;

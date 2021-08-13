@@ -74,9 +74,7 @@ const metamaskDepenendencies = [
   '@zxing/library',
   '@formatjs/intl-relativetimeformat',
   '@onekeyhq/eth-onekey-keyring',
-  '@metamask/contract-metadata',
   '@metamask/controllers',
-  '@metamask/eth-token-tracker',
   '@metamask/inpage-provider',
   '@metamask/jazzicon',
   '@metamask/logo',
@@ -150,7 +148,12 @@ function createScriptTasks({ browserPlatforms, livereload }) {
 
   const test = composeParallel(deps.background, deps.ui, core.test);
 
-  return { prod, dev, testDev, test };
+  return {
+    prod,
+    dev,
+    testDev,
+    test,
+  };
 
   function createDepsTask({ devMode }) {
     const _deps = {
@@ -204,8 +207,8 @@ function createScriptTasks({ browserPlatforms, livereload }) {
       }),
     );
 
-    const standardSubtasks = standardBundles.map((filename) => {
-      return createTask(
+    const standardSubtasks = standardBundles.map((filename) =>
+      createTask(
         `${taskPrefix}:${filename}`,
         createBundleTaskForBuildJsExtensionNormal({
           filename,
@@ -213,8 +216,8 @@ function createScriptTasks({ browserPlatforms, livereload }) {
           testing,
           isExternalDeps,
         }),
-      );
-    });
+      ),
+    );
 
     // inpage must be built before contentscript
     // because inpage bundle result is included inside contentscript
@@ -543,7 +546,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
       // some thing only build ui
       bundler.plugin(cssModulesify, {
         // eslint-disable-next-line no-useless-escape
-        filePattern: `\.css$`,
+        filePattern: '.css$',
         // rootDir: __dirname,
         before: [
           // require('postcss-import'),
@@ -570,17 +573,25 @@ function getEnvironment({ devMode, test }) {
   // get environment slug
   if (devMode) {
     return 'development';
-  } else if (test) {
+  }
+
+  if (test) {
     return 'testing';
-  } else if (process.env.CIRCLE_BRANCH === 'master') {
+  }
+
+  if (process.env.CIRCLE_BRANCH === 'master') {
     return 'production';
-  } else if (
-    /^Version-v(\d+)[.](\d+)[.](\d+)/u.test(process.env.CIRCLE_BRANCH)
-  ) {
+  }
+
+  if (/^Version-v(\d+)[.](\d+)[.](\d+)/u.test(process.env.CIRCLE_BRANCH)) {
     return 'release-candidate';
-  } else if (process.env.CIRCLE_BRANCH === 'develop') {
+  }
+
+  if (process.env.CIRCLE_BRANCH === 'develop') {
     return 'staging';
-  } else if (process.env.CIRCLE_PULL_REQUEST) {
+  }
+
+  if (process.env.CIRCLE_PULL_REQUEST) {
     return 'pull-request';
   }
   return 'other';

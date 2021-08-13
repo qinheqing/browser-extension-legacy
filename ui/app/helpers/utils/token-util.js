@@ -1,16 +1,17 @@
 import log from 'loglevel';
 import BigNumber from 'bignumber.js';
-import contractMap from '@metamask/contract-metadata';
+import contractMap from '../../../../shared/contract-metadata';
 import * as util from './util';
 import { conversionUtil, multiplyCurrencies } from './conversion-util';
 import { formatCurrency } from './confirm-tx.util';
 
-const casedContractMap = Object.keys(contractMap).reduce((acc, base) => {
-  return {
+const casedContractMap = Object.keys(contractMap).reduce(
+  (acc, base) => ({
     ...acc,
     [base.toLowerCase()]: contractMap[base],
-  };
-}, {});
+  }),
+  {},
+);
 
 const DEFAULT_SYMBOL = '';
 const DEFAULT_DECIMALS = '0';
@@ -79,7 +80,8 @@ async function getDecimals(tokenAddress) {
 }
 
 export async function fetchSymbolAndDecimals(tokenAddress) {
-  let symbol, decimals;
+  let symbol;
+  let decimals;
 
   try {
     symbol = await getSymbol(tokenAddress);
@@ -109,7 +111,8 @@ export async function getSymbolAndDecimals(tokenAddress, existingTokens = []) {
     };
   }
 
-  let symbol, decimals;
+  let symbol;
+  let decimals;
 
   try {
     symbol = await getSymbol(tokenAddress);

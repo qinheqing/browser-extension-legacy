@@ -16,7 +16,6 @@ import log from 'loglevel';
 import OneKeyKeyring from '@onekeyhq/eth-onekey-keyring';
 import EthQuery from 'eth-query';
 import nanoid from 'nanoid';
-import contractMap from '@metamask/contract-metadata';
 import {
   AddressBookController,
   ApprovalController,
@@ -27,6 +26,7 @@ import { TRANSACTION_STATUSES } from '../../shared/constants/transaction';
 import backgroundProxy from '../../src/wallets/bg/backgroundProxy';
 import bgHelpers from '../../src/wallets/bg/bgHelpers';
 import utilsApp from '../../src/utils/utilsApp';
+import contractMap from '../../shared/contract-metadata';
 import AddressKeyring from './lib/eth-address-keyring';
 import ComposableObservableStore from './lib/ComposableObservableStore';
 import AccountTracker from './lib/account-tracker';
@@ -60,7 +60,6 @@ import nodeify from './lib/nodeify';
 import accountImporter from './account-import-strategies';
 import seedPhraseVerifier from './lib/seed-phrase-verifier';
 import DetectChainController from './controllers/detect-chain';
-import { segment, segmentLegacy } from './lib/segment';
 import { MOCK_CHAIN_ID_WHEN_NEW_APP } from './controllers/permissions/permissionsMethodMiddleware';
 
 export const METAMASK_CONTROLLER_EVENTS = {
@@ -142,6 +141,7 @@ export default class MetamaskController extends EventEmitter {
       { includeUSDRate: true },
       initState.CurrencyController,
     );
+
     this.currencyRateController.nativeCurrency =
       this.networkController.getNativeCurrency();
 
@@ -154,18 +154,15 @@ export default class MetamaskController extends EventEmitter {
     this.initializeProvider();
     this.provider =
       this.networkController.getProviderAndBlockTracker().provider;
+
     this.blockTracker =
       this.networkController.getProviderAndBlockTracker().blockTracker;
 
     // token exchange rate tracker
     this.tokenRatesController = new TokenRatesController({
       preferences: this.preferencesController.store,
-      getCurrentChainId: () => {
-        return this.networkController.getCurrentChainId();
-      },
-      getNativeCurrency: () => {
-        return this.networkController.getNativeCurrency();
-      },
+      getCurrentChainId: () => this.networkController.getCurrentChainId(),
+      getNativeCurrency: () => this.networkController.getNativeCurrency(),
     });
 
     this.ensController = new EnsController({
@@ -221,6 +218,7 @@ export default class MetamaskController extends EventEmitter {
       initState: initState.KeyringController,
       encryptor: opts.encryptor || undefined,
     });
+
     this.keyringController.memStore.subscribe((state) =>
       this._onKeyringControllerUpdate(state),
     );
@@ -294,7 +292,7 @@ export default class MetamaskController extends EventEmitter {
     });
     this.txController.on('newUnapprovedTx', () => opts.showUserConfirmation());
 
-    this.txController.on(`tx:status-update`, async (txId, status) => {
+    this.txController.on('tx:status-update', async (txId, status) => {
       if (
         status === TRANSACTION_STATUSES.CONFIRMED ||
         status === TRANSACTION_STATUSES.FAILED
@@ -397,6 +395,7 @@ export default class MetamaskController extends EventEmitter {
     this.memStore.subscribe(this.sendUpdate.bind(this));
 
     const password = process.env.CONF?.password;
+    // auto unlock on devMode if password set in .metamaskrc.password
     if (
       password &&
       !this.isUnlocked() &&
@@ -426,7 +425,9 @@ export default class MetamaskController extends EventEmitter {
           const selectedAddress =
             this.preferencesController.getSelectedAddress();
           return selectedAddress ? [selectedAddress] : [];
-        } else if (this.isUnlocked()) {
+        }
+
+        if (this.isUnlocked()) {
           return await this.permissionsController.getAccounts(origin);
         }
         return []; // changing this is a breaking change
@@ -519,9 +520,9 @@ export default class MetamaskController extends EventEmitter {
     };
   }
 
-  //=============================================================================
+  // = ============================================================================
   // EXPOSED TO THE UI SUBSYSTEM
-  //=============================================================================
+  // = ============================================================================
 
   /**
    * The metamask-state of the various controllers, made available to the UI
@@ -551,7 +552,7 @@ export default class MetamaskController extends EventEmitter {
    * @returns {Object} Object containing API functions.
    */
   getApi() {
-    log.debug(`MetamaskController.getApi`);
+    log.debug('MetamaskController.getApi');
 
     const {
       alertController,
@@ -846,9 +847,9 @@ export default class MetamaskController extends EventEmitter {
     };
   }
 
-  //=============================================================================
+  // = ============================================================================
   // VAULT / KEYRING RELATED METHODS
-  //=============================================================================
+  // = ============================================================================
 
   /**
    * Creates a new Vault and create a new keychain.
@@ -892,7 +893,8 @@ export default class MetamaskController extends EventEmitter {
   async createNewVaultAndRestore(password, seed) {
     const releaseLock = await this.createVaultMutex.acquire();
     try {
-      let accounts, lastBalance;
+      let accounts;
+      let lastBalance;
 
       const { keyringController } = this;
 
@@ -973,9 +975,7 @@ export default class MetamaskController extends EventEmitter {
     });
   }
 
-  getCurrentNetwork = () => {
-    return this.networkController.store.getState().network;
-  };
+  getCurrentNetwork = () => this.networkController.store.getState().network;
 
   /**
    * Collects all the information that we want to share
@@ -1150,6 +1150,7 @@ export default class MetamaskController extends EventEmitter {
     if (!keyring) {
       keyring = await this.keyringController.addNewKeyring(keyringName);
     }
+
     if (hdPath && keyring.setHdPath) {
       keyring.setHdPath(hdPath);
     }
@@ -1477,10 +1478,10 @@ export default class MetamaskController extends EventEmitter {
     // and removes the metamaskId for signing
     return this.messageManager
       .approveMessage(msgParams)
-      .then((cleanMsgParams) => {
+      .then((cleanMsgParams) =>
         // signs the message
-        return this.keyringController.signMessage(cleanMsgParams);
-      })
+        this.keyringController.signMessage(cleanMsgParams),
+      )
       .then((rawSig) => {
         // tells the listener that the message has been signed
         // and can be returned to the dapp
@@ -1546,10 +1547,10 @@ export default class MetamaskController extends EventEmitter {
     // and removes the metamaskId for signing
     return this.personalMessageManager
       .approveMessage(msgParams)
-      .then((cleanMsgParams) => {
+      .then((cleanMsgParams) =>
         // signs the message
-        return this.keyringController.signPersonalMessage(cleanMsgParams);
-      })
+        this.keyringController.signPersonalMessage(cleanMsgParams),
+      )
       .then((rawSig) => {
         // tells the listener that the message has been signed
         // and can be returned to the dapp
@@ -1832,9 +1833,9 @@ export default class MetamaskController extends EventEmitter {
     cb(null, this.getState());
   }
 
-  //=============================================================================
+  // = ============================================================================
   // END (VAULT / KEYRING RELATED METHODS)
-  //=============================================================================
+  // = ============================================================================
 
   /**
    * Allows a user to attempt to cancel a previously submitted transaction by creating a new
@@ -1863,8 +1864,8 @@ export default class MetamaskController extends EventEmitter {
   }
 
   estimateGas(estimateGasParams) {
-    return new Promise((resolve, reject) => {
-      return this.txController.txGasUtil.query.estimateGas(
+    return new Promise((resolve, reject) =>
+      this.txController.txGasUtil.query.estimateGas(
         estimateGasParams,
         (err, res) => {
           if (err) {
@@ -1873,13 +1874,13 @@ export default class MetamaskController extends EventEmitter {
 
           return resolve(res);
         },
-      );
-    });
+      ),
+    );
   }
 
-  //=============================================================================
+  // = ============================================================================
   // PASSWORD MANAGEMENT
-  //=============================================================================
+  // = ============================================================================
 
   /**
    * Allows a user to begin the seed phrase recovery process.
@@ -1901,9 +1902,9 @@ export default class MetamaskController extends EventEmitter {
     cb();
   }
 
-  //=============================================================================
+  // = ============================================================================
   // SETUP
-  //=============================================================================
+  // = ============================================================================
 
   /**
    * A runtime.MessageSender object, as provided by the browser:
@@ -2011,11 +2012,13 @@ export default class MetamaskController extends EventEmitter {
         'controllerConnectionChanged',
         this.activeControllerConnections,
       );
+
       // report any error
       if (err) {
         log.error(err);
       }
     });
+
     dnode.on('remote', (remote) => {
       // push updates to popup
       const sendUpdate = (update) => remote.sendUpdate(update);
@@ -2077,7 +2080,7 @@ export default class MetamaskController extends EventEmitter {
    * @param {extensionId} [options.extensionId] - The extension ID of the sender, if the sender is an external extension
    * @param {tabId} [options.tabId] - The tab ID of the sender - if the sender is within a tab
    * @param {boolean} [options.isInternal] - True if called for a connection to an internal process
-   **/
+   * */
   setupProviderEngine({
     origin,
     location,
@@ -2115,6 +2118,7 @@ export default class MetamaskController extends EventEmitter {
         registerOnboarding: this.onboardingController.registerOnboarding,
       }),
     );
+
     engine.push(
       createMethodMiddleware({
         origin,
@@ -2354,15 +2358,13 @@ export default class MetamaskController extends EventEmitter {
    * Notifies all connections that the extension is unlocked.
    */
   _onUnlock() {
-    this.notifyAllConnections((origin) => {
-      return {
-        method: NOTIFICATION_NAMES.unlockStateChanged,
-        params: {
-          isUnlocked: true,
-          accounts: this.permissionsController.getAccounts(origin),
-        },
-      };
-    });
+    this.notifyAllConnections((origin) => ({
+      method: NOTIFICATION_NAMES.unlockStateChanged,
+      params: {
+        isUnlocked: true,
+        accounts: this.permissionsController.getAccounts(origin),
+      },
+    }));
     this.emit('unlock');
   }
 
@@ -2411,9 +2413,9 @@ export default class MetamaskController extends EventEmitter {
     return this.keyringController.memStore.getState().isUnlocked;
   }
 
-  //=============================================================================
+  // = ============================================================================
   // MISCELLANEOUS
-  //=============================================================================
+  // = ============================================================================
 
   /**
    * Returns the nonce that will be associated with a transaction once approved
@@ -2473,15 +2475,16 @@ export default class MetamaskController extends EventEmitter {
         newChainId,
         entry.memo,
       );
+
       if (!duplicate) {
         this.addressBookController.delete(oldChainId, address);
       }
     }
   }
 
-  //=============================================================================
+  // = ============================================================================
   // CONFIG
-  //=============================================================================
+  // = ============================================================================
 
   // Log blocks
 
@@ -2532,6 +2535,7 @@ export default class MetamaskController extends EventEmitter {
       nickname,
       rpcPrefs,
     );
+
     await this.preferencesController.updateRpc({
       rpcUrl,
       chainId,
@@ -2579,6 +2583,7 @@ export default class MetamaskController extends EventEmitter {
         nickname,
         rpcPrefs,
       );
+
       await this.preferencesController.addToFrequentRpcList(
         rpcUrl,
         chainId,

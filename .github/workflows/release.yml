@@ -28,33 +28,36 @@ jobs:
     env:
       buildEveryTime: 'true'
     steps:
-      - name: 'Setup ENV 1'
-        run: |
-          ref="${github_ref////-}"
-          ref="${ref/refs-heads-/}"
-          ref="${ref/refs-tags-/}"
-          echo $ref
-          # echo "::set-env name=GITHUB_TAG::$ref"
-          echo "GITHUB_TAG=$ref" >> $GITHUB_ENV
-          echo "QINIU_UPLOAD_DEST_PATH=fe/${{ github.repository_owner }}/${{ github.event.repository.name }}/${{ github.sha }}/" >> $GITHUB_ENV
-          echo "ActionTriggerBy = ${{ github.event.action }} / ${{ github.event_name }}"
-        env:
-          github_ref: ${{ github.ref }}
-
-      - name: 'Setup ENV 2'
-        run: |
-          echo "QINIU_PUBLIC_URL=${{ secrets.QINIU_PUBLIC_ORIGIN }}/${{ env.QINIU_UPLOAD_DEST_PATH }}" >> $GITHUB_ENV
 
       - name: 'Checkout Source Code'
         uses: actions/checkout@v2
         with:
           lfs: true
 
-      - name: 'Setup ENV 3'
+      - name: 'Setup ENV'
         run: |
-          eval "$(node -e 'const v=require("./package.json").version; console.log("version="+v)')"
-          echo $version
-          echo "PKG_VERSION=$version" >> $GITHUB_ENV
+          echo "ActionTriggerBy = ${{ github.event.action }} / ${{ github.event_name }}"
+
+          github_ref="${github_ref////-}"
+          github_ref="${github_ref/refs-heads-/}"
+          github_ref="${github_ref/refs-tags-/}"
+          echo '$github_ref='$github_ref
+          echo "GITHUB_TAG=$github_ref" >> $GITHUB_ENV
+          # echo "::set-env name=GITHUB_TAG::$github_ref"
+
+          eval "$(node -e 'const v=require("./package.json").version; console.log("pkg_version="+v)')"
+          echo '$pkg_version='$pkg_version
+          echo "PKG_VERSION=$pkg_version" >> $GITHUB_ENV
+
+          qiniu_upload_path_key=fe/${{ github.repository_owner }}/${{ github.event.repository.name }}/$pkg_version/${{ github.sha }}/
+          echo '$qiniu_upload_path_key='$qiniu_upload_path_key
+          echo "QINIU_UPLOAD_DEST_PATH=$qiniu_upload_path_key" >> $GITHUB_ENV
+
+          qiniu_public_url=${{ secrets.QINIU_PUBLIC_ORIGIN }}/$qiniu_upload_path_key
+          echo '$qiniu_public_url='$qiniu_public_url
+          echo "QINIU_PUBLIC_URL=$qiniu_public_url" >> $GITHUB_ENV
+        env:
+          github_ref: ${{ github.ref }}
 
       - name: 'Setup Node'
         uses: actions/setup-node@v2

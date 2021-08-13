@@ -1,8 +1,8 @@
-import contractMap from '@metamask/contract-metadata';
 import BigNumber from 'bignumber.js';
 import { shuffle } from 'lodash';
 import { checksumAddress } from '../helpers/utils/util';
 import { getTokenFiatAmount } from '../helpers/utils/token-util';
+import contractMap from '../../../shared/contract-metadata';
 
 const tokenList = shuffle(
   Object.entries(contractMap)
@@ -39,10 +39,10 @@ export function getRenderableTokenData(
       symbol,
       false,
     ) || '';
-  const usedIconUrl =
-    iconUrl ||
-    (contractMap[checksumAddress(address)] &&
-      `images/contract/${contractMap[checksumAddress(address)].logo}`);
+  const usedIconUrl = iconUrl(
+    contractMap[checksumAddress(address)] &&
+      `images/contract/${contractMap[checksumAddress(address)].logo}`,
+  );
   return {
     ...token,
     primaryLabel: symbol,

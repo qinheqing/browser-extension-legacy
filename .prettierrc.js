@@ -4,5 +4,6 @@ module.exports = {
   trailingComma: 'all',
 
   // DO NOT add quote for object props key, conflict with eslint auto-fix
+  //    auto quote prettier quote
   quoteProps: 'preserve',
 };

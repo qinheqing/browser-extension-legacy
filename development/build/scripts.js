@@ -585,8 +585,8 @@ function setupBundlerDefaults(
       // inline `fs.readFileSync` files
       brfs,
     ].filter(Boolean),
-    // use entryFilepath for moduleIds, easier to determine origin file
-    fullPaths: devMode,
+    // use entryFilepath for moduleIds, easier to determine origin file (full path of OS)
+    fullPaths: false, // devMode,
     paths: configs.browserifyPaths,
     // for sourcemaps
     debug: true,
@@ -759,6 +759,7 @@ async function bundleIt(buildConfiguration) {
   }
 }
 
+// inject process.env variables to output bundle
 function getEnvironmentVariables({ devMode, testing }) {
   const environment = getEnvironment({ devMode, testing });
   if (environment === 'production' && !process.env.SENTRY_DSN) {
@@ -772,6 +773,7 @@ function getEnvironmentVariables({ devMode, testing }) {
     IN_TEST: testing ? 'true' : false,
     PUBNUB_SUB_KEY: process.env.PUBNUB_SUB_KEY || '',
     PUBNUB_PUB_KEY: process.env.PUBNUB_PUB_KEY || '',
+    // auto unlock on devMode, process.env.CONF?.password
     CONF: devMode ? metamaskrc : {},
     SENTRY_DSN: process.env.SENTRY_DSN || metamaskrc.SENTRY_DSN,
     SENTRY_DSN_DEV: process.env.SENTRY_DSN_DEV || metamaskrc.SENTRY_DSN_DEV,
