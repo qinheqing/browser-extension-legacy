@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
-import contractMap from '@metamask/contract-metadata';
 import { clearConfirmTransaction } from '../../ducks/confirm-transaction/confirm-transaction.duck';
 
 import {
@@ -38,14 +37,16 @@ import {
   transactionFeeSelector,
 } from '../../selectors';
 import { getMostRecentOverviewPage } from '../../ducks/history/history';
+import contractMap from '../../../../shared/contract-metadata';
 import ConfirmTransactionBase from './confirm-transaction-base.component';
 
-const casedContractMap = Object.keys(contractMap).reduce((acc, base) => {
-  return {
+const casedContractMap = Object.keys(contractMap).reduce(
+  (acc, base) => ({
     ...acc,
     [base.toLowerCase()]: contractMap[base],
-  };
-}, {});
+  }),
+  {},
+);
 
 let customNonceValue = '';
 const customNonceMerge = (txData) =>
@@ -102,9 +103,8 @@ const mapStateToProps = (state, ownProps) => {
   const { name: fromName } = identities[fromAddress];
   const toAddress = propsToAddress || txParamsToAddress;
 
-  const toName =
-    identities[toAddress]?.name ||
-    casedContractMap[toAddress]?.name ||
+  const toName = identities[toAddress]?.name;
+  casedContractMap[toAddress]?.name ||
     shortenAddress(checksumAddress(toAddress));
 
   const checksummedAddress = checksumAddress(toAddress);
@@ -186,42 +186,36 @@ const mapStateToProps = (state, ownProps) => {
   };
 };
 
-export const mapDispatchToProps = (dispatch) => {
-  return {
-    tryReverseResolveAddress: (address) => {
-      return dispatch(tryReverseResolveAddress(address));
-    },
-    updateCustomNonce: (value) => {
-      customNonceValue = value;
-      dispatch(updateCustomNonce(value));
-    },
-    clearConfirmTransaction: () => dispatch(clearConfirmTransaction()),
-    showTransactionConfirmedModal: ({ onSubmit }) => {
-      return dispatch(showModal({ name: 'TRANSACTION_CONFIRMED', onSubmit }));
-    },
-    showCustomizeGasModal: ({ txData, onSubmit, validate }) => {
-      return dispatch(
-        showModal({ name: 'CUSTOMIZE_GAS', txData, onSubmit, validate }),
-      );
-    },
-    updateGasAndCalculate: (updatedTx) => {
-      return dispatch(updateTransaction(updatedTx));
-    },
-    showRejectTransactionsConfirmationModal: ({
-      onSubmit,
-      unapprovedTxCount,
-    }) => {
-      return dispatch(
-        showModal({ name: 'REJECT_TRANSACTIONS', onSubmit, unapprovedTxCount }),
-      );
-    },
-    cancelTransaction: ({ id }) => dispatch(cancelTx({ id })),
-    cancelAllTransactions: (txList) => dispatch(cancelTxs(txList)),
-    sendTransaction: (txData) =>
-      dispatch(updateAndApproveTx(customNonceMerge(txData))),
-    getNextNonce: () => dispatch(getNextNonce()),
-  };
-};
+export const mapDispatchToProps = (dispatch) => ({
+  tryReverseResolveAddress: (address) =>
+    dispatch(tryReverseResolveAddress(address)),
+  updateCustomNonce: (value) => {
+    customNonceValue = value;
+    dispatch(updateCustomNonce(value));
+  },
+  clearConfirmTransaction: () => dispatch(clearConfirmTransaction()),
+  showTransactionConfirmedModal: ({ onSubmit }) =>
+    dispatch(showModal({ name: 'TRANSACTION_CONFIRMED', onSubmit })),
+  showCustomizeGasModal: ({ txData, onSubmit, validate }) =>
+    dispatch(
+      showModal({
+        name: 'CUSTOMIZE_GAS',
+        txData,
+        onSubmit,
+        validate,
+      }),
+    ),
+  updateGasAndCalculate: (updatedTx) => dispatch(updateTransaction(updatedTx)),
+  showRejectTransactionsConfirmationModal: ({ onSubmit, unapprovedTxCount }) =>
+    dispatch(
+      showModal({ name: 'REJECT_TRANSACTIONS', onSubmit, unapprovedTxCount }),
+    ),
+  cancelTransaction: ({ id }) => dispatch(cancelTx({ id })),
+  cancelAllTransactions: (txList) => dispatch(cancelTxs(txList)),
+  sendTransaction: (txData) =>
+    dispatch(updateAndApproveTx(customNonceMerge(txData))),
+  getNextNonce: () => dispatch(getNextNonce()),
+});
 
 const getValidateEditGas = ({ balance, conversionRate, txData }) => {
   const { txParams: { value: amount } = {} } = txData;
@@ -242,19 +236,18 @@ const getValidateEditGas = ({ balance, conversionRate, txData }) => {
       };
     }
 
-    const gasLimitTooLow =
-      gasLimit &&
-      conversionGreaterThan(
-        {
-          value: MIN_GAS_LIMIT_DEC,
-          fromNumericBase: 'dec',
-          conversionRate,
-        },
-        {
-          value: gasLimit,
-          fromNumericBase: 'hex',
-        },
-      );
+    const gasLimitTooLow = gasLimit;
+    conversionGreaterThan(
+      {
+        value: MIN_GAS_LIMIT_DEC,
+        fromNumericBase: 'dec',
+        conversionRate,
+      },
+      {
+        value: gasLimit,
+        fromNumericBase: 'hex',
+      },
+    );
 
     if (gasLimitTooLow) {
       return {

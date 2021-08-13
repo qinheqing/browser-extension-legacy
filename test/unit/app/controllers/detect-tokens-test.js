@@ -1,17 +1,19 @@
 import assert from 'assert';
 import sinon from 'sinon';
 import { ObservableStore } from '@metamask/obs-store';
-import contracts from '@metamask/contract-metadata';
 import BigNumber from 'bignumber.js';
 
 import DetectTokensController from '../../../../app/scripts/controllers/detect-tokens';
 import NetworkController from '../../../../app/scripts/controllers/network/network';
 import PreferencesController from '../../../../app/scripts/controllers/preferences';
 import { MAINNET, ROPSTEN } from '../../../../shared/constants/network';
+import contracts from '../../../../shared/contract-metadata';
 
 describe('DetectTokensController', function () {
   const sandbox = sinon.createSandbox();
-  let keyringMemStore, network, preferences;
+  let keyringMemStore;
+  let network;
+  let preferences;
 
   const noop = () => undefined;
 
@@ -159,9 +161,8 @@ describe('DetectTokensController', function () {
     const contractAddresssesToDetect = contractAddresses.filter(
       (address) => address !== existingTokenAddress,
     );
-    const indexOfTokenToAdd = contractAddresssesToDetect.indexOf(
-      tokenAddressToAdd,
-    );
+    const indexOfTokenToAdd =
+      contractAddresssesToDetect.indexOf(tokenAddressToAdd);
 
     const balances = new Array(contractAddresssesToDetect.length);
     balances[indexOfTokenToAdd] = new BigNumber(10);
@@ -216,9 +217,8 @@ describe('DetectTokensController', function () {
     const contractAddresssesToDetect = contractAddresses.filter(
       (address) => address !== existingTokenAddress,
     );
-    const indexOfTokenToAdd = contractAddresssesToDetect.indexOf(
-      tokenAddressToAdd,
-    );
+    const indexOfTokenToAdd =
+      contractAddresssesToDetect.indexOf(tokenAddressToAdd);
 
     const balances = new Array(contractAddresssesToDetect.length);
     balances[indexOfTokenToAdd] = new BigNumber(10);

@@ -56,7 +56,6 @@ const onekeyDeps = [
   // '@zxing/library',
   // '@formatjs/intl-relativetimeformat',
   // '@onekeyhq/eth-onekey-keyring',
-  // '@metamask/contract-metadata',
   // '@metamask/controllers',
   // '@metamask/eth-token-tracker',
   // '@metamask/inpage-provider',

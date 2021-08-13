@@ -13,63 +13,63 @@ module.exports = createStaticAssetTasks;
 const copyTargets = [
   ...configs.externalModulesCopyFiles,
   {
-    src: `./app/_locales/`,
-    dest: `_locales`,
+    src: './app/_locales/',
+    dest: '_locales',
   },
   {
-    src: `./app/_locales/zh_CN/messages.json`,
-    dest: `_locales/zh/messages.json`,
+    src: './app/_locales/zh_CN/messages.json',
+    dest: '_locales/zh/messages.json',
   },
   {
-    src: `./app/images/`,
-    dest: `images`,
+    src: './app/images/',
+    dest: 'images',
   },
   {
-    src: `./node_modules/@metamask/contract-metadata/images/`,
-    dest: `images/contract`,
+    src: './shared/contract-metadata/images/',
+    dest: 'images/contract',
   },
   {
-    src: `./app/fonts/`,
-    dest: `fonts`,
+    src: './app/fonts/',
+    dest: 'fonts',
   },
   {
-    src: `./app/vendor/`,
-    dest: `vendor`,
+    src: './app/vendor/',
+    dest: 'vendor',
   },
   {
-    src: `./node_modules/@fortawesome/fontawesome-free/webfonts/`,
-    dest: `fonts/fontawesome`,
+    src: './node_modules/@fortawesome/fontawesome-free/webfonts/',
+    dest: 'fonts/fontawesome',
   },
   {
-    src: `./ui/app/css/output/`,
-    pattern: `*.css`,
-    dest: ``,
+    src: './ui/app/css/output/',
+    pattern: '*.css',
+    dest: '',
   },
   {
-    src: `./app/loading.html`,
-    dest: `loading.html`,
+    src: './app/loading.html',
+    dest: 'loading.html',
   },
   {
-    src: `./app/vendor-js/`,
-    pattern: `*.js`,
-    dest: ``,
+    src: './app/vendor-js/',
+    pattern: '*.js',
+    dest: '',
   },
   {
-    src: `./node_modules/globalthis/dist/browser.js`,
-    dest: `globalthis.js`,
+    src: './node_modules/globalthis/dist/browser.js',
+    dest: 'globalthis.js',
   },
   {
-    src: `./node_modules/ses/dist/lockdown.cjs`,
-    dest: `lockdown-install.js`,
+    src: './node_modules/ses/dist/lockdown.cjs',
+    dest: 'lockdown-install.js',
   },
   {
-    src: `./app/scripts/lockdown-run.js`,
-    dest: `lockdown-run.js`, // runLockdown.js
+    src: './app/scripts/lockdown-run.js',
+    dest: 'lockdown-run.js', // runLockdown.js
   },
   {
     // eslint-disable-next-line node/no-extraneous-require
     src: require.resolve('@lavamoat/lavapack/src/runtime-cjs.js'),
-    dest: `runtime-cjs.js`,
+    dest: 'runtime-cjs.js',
   },
 ];
 
@@ -92,16 +92,16 @@ const copyTargetsDev = [
   {
     src: './development',
     pattern: '/chromereload.js',
-    dest: ``,
+    dest: '',
   },
   // empty files to suppress missing file errors
   {
     src: './development/empty.js',
-    dest: `bg-libs.js`,
+    dest: 'bg-libs.js',
   },
   {
     src: './development/empty.js',
-    dest: `ui-libs.js`,
+    dest: 'ui-libs.js',
   },
   // {
   //   src: './development/empty.js',
@@ -114,7 +114,7 @@ const copyTargetsProd = [
   // empty files to suppress missing file errors
   {
     src: './development/empty.js',
-    dest: `chromereload.js`,
+    dest: 'chromereload.js',
   },
 ];
 
@@ -122,21 +122,23 @@ function createStaticAssetTasks({ livereload, browserPlatforms }) {
   const prod = createTask(
     'static:prod',
     composeSeries(
-      ...copyTargetsProd.map((target) => {
-        return async function copyStaticAssets() {
-          await performCopy(target);
-        };
-      }),
+      ...copyTargetsProd.map(
+        (target) =>
+          async function copyStaticAssets() {
+            await performCopy(target);
+          },
+      ),
     ),
   );
   const dev = createTask(
     'static:dev',
     composeSeries(
-      ...copyTargetsDev.map((target) => {
-        return async function copyStaticAssets() {
-          await setupLiveCopy(target);
-        };
-      }),
+      ...copyTargetsDev.map(
+        (target) =>
+          async function copyStaticAssets() {
+            await setupLiveCopy(target);
+          },
+      ),
     ),
   );
 
@@ -152,6 +154,7 @@ function createStaticAssetTasks({ livereload, browserPlatforms }) {
       //    Please open this link to report the issue:
       watchGlobs = target.src;
     }
+
     // console.log('static watch: ', watchGlobs);
     watch(watchGlobs, (event) => {
       console.log(`[static] gulp-watch file changed: ${event.path}`);
