@@ -23,19 +23,10 @@ import {
   CONNECT_ROUTE,
   CONNECTED_ROUTE,
   CONNECTED_ACCOUNTS_ROUTE,
-  AWAITING_SWAP_ROUTE,
-  BUILD_QUOTE_ROUTE,
-  VIEW_QUOTE_ROUTE,
   CONFIRMATION_V_NEXT_ROUTE,
-  CONNECT_HARDWARE_ROUTE,
-  DEFAULT_ROUTE,
 } from '../../helpers/constants/routes';
 import { WALLET_ACCOUNT_TYPES } from '../../helpers/constants/common';
-import { getEnvironmentType } from '../../../../app/scripts/lib/util';
-import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
-import storeApp from '../../../../src/store/storeApp';
 import { ROUTE_HOME } from '../../../../src/routes/routeUrls';
-import storeStorage from '../../../../src/store/storeStorage';
 import utilsApp from '../../../../src/utils/utilsApp';
 
 const LEARN_MORE_URL =
@@ -72,12 +63,6 @@ export default class Home extends PureComponent {
     connectedStatusPopoverHasBeenShown: PropTypes.bool,
     defaultHomeActiveTabName: PropTypes.string,
     onTabClick: PropTypes.func.isRequired,
-    setSwapsWelcomeMessageHasBeenShown: PropTypes.func.isRequired,
-    swapsWelcomeMessageHasBeenShown: PropTypes.bool.isRequired,
-    haveSwapsQuotes: PropTypes.bool.isRequired,
-    showAwaitingSwapScreen: PropTypes.bool.isRequired,
-    swapsFetchParams: PropTypes.object,
-    swapsEnabled: PropTypes.bool,
     isMainnet: PropTypes.bool,
     shouldShowWeb3ShimUsageNotification: PropTypes.bool.isRequired,
     setWeb3ShimUsageAlertDismissed: PropTypes.func.isRequired,
@@ -98,9 +83,6 @@ export default class Home extends PureComponent {
       suggestedTokens = {},
       totalUnapprovedCount,
       unconfirmedTransactionsCount,
-      haveSwapsQuotes,
-      showAwaitingSwapScreen,
-      swapsFetchParams,
       pendingApprovals,
     } = this.props;
 
@@ -113,12 +95,6 @@ export default class Home extends PureComponent {
     this.setState({ mounted: true });
     if (isNotification && totalUnapprovedCount === 0) {
       global.platform.closeCurrentWindow();
-    } else if (!isNotification && showAwaitingSwapScreen) {
-      history.push(AWAITING_SWAP_ROUTE);
-    } else if (!isNotification && haveSwapsQuotes) {
-      history.push(VIEW_QUOTE_ROUTE);
-    } else if (!isNotification && swapsFetchParams) {
-      history.push(BUILD_QUOTE_ROUTE);
     } else if (firstPermissionsRequestId) {
       history.push(`${CONNECT_ROUTE}/${firstPermissionsRequestId}`);
     } else if (unconfirmedTransactionsCount > 0) {
@@ -137,9 +113,6 @@ export default class Home extends PureComponent {
       suggestedTokens,
       totalUnapprovedCount,
       unconfirmedTransactionsCount,
-      haveSwapsQuotes,
-      showAwaitingSwapScreen,
-      swapsFetchParams,
     },
     { mounted },
   ) {
@@ -149,9 +122,7 @@ export default class Home extends PureComponent {
       } else if (
         firstPermissionsRequestId ||
         unconfirmedTransactionsCount > 0 ||
-        Object.keys(suggestedTokens).length > 0 ||
-        (!isNotification &&
-          (showAwaitingSwapScreen || haveSwapsQuotes || swapsFetchParams))
+        Object.keys(suggestedTokens).length > 0
       ) {
         return { redirecting: true };
       }
@@ -309,14 +280,9 @@ export default class Home extends PureComponent {
     const {
       defaultHomeActiveTabName,
       onTabClick,
-      forgottenPassword,
       history,
       connectedStatusPopoverHasBeenShown,
       isPopup,
-      swapsWelcomeMessageHasBeenShown,
-      setSwapsWelcomeMessageHasBeenShown,
-      swapsEnabled,
-      isMainnet,
       hwOnlyMode,
       accountType,
     } = this.props;
@@ -381,7 +347,6 @@ export default class Home extends PureComponent {
   }
 
   render() {
-    const { t } = this.context;
     const { forgottenPassword } = this.props;
 
     if (forgottenPassword) {

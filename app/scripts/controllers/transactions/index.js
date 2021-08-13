@@ -18,7 +18,6 @@ import {
   retry,
 } from '../../lib/util';
 import { TRANSACTION_NO_CONTRACT_ERROR_KEY } from '../../../../ui/app/helpers/constants/error-keys';
-import { getSwapsTokensReceivedFromTxMeta } from '../../../../ui/app/pages/swaps/swaps.util';
 import {
   TRANSACTION_CATEGORIES,
   TRANSACTION_STATUSES,

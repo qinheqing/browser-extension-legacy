@@ -4,10 +4,8 @@ import React, { Component, PureComponent } from 'react';
 import { matchPath, Route, Switch } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 
-import { Helmet } from 'react-helmet';
 import FirstTimeFlow from '../first-time-flow';
 import SendTransactionScreen from '../send';
-import Swaps from '../swaps';
 import ConfirmTransaction from '../confirm-transaction';
 import Sidebar from '../../components/app/sidebars';
 import Home from '../home';
@@ -50,10 +48,8 @@ import {
   RESTORE_VAULT_ROUTE,
   REVEAL_SEED_ROUTE,
   SEND_ROUTE,
-  SWAPS_ROUTE,
   SETTINGS_ROUTE,
   UNLOCK_ROUTE,
-  BUILD_QUOTE_ROUTE,
   CONFIRMATION_V_NEXT_ROUTE,
 } from '../../helpers/constants/routes';
 import {
@@ -115,7 +111,6 @@ class AllRoutesComponents extends Component {
               component={SendTransactionScreen}
               exact
             />
-            <Authenticated path={SWAPS_ROUTE} component={Swaps} />
             <Authenticated
               path={ADD_TOKEN_ROUTE}
               component={AddTokenPage}
@@ -195,7 +190,6 @@ export default class Routes extends Component {
     providerId: PropTypes.string,
     autoLockTimeLimit: PropTypes.number,
     pageChanged: PropTypes.func.isRequired,
-    prepareToLeaveSwaps: PropTypes.func,
   };
 
   static contextTypes = {
@@ -240,20 +234,6 @@ export default class Routes extends Component {
         path: CONFIRM_TRANSACTION_ROUTE,
         exact: false,
       }),
-    );
-  }
-
-  onSwapsPage() {
-    const { location } = this.props;
-    return Boolean(
-      matchPath(location.pathname, { path: SWAPS_ROUTE, exact: false }),
-    );
-  }
-
-  onSwapsBuildQuotePage() {
-    const { location } = this.props;
-    return Boolean(
-      matchPath(location.pathname, { path: BUILD_QUOTE_ROUTE, exact: false }),
     );
   }
 
@@ -323,7 +303,6 @@ export default class Routes extends Component {
       sidebar,
       submittedPendingTransactions,
       isMouseUser,
-      prepareToLeaveSwaps,
     } = this.props;
     const isLoadingNetwork = network === 'loading';
     const loadMessage =
@@ -363,16 +342,7 @@ export default class Routes extends Component {
         {!this.hideAppHeader() && (
           <AppHeader
             hideNetworkIndicator={this.onInitializationUnlockPage()}
-            disableNetworkIndicator={this.onSwapsPage()}
-            onClick={async () => {
-              if (this.onSwapsPage()) {
-                await prepareToLeaveSwaps();
-              }
-            }}
-            disabled={
-              this.onConfirmPage() ||
-              (this.onSwapsPage() && !this.onSwapsBuildQuotePage())
-            }
+            disabled={this.onConfirmPage()}
           />
         )}
         <Sidebar
@@ -404,20 +374,6 @@ export default class Routes extends Component {
         {isUnlocked ? <Alerts history={this.props.history} /> : null}
       </div>
     );
-  }
-
-  toggleMetamaskActive() {
-    if (this.props.isUnlocked) {
-      // currently active: deactivate
-      this.props.lockMetaMask();
-    } else {
-      // currently inactive: redirect to password box
-      const passwordBox = document.querySelector('input[type=password]');
-      if (!passwordBox) {
-        return;
-      }
-      passwordBox.focus();
-    }
   }
 
   getConnectingLabel(loadingMessage) {
