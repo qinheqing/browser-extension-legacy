@@ -21,16 +21,11 @@ import {
   setShowRestorePromptToFalse,
   setConnectedStatusPopoverHasBeenShown,
   setDefaultHomeActiveTabName,
-  setSwapsWelcomeMessageHasBeenShown,
   setWeb3ShimUsageAlertDismissed,
   setAlertEnabledness,
 } from 'ui/app/store/actions';
 import { setThreeBoxLastUpdated } from 'ui/app/ducks/app/app';
 import { getWeb3ShimUsageAlertEnabledness } from 'ui/app/ducks/metamask/metamask';
-import {
-  getSwapsWelcomeMessageSeenStatus,
-  getSwapsFeatureLiveness,
-} from 'ui/app/ducks/swaps/swaps';
 import { getEnvironmentType } from 'app/scripts/lib/util';
 import {
   ENVIRONMENT_TYPE_NOTIFICATION,
@@ -53,7 +48,6 @@ const mapStateToProps = (state) => {
     selectedAddress,
     connectedStatusPopoverHasBeenShown,
     defaultHomeActiveTabName,
-    swapsState,
     hwOnlyMode,
     pendingApprovals = {},
   } = metamask;
@@ -63,7 +57,6 @@ const mapStateToProps = (state) => {
   const accountBalance = getCurrentEthBalance(state);
   const { forgottenPassword, threeBoxLastUpdated } = appState;
   const totalUnapprovedCount = getTotalUnapprovedCount(state);
-  const swapsEnabled = getSwapsFeatureLiveness(state);
 
   const envType = getEnvironmentType();
   const isPopup = envType === ENVIRONMENT_TYPE_POPUP;
@@ -89,7 +82,6 @@ const mapStateToProps = (state) => {
     accountType,
     forgottenPassword,
     suggestedTokens,
-    swapsEnabled,
     unconfirmedTransactionsCount: unconfirmedTransactionsCountSelector(state),
     shouldShowSeedPhraseReminder:
       seedPhraseBackedUp === false &&
@@ -104,10 +96,6 @@ const mapStateToProps = (state) => {
     totalUnapprovedCount,
     connectedStatusPopoverHasBeenShown,
     defaultHomeActiveTabName,
-    swapsWelcomeMessageHasBeenShown: getSwapsWelcomeMessageSeenStatus(state),
-    haveSwapsQuotes: Boolean(Object.values(swapsState.quotes || {}).length),
-    swapsFetchParams: swapsState.fetchParams,
-    showAwaitingSwapScreen: swapsState.routeState === 'awaiting',
     isMainnet: getIsMainnet(state),
     originOfCurrentTab,
     shouldShowWeb3ShimUsageNotification,
@@ -132,8 +120,6 @@ const mapDispatchToProps = (dispatch) => ({
   setConnectedStatusPopoverHasBeenShown: () =>
     dispatch(setConnectedStatusPopoverHasBeenShown()),
   onTabClick: (name) => dispatch(setDefaultHomeActiveTabName(name)),
-  setSwapsWelcomeMessageHasBeenShown: () =>
-    dispatch(setSwapsWelcomeMessageHasBeenShown()),
   setWeb3ShimUsageAlertDismissed: (origin) =>
     setWeb3ShimUsageAlertDismissed(origin),
   disableWeb3ShimUsageAlert: () =>

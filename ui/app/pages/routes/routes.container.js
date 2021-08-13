@@ -14,18 +14,12 @@ import {
   setMouseUserState,
 } from '../../store/actions';
 import { pageChanged } from '../../ducks/history/history';
-import { prepareToLeaveSwaps } from '../../ducks/swaps/swaps';
 import Routes from './routes.component';
 
 function mapStateToProps(state) {
   const { appState } = state;
-  const {
-    sidebar,
-    alertOpen,
-    alertMessage,
-    isLoading,
-    loadingMessage,
-  } = appState;
+  const { sidebar, alertOpen, alertMessage, isLoading, loadingMessage } =
+    appState;
   const { autoLockTimeLimit = 0 } = getPreferences(state);
 
   return {
@@ -56,7 +50,6 @@ function mapDispatchToProps(dispatch) {
       dispatch(setMouseUserState(isMouseUser)),
     setLastActiveTime: () => dispatch(setLastActiveTime()),
     pageChanged: (path) => dispatch(pageChanged(path)),
-    prepareToLeaveSwaps: () => dispatch(prepareToLeaveSwaps()),
   };
 }
 

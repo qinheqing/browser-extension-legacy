@@ -1,18 +1,8 @@
-import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 import contractMap from '@metamask/contract-metadata';
 import BigNumber from 'bignumber.js';
-import { isEqual, shuffle } from 'lodash';
+import { shuffle } from 'lodash';
 import { checksumAddress } from '../helpers/utils/util';
 import { getTokenFiatAmount } from '../helpers/utils/token-util';
-import {
-  getTokenExchangeRates,
-  getConversionRate,
-  getCurrentCurrency,
-} from '../selectors';
-import { getSwapsTokens } from '../ducks/swaps/swaps';
-import { useSwapsEthToken } from './useSwapsEthToken';
-import { useEqualityCheck } from './useEqualityCheck';
 
 const tokenList = shuffle(
   Object.entries(contractMap)
@@ -67,98 +57,4 @@ export function getRenderableTokenData(
     name: name || contractMap[checksumAddress(address)]?.name,
     rawFiat,
   };
-}
-
-export function useTokensToSearch({
-  providedTokens,
-  usersTokens = [],
-  topTokens = {},
-  onlyEth,
-  singleToken,
-}) {
-  const tokenConversionRates = useSelector(getTokenExchangeRates, isEqual);
-  const conversionRate = useSelector(getConversionRate);
-  const currentCurrency = useSelector(getCurrentCurrency);
-
-  const memoizedTopTokens = useEqualityCheck(topTokens);
-  const memoizedUsersToken = useEqualityCheck(usersTokens);
-
-  const swapsEthToken = useSwapsEthToken();
-  const ethToken = getRenderableTokenData(
-    swapsEthToken,
-    tokenConversionRates,
-    conversionRate,
-    currentCurrency,
-  );
-  const memoizedEthToken = useEqualityCheck(ethToken);
-
-  const swapsTokens = useSelector(getSwapsTokens) || [];
-  let tokensToSearch;
-  if (onlyEth) {
-    tokensToSearch = [memoizedEthToken];
-  } else if (singleToken) {
-    tokensToSearch = providedTokens;
-  } else if (providedTokens) {
-    tokensToSearch = [memoizedEthToken, ...providedTokens];
-  } else if (swapsTokens.length) {
-    tokensToSearch = [memoizedEthToken, ...swapsTokens];
-  } else {
-    tokensToSearch = [memoizedEthToken, ...tokenList];
-  }
-  const memoizedTokensToSearch = useEqualityCheck(tokensToSearch);
-  return useMemo(() => {
-    const usersTokensAddressMap = memoizedUsersToken.reduce(
-      (acc, token) => ({ ...acc, [token.address]: token }),
-      {},
-    );
-
-    const tokensToSearchBuckets = {
-      owned: singleToken ? [] : [memoizedEthToken],
-      top: [],
-      others: [],
-    };
-
-    memoizedTokensToSearch.forEach((token) => {
-      const renderableDataToken = getRenderableTokenData(
-        { ...usersTokensAddressMap[token.address], ...token },
-        tokenConversionRates,
-        conversionRate,
-        currentCurrency,
-      );
-      if (
-        usersTokensAddressMap[token.address] &&
-        (renderableDataToken.symbol === 'ETH' ||
-          Number(renderableDataToken.balance ?? 0) !== 0)
-      ) {
-        tokensToSearchBuckets.owned.push(renderableDataToken);
-      } else if (memoizedTopTokens[token.address]) {
-        tokensToSearchBuckets.top[
-          memoizedTopTokens[token.address].index
-        ] = renderableDataToken;
-      } else {
-        tokensToSearchBuckets.others.push(renderableDataToken);
-      }
-    });
-
-    tokensToSearchBuckets.owned = tokensToSearchBuckets.owned.sort(
-      ({ rawFiat }, { rawFiat: secondRawFiat }) => {
-        return new BigNumber(rawFiat || 0).gt(secondRawFiat || 0) ? -1 : 1;
-      },
-    );
-    tokensToSearchBuckets.top = tokensToSearchBuckets.top.filter(Boolean);
-    return [
-      ...tokensToSearchBuckets.owned,
-      ...tokensToSearchBuckets.top,
-      ...tokensToSearchBuckets.others,
-    ];
-  }, [
-    memoizedTokensToSearch,
-    memoizedUsersToken,
-    tokenConversionRates,
-    conversionRate,
-    currentCurrency,
-    memoizedTopTokens,
-    memoizedEthToken,
-    singleToken,
-  ]);
 }

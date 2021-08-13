@@ -54,7 +54,6 @@ import TypedMessageManager from './lib/typed-message-manager';
 import TransactionController from './controllers/transactions';
 import TokenRatesController from './controllers/token-rates';
 import DetectTokensController from './controllers/detect-tokens';
-import SwapsController from './controllers/swaps';
 import { PermissionsController } from './controllers/permissions';
 import { NOTIFICATION_NAMES } from './controllers/permissions/enums';
 import getRestrictedMethods from './controllers/permissions/restrictedMethods';
@@ -340,18 +339,6 @@ export default class MetamaskController extends EventEmitter {
       ),
     });
 
-    this.swapsController = new SwapsController({
-      getBufferedGasLimit: this.txController.txGasUtil.getBufferedGasLimit.bind(
-        this.txController.txGasUtil,
-      ),
-      networkController: this.networkController,
-      provider: this.provider,
-      getProviderConfig: this.networkController.getProviderConfig.bind(
-        this.networkController,
-      ),
-      tokenRatesStore: this.tokenRatesController.store,
-    });
-
     // ensure accountTracker updates balances after network change
     this.networkController.on(NETWORK_EVENTS.NETWORK_DID_CHANGE, () => {
       this.accountTracker._updateAccounts();
@@ -409,7 +396,6 @@ export default class MetamaskController extends EventEmitter {
       PermissionsController: this.permissionsController.permissions,
       PermissionsMetadata: this.permissionsController.store,
       ThreeBoxController: this.threeBoxController.store,
-      SwapsController: this.swapsController.store,
       EnsController: this.ensController.store,
       ApprovalController: this.approvalController,
     });
@@ -580,7 +566,6 @@ export default class MetamaskController extends EventEmitter {
       onboardingController,
       permissionsController,
       preferencesController,
-      swapsController,
       threeBoxController,
       txController,
     } = this;
@@ -712,10 +697,6 @@ export default class MetamaskController extends EventEmitter {
       ),
       setConnectedStatusPopoverHasBeenShown: nodeify(
         this.appStateController.setConnectedStatusPopoverHasBeenShown,
-        this.appStateController,
-      ),
-      setSwapsWelcomeMessageHasBeenShown: nodeify(
-        this.appStateController.setSwapsWelcomeMessageHasBeenShown,
         this.appStateController,
       ),
 
@@ -851,63 +832,6 @@ export default class MetamaskController extends EventEmitter {
       requestAccountsPermissionWithId: nodeify(
         permissionsController.requestAccountsPermissionWithId,
         permissionsController,
-      ),
-
-      // swaps
-      fetchAndSetQuotes: nodeify(
-        swapsController.fetchAndSetQuotes,
-        swapsController,
-      ),
-      setSelectedQuoteAggId: nodeify(
-        swapsController.setSelectedQuoteAggId,
-        swapsController,
-      ),
-      resetSwapsState: nodeify(
-        swapsController.resetSwapsState,
-        swapsController,
-      ),
-      setSwapsTokens: nodeify(swapsController.setSwapsTokens, swapsController),
-      setApproveTxId: nodeify(swapsController.setApproveTxId, swapsController),
-      setTradeTxId: nodeify(swapsController.setTradeTxId, swapsController),
-      setSwapsTxGasPrice: nodeify(
-        swapsController.setSwapsTxGasPrice,
-        swapsController,
-      ),
-      setSwapsTxGasLimit: nodeify(
-        swapsController.setSwapsTxGasLimit,
-        swapsController,
-      ),
-      safeRefetchQuotes: nodeify(
-        swapsController.safeRefetchQuotes,
-        swapsController,
-      ),
-      stopPollingForQuotes: nodeify(
-        swapsController.stopPollingForQuotes,
-        swapsController,
-      ),
-      setBackgroundSwapRouteState: nodeify(
-        swapsController.setBackgroundSwapRouteState,
-        swapsController,
-      ),
-      resetPostFetchState: nodeify(
-        swapsController.resetPostFetchState,
-        swapsController,
-      ),
-      setSwapsErrorKey: nodeify(
-        swapsController.setSwapsErrorKey,
-        swapsController,
-      ),
-      setInitialGasEstimate: nodeify(
-        swapsController.setInitialGasEstimate,
-        swapsController,
-      ),
-      setCustomApproveTxData: nodeify(
-        swapsController.setCustomApproveTxData,
-        swapsController,
-      ),
-      setSwapsLiveness: nodeify(
-        swapsController.setSwapsLiveness,
-        swapsController,
       ),
 
       // trackEvents
