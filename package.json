@@ -119,7 +119,6 @@
     "@metamask/etherscan-link": "^1.4.1",
     "@metamask/inpage-provider": "8.0.4",
     "@metamask/jazzicon": "^2.0.0",
-    "@metamask/logo": "^2.5.0",
     "@metamask/obs-store": "^5.0.0",
     "@metamask/post-message-stream": "^4.0.0",
     "@metamask/providers": "^8.1.1",
