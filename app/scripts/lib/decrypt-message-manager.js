@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import ethUtil from 'ethereumjs-util';
 import { ethErrors } from 'eth-rpc-errors';
 import log from 'loglevel';
@@ -134,6 +134,7 @@ export default class DecryptMessageManager extends EventEmitter {
         msgParams,
       )}`,
     );
+
     // add origin from request
     if (req) {
       msgParams.origin = req.origin;

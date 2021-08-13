@@ -1,4 +1,4 @@
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 
 /**
  * @typedef {Object} CachedBalancesOptions

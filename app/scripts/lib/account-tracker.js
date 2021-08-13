@@ -9,7 +9,7 @@
 
 import EthQuery from 'eth-query';
 
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import log from 'loglevel';
 import pify from 'pify';
 import Web3 from 'web3';
@@ -303,6 +303,7 @@ export default class AccountTracker {
         Promise.all(addresses.map(this._updateAccount.bind(this)));
         return;
       }
+
       if (
         result &&
         Array.isArray(result) &&

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import sinon from 'sinon';
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import TokenRatesController from '../../../../app/scripts/controllers/token-rates';
 
 describe('TokenRatesController', function () {
@@ -10,6 +10,7 @@ describe('TokenRatesController', function () {
     nativeCurrency = 'ETH';
     getNativeCurrency = () => nativeCurrency;
   });
+
   it('should listen for preferences store updates', function () {
     const preferences = new ObservableStore({ tokens: [] });
     preferences.putState({ tokens: ['foo'] });

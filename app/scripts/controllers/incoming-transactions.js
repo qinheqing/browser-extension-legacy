@@ -1,4 +1,4 @@
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import log from 'loglevel';
 import BN from 'bn.js';
 import createId from '../lib/random-id';
@@ -158,6 +158,7 @@ export default class IncomingTransactionsController {
     if (!etherscanSupportedNetworks.includes(chainId)) {
       return;
     }
+
     try {
       const dataForUpdate = await this._getDataForUpdate({
         address,

@@ -1,5 +1,5 @@
 import { strict as assert } from 'assert';
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import nanoid from 'nanoid';
 import { useFakeTimers } from 'sinon';
 
@@ -399,6 +399,7 @@ describe('permissions log', function () {
         1,
         'history should have single origin',
       );
+
       assert.ok(
         Boolean(permHistory[DOMAINS.a.origin]),
         'history should have expected origin',
@@ -557,6 +558,7 @@ describe('permissions log', function () {
         DOMAINS.a.origin,
         PERM_NAMES.eth_accounts,
       );
+
       res = {
         result: [PERMS.granted.test_method()],
       };

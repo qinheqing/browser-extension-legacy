@@ -17,7 +17,7 @@ import pump from 'pump';
 import debounce from 'debounce-stream';
 import log from '../../src/log/logger';
 import extension from 'extensionizer';
-import { storeAsStream, storeTransformStream } from '@metamask/obs-store';
+import { storeAsStream, storeTransformStream } from '@onekeyhq/obs-store';
 import PortStream from 'extension-port-stream';
 import { captureException } from '@sentry/browser';
 import { autorun } from 'mobx';

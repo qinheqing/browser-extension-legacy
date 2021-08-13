@@ -1,8 +1,8 @@
 import EventEmitter from 'events';
 import pump from 'pump';
 import Dnode from 'dnode';
-import { ObservableStore } from '@metamask/obs-store';
-import { storeAsStream } from '@metamask/obs-store/dist/asStream';
+import { ObservableStore } from '@onekeyhq/obs-store';
+import { storeAsStream } from '@onekeyhq/obs-store/dist/asStream';
 import { JsonRpcEngine } from 'json-rpc-engine';
 import { debounce } from 'lodash';
 import createEngineStream from 'json-rpc-middleware-stream/engineStream';

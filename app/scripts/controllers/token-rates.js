@@ -1,4 +1,4 @@
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import log from 'loglevel';
 import { normalize as normalizeAddress } from 'eth-sig-util';
 import ethUtil from 'ethereumjs-util';
@@ -89,6 +89,7 @@ export default class TokenRatesController {
     if (!interval) {
       return;
     }
+
     this._handle = setInterval(() => {
       this.updateExchangeRates();
     }, interval);

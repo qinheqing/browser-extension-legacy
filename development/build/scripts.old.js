@@ -76,9 +76,9 @@ const metamaskDepenendencies = [
   '@onekeyhq/eth-onekey-keyring',
   '@metamask/controllers',
   '@metamask/inpage-provider',
-  '@metamask/jazzicon',
+  '@onekeyhq/jazzicon',
   '@metamask/logo',
-  '@metamask/obs-store',
+  '@onekeyhq/obs-store',
 ];
 const reactDepenendencies = dependencies.filter((dep) => dep.match(/react/u));
 

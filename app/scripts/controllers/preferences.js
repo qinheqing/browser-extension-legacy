@@ -1,5 +1,5 @@
 import { strict as assert } from 'assert';
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import { ethErrors } from 'eth-rpc-errors';
 import { normalize as normalizeAddress } from 'eth-sig-util';
 import { isValidAddress } from 'ethereumjs-util';
@@ -234,11 +234,8 @@ export default class PreferencesController {
    * @returns {string} the address that was removed
    */
   removeAddress(address) {
-    const {
-      identities,
-      accountTokens,
-      accountHiddenTokens,
-    } = this.store.getState();
+    const { identities, accountTokens, accountHiddenTokens } =
+      this.store.getState();
 
     if (!identities[address]) {
       throw new Error(`${address} can't be deleted cause it was not found`);
@@ -264,11 +261,8 @@ export default class PreferencesController {
    *
    */
   addAddresses(addresses) {
-    const {
-      identities,
-      accountTokens,
-      accountHiddenTokens,
-    } = this.store.getState();
+    const { identities, accountTokens, accountHiddenTokens } =
+      this.store.getState();
     addresses.forEach((address) => {
       // skip if already exists
       if (identities[address]) {
@@ -729,11 +723,8 @@ export default class PreferencesController {
   }
 
   updateTokensWithBalance(tokensWithBalance) {
-    const {
-      accountTokensWithBalance,
-      providerType,
-      selectedAddress,
-    } = this._getTokenRelatedStates();
+    const { accountTokensWithBalance, providerType, selectedAddress } =
+      this._getTokenRelatedStates();
     accountTokensWithBalance[selectedAddress][providerType] = tokensWithBalance;
     this.store.updateState({ accountTokensWithBalance, tokensWithBalance });
   }
@@ -745,9 +736,8 @@ export default class PreferencesController {
    *
    */
   _updateTokens(selectedAddress) {
-    const { tokens, hiddenTokens } = this._getTokenRelatedStates(
-      selectedAddress,
-    );
+    const { tokens, hiddenTokens } =
+      this._getTokenRelatedStates(selectedAddress);
     this.store.updateState({ tokens, hiddenTokens });
   }
 
@@ -759,11 +749,8 @@ export default class PreferencesController {
    *
    */
   _getTokenRelatedStates(selectedAddress) {
-    const {
-      accountTokens,
-      accountHiddenTokens,
-      accountTokensWithBalance,
-    } = this.store.getState();
+    const { accountTokens, accountHiddenTokens, accountTokensWithBalance } =
+      this.store.getState();
     if (!selectedAddress) {
       // eslint-disable-next-line no-param-reassign
       selectedAddress = this.store.getState().selectedAddress;
@@ -772,18 +759,23 @@ export default class PreferencesController {
     if (!(selectedAddress in accountTokens)) {
       accountTokens[selectedAddress] = {};
     }
+
     if (!(selectedAddress in accountHiddenTokens)) {
       accountHiddenTokens[selectedAddress] = {};
     }
+
     if (!(selectedAddress in accountTokensWithBalance)) {
       accountTokensWithBalance[selectedAddress] = {};
     }
+
     if (!(providerType in accountTokens[selectedAddress])) {
       accountTokens[selectedAddress][providerType] = [];
     }
+
     if (!(providerType in accountHiddenTokens[selectedAddress])) {
       accountHiddenTokens[selectedAddress][providerType] = [];
     }
+
     if (!(providerType in accountTokensWithBalance[selectedAddress])) {
       accountTokensWithBalance[selectedAddress][providerType] = [];
     }
@@ -837,9 +829,11 @@ export default class PreferencesController {
         `Must specify address, symbol, and decimals.`,
       );
     }
+
     if (typeof symbol !== 'string') {
       throw ethErrors.rpc.invalidParams(`Invalid symbol: not a string.`);
     }
+
     if (!(symbol.length < 12)) {
       throw ethErrors.rpc.invalidParams(
         `Invalid symbol "${symbol}": longer than 6 characters.`,
@@ -851,6 +845,7 @@ export default class PreferencesController {
         `Invalid decimals "${decimals}": must be 0 <= 36.`,
       );
     }
+
     if (!isValidAddress(address)) {
       throw ethErrors.rpc.invalidParams(`Invalid address "${address}".`);
     }

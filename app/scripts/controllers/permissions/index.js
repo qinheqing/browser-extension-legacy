@@ -1,6 +1,6 @@
 import nanoid from 'nanoid';
 import { JsonRpcEngine } from 'json-rpc-engine';
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import log from 'loglevel';
 import { CapabilitiesController as RpcCap } from 'rpc-cap';
 import { ethErrors } from 'eth-rpc-errors';
@@ -59,6 +59,7 @@ export class PermissionsController {
       getKeyringAccounts: this.getKeyringAccounts.bind(this),
       getIdentities: this._getIdentities.bind(this),
     });
+
     this.permissionsLog = new PermissionsLogController({
       restrictedMethods: Object.keys(this._restrictedMethods),
       store: this.store,

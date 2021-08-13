@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import { METAMASK_CONTROLLER_EVENTS } from '../metamask-controller';
 
 export default class AppStateController extends EventEmitter {

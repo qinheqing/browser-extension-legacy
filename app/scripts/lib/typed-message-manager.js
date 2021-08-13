@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import assert from 'assert';
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import { ethErrors } from 'eth-rpc-errors';
 import { typedSignatureHash, TYPED_MESSAGE_SCHEMA } from 'eth-sig-util';
 import { isValidAddress } from 'ethereumjs-util';
@@ -170,6 +170,7 @@ export default class TypedMessageManager extends EventEmitter {
           Array.isArray(params.data),
           '"params.data" must be an array.',
         );
+
         assert.doesNotThrow(() => {
           typedSignatureHash(params.data);
         }, 'Signing data must be valid EIP-712 typed data.');
@@ -190,6 +191,7 @@ export default class TypedMessageManager extends EventEmitter {
           data.primaryType in data.types,
           `Primary type of "${data.primaryType}" has no type definition.`,
         );
+
         assert.equal(
           validation.errors.length,
           0,
@@ -202,6 +204,7 @@ export default class TypedMessageManager extends EventEmitter {
             !Number.isNaN(activeChainId),
             `Cannot sign messages for chainId "${chainId}", because MetaMask is switching networks.`,
           );
+
           assert.equal(
             chainId,
             activeChainId,
@@ -380,8 +383,9 @@ export default class TypedMessageManager extends EventEmitter {
    */
   _saveMsgList() {
     const unapprovedTypedMessages = this.getUnapprovedMsgs();
-    const unapprovedTypedMessagesCount = Object.keys(unapprovedTypedMessages)
-      .length;
+    const unapprovedTypedMessagesCount = Object.keys(
+      unapprovedTypedMessages,
+    ).length;
     this.memStore.updateState({
       unapprovedTypedMessages,
       unapprovedTypedMessagesCount,

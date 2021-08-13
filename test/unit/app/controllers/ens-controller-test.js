@@ -1,6 +1,6 @@
 import assert from 'assert';
 import sinon from 'sinon';
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import EnsController from '../../../../app/scripts/controllers/ens';
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
