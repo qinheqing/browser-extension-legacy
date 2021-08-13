@@ -2,7 +2,7 @@ import { strict as assert } from 'assert';
 import EventEmitter from 'events';
 import ethUtil from 'ethereumjs-util';
 import EthTx from 'ethereumjs-tx';
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import sinon from 'sinon';
 import TransactionController from '../../../../../app/scripts/controllers/transactions';
 
@@ -31,8 +31,10 @@ describe('Transaction Controller', function () {
       // by default, all accounts are external accounts (not contracts)
       eth_getCode: '0x',
     };
-    provider = createTestProviderTools({ scaffold: providerResultStub })
-      .provider;
+
+    provider = createTestProviderTools({
+      scaffold: providerResultStub,
+    }).provider;
     fromAccount = getTestAccounts()[0];
     const blockTrackerStub = new EventEmitter();
     blockTrackerStub.getCurrentBlock = noop;
@@ -54,6 +56,7 @@ describe('Transaction Controller', function () {
       getCurrentChainId: () => currentChainId,
       getParticipateInMetrics: () => false,
     });
+
     txController.nonceTracker.getNonceLock = () =>
       Promise.resolve({ nextNonce: 0, releaseLock: noop });
   });
@@ -65,14 +68,17 @@ describe('Transaction Controller', function () {
         'unapprovedTxs' in exposedState,
         'state should have the key unapprovedTxs',
       );
+
       assert.ok(
         'currentNetworkTxList' in exposedState,
         'state should have the key currentNetworkTxList',
       );
+
       assert.ok(
         typeof exposedState?.unapprovedTxs === 'object',
         'should be an object',
       );
+
       assert.ok(
         Array.isArray(exposedState.currentNetworkTxList),
         'should be an array',
@@ -212,6 +218,7 @@ describe('Transaction Controller', function () {
           history: [{}],
         },
       ]);
+
       assert.equal(
         txController.nonceTracker.getConfirmedTransactions(address).length,
         3,
@@ -226,6 +233,7 @@ describe('Transaction Controller', function () {
         from: '0xc684832530fcbddae4b4230a47e991ddcec2831d',
         to: '0xc684832530fcbddae4b4230a47e991ddcec2831d',
       };
+
       txMeta = {
         status: TRANSACTION_STATUSES.UNAPPROVED,
         id: 1,
@@ -284,6 +292,7 @@ describe('Transaction Controller', function () {
       getSelectedAddress = sinon
         .stub(txController, 'getSelectedAddress')
         .returns(selectedAddress);
+
       getPermittedAccounts = sinon
         .stub(txController, 'getPermittedAccounts')
         .returns([selectedAddress]);
@@ -323,6 +332,7 @@ describe('Transaction Controller', function () {
         assert.ok(txMetaFromEmit, 'txMeta is falsy');
         done();
       });
+
       txController
         .addUnapprovedTransaction({
           from: selectedAddress,
@@ -380,6 +390,7 @@ describe('Transaction Controller', function () {
         txMetaWithDefaults.txParams.gasPrice,
         'should have added the gas price',
       );
+
       assert.ok(
         txMetaWithDefaults.txParams.gas,
         'should have added the gas field',
@@ -410,6 +421,7 @@ describe('Transaction Controller', function () {
           }),
         );
       });
+
       Promise.all(listeners)
         .then((returnValues) => {
           assert.deepEqual(
@@ -607,6 +619,7 @@ describe('Transaction Controller', function () {
         gas: '0x5209',
         gasPrice: '0xa',
       };
+
       txController.txStateManager._saveTxList([
         {
           id: 1,
@@ -671,6 +684,7 @@ describe('Transaction Controller', function () {
     beforeEach(function () {
       hash =
         '0x2a5523c6fa98b47b7d9b6c8320179785150b42a16bcff36b398c5062b65657e8';
+
       txMeta = {
         id: 1,
         status: TRANSACTION_STATUSES.UNAPPROVED,
@@ -790,8 +804,7 @@ describe('Transaction Controller', function () {
     it('should return a token transfer transactionCategory when data is for the respective method call', async function () {
       const result = await txController._determineTransactionCategory({
         to: '0xabc',
-        data:
-          '0xa9059cbb0000000000000000000000002f318C334780961FB129D2a6c30D0763d9a5C970000000000000000000000000000000000000000000000000000000000000000a',
+        data: '0xa9059cbb0000000000000000000000002f318C334780961FB129D2a6c30D0763d9a5C970000000000000000000000000000000000000000000000000000000000000000a',
       });
       assert.deepEqual(result, {
         transactionCategory: TRANSACTION_CATEGORIES.TOKEN_METHOD_TRANSFER,
@@ -802,8 +815,7 @@ describe('Transaction Controller', function () {
     it('should return a token approve transactionCategory when data is for the respective method call', async function () {
       const result = await txController._determineTransactionCategory({
         to: '0xabc',
-        data:
-          '0x095ea7b30000000000000000000000002f318C334780961FB129D2a6c30D0763d9a5C9700000000000000000000000000000000000000000000000000000000000000005',
+        data: '0x095ea7b30000000000000000000000002f318C334780961FB129D2a6c30D0763d9a5C9700000000000000000000000000000000000000000000000000000000000000005',
       });
       assert.deepEqual(result, {
         transactionCategory: TRANSACTION_CATEGORIES.TOKEN_METHOD_APPROVE,
@@ -987,6 +999,7 @@ describe('Transaction Controller', function () {
         states.includes(TRANSACTION_STATUSES.APPROVED),
         'includes approved',
       );
+
       assert.ok(
         states.includes(TRANSACTION_STATUSES.SUBMITTED),
         'includes submitted',

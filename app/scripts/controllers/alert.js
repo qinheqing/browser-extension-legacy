@@ -1,4 +1,4 @@
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import {
   TOGGLEABLE_ALERT_TYPES,
   WEB3_SHIM_USAGE_ALERT_STATES,

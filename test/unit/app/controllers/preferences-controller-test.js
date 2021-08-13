@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import sinon from 'sinon';
 import PreferencesController from '../../../../app/scripts/controllers/preferences';
 
@@ -361,6 +361,7 @@ describe('preferences controller', function () {
         initialTokensFirst,
         'tokens equal for same account',
       );
+
       assert.deepEqual(
         tokensSecond,
         initialTokensSecond,
@@ -395,6 +396,7 @@ describe('preferences controller', function () {
         initialTokensFirst,
         'tokens equal for same network',
       );
+
       assert.deepEqual(
         tokensSecond,
         initialTokensSecond,
@@ -450,6 +452,7 @@ describe('preferences controller', function () {
     beforeEach(function () {
       req = { params: { type: 'ERC20' } };
     });
+
     after(function () {
       sandbox.restore();
     });
@@ -498,6 +501,7 @@ describe('preferences controller', function () {
       sandbox
         .stub(preferencesController, '_validateERC20AssetParams')
         .returns(true);
+
       preferencesController.openPopup = async () => {
         await preferencesController.addToken(address, symbol, decimals, image);
       };
@@ -513,6 +517,7 @@ describe('preferences controller', function () {
       const assetImages = preferencesController.getAssetImages();
       assert.ok(assetImages[address], `set image correctly`);
     });
+
     it('should validate ERC20 asset correctly', async function () {
       const validate = preferencesController._validateERC20AssetParams;
 
@@ -523,10 +528,12 @@ describe('preferences controller', function () {
           decimals: 0,
         }),
       );
+
       assert.throws(
         () => validate({ symbol: 'ABC', decimals: 0 }),
         'missing address should fail',
       );
+
       assert.throws(
         () =>
           validate({
@@ -535,6 +542,7 @@ describe('preferences controller', function () {
           }),
         'missing symbol should fail',
       );
+
       assert.throws(
         () =>
           validate({
@@ -543,6 +551,7 @@ describe('preferences controller', function () {
           }),
         'missing decimals should fail',
       );
+
       assert.throws(
         () =>
           validate({
@@ -552,6 +561,7 @@ describe('preferences controller', function () {
           }),
         'invalid symbol should fail',
       );
+
       assert.throws(
         () =>
           validate({
@@ -561,6 +571,7 @@ describe('preferences controller', function () {
           }),
         'decimals < 0 should fail',
       );
+
       assert.throws(
         () =>
           validate({
@@ -570,6 +581,7 @@ describe('preferences controller', function () {
           }),
         'decimals > 36 should fail',
       );
+
       assert.throws(
         () => validate({ address: '0x123', symbol: 'ABC', decimals: 0 }),
         'invalid address should fail',
@@ -608,10 +620,12 @@ describe('preferences controller', function () {
         rpcUrl: 'test/1',
         chainId: '0x1',
       });
+
       await preferencesController.updateRpc({
         rpcUrl: 'test/2',
         chainId: '0x1',
       });
+
       await preferencesController.updateRpc({
         rpcUrl: 'test/3',
         chainId: '0x1',

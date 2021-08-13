@@ -1,4 +1,4 @@
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import log from 'loglevel';
 
 /**
@@ -33,7 +33,8 @@ export default class OnboardingController {
     };
     this.store = new ObservableStore(initState);
     this.preferencesController = opts.preferencesController;
-    this.completedOnboarding = this.preferencesController.store.getState().completedOnboarding;
+    this.completedOnboarding =
+      this.preferencesController.store.getState().completedOnboarding;
 
     this.preferencesController.store.subscribe(({ completedOnboarding }) => {
       if (completedOnboarding !== this.completedOnboarding) {

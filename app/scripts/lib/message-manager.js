@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import ethUtil from 'ethereumjs-util';
 import { ethErrors } from 'eth-rpc-errors';
 import { MESSAGE_TYPE } from '../../../shared/constants/app';

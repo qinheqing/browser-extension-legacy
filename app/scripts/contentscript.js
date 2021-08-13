@@ -1,6 +1,6 @@
 import querystring from 'querystring';
 import pump from 'pump';
-import LocalMessageDuplexStream from 'post-message-stream';
+import { WindowPostMessageStream } from '@onekeyhq/post-message-stream';
 import ObjectMultiplex from 'obj-multiplex';
 import extension from 'extensionizer';
 import PortStream from 'extension-port-stream';
@@ -58,7 +58,7 @@ function injectScript(content) {
  */
 async function setupStreams() {
   // the transport-specific streams for communication between inpage and background
-  const pageStream = new LocalMessageDuplexStream({
+  const pageStream = new WindowPostMessageStream({
     name: CONTENT_SCRIPT,
     target: INPAGE,
   });
@@ -76,6 +76,7 @@ async function setupStreams() {
   pump(pageMux, pageStream, pageMux, (err) =>
     logStreamDisconnectWarning('MetaMask Inpage Multiplex', err),
   );
+
   pump(extensionMux, extensionStream, extensionMux, (err) => {
     logStreamDisconnectWarning('MetaMask Background Multiplex', err);
     notifyInpageOfStreamFailure();
@@ -221,6 +222,7 @@ function blockedDomainCheck() {
       `(?:https?:\\/\\/)(?:(?!${blockedDomain}).)*$`,
       'u',
     );
+
     if (!currentRegex.test(currentUrl)) {
       return true;
     }

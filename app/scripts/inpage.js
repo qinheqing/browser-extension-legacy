@@ -31,7 +31,7 @@ const restoreContextAfterImports = () => {
 cleanContextForImports();
 
 /* eslint-disable import/first */
-import LocalMessageDuplexStream from 'post-message-stream';
+import { WindowPostMessageStream } from '@onekeyhq/post-message-stream';
 import { initializeProvider } from '@metamask/inpage-provider';
 import log from '../../src/log/logger';
 import inpageSolana from '../../src/wallets/SOL/modules/dappProvider/inpage';
@@ -44,7 +44,7 @@ restoreContextAfterImports();
 //
 
 // setup background connection
-const metamaskStream = new LocalMessageDuplexStream({
+const metamaskStream = new WindowPostMessageStream({
   name: 'onekey-inpage',
   target: 'onekey-contentscript',
 });

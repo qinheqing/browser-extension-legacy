@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import ethUtil from 'ethereumjs-util';
 import { ethErrors } from 'eth-rpc-errors';
 import log from 'loglevel';
@@ -135,6 +135,7 @@ export default class PersonalMessageManager extends EventEmitter {
         msgParams,
       )}`,
     );
+
     // add origin from request
     if (req) {
       msgParams.origin = req.origin;
@@ -304,8 +305,9 @@ export default class PersonalMessageManager extends EventEmitter {
    */
   _saveMsgList() {
     const unapprovedPersonalMsgs = this.getUnapprovedMsgs();
-    const unapprovedPersonalMsgCount = Object.keys(unapprovedPersonalMsgs)
-      .length;
+    const unapprovedPersonalMsgCount = Object.keys(
+      unapprovedPersonalMsgs,
+    ).length;
     this.memStore.updateState({
       unapprovedPersonalMsgs,
       unapprovedPersonalMsgCount,

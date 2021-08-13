@@ -1,5 +1,5 @@
 import EventEmitter from 'safe-event-emitter';
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 import log from 'loglevel';
 import createId from '../../lib/random-id';
 import { TRANSACTION_STATUSES } from '../../../../shared/constants/transaction';
@@ -170,6 +170,7 @@ export default class TransactionStateManager extends EventEmitter {
     this.once(`${txMeta.id}:signed`, () => {
       this.removeAllListeners(`${txMeta.id}:rejected`);
     });
+
     this.once(`${txMeta.id}:rejected`, () => {
       this.removeAllListeners(`${txMeta.id}:signed`);
     });

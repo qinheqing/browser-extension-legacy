@@ -1,4 +1,4 @@
-import { ObservableStore } from '@metamask/obs-store';
+import { ObservableStore } from '@onekeyhq/obs-store';
 
 /* eslint-disable import/first,import/order */
 const Box = process.env.IN_TEST
@@ -145,6 +145,7 @@ export default class ThreeBoxController {
         throw e;
       }
     }
+
     if (this.getThreeBoxSyncingState() || backupExists) {
       this.store.updateState({ threeBoxSynced: false });
 
@@ -197,9 +198,8 @@ export default class ThreeBoxController {
       PreferencesController: preferences,
       AddressBookController: addressBook,
     };
-    const initialMigrationState = migrator.generateInitialState(
-      formattedStateBackup,
-    );
+    const initialMigrationState =
+      migrator.generateInitialState(formattedStateBackup);
     const migratedState = await migrator.migrateData(initialMigrationState);
     return {
       preferences: migratedState.data.PreferencesController,
@@ -234,6 +234,7 @@ export default class ThreeBoxController {
     if (this.store.getState().threeBoxDisabled) {
       return;
     }
+
     this.store.updateState({
       threeBoxSyncingAllowed: newThreeboxSyncingState,
     });

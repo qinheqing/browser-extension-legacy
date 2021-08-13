@@ -1,6 +1,6 @@
 import React, { createRef, PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import jazzicon from '@metamask/jazzicon';
+import jazzicon from '@onekeyhq/jazzicon';
 import iconFactoryGenerator from '../../../../lib/icon-factory';
 
 const iconFactory = iconFactoryGenerator(jazzicon);
