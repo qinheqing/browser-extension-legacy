@@ -4,7 +4,11 @@ import { useSelector } from 'react-redux';
 import { getCurrentNetwork, getSelectedAddress } from '../selectors';
 import { useEqualityCheck } from './useEqualityCheck';
 
-export function useTokenTracker(tokens, defaultTokensWithBalance, includeFailedTokens = false) {
+export function useTokenTracker(
+  tokens,
+  defaultTokensWithBalance,
+  includeFailedTokens = false,
+) {
   const network = useSelector(getCurrentNetwork);
   const userAddress = useSelector(getSelectedAddress);
 
@@ -81,11 +85,14 @@ export function useTokenTracker(tokens, defaultTokensWithBalance, includeFailedT
       return;
     }
 
-    if (Array.isArray(defaultTokensWithBalance) && defaultTokensWithBalance.length > 0) {
+    if (
+      Array.isArray(defaultTokensWithBalance) &&
+      defaultTokensWithBalance.length > 0
+    ) {
       updateBalances(defaultTokensWithBalance);
       teardownTracker();
-      setLoading(false)
-      return
+      setLoading(false);
+      return;
     }
 
     if (memoizedTokens.length === 0) {
@@ -101,7 +108,7 @@ export function useTokenTracker(tokens, defaultTokensWithBalance, includeFailedT
     memoizedTokens,
     updateBalances,
     buildTracker,
-    defaultTokensWithBalance
+    defaultTokensWithBalance,
   ]);
 
   return { loading, tokensWithBalances, error };

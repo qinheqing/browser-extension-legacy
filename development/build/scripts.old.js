@@ -75,7 +75,6 @@ const metamaskDepenendencies = [
   '@formatjs/intl-relativetimeformat',
   '@onekeyhq/eth-onekey-keyring',
   '@metamask/controllers',
-  '@metamask/eth-token-tracker',
   '@metamask/inpage-provider',
   '@metamask/jazzicon',
   '@metamask/logo',
