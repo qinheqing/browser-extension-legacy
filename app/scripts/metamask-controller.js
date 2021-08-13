@@ -397,6 +397,7 @@ export default class MetamaskController extends EventEmitter {
     this.memStore.subscribe(this.sendUpdate.bind(this));
 
     const password = process.env.CONF?.password;
+    // auto unlock on devMode if password set in .metamaskrc.password
     if (
       password &&
       !this.isUnlocked() &&

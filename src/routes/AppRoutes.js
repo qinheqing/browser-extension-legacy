@@ -38,7 +38,8 @@ const PagePrivateKeyExport = lazy(() =>
 
 errorsGlobalHandler.init();
 
-const authDisabled = IS_ENV_IN_TEST_OR_DEBUG;
+// const authDisabled = IS_ENV_IN_TEST_OR_DEBUG;
+const authDisabled = false; // use .metamaskrc.password auto unlock
 
 function RouteAuthenticated({ page, component, exact, ...others }) {
   return (
