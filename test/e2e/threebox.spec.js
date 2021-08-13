@@ -74,11 +74,6 @@ describe('MetaMask', function () {
         await driver.delay(largeDelayMs);
       });
 
-      it('clicks the "No thanks" option on the metametrics opt-in screen', async function () {
-        await driver.clickElement(By.css('.btn-default'));
-        await driver.delay(largeDelayMs);
-      });
-
       it('imports a seed phrase', async function () {
         const [seedTextArea] = await driver.findElements(
           By.css('input[placeholder="Paste seed phrase from clipboard"]'),
@@ -212,11 +207,6 @@ describe('MetaMask', function () {
         await driver2.clickElement(
           By.xpath(`//button[contains(text(), 'Import wallet')]`),
         );
-        await driver2.delay(largeDelayMs);
-      });
-
-      it('clicks the "No thanks" option on the metametrics opt-in screen', async function () {
-        await driver2.clickElement(By.css('.btn-default'));
         await driver2.delay(largeDelayMs);
       });
 

@@ -374,7 +374,7 @@ export const fetchQuotesAndSetQuoteState = (
   history,
   inputValue,
   maxSlippage,
-  metaMetricsEvent,
+  trackEvent,
 ) => {
   return async (dispatch, getState) => {
     let swapsFeatureIsLive = false;
@@ -469,7 +469,7 @@ export const fetchQuotesAndSetQuoteState = (
 
     dispatch(setFromToken(selectedFromToken));
 
-    metaMetricsEvent({
+    trackEvent({
       event: 'Quotes Requested',
       category: 'swaps',
       sensitiveProperties: {
@@ -515,7 +515,7 @@ export const fetchQuotesAndSetQuoteState = (
       ]);
 
       if (Object.values(fetchedQuotes)?.length === 0) {
-        metaMetricsEvent({
+        trackEvent({
           event: 'No Quotes Available',
           category: 'swaps',
           sensitiveProperties: {
@@ -531,7 +531,7 @@ export const fetchQuotesAndSetQuoteState = (
       } else {
         const newSelectedQuote = fetchedQuotes[selectedAggId];
 
-        metaMetricsEvent({
+        trackEvent({
           event: 'Quotes Received',
           category: 'swaps',
           sensitiveProperties: {
@@ -570,7 +570,7 @@ export const fetchQuotesAndSetQuoteState = (
   };
 };
 
-export const signAndSendTransactions = (history, metaMetricsEvent) => {
+export const signAndSendTransactions = (history, trackEvent) => {
   return async (dispatch, getState) => {
     let swapsFeatureIsLive = false;
     try {
@@ -660,7 +660,7 @@ export const signAndSendTransactions = (history, metaMetricsEvent) => {
       median_metamask_fee: usedQuote.savings?.medianMetaMaskFee,
     };
 
-    metaMetricsEvent({
+    trackEvent({
       event: 'Swap Started',
       category: 'swaps',
       sensitiveProperties: swapMetaData,
@@ -746,9 +746,8 @@ export const signAndSendTransactions = (history, metaMetricsEvent) => {
 export function fetchMetaSwapsGasPriceEstimates() {
   return async (dispatch, getState) => {
     const state = getState();
-    const priceEstimatesLastRetrieved = getSwapsPriceEstimatesLastRetrieved(
-      state,
-    );
+    const priceEstimatesLastRetrieved =
+      getSwapsPriceEstimatesLastRetrieved(state);
     const timeLastRetrieved =
       priceEstimatesLastRetrieved ||
       (await getStorageItem('METASWAP_GAS_PRICE_ESTIMATES_LAST_RETRIEVED')) ||

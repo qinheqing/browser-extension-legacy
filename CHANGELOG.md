@@ -232,7 +232,6 @@
 - [#9288](https://github.com/MetaMask/metamask-extension/pull/9288): Fix bug that caused the accounts list to be empty after entering an incorrect password when attempting to export private key
 - [#9314](https://github.com/MetaMask/metamask-extension/pull/9314): Improve/fix error text for when ENS names are not found, on mainnet
 - [#9307](https://github.com/MetaMask/metamask-extension/pull/9307): Improve 'Contact Us' copy in settings
-- [#9283](https://github.com/MetaMask/metamask-extension/pull/9283): Fix capitalization of copy on MetaMetrics opt-in page
 - [#9269](https://github.com/MetaMask/metamask-extension/pull/9269): Add lock icon to default networks in the Settings network page, to indicate they are not editable
 - [#9189](https://github.com/MetaMask/metamask-extension/pull/9189): Hide gas price/speed estimate button, and link to advanced gas modal, in send flow on non-main network
 - [#9184](https://github.com/MetaMask/metamask-extension/pull/9184): Improve visual styling of back button in account modal
@@ -529,7 +528,7 @@
 - [#7434](https://github.com/MetaMask/metamask-extension/pull/7434): Update 512px icon (#7434)
 - [#7410](https://github.com/MetaMask/metamask-extension/pull/7410): Fix sourcemaps for Sentry
 - [#7420](https://github.com/MetaMask/metamask-extension/pull/7420): Adds and end to end test for typed signature requests
-- [#7439](https://github.com/MetaMask/metamask-extension/pull/7439): Add metricsEvent to contextTypes (#7439)
+- [#7439](https://github.com/MetaMask/metamask-extension/pull/7439): Add trackEvent to contextTypes (#7439)
 - [#7419](https://github.com/MetaMask/metamask-extension/pull/7419): Added webRequest.RequestFilter to filter main_frame .eth requests (#7419)
 
 ## 7.5.2 Thu Nov 14 2019
@@ -814,7 +813,6 @@
 - [#6192](https://github.com/MetaMask/metamask-extension/pull/6192): Improves design and UX of onboarding flow
 - [#6195](https://github.com/MetaMask/metamask-extension/pull/6195): Fixes gas estimation when sending to contracts
 - [#6223](https://github.com/MetaMask/metamask-extension/pull/6223): Fixes display of notification windows when metamask is active in a tab
-- [#6171](https://github.com/MetaMask/metamask-extension/pull/6171): Adds MetaMetrics usage analytics system
 
 ## 6.1.0 Tue Feb 19 2019
 

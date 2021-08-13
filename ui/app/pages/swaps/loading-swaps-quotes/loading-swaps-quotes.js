@@ -11,9 +11,9 @@ import {
   getQuotesFetchStartTime,
 } from '../../../ducks/swaps/swaps';
 import { I18nContext } from '../../../contexts/i18n';
-import { MetaMetricsContext } from '../../../contexts/metametrics.new';
 import Mascot from '../../../components/ui/mascot';
 import SwapsFooter from '../swaps-footer';
+import utilsApp from '../../../../../src/utils/utilsApp';
 import BackgroundAnimation from './background-animation';
 import AggregatorLogo from './aggregator-logo';
 
@@ -60,7 +60,7 @@ export default function LoadingSwapsQuotes({
   onDone,
 }) {
   const t = useContext(I18nContext);
-  const metaMetricsEvent = useContext(MetaMetricsContext);
+  const trackEvent = utilsApp.trackEventNoop;
   const dispatch = useDispatch();
   const history = useHistory();
   const animationEventEmitter = useRef(new EventEmitter());
@@ -139,12 +139,8 @@ export default function LoadingSwapsQuotes({
 
   useEffect(() => {
     if (currentMascotContainer) {
-      const {
-        top,
-        left,
-        width,
-        height,
-      } = currentMascotContainer.getBoundingClientRect();
+      const { top, left, width, height } =
+        currentMascotContainer.getBoundingClientRect();
       const center = { x: left + width / 2, y: top + height / 2 };
       setMidpointTarget(center);
     }
@@ -186,7 +182,10 @@ export default function LoadingSwapsQuotes({
             className="loading-swaps-quotes__mascot-container"
             ref={mascotContainer}
           >
-            <img src="./images/logo/metamask-fox.svg" style={{ width: '90px', height: '90px' }}></img>
+            <img
+              src="./images/logo/metamask-fox.svg"
+              style={{ width: '90px', height: '90px' }}
+            />
             {/* <Mascot
               animationEventEmitter={animationEventEmitter.current}
               width="90"
@@ -228,7 +227,7 @@ export default function LoadingSwapsQuotes({
       <SwapsFooter
         submitText={t('back')}
         onSubmit={async () => {
-          metaMetricsEvent(quotesRequestCancelledEventConfig);
+          trackEvent(quotesRequestCancelledEventConfig);
           await dispatch(navigateBackToBuildQuote(history));
         }}
         hideCancel

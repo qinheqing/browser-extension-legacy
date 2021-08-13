@@ -5,13 +5,9 @@ import { HashRouter } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
 import { I18nProvider, LegacyI18nProvider } from '../contexts/i18n';
 import {
-  MetaMetricsProvider,
-  LegacyMetaMetricsProvider,
-} from '../contexts/metametrics';
-import {
-  MetaMetricsProvider as NewMetaMetricsProvider,
-  LegacyMetaMetricsProvider as NewLegacyMetaMetricsProvider,
-} from '../contexts/metametrics.new';
+  TrackEventsContextProvider,
+  LegacyTrackEventsContextProvider,
+} from '../contexts/trackEvent';
 import ForceSelectHwAccountProvider from '../contexts/ForceSelectHwAccountProvider';
 import ErrorPage from './error';
 import Routes from './routes';
@@ -46,21 +42,17 @@ class Index extends PureComponent {
     return (
       <Provider store={store}>
         <HashRouter hashType="noslash">
-          <MetaMetricsProvider>
-            <LegacyMetaMetricsProvider>
-              <NewMetaMetricsProvider>
-                <NewLegacyMetaMetricsProvider>
-                  <I18nProvider>
-                    <LegacyI18nProvider>
-                      <ForceSelectHwAccountProvider>
-                        <Routes />
-                      </ForceSelectHwAccountProvider>
-                    </LegacyI18nProvider>
-                  </I18nProvider>
-                </NewLegacyMetaMetricsProvider>
-              </NewMetaMetricsProvider>
-            </LegacyMetaMetricsProvider>
-          </MetaMetricsProvider>
+          <TrackEventsContextProvider>
+            <LegacyTrackEventsContextProvider>
+              <I18nProvider>
+                <LegacyI18nProvider>
+                  <ForceSelectHwAccountProvider>
+                    <Routes />
+                  </ForceSelectHwAccountProvider>
+                </LegacyI18nProvider>
+              </I18nProvider>
+            </LegacyTrackEventsContextProvider>
+          </TrackEventsContextProvider>
         </HashRouter>
       </Provider>
     );

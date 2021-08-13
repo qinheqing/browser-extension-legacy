@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { I18nContext } from '../../../contexts/i18n';
-import { useNewMetricEvent } from '../../../hooks/useMetricEvent';
-import { MetaMetricsContext } from '../../../contexts/metametrics.new';
+import { useTrackEvent } from '../../../hooks/useTrackEvent';
 import { getCurrentCurrency, getUSDConversionRate } from '../../../selectors';
 import {
   getUsedQuote,
@@ -31,6 +30,7 @@ import { ASSET_ROUTE, DEFAULT_ROUTE } from '../../../helpers/constants/routes';
 
 import { getRenderableNetworkFeesForQuote } from '../swaps.util';
 import SwapsFooter from '../swaps-footer';
+import utilsApp from '../../../../../src/utils/utilsApp';
 import SwapFailureIcon from './swap-failure-icon';
 import SwapSuccessIcon from './swap-success-icon';
 import QuotesTimeoutIcon from './quotes-timeout-icon';
@@ -48,7 +48,7 @@ export default function AwaitingSwap({
   maxSlippage,
 }) {
   const t = useContext(I18nContext);
-  const metaMetricsEvent = useContext(MetaMetricsContext);
+  const trackEvent = utilsApp.trackEventNoop;
   const history = useHistory();
   const dispatch = useDispatch();
   const animationEventEmitter = useRef(new EventEmitter());
@@ -61,9 +61,8 @@ export default function AwaitingSwap({
   const currentCurrency = useSelector(getCurrentCurrency);
   const usdConversionRate = useSelector(getUSDConversionRate);
 
-  const [trackedQuotesExpiredEvent, setTrackedQuotesExpiredEvent] = useState(
-    false,
-  );
+  const [trackedQuotesExpiredEvent, setTrackedQuotesExpiredEvent] =
+    useState(false);
 
   let feeinUnformattedFiat;
 
@@ -81,7 +80,7 @@ export default function AwaitingSwap({
     feeinUnformattedFiat = renderableNetworkFees.rawNetworkFees;
   }
 
-  const quotesExpiredEvent = useNewMetricEvent({
+  const quotesExpiredEvent = useTrackEvent({
     event: 'Quotes Timed Out',
     sensitiveProperties: {
       token_from: sourceTokenInfo?.symbol,
@@ -208,7 +207,7 @@ export default function AwaitingSwap({
                 history,
                 inputValue,
                 maxSlippage,
-                metaMetricsEvent,
+                trackEvent,
               ),
             );
           } else if (errorKey) {

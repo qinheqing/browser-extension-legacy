@@ -27,7 +27,7 @@ describe('ConfirmSeedPhrase Component', function () {
   });
 
   it('should add/remove selected on click', function () {
-    const metricsEventSpy = sinon.spy();
+    const trackEventSpy = sinon.spy();
     const pushSpy = sinon.spy();
     const root = shallowRender(
       {
@@ -35,7 +35,7 @@ describe('ConfirmSeedPhrase Component', function () {
         history: { push: pushSpy },
       },
       {
-        metricsEvent: metricsEventSpy,
+        trackEvent: trackEventSpy,
       },
     );
 
@@ -68,7 +68,7 @@ describe('ConfirmSeedPhrase Component', function () {
   });
 
   it('should render correctly on hover', function () {
-    const metricsEventSpy = sinon.spy();
+    const trackEventSpy = sinon.spy();
     const pushSpy = sinon.spy();
     const root = shallowRender(
       {
@@ -76,7 +76,7 @@ describe('ConfirmSeedPhrase Component', function () {
         history: { push: pushSpy },
       },
       {
-        metricsEvent: metricsEventSpy,
+        trackEvent: trackEventSpy,
       },
     );
 
@@ -103,7 +103,7 @@ describe('ConfirmSeedPhrase Component', function () {
   });
 
   it('should insert seed in place on drop', function () {
-    const metricsEventSpy = sinon.spy();
+    const trackEventSpy = sinon.spy();
     const pushSpy = sinon.spy();
     const root = shallowRender(
       {
@@ -111,7 +111,7 @@ describe('ConfirmSeedPhrase Component', function () {
         history: { push: pushSpy },
       },
       {
-        metricsEvent: metricsEventSpy,
+        trackEvent: trackEventSpy,
       },
     );
 
@@ -148,7 +148,7 @@ describe('ConfirmSeedPhrase Component', function () {
       '狗',
       '豬',
     ];
-    const metricsEventSpy = sinon.spy();
+    const trackEventSpy = sinon.spy();
     const pushSpy = sinon.spy();
     const initialize3BoxSpy = sinon.spy();
     const root = shallowRender(
@@ -159,7 +159,7 @@ describe('ConfirmSeedPhrase Component', function () {
         initializeThreeBox: initialize3BoxSpy,
       },
       {
-        metricsEvent: metricsEventSpy,
+        trackEvent: trackEventSpy,
       },
     );
 
@@ -177,7 +177,7 @@ describe('ConfirmSeedPhrase Component', function () {
 
     await new Promise((resolve) => setTimeout(resolve, 100));
 
-    assert.deepStrictEqual(metricsEventSpy.args[0][0], {
+    assert.deepStrictEqual(trackEventSpy.args[0][0], {
       eventOpts: {
         category: 'Onboarding',
         action: 'Seed Phrase Setup',

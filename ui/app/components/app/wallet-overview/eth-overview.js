@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 import Identicon from '../../ui/identicon';
 import { I18nContext } from '../../../contexts/i18n';
 import { SEND_ROUTE } from '../../../helpers/constants/routes';
-import { useMetricEvent } from '../../../hooks/useMetricEvent';
+import { useTrackEvent } from '../../../hooks/useTrackEvent';
 import Tooltip from '../../ui/tooltip';
 import UserPreferencedCurrencyDisplay from '../user-preferenced-currency-display';
 import { PRIMARY, SECONDARY } from '../../../helpers/constants/common';
@@ -27,7 +27,7 @@ import WalletOverview from './wallet-overview';
 
 const EthOverview = ({ className }) => {
   const t = useContext(I18nContext);
-  const sendEvent = useMetricEvent({
+  const sendEvent = useTrackEvent({
     eventOpts: {
       category: 'Navigation',
       action: 'Home',

@@ -14,7 +14,7 @@ import { CONFIRMED_STATUS } from './transaction-activity-log.constants';
 export default class TransactionActivityLog extends PureComponent {
   static contextTypes = {
     t: PropTypes.func,
-    metricEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   static propTypes = {

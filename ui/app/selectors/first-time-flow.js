@@ -5,11 +5,8 @@ import {
 } from '../helpers/constants/routes';
 import { CONST_FIRST_TIME_FLOW_TYPES } from '../helpers/constants/common';
 
-export function getFirstTimeFlowTypeRoute(state) {
-  const { firstTimeFlowType } = state.metamask;
-
+export function getNextRouteOfFirstTimeFlow(firstTimeFlowType) {
   let nextRoute;
-  // Page metametrics-opt-in nextRoute for firstTimeFlowType if click [HW only] button
   if (firstTimeFlowType === CONST_FIRST_TIME_FLOW_TYPES.CONNECT_HW) {
     nextRoute = INITIALIZE_CREATE_PASSWORD_ROUTE;
   } else if (firstTimeFlowType === CONST_FIRST_TIME_FLOW_TYPES.CREATE) {
@@ -19,8 +16,13 @@ export function getFirstTimeFlowTypeRoute(state) {
   } else {
     nextRoute = DEFAULT_ROUTE;
   }
-
   return nextRoute;
+}
+
+export function getFirstTimeFlowTypeRoute(state) {
+  const { firstTimeFlowType } = state.metamask;
+
+  return getNextRouteOfFirstTimeFlow(firstTimeFlowType);
 }
 
 export const getOnboardingInitiator = (state) => {

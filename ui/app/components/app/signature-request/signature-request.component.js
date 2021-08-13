@@ -23,15 +23,15 @@ export default class SignatureRequest extends PureComponent {
 
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   componentDidMount() {
     const { clearConfirmTransaction, cancel } = this.props;
-    const { metricsEvent } = this.context;
+    const { trackEvent } = this.context;
     if (getEnvironmentType() === ENVIRONMENT_TYPE_NOTIFICATION) {
       window.addEventListener('beforeunload', (event) => {
-        metricsEvent({
+        trackEvent({
           eventOpts: {
             category: 'Transactions',
             action: 'Sign Request',

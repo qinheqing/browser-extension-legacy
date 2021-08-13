@@ -31,7 +31,7 @@ export default class PermissionPageContainer extends Component {
 
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   state = {
@@ -72,7 +72,7 @@ export default class PermissionPageContainer extends Component {
   };
 
   componentDidMount() {
-    this.context.metricsEvent({
+    this.context.trackEvent({
       eventOpts: {
         category: 'Auth',
         action: 'Connect',

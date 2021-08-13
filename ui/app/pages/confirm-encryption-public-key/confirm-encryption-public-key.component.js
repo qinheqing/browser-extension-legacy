@@ -12,7 +12,7 @@ import { conversionUtil } from '../../helpers/utils/conversion-util';
 export default class ConfirmEncryptionPublicKey extends Component {
   static contextTypes = {
     t: PropTypes.func.isRequired,
-    metricsEvent: PropTypes.func.isRequired,
+    trackEvent: PropTypes.func.isRequired,
   };
 
   static propTypes = {
@@ -49,14 +49,11 @@ export default class ConfirmEncryptionPublicKey extends Component {
   };
 
   _beforeUnload = async (event) => {
-    const {
-      clearConfirmTransaction,
-      cancelEncryptionPublicKey,
-      txData,
-    } = this.props;
-    const { metricsEvent } = this.context;
+    const { clearConfirmTransaction, cancelEncryptionPublicKey, txData } =
+      this.props;
+    const { trackEvent } = this.context;
     await cancelEncryptionPublicKey(txData, event);
-    metricsEvent({
+    trackEvent({
       eventOpts: {
         category: 'Messages',
         action: 'Encryption public key Request',
@@ -196,7 +193,7 @@ export default class ConfirmEncryptionPublicKey extends Component {
       mostRecentOverviewPage,
       txData,
     } = this.props;
-    const { t, metricsEvent } = this.context;
+    const { t, trackEvent } = this.context;
 
     return (
       <div className="request-encryption-public-key__footer">
@@ -207,7 +204,7 @@ export default class ConfirmEncryptionPublicKey extends Component {
           onClick={async (event) => {
             this._removeBeforeUnload();
             await cancelEncryptionPublicKey(txData, event);
-            metricsEvent({
+            trackEvent({
               eventOpts: {
                 category: 'Messages',
                 action: 'Encryption public key Request',
@@ -227,7 +224,7 @@ export default class ConfirmEncryptionPublicKey extends Component {
           onClick={async (event) => {
             this._removeBeforeUnload();
             await encryptionPublicKey(txData, event);
-            this.context.metricsEvent({
+            this.context.trackEvent({
               eventOpts: {
                 category: 'Messages',
                 action: 'Encryption public key Request',

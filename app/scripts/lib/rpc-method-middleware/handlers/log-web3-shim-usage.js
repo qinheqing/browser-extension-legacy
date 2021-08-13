@@ -15,7 +15,7 @@ export default logWeb3ShimUsage;
 
 /**
  * @typedef {Object} LogWeb3ShimUsageOptions
- * @property {Function} sendMetrics - A function that registers a metrics event.
+ * @property {Function} trackEvent - A function that registers a metrics event.
  * @property {Function} getWeb3ShimUsageState - A function that gets web3 shim
  * usage state for the given origin.
  * @property {Function} setWeb3ShimUsageRecorded - A function that records web3 shim
@@ -34,13 +34,13 @@ function logWeb3ShimUsageHandler(
   res,
   _next,
   end,
-  { sendMetrics, getWeb3ShimUsageState, setWeb3ShimUsageRecorded },
+  { trackEvent, getWeb3ShimUsageState, setWeb3ShimUsageRecorded },
 ) {
   const { origin } = req;
   if (getWeb3ShimUsageState(origin) === undefined) {
     setWeb3ShimUsageRecorded(origin);
 
-    sendMetrics(
+    trackEvent(
       {
         event: `Website Accessed window.web3 Shim`,
         category: 'inpage_provider',
@@ -49,7 +49,7 @@ function logWeb3ShimUsageHandler(
         },
       },
       {
-        excludeMetaMetricsId: true,
+        excludeTrackEventsId: true,
       },
     );
   }

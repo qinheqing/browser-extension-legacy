@@ -14,7 +14,7 @@ import Popover from '../../ui/popover';
 export default class TransactionListItemDetails extends PureComponent {
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   static defaultProps = {
@@ -54,7 +54,7 @@ export default class TransactionListItemDetails extends PureComponent {
     } = this.props;
     const { hash, metamaskNetworkId } = primaryTransaction;
 
-    this.context.metricsEvent({
+    this.context.trackEvent({
       eventOpts: {
         category: 'Navigation',
         action: 'Activity Log',
@@ -84,7 +84,7 @@ export default class TransactionListItemDetails extends PureComponent {
     const { primaryTransaction: transaction } = transactionGroup;
     const { hash } = transaction;
 
-    this.context.metricsEvent({
+    this.context.trackEvent({
       eventOpts: {
         category: 'Navigation',
         action: 'Activity Log',
@@ -142,7 +142,7 @@ export default class TransactionListItemDetails extends PureComponent {
     const { t } = this.context;
     const { chainId } = this.props;
     const { justCopied } = this.state;
-    const isOfficeChain = [1, 3, 4, 5, 42].includes(+chainId);
+    const isOfficeChain = [1, 3, 4, 5, 42].includes(Number(chainId));
     const {
       transactionGroup,
       primaryCurrency,
@@ -198,7 +198,9 @@ export default class TransactionListItemDetails extends PureComponent {
               <Tooltip
                 wrapperClassName="transaction-list-item-details__header-button"
                 containerClassName="transaction-list-item-details__header-button-tooltip-container"
-                title={!isOfficeChain ? t('viewinExplorer') : t('viewOnEtherscan')}
+                title={
+                  isOfficeChain ? t('viewOnEtherscan') : t('viewinExplorer')
+                }
               >
                 <Button
                   type="raised"
@@ -215,7 +217,7 @@ export default class TransactionListItemDetails extends PureComponent {
                     onClick={this.handleRetry}
                     className="transaction-list-item-details__header-button"
                   >
-                    <i className="fa fa-sync"></i>
+                    <i className="fa fa-sync" />
                   </Button>
                 </Tooltip>
               )}
@@ -233,7 +235,7 @@ export default class TransactionListItemDetails extends PureComponent {
                 senderName={senderNickname}
                 senderAddress={senderAddress}
                 onRecipientClick={() => {
-                  this.context.metricsEvent({
+                  this.context.trackEvent({
                     eventOpts: {
                       category: 'Navigation',
                       action: 'Activity Log',
@@ -242,7 +244,7 @@ export default class TransactionListItemDetails extends PureComponent {
                   });
                 }}
                 onSenderClick={() => {
-                  this.context.metricsEvent({
+                  this.context.trackEvent({
                     eventOpts: {
                       category: 'Navigation',
                       action: 'Activity Log',

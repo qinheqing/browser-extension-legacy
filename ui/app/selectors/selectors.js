@@ -30,7 +30,7 @@ export function getNetworkIdentifier(state) {
   return nickname || rpcUrl || type;
 }
 
-export function getMetricsNetworkIdentifier(state) {
+export function getProviderNetworkIdentifier(state) {
   const { provider } = state.metamask;
   return provider.type === NETWORK_TYPE_RPC ? provider.rpcUrl : provider.type;
 }
@@ -392,17 +392,6 @@ export function getCustomNonceValue(state) {
 export function getDomainMetadata(state) {
   return state.metamask.domainMetadata;
 }
-
-export const getBackgroundMetaMetricState = (state) => {
-  return {
-    network: getCurrentNetworkId(state),
-    accountType: getAccountType(state),
-    metaMetricsId: state.metamask.metaMetricsId,
-    numberOfTokens: getNumberOfTokens(state),
-    numberOfAccounts: getNumberOfAccounts(state),
-    participateInMetaMetrics: state.metamask.participateInMetaMetrics,
-  };
-};
 
 export function getRpcPrefsForCurrentProvider(state) {
   const { frequentRpcListDetail, provider } = state.metamask;

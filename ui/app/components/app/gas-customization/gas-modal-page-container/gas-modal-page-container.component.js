@@ -8,7 +8,6 @@ import BasicTabContent from './basic-tab-content';
 export default class GasModalPageContainer extends Component {
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
     trackEvent: PropTypes.func,
   };
 
@@ -125,14 +124,14 @@ export default class GasModalPageContainer extends Component {
       {
         name: this.context.t('advanced'),
         content: this.renderAdvancedTabContent(),
-      }
+      },
     ];
 
     if (isMainnet || process.env.IN_TEST) {
       tabsToRender.unshift({
         name: this.context.t('basic'),
         content: this.renderBasicTabContent(gasPriceButtonGroupProps),
-      })
+      });
     }
 
     if (hideBasic) {
@@ -179,7 +178,7 @@ export default class GasModalPageContainer extends Component {
           onClose={() => cancelAndClose()}
           onSubmit={() => {
             if (isSpeedUp) {
-              this.context.metricsEvent({
+              this.context.trackEvent({
                 eventOpts: {
                   category: 'Navigation',
                   action: 'Activity Log',

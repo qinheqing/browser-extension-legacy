@@ -22,13 +22,13 @@ export function mountWithRouter(component, store = {}, pathname = '/') {
     context: {
       router,
       t: (str) => str,
-      metricsEvent: () => undefined,
+      trackEvent: () => undefined,
       store,
     },
     childContextTypes: {
       router: PropTypes.object,
       t: PropTypes.func,
-      metricsEvent: PropTypes.func,
+      trackEvent: PropTypes.func,
       store: PropTypes.object,
     },
   });

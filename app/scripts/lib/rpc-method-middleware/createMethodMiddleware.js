@@ -21,7 +21,7 @@ const handlerMap = handlers.reduce((map, handler) => {
  * Eventually, we'll want to extract this middleware into its own package.
  *
  * @param {Object} opts - The middleware options
- * @param {Function} opts.sendMetrics - A function for sending a metrics event
+ * @param {Function} opts.trackEvent - A function for sending a metrics event
  * @returns {(req: Object, res: Object, next: Function, end: Function) => void}
  */
 export default function createMethodMiddleware(opts) {

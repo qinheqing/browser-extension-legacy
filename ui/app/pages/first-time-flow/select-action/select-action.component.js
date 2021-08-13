@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../../components/ui/button';
 import MetaFoxLogo from '../../../components/ui/metafox-logo';
-import { INITIALIZE_METAMETRICS_OPT_IN_ROUTE } from '../../../helpers/constants/routes';
 import { CONST_FIRST_TIME_FLOW_TYPES } from '../../../helpers/constants/common';
+import { getNextRouteOfFirstTimeFlow } from '../../../selectors';
 
 export default class SelectAction extends PureComponent {
   static propTypes = {
@@ -26,13 +26,15 @@ export default class SelectAction extends PureComponent {
   }
 
   handleCreate = () => {
-    this.props.setFirstTimeFlowType(CONST_FIRST_TIME_FLOW_TYPES.CREATE);
-    this.props.history.push(INITIALIZE_METAMETRICS_OPT_IN_ROUTE);
+    const flowType = CONST_FIRST_TIME_FLOW_TYPES.CREATE;
+    this.props.setFirstTimeFlowType(flowType);
+    this.props.history.push(getNextRouteOfFirstTimeFlow(flowType));
   };
 
   handleImport = () => {
-    this.props.setFirstTimeFlowType(CONST_FIRST_TIME_FLOW_TYPES.IMPORT);
-    this.props.history.push(INITIALIZE_METAMETRICS_OPT_IN_ROUTE);
+    const flowType = CONST_FIRST_TIME_FLOW_TYPES.IMPORT;
+    this.props.setFirstTimeFlowType(flowType);
+    this.props.history.push(getNextRouteOfFirstTimeFlow(flowType));
   };
 
   render() {

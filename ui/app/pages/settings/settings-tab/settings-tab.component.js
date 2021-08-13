@@ -26,7 +26,7 @@ const localeOptions = locales.map((locale) => {
 export default class SettingsTab extends PureComponent {
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   static propTypes = {

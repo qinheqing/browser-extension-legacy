@@ -21,7 +21,6 @@ describe('migration #49', function () {
       meta: {},
       data: {
         PreferencesController: {
-          metaMetricsId: '0xaab',
           bar: 'baz',
         },
         foo: 'bar',
@@ -32,9 +31,6 @@ describe('migration #49', function () {
     assert.deepStrictEqual(newStorage.data, {
       PreferencesController: {
         bar: 'baz',
-      },
-      MetaMetricsController: {
-        metaMetricsId: '0xaab',
       },
       foo: 'bar',
     });
@@ -45,7 +41,6 @@ describe('migration #49', function () {
       meta: {},
       data: {
         PreferencesController: {
-          participateInMetaMetrics: false,
           bar: 'baz',
         },
         foo: 'bar',
@@ -56,9 +51,6 @@ describe('migration #49', function () {
     assert.deepStrictEqual(newStorage.data, {
       PreferencesController: {
         bar: 'baz',
-      },
-      MetaMetricsController: {
-        participateInMetaMetrics: false,
       },
       foo: 'bar',
     });
@@ -69,7 +61,6 @@ describe('migration #49', function () {
       meta: {},
       data: {
         PreferencesController: {
-          metaMetricsSendCount: 1,
           bar: 'baz',
         },
         foo: 'bar',
@@ -80,9 +71,6 @@ describe('migration #49', function () {
     assert.deepStrictEqual(newStorage.data, {
       PreferencesController: {
         bar: 'baz',
-      },
-      MetaMetricsController: {
-        metaMetricsSendCount: 1,
       },
       foo: 'bar',
     });
@@ -93,9 +81,6 @@ describe('migration #49', function () {
       meta: {},
       data: {
         PreferencesController: {
-          metaMetricsSendCount: 1,
-          metaMetricsId: '0xaab',
-          participateInMetaMetrics: true,
           bar: 'baz',
         },
         foo: 'bar',
@@ -106,11 +91,6 @@ describe('migration #49', function () {
     assert.deepStrictEqual(newStorage.data, {
       PreferencesController: {
         bar: 'baz',
-      },
-      MetaMetricsController: {
-        metaMetricsSendCount: 1,
-        metaMetricsId: '0xaab',
-        participateInMetaMetrics: true,
       },
       foo: 'bar',
     });

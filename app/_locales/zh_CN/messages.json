@@ -1205,12 +1205,7 @@
   "parameters": {
     "message": "参数"
   },
-  "participateInMetaMetrics": {
-    "message": "加入 MetaMetrics"
-  },
-  "participateInMetaMetricsDescription": {
-    "message": "加入 MetaMetrics ，帮助我们改善 OneKey 服务"
-  },
+
   "password": {
     "message": "密码"
   },

@@ -33,7 +33,7 @@ describe('AmountMaxButton Component', function () {
       {
         context: {
           t: (str) => `${str}_t`,
-          metricsEvent: () => undefined,
+          trackEvent: () => undefined,
         },
       },
     );

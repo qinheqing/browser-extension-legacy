@@ -22,7 +22,7 @@ const FORM_STATE_KEYS = [
 export default class NetworkForm extends PureComponent {
   static contextTypes = {
     t: PropTypes.func.isRequired,
-    metricsEvent: PropTypes.func.isRequired,
+    trackEvent: PropTypes.func.isRequired,
   };
 
   static propTypes = {
@@ -94,13 +94,8 @@ export default class NetworkForm extends PureComponent {
   }
 
   resetForm() {
-    const {
-      rpcUrl,
-      chainId,
-      ticker,
-      networkName,
-      blockExplorerUrl,
-    } = this.props;
+    const { rpcUrl, chainId, ticker, networkName, blockExplorerUrl } =
+      this.props;
 
     this.setState({
       rpcUrl,

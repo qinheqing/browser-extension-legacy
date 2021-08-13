@@ -185,7 +185,7 @@ class ConnectHardwareForm extends Component {
       description,
     )
       .then((_) => {
-        this.context.metricsEvent({
+        this.context.trackEvent({
           eventOpts: {
             category: 'Accounts',
             action: 'Connected Hardware Wallet',
@@ -195,7 +195,7 @@ class ConnectHardwareForm extends Component {
         history.push(mostRecentOverviewPage);
       })
       .catch((e) => {
-        this.context.metricsEvent({
+        this.context.trackEvent({
           eventOpts: {
             category: 'Accounts',
             action: 'Connected Hardware Wallet',
@@ -384,7 +384,7 @@ const mapDispatchToProps = (dispatch) => {
 
 ConnectHardwareForm.contextTypes = {
   t: PropTypes.func,
-  metricsEvent: PropTypes.func,
+  trackEvent: PropTypes.func,
 };
 
 export default connect(

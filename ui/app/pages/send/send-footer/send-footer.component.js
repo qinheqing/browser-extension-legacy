@@ -31,7 +31,7 @@ export default class SendFooter extends Component {
 
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   onCancel() {
@@ -60,7 +60,7 @@ export default class SendFooter extends Component {
       history,
       gasEstimateType,
     } = this.props;
-    const { metricsEvent } = this.context;
+    const { trackEvent } = this.context;
 
     // Should not be needed because submit should be disabled if there are errors.
     // const noErrors = !amountError && toError === null
@@ -86,7 +86,7 @@ export default class SendFooter extends Component {
       : sign({ data, sendToken, to, amount, from, gas, gasPrice });
 
     Promise.resolve(promise).then(() => {
-      metricsEvent({
+      trackEvent({
         eventOpts: {
           category: 'Transactions',
           action: 'Edit Screen',
@@ -125,12 +125,12 @@ export default class SendFooter extends Component {
 
   componentDidUpdate(prevProps) {
     const { inError, sendErrors } = this.props;
-    const { metricsEvent } = this.context;
+    const { trackEvent } = this.context;
     if (!prevProps.inError && inError) {
       const errorField = Object.keys(sendErrors).find((key) => sendErrors[key]);
       const errorMessage = sendErrors[errorField];
 
-      metricsEvent({
+      trackEvent({
         eventOpts: {
           category: 'Transactions',
           action: 'Edit Screen',

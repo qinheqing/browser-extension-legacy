@@ -200,7 +200,7 @@ export default class Routes extends Component {
 
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   constructor(props) {

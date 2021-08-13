@@ -1205,12 +1205,7 @@
   "parameters": {
     "message": "Parameters"
   },
-  "participateInMetaMetrics": {
-    "message": "Participate in MetaMetrics"
-  },
-  "participateInMetaMetricsDescription": {
-    "message": "Participate in MetaMetrics to help us make OneKey better"
-  },
+
   "password": {
     "message": "Password"
   },

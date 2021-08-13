@@ -1,5 +1,3 @@
-import Analytics from 'analytics-node';
-
 const isDevOrTestEnvironment = Boolean(
   process.env.METAMASK_DEBUG || process.env.IN_TEST,
 );
@@ -48,22 +46,15 @@ export const createSegmentMock = (
      * the event.
      */
     flush() {
-      segmentMock.queue.forEach(([_, callback]) => {
-        callback();
-      });
-      segmentMock.queue = [];
+      // noop
     },
 
     /**
      * Track an event and add it to the queue. If the queue size reaches the
      * flushAt threshold, flush the queue.
      */
-    track(payload, callback = () => undefined) {
-      segmentMock.queue.push([payload, callback]);
-
-      if (segmentMock.queue.length >= flushAt) {
-        segmentMock.flush();
-      }
+    track() {
+      // noop
     },
 
     /**
@@ -73,29 +64,24 @@ export const createSegmentMock = (
     page() {
       // noop
     },
+
     identify() {
       // noop
     },
   };
+
   // Mimic the flushInterval behavior with an interval
-  setInterval(segmentMock.flush, flushInterval);
+  // setInterval(segmentMock.flush, flushInterval);
+
   return segmentMock;
 };
 
-export const segment =
-  !SEGMENT_WRITE_KEY || (isDevOrTestEnvironment && !SEGMENT_HOST)
-    ? createSegmentMock(SEGMENT_FLUSH_AT, SEGMENT_FLUSH_INTERVAL)
-    : new Analytics(SEGMENT_WRITE_KEY, {
-        host: SEGMENT_HOST,
-        flushAt: SEGMENT_FLUSH_AT,
-        flushInterval: SEGMENT_FLUSH_INTERVAL,
-      });
+export const segment = createSegmentMock(
+  SEGMENT_FLUSH_AT,
+  SEGMENT_FLUSH_INTERVAL,
+);
 
-export const segmentLegacy =
-  !SEGMENT_LEGACY_WRITE_KEY || (isDevOrTestEnvironment && !SEGMENT_HOST)
-    ? createSegmentMock(SEGMENT_FLUSH_AT, SEGMENT_FLUSH_INTERVAL)
-    : new Analytics(SEGMENT_LEGACY_WRITE_KEY, {
-        host: SEGMENT_HOST,
-        flushAt: SEGMENT_FLUSH_AT,
-        flushInterval: SEGMENT_FLUSH_INTERVAL,
-      });
+export const segmentLegacy = createSegmentMock(
+  SEGMENT_FLUSH_AT,
+  SEGMENT_FLUSH_INTERVAL,
+);

@@ -2219,49 +2219,6 @@ export function toggleAccountMenu() {
   };
 }
 
-export function setParticipateInMetaMetrics(val) {
-  return (dispatch) => {
-    log.debug(`background.setParticipateInMetaMetrics`);
-    return new Promise((resolve, reject) => {
-      background.setParticipateInMetaMetrics(val, (err, metaMetricsId) => {
-        log.debug(err);
-        if (err) {
-          dispatch(displayWarning(err.message));
-          reject(err);
-          return;
-        }
-
-        dispatch({
-          type: actionConstants.SET_PARTICIPATE_IN_METAMETRICS,
-          value: val,
-        });
-        resolve([val, metaMetricsId]);
-      });
-    });
-  };
-}
-
-export function setMetaMetricsSendCount(val) {
-  return (dispatch) => {
-    log.debug(`background.setMetaMetricsSendCount`);
-    return new Promise((resolve, reject) => {
-      background.setMetaMetricsSendCount(val, (err) => {
-        if (err) {
-          dispatch(displayWarning(err.message));
-          reject(err);
-          return;
-        }
-
-        dispatch({
-          type: actionConstants.SET_METAMETRICS_SEND_COUNT,
-          value: val,
-        });
-        resolve(val);
-      });
-    });
-  };
-}
-
 export function setUseBlockie(val) {
   return (dispatch) => {
     dispatch(showLoadingIndication());
@@ -2953,30 +2910,22 @@ export function getCurrentWindowTab() {
   };
 }
 
-// MetaMetrics
 /**
- * @typedef {import('../../../shared/constants/metametrics').MetaMetricsEventPayload} MetaMetricsEventPayload
- * @typedef {import('../../../shared/constants/metametrics').MetaMetricsEventOptions} MetaMetricsEventOptions
- * @typedef {import('../../../shared/constants/metametrics').MetaMetricsPagePayload} MetaMetricsPagePayload
- * @typedef {import('../../../shared/constants/metametrics').MetaMetricsPageOptions} MetaMetricsPageOptions
- */
-
-/**
- * @param {MetaMetricsEventPayload} payload - details of the event to track
- * @param {MetaMetricsEventOptions} options - options for routing/handling of event
+ * @param {TrackEventPayload} payload - details of the event to track
+ * @param {TrackEventOptions} options - options for routing/handling of event
  * @returns {Promise<void>}
  */
-export function trackMetaMetricsEvent(payload, options) {
-  return promisifiedBackground.trackMetaMetricsEvent(payload, options);
+export function trackEvent(payload, options) {
+  return promisifiedBackground.trackEvent(payload, options);
 }
 
 /**
- * @param {MetaMetricsPagePayload} payload - details of the page viewed
- * @param {MetaMetricsPageOptions} options - options for handling the page view
+ * @param {TrackEventPagePayload} payload - details of the page viewed
+ * @param {TrackEventPageOptions} options - options for handling the page view
  * @returns {void}
  */
-export function trackMetaMetricsPage(payload, options) {
-  return promisifiedBackground.trackMetaMetricsPage(payload, options);
+export function trackEventPage(payload, options) {
+  return promisifiedBackground.trackEventPage(payload, options);
 }
 
 // If you need the return value of a background method call

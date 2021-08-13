@@ -20,7 +20,7 @@ export default class NewAccountCreateForm extends Component {
     const createClick = (_) => {
       createAccount(newAccountName || defaultAccountName)
         .then(() => {
-          this.context.metricsEvent({
+          this.context.trackEvent({
             eventOpts: {
               category: 'Accounts',
               action: 'Add New Account',
@@ -30,7 +30,7 @@ export default class NewAccountCreateForm extends Component {
           history.push(mostRecentOverviewPage);
         })
         .catch((e) => {
-          this.context.metricsEvent({
+          this.context.trackEvent({
             eventOpts: {
               category: 'Accounts',
               action: 'Add New Account',
@@ -91,5 +91,5 @@ NewAccountCreateForm.propTypes = {
 
 NewAccountCreateForm.contextTypes = {
   t: PropTypes.func,
-  metricsEvent: PropTypes.func,
+  trackEvent: PropTypes.func,
 };

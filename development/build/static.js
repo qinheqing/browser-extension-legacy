@@ -144,7 +144,16 @@ function createStaticAssetTasks({ livereload, browserPlatforms }) {
 
   async function setupLiveCopy(target) {
     const pattern = target.pattern || '/**/*';
-    watch(target.src + pattern, (event) => {
+    let watchGlobs = path.join(target.src, pattern);
+    if (fs.pathExistsSync(target.src) && fs.lstatSync(target.src).isFile()) {
+      // FIX:
+      //    Globs: `"./app/_locales/zh_CN/messages.json/**/*"`
+      //    [gulp-watch] Watched unexpected path. This is likely a bug.
+      //    Please open this link to report the issue:
+      watchGlobs = target.src;
+    }
+    // console.log('static watch: ', watchGlobs);
+    watch(watchGlobs, (event) => {
       console.log(`[static] gulp-watch file changed: ${event.path}`);
       livereload.changed(event.path);
       performCopy(target);

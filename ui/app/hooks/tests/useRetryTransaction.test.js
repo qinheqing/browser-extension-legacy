@@ -4,7 +4,7 @@ import { renderHook } from '@testing-library/react-hooks';
 import sinon from 'sinon';
 import transactions from '../../../../test/data/transaction-data.json';
 import * as methodDataHook from '../useMethodData';
-import * as metricEventHook from '../useMetricEvent';
+import * as trackEventHook from '../useTrackEvent';
 import { showSidebar } from '../../store/actions';
 import { useRetryTransaction } from '../useRetryTransaction';
 
@@ -20,7 +20,7 @@ describe('useRetryTransaction', function () {
     before(function () {
       sinon.stub(reactRedux, 'useDispatch').returns(dispatch);
       sinon.stub(methodDataHook, 'useMethodData').returns({});
-      sinon.stub(metricEventHook, 'useMetricEvent').returns(trackEvent);
+      sinon.stub(trackEventHook, 'useTrackEvent').returns(trackEvent);
     });
 
     afterEach(function () {

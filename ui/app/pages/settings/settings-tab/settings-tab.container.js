@@ -5,7 +5,6 @@ import {
   setUseAutoSwitchChain,
   updateCurrentLocale,
   setUseNativeCurrencyAsPrimaryCurrencyPreference,
-  setParticipateInMetaMetrics,
   actionSetHwOnlyModeAsync,
 } from '../../../store/actions';
 import { getPreferences } from '../../../selectors';
@@ -49,8 +48,6 @@ const mapDispatchToProps = (dispatch) => {
     setUseNativeCurrencyAsPrimaryCurrencyPreference: (value) => {
       return dispatch(setUseNativeCurrencyAsPrimaryCurrencyPreference(value));
     },
-    setParticipateInMetaMetrics: (val) =>
-      dispatch(setParticipateInMetaMetrics(val)),
     actionSetHwOnlyModeAsync: (val) => dispatch(actionSetHwOnlyModeAsync(val)),
   };
 };

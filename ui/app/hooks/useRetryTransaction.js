@@ -7,7 +7,7 @@ import {
   setCustomGasLimit,
 } from '../ducks/gas/gas.duck';
 import { increaseLastGasPrice } from '../helpers/utils/confirm-tx.util';
-import { useMetricEvent } from './useMetricEvent';
+import { useTrackEvent } from './useTrackEvent';
 
 /**
  * Provides a reusable hook that, given a transactionGroup, will return
@@ -19,7 +19,7 @@ export function useRetryTransaction(transactionGroup) {
   const { primaryTransaction, initialTransaction } = transactionGroup;
   // Signature requests do not have a txParams, but this hook is called indiscriminately
   const gasPrice = primaryTransaction.txParams?.gasPrice;
-  const trackMetricsEvent = useMetricEvent({
+  const trackEvent = useTrackEvent({
     eventOpts: {
       category: 'Navigation',
       action: 'Activity Log',
@@ -32,7 +32,7 @@ export function useRetryTransaction(transactionGroup) {
     async (event) => {
       event.stopPropagation();
 
-      trackMetricsEvent();
+      trackEvent();
       await dispatch(fetchBasicGasEstimates);
       const transaction = initialTransaction;
       const increasedGasPrice = increaseLastGasPrice(gasPrice);
@@ -50,7 +50,7 @@ export function useRetryTransaction(transactionGroup) {
         }),
       );
     },
-    [dispatch, trackMetricsEvent, initialTransaction, gasPrice],
+    [dispatch, trackEvent, initialTransaction, gasPrice],
   );
 
   return retryTransaction;

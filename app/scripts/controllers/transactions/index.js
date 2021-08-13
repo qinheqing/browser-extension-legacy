@@ -73,8 +73,6 @@ export default class TransactionController extends EventEmitter {
     this.blockTracker = opts.blockTracker;
     this.signEthTx = opts.signTransaction;
     this.inProcessOfSigning = new Set();
-    this._trackMetaMetricsEvent = opts.trackMetaMetricsEvent;
-    this._getParticipateInMetrics = opts.getParticipateInMetrics;
 
     this.memStore = new ObservableStore({});
     this.query = new EthQuery(this.provider);
@@ -650,8 +648,6 @@ export default class TransactionController extends EventEmitter {
           latestTxMeta,
           'transactions#confirmTransaction - add postTxBalance',
         );
-
-        this._trackSwapsMetrics(latestTxMeta, approvalTxMeta);
       }
     } catch (err) {
       log.error(err);
@@ -928,50 +924,5 @@ export default class TransactionController extends EventEmitter {
       MAX_MEMSTORE_TX_LIST_SIZE,
     );
     this.memStore.updateState({ unapprovedTxs, currentNetworkTxList });
-  }
-
-  _trackSwapsMetrics(txMeta, approvalTxMeta) {
-    if (this._getParticipateInMetrics() && txMeta.swapMetaData) {
-      if (txMeta.txReceipt.status === '0x0') {
-        this._trackMetaMetricsEvent({
-          event: 'Swap Failed',
-          sensitiveProperties: { ...txMeta.swapMetaData },
-          category: 'swaps',
-        });
-      } else {
-        const tokensReceived = getSwapsTokensReceivedFromTxMeta(
-          txMeta.destinationTokenSymbol,
-          txMeta,
-          txMeta.destinationTokenAddress,
-          txMeta.txParams.from,
-          txMeta.destinationTokenDecimals,
-          approvalTxMeta,
-        );
-
-        const quoteVsExecutionRatio = `${new BigNumber(tokensReceived, 10)
-          .div(txMeta.swapMetaData.token_to_amount, 10)
-          .times(100)
-          .round(2)}%`;
-
-        const estimatedVsUsedGasRatio = `${new BigNumber(
-          txMeta.txReceipt.gasUsed,
-          16,
-        )
-          .div(txMeta.swapMetaData.estimated_gas, 10)
-          .times(100)
-          .round(2)}%`;
-
-        this._trackMetaMetricsEvent({
-          event: 'Swap Completed',
-          category: 'swaps',
-          sensitiveProperties: {
-            ...txMeta.swapMetaData,
-            token_to_amount_received: tokensReceived,
-            quote_vs_executionRatio: quoteVsExecutionRatio,
-            estimated_vs_used_gasRatio: estimatedVsUsedGasRatio,
-          },
-        });
-      }
-    }
   }
 }

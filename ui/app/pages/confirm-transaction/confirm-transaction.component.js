@@ -28,7 +28,7 @@ import ConfTx from './conf-tx';
 
 export default class ConfirmTransaction extends Component {
   static contextTypes = {
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   static propTypes = {

@@ -27,7 +27,7 @@ import { getTransactionCategoryTitle } from '../../helpers/utils/transactions.ut
 export default class ConfirmTransactionBase extends Component {
   static contextTypes = {
     t: PropTypes.func,
-    metricsEvent: PropTypes.func,
+    trackEvent: PropTypes.func,
   };
 
   static propTypes = {
@@ -80,8 +80,6 @@ export default class ConfirmTransactionBase extends Component {
     hideSubtitle: PropTypes.bool,
     identiconAddress: PropTypes.string,
     onEdit: PropTypes.func,
-    setMetaMetricsSendCount: PropTypes.func,
-    metaMetricsSendCount: PropTypes.number,
     subtitleComponent: PropTypes.node,
     title: PropTypes.string,
     advancedInlineGasShown: PropTypes.bool,
@@ -207,7 +205,7 @@ export default class ConfirmTransactionBase extends Component {
       methodData = {},
     } = this.props;
 
-    this.context.metricsEvent({
+    this.context.trackEvent({
       eventOpts: {
         category: 'Transactions',
         action: 'Confirm Screen',
@@ -384,7 +382,7 @@ export default class ConfirmTransactionBase extends Component {
       methodData = {},
     } = this.props;
 
-    this.context.metricsEvent({
+    this.context.trackEvent({
       eventOpts: {
         category: 'Transactions',
         action: 'Confirm Screen',
@@ -425,7 +423,7 @@ export default class ConfirmTransactionBase extends Component {
   }
 
   handleCancel() {
-    const { metricsEvent } = this.context;
+    const { trackEvent } = this.context;
     const {
       txData,
       cancelTransaction,
@@ -439,7 +437,7 @@ export default class ConfirmTransactionBase extends Component {
     } = this.props;
 
     this._removeBeforeUnload();
-    metricsEvent({
+    trackEvent({
       eventOpts: {
         category: 'Transactions',
         action: 'Confirm Screen',
@@ -462,7 +460,7 @@ export default class ConfirmTransactionBase extends Component {
   }
 
   handleSubmit() {
-    const { metricsEvent } = this.context;
+    const { trackEvent } = this.context;
     const {
       txData: { origin },
       sendTransaction,
@@ -471,8 +469,6 @@ export default class ConfirmTransactionBase extends Component {
       history,
       actionKey,
       mostRecentOverviewPage,
-      metaMetricsSendCount = 0,
-      setMetaMetricsSendCount,
       methodData = {},
       updateCustomNonce,
     } = this.props;
@@ -489,7 +485,7 @@ export default class ConfirmTransactionBase extends Component {
       },
       () => {
         this._removeBeforeUnload();
-        metricsEvent({
+        trackEvent({
           eventOpts: {
             category: 'Transactions',
             action: 'Confirm Screen',
@@ -505,28 +501,26 @@ export default class ConfirmTransactionBase extends Component {
           },
         });
 
-        setMetaMetricsSendCount(metaMetricsSendCount + 1).then(() => {
-          sendTransaction(txData)
-            .then(() => {
-              clearConfirmTransaction();
-              this.setState(
-                {
-                  submitting: false,
-                },
-                () => {
-                  history.push(mostRecentOverviewPage);
-                  updateCustomNonce('');
-                },
-              );
-            })
-            .catch((error) => {
-              this.setState({
+        sendTransaction(txData)
+          .then(() => {
+            clearConfirmTransaction();
+            this.setState(
+              {
                 submitting: false,
-                submitError: error.message,
-              });
-              updateCustomNonce('');
+              },
+              () => {
+                history.push(mostRecentOverviewPage);
+                updateCustomNonce('');
+              },
+            );
+          })
+          .catch((error) => {
+            this.setState({
+              submitting: false,
+              submitError: error.message,
             });
-        });
+            updateCustomNonce('');
+          });
       },
     );
   }
@@ -594,8 +588,8 @@ export default class ConfirmTransactionBase extends Component {
 
   _beforeUnload = () => {
     const { txData: { origin, id } = {}, cancelTransaction } = this.props;
-    const { metricsEvent } = this.context;
-    metricsEvent({
+    const { trackEvent } = this.context;
+    trackEvent({
       eventOpts: {
         category: 'Transactions',
         action: 'Confirm Screen',
@@ -621,8 +615,8 @@ export default class ConfirmTransactionBase extends Component {
       getNextNonce,
       tryReverseResolveAddress,
     } = this.props;
-    const { metricsEvent } = this.context;
-    metricsEvent({
+    const { trackEvent } = this.context;
+    trackEvent({
       eventOpts: {
         category: 'Transactions',
         action: 'Confirm Screen',
