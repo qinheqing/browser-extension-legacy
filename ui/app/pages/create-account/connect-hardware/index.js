@@ -49,14 +49,12 @@ class ConnectHardwareForm extends Component {
   }
 
   async checkIfUnlocked() {
-    for (const device of ['onekey', 'trezor', 'ledger']) {
-      const path = this.props.defaultHdPaths[device];
-      const unlocked = await this.props.checkHardwareStatus(device, path);
-      if (unlocked) {
-        this.setState({ unlocked: true });
-        this.getPage(device, 0, path);
-        break;
-      }
+    const device = 'onekey';
+    const path = this.props.defaultHdPaths[device];
+    const unlocked = await this.props.checkHardwareStatus(device, path);
+    if (unlocked) {
+      this.setState({ unlocked: true });
+      this.getPage(device, 0, path);
     }
   }
 
@@ -215,26 +213,6 @@ class ConnectHardwareForm extends Component {
   };
 
   renderError() {
-    if (this.state.error === U2F_ERROR) {
-      return (
-        <p className="hw-connect__error">
-          {this.context.t('troubleConnectingToWallet', [
-            this.state.device,
-            // eslint-disable-next-line react/jsx-key
-            <a
-              href="https://metamask.zendesk.com/hc/en-us/articles/360020394612-How-to-connect-a-Trezor-or-Ledger-Hardware-Wallet"
-              key="hardware-connection-guide"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hw-connect__link"
-              style={{ marginLeft: '5px', marginRight: '5px' }}
-            >
-              {this.context.t('walletConnectionGuide')}
-            </a>,
-          ])}
-        </p>
-      );
-    }
     return this.state.error ? (
       <>
         <span className="hw-connect__error">{this.state.error}</span>

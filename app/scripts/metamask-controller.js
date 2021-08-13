@@ -13,8 +13,7 @@ import KeyringController from 'eth-keyring-controller';
 import { Mutex } from 'await-semaphore';
 import ethUtil from 'ethereumjs-util';
 import log from 'loglevel';
-import TrezorKeyring from '@onekeyhq/eth-onekey-keyring';
-import LedgerBridgeKeyring from '@metamask/eth-ledger-bridge-keyring';
+import OneKeyKeyring from '@onekeyhq/eth-onekey-keyring';
 import EthQuery from 'eth-query';
 import nanoid from 'nanoid';
 import contractMap from '@metamask/contract-metadata';
@@ -216,11 +215,7 @@ export default class MetamaskController extends EventEmitter {
       preferencesController: this.preferencesController,
     });
 
-    const additionalKeyrings = [
-      TrezorKeyring,
-      LedgerBridgeKeyring,
-      AddressKeyring,
-    ];
+    const additionalKeyrings = [OneKeyKeyring, AddressKeyring];
     this.keyringController = new KeyringController({
       keyringTypes: additionalKeyrings,
       initState: initState.KeyringController,
@@ -1142,10 +1137,7 @@ export default class MetamaskController extends EventEmitter {
     switch (deviceName) {
       case 'onekey':
       case 'trezor':
-        keyringName = TrezorKeyring.type;
-        break;
-      case 'ledger':
-        keyringName = LedgerBridgeKeyring.type;
+        keyringName = OneKeyKeyring.type;
         break;
       default:
         throw new Error(
