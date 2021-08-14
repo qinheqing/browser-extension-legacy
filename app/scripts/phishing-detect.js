@@ -55,3 +55,5 @@ function setupControllerConnection(connectionStream, cb) {
     cb(null, backgroundConnection),
   );
 }
+
+// test on site:  window.postMessage({type: 'ONEKEY_PHISHING_WARNING'});

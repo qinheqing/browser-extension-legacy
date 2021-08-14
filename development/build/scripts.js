@@ -34,7 +34,9 @@ const vfs = require('vinyl-fs');
 // https://github.com/browserify/browserify#browserifyfiles--opts
 
 // TODO tree shaking
-//      https://github.com/browserify/common-shakeify
+//    https://github.com/browserify/common-shakeify
+// TODO tinyify ( optimizations all-in-one )
+//    https://github.com/browserify/tinyify
 
 const bifyModuleGroups = require('bify-module-groups');
 
@@ -391,6 +393,7 @@ function createFactoredBuild({
         ...bundlerOpts.manualExternal,
         ...externalLibs,
       ];
+
       bundlerOpts.manualExclude = [
         ...bundlerOpts.manualExclude,
         ...externalLibs,
@@ -627,6 +630,7 @@ function setupReloadOnChange({ bundlerOpts, events }) {
     cache: {},
     packageCache: {},
   });
+
   // instrument pipeline
   events.on('configurePipeline', ({ bundleStream }) => {
     // handle build error to avoid breaking build process
@@ -689,6 +693,7 @@ function setupSourcemaps(buildConfiguration, { devMode }) {
       });
     // writeSourceMapDev = () => sourcemaps.write();
   }
+
   events.on('configurePipeline', ({ pipeline }) => {
     pipeline.get('sourcemaps:init').push(sourcemaps.init({ loadMaps: true }));
     pipeline
@@ -837,15 +842,18 @@ function buildAllHtmlFiles({
       renderHtmlFile('home', groupSet, commonSet, browserPlatforms);
       break;
     }
+
     case 'phishing-detect': {
       renderHtmlFile('phishing', groupSet, commonSet, browserPlatforms);
       renderHtmlFile('phishing_en', groupSet, commonSet, browserPlatforms);
       break;
     }
+
     case 'background': {
       renderHtmlFile('background', groupSet, commonSet, browserPlatforms);
       break;
     }
+
     default: {
       if (failOnUnknownLabel) {
         throw new Error(`buildsys - unknown groupLabel "${groupLabel}"`);

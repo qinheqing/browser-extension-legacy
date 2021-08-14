@@ -75,9 +75,7 @@ const metamaskDepenendencies = [
   '@formatjs/intl-relativetimeformat',
   '@onekeyhq/eth-onekey-keyring',
   '@metamask/controllers',
-  '@metamask/inpage-provider',
   '@onekeyhq/jazzicon',
-  '@metamask/logo',
   '@onekeyhq/obs-store',
 ];
 const reactDepenendencies = dependencies.filter((dep) => dep.match(/react/u));

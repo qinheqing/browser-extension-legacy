@@ -56,9 +56,7 @@ const onekeyDeps = [
   // '@formatjs/intl-relativetimeformat',
   // '@onekeyhq/eth-onekey-keyring',
   // '@metamask/controllers',
-  // '@metamask/inpage-provider',
   // '@onekeyhq/jazzicon',
-  // '@metamask/logo',
   // '@onekeyhq/obs-store',
 ];
 

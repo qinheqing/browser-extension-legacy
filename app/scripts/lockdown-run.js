@@ -1,5 +1,6 @@
 // Freezes all intrinsics
 try {
+  // https://github.com/endojs/endo/blob/master/packages/ses/lockdown-options.md
   // eslint-disable-next-line no-undef,import/unambiguous
   lockdown({
     consoleTaming: 'unsafe',

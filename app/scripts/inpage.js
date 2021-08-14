@@ -32,10 +32,10 @@ cleanContextForImports();
 
 /* eslint-disable import/first */
 import { WindowPostMessageStream } from '@onekeyhq/post-message-stream';
-import { initializeProvider } from '@metamask/inpage-provider';
+import { initializeProvider } from '@onekeyhq/providers';
 import log from '../../src/log/logger';
 import inpageSolana from '../../src/wallets/SOL/modules/dappProvider/inpage';
-import inpageSolanaLegacy from '../../src/wallets/SOL/modules/dappProvider/inpageSolanaLegacy';
+// import inpageSolanaLegacy from '../../src/wallets/SOL/modules/dappProvider/inpageSolanaLegacy';
 
 restoreContextAfterImports();
 
