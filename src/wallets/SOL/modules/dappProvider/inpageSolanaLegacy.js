@@ -1,8 +1,9 @@
 import { EventEmitter } from 'events';
 import pump from 'pump';
-import LocalMessageDuplexStream from 'post-message-stream';
+import { WindowPostMessageStream } from '@onekeyhq/post-message-stream';
 import { JsonRpcEngine } from 'json-rpc-engine';
 import createJsonRpcStream from 'json-rpc-middleware-stream';
+// eslint-disable-next-line node/no-extraneous-import,import/no-extraneous-dependencies
 import debug from 'debug';
 import ObjectMultiplex from 'obj-multiplex';
 import { duplex as isDuplex } from 'is-stream';
@@ -13,6 +14,7 @@ import { duplex as isDuplex } from 'is-stream';
 const createLogger = (module) => {
   return debug(module);
 };
+
 const createObjectMultiplex = (name) => {
   return new ObjectMultiplex(name);
   // return (new ObjectMultiplex())
@@ -102,6 +104,7 @@ class Provider extends EventEmitter {
       if (args.params) {
         req = Object.assign(req, { params: args.params });
       }
+
       this._rpcEngine.handle(req, function (err, response) {
         if (err) {
           log('rpc engine [%s] failed: %O ', err);
@@ -127,7 +130,7 @@ class Provider extends EventEmitter {
 }
 
 // setup background connection./app/background/background.ts
-const csStream = new LocalMessageDuplexStream({
+const csStream = new WindowPostMessageStream({
   name: INPAGE_MESSAGE_STREAM,
   target: CONTENT_MESSAGE_STREAM,
 });

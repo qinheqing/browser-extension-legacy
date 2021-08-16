@@ -60,11 +60,11 @@ const copyTargets = [
   },
   {
     src: './node_modules/ses/dist/lockdown.cjs',
-    dest: 'lockdown-install.js',
+    dest: 'lockdown-install.js', // # ses: Secure ECMAScript
   },
   {
     src: './app/scripts/lockdown-run.js',
-    dest: 'lockdown-run.js', // runLockdown.js
+    dest: 'lockdown-run.js', // runLockdown.js # ses: Secure ECMAScript
   },
   {
     // eslint-disable-next-line node/no-extraneous-require
