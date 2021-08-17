@@ -23,3 +23,5 @@ export const ROUTE_TOKEN_ADD = `${ROUTE_PREFIX}/token-add`;
 export const ROUTE_ACCOUNT_DETAIL = `${ROUTE_PREFIX}/account-detail`;
 // /app/private-key-export
 export const ROUTE_PRIVATE_KEY_EXPORT = `${ROUTE_PREFIX}/private-key-export`;
+// /app/demo/i18n
+export const ROUTE_DEMO_I18N = `${ROUTE_PREFIX}/demo/i18n`;

@@ -1,5 +1,5 @@
 import nanoid from 'nanoid';
-import { JsonRpcEngine } from 'json-rpc-engine';
+import { JsonRpcEngine } from '@onekeyhq/json-rpc-engine';
 import { ObservableStore } from '@onekeyhq/obs-store';
 import log from 'loglevel';
 import { CapabilitiesController as RpcCap } from '@onekeyhq/rpc-cap';

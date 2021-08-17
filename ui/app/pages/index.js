@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
-import { I18nProvider, LegacyI18nProvider } from '../contexts/i18n';
+import {
+  I18nProvider,
+  IntlI18nProvider,
+  LegacyI18nProvider,
+} from '../contexts/i18n';
 import {
   TrackEventsContextProvider,
   LegacyTrackEventsContextProvider,
@@ -30,11 +34,13 @@ class Index extends PureComponent {
     if (error) {
       return (
         <Provider store={store}>
-          <I18nProvider>
-            <LegacyI18nProvider>
-              <ErrorPage error={error} errorId={errorId} />
-            </LegacyI18nProvider>
-          </I18nProvider>
+          <IntlI18nProvider>
+            <I18nProvider>
+              <LegacyI18nProvider>
+                <ErrorPage error={error} errorId={errorId} />
+              </LegacyI18nProvider>
+            </I18nProvider>
+          </IntlI18nProvider>
         </Provider>
       );
     }
@@ -44,13 +50,15 @@ class Index extends PureComponent {
         <HashRouter hashType="noslash">
           <TrackEventsContextProvider>
             <LegacyTrackEventsContextProvider>
-              <I18nProvider>
-                <LegacyI18nProvider>
-                  <ForceSelectHwAccountProvider>
-                    <Routes />
-                  </ForceSelectHwAccountProvider>
-                </LegacyI18nProvider>
-              </I18nProvider>
+              <IntlI18nProvider>
+                <I18nProvider>
+                  <LegacyI18nProvider>
+                    <ForceSelectHwAccountProvider>
+                      <Routes />
+                    </ForceSelectHwAccountProvider>
+                  </LegacyI18nProvider>
+                </I18nProvider>
+              </IntlI18nProvider>
             </LegacyTrackEventsContextProvider>
           </TrackEventsContextProvider>
         </HashRouter>

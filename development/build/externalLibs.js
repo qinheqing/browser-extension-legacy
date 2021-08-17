@@ -9,6 +9,7 @@ const ignoreDeps = [
   'mobx', // global standalone
   'mobx-react-lite', // global standalone
   '@solana/web3.js', // global standalone
+  '@onekeyhq/ui-components',
 
   // * ignore modules below, cause background error ( only start by "yarn start-legacy" ):
   'tailwindcss', // Error: Parsing file /tailwindcss/lib/util/withAlphaVariable.js: Unexpected token
@@ -17,6 +18,7 @@ const ignoreDeps = [
   'eth-json-rpc-infura', // Cannot find module '/eth-json-rpc-infura/src/index.js'
   'eth-json-rpc-filters', // Cannot find module '/eth-json-rpc-filters/index.js'
   'json-rpc-engine', // TypeError: JsonRpcEngine is not a constructor
+  '@onekeyhq/json-rpc-engine', //  (0 , _jsonRpcEngine.createAsyncMiddleware) is not a function
   'ethereumjs-util', // ethUtil.keccak is not a function (first time on-boarding finished)
 ];
 const commonDeps = ['lodash'];

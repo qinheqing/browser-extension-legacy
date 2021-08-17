@@ -1,7 +1,7 @@
 import assert from 'assert';
 import EventEmitter from 'events';
 import { ComposedStore, ObservableStore } from '@onekeyhq/obs-store';
-import { JsonRpcEngine } from 'json-rpc-engine';
+import { JsonRpcEngine } from '@onekeyhq/json-rpc-engine';
 import providerFromEngine from 'eth-json-rpc-middleware/providerFromEngine';
 import log from 'loglevel';
 import {
