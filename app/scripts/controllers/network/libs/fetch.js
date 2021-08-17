@@ -15,6 +15,7 @@ const RETRIABLE_ERRORS = [
   'missing trie node',
   'header not found',
   'request rate limited',
+  'limit exceeded',
   'TypeError: NetworkError when attempting to fetch resource.',
 ];
 
@@ -153,7 +154,7 @@ function createFetchConfigFromReq({ req, rpcUrl, originHttpHeaderKey }) {
   const fetchParams = {
     method: 'POST',
     headers: {
-      Accept: 'application/json',
+      'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
     body: serializedPayload,
