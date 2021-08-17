@@ -2667,10 +2667,6 @@
   resolved "https://registry.npmjs.org/@metamask/etherscan-link/-/etherscan-link-1.5.0.tgz#c6940ea934b3a7dcf04e459d9ea3c630b69f6b5f"
   integrity sha512-vPCkZJwZ5p933n20Zh+cC3umJv05un2CRZ8y+14KgMq3I4eOwllqmqxoYf9tn3BLGM8QXm/Nie+aBjmoe/T9ag==
 
-"@metamask/forwarder@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@metamask/forwarder/-/forwarder-1.1.0.tgz#13829d8244bbf19ea658c0b20d21a77b67de0bdd"
-  integrity sha512-Hggj4y0QIjDzKGTXzarhEPIQyFSB2bi2y6YLJNwaT4JmP30UB5Cj6gqoY0M4pj3QT57fzp0BUuGp7F/AUe28tw==
 
 "@metamask/object-multiplex@^1.1.0":
   version "1.1.0"
@@ -2685,11 +2681,6 @@
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@metamask/safe-event-emitter/-/safe-event-emitter-2.0.0.tgz#af577b477c683fad17c619a78208cede06f9605c"
   integrity sha512-/kSXhY692qiV1MXu6EeOZvg5nECLclxNXcKCxJ3cXQgYuRymRHpdx/t7JXfsK+JLjwA1e1c1/SBrlQYpusC29Q==
-
-"@metamask/test-dapp@^4.0.1":
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/@metamask/test-dapp/-/test-dapp-4.0.1.tgz#fbc66069687f0502ebb4c6ac0fa7c9862ea6563c"
-  integrity sha512-FN2Rz7ctY7Blx3iK6AmZmZEU+TkvEcpYvvebUmqZyOrmjh/DsYKVxfRicVAbyK9mDkeJ18Gx8r7swwFFR4rSgA==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -2876,6 +2867,11 @@
   version "2.0.0"
   resolved "https://npm.pkg.github.com/download/@onekeyhq/safe-event-emitter/2.0.0/59b505b4e7289f9cfe6294947542b5e2ec25638709c7cc8d94a7eb6118f14403#0aa7b21ec9751b969fb0a6f43500b3dece15972e"
   integrity sha512-2fggvk1/QvPd04rlEUCpn9QMCPx8Lr/oyjYaAirXVbrFFzJ9SU7r0CVEfc50w/uGeF4ajWPW9LSR81CvGHtMAw==
+
+"@onekeyhq/test-dapp@^4.0.2":
+  version "4.0.2"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/test-dapp/4.0.2/05adf8661ddec7c96d86a1822275272c11e5fb83d1f6bb8e7a628926e4b59792#981356b998f79e2e3822a5514bcec4ac7ea15f6f"
+  integrity sha512-v41H4Oa9SSBeHeJGkf3eoV8EXhg/5wwIG0CPndRLnWxC0Drd1j1qIstRandmbuqKRZBf3TIm1uOUdbhtnKt16A==
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.4.2":
   version "0.4.3"
