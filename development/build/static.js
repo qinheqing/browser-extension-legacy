@@ -25,7 +25,7 @@ const copyTargets = [
     dest: 'images',
   },
   {
-    src: './shared/contract-metadata/images/',
+    src: './node_modules/@onekeyhq/contract-metadata/images',
     dest: 'images/contract',
   },
   {
