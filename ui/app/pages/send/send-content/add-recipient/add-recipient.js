@@ -1,4 +1,5 @@
 import ethUtil from 'ethereumjs-util';
+import contractMap from '@onekeyhq/contract-metadata';
 import {
   REQUIRED_ERROR,
   INVALID_RECIPIENT_ADDRESS_ERROR,
@@ -11,7 +12,6 @@ import {
   isEthNetwork,
   checkExistingAddresses,
 } from '../../../../helpers/utils/util';
-import contractMap from '../../../../../../shared/contract-metadata';
 
 export function getToErrorObject(to, hasHexData = false, network) {
   let toError = null;

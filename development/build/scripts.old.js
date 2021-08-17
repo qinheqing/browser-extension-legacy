@@ -69,12 +69,10 @@ const metamaskDepenendencies = [
   'json-rpc-engine',
   'json-rpc-middleware-stream',
   'safe-event-emitter',
-  'rpc-cap',
   'ethereumjs-wallet',
   '@zxing/library',
   '@formatjs/intl-relativetimeformat',
   '@onekeyhq/eth-onekey-keyring',
-  '@metamask/controllers',
   '@onekeyhq/jazzicon',
   '@onekeyhq/obs-store',
 ];

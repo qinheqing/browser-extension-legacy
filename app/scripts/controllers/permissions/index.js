@@ -2,7 +2,7 @@ import nanoid from 'nanoid';
 import { JsonRpcEngine } from 'json-rpc-engine';
 import { ObservableStore } from '@onekeyhq/obs-store';
 import log from 'loglevel';
-import { CapabilitiesController as RpcCap } from 'rpc-cap';
+import { CapabilitiesController as RpcCap } from '@onekeyhq/rpc-cap';
 import { ethErrors } from 'eth-rpc-errors';
 import { cloneDeep } from 'lodash';
 
@@ -66,7 +66,7 @@ export class PermissionsController {
     });
 
     /**
-     * @type {import('@metamask/controllers').ApprovalController}
+     * @type {import('@onekeyhq/extension-controllers').ApprovalController}
      * @public
      */
     this.approvals = approvals;

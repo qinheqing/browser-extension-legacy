@@ -24,13 +24,11 @@ const reactDeps = allDependencies.filter((dep) => dep.match(/react/u));
 const onekeyDeps = [
   '3box',
   '@onekeyhq/eth-onekey-keyring ',
-  '@metamask/controllers',
   '@formatjs/intl-relativetimeformat',
   '@solana/spl-token-registry',
   '@ensdomains/content-hash',
   '@material-ui/core',
   'ethers',
-  'rpc-cap',
   'eth-keyring-controller',
   // 'ethjs',
   // 'ethjs-ens',
@@ -55,7 +53,6 @@ const onekeyDeps = [
   // '@zxing/library',
   // '@formatjs/intl-relativetimeformat',
   // '@onekeyhq/eth-onekey-keyring',
-  // '@metamask/controllers',
   // '@onekeyhq/jazzicon',
   // '@onekeyhq/obs-store',
 ];

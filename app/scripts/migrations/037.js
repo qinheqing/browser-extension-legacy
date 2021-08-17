@@ -1,5 +1,5 @@
 import { cloneDeep } from 'lodash';
-import { util } from '@metamask/controllers';
+import { util } from '@onekeyhq/extension-controllers';
 
 const version = 37;
 

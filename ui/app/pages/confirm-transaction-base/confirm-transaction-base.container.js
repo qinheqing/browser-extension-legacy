@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
+import contractMap from '@onekeyhq/contract-metadata';
 import { clearConfirmTransaction } from '../../ducks/confirm-transaction/confirm-transaction.duck';
 
 import {
@@ -37,7 +38,6 @@ import {
   transactionFeeSelector,
 } from '../../selectors';
 import { getMostRecentOverviewPage } from '../../ducks/history/history';
-import contractMap from '../../../../shared/contract-metadata';
 import ConfirmTransactionBase from './confirm-transaction-base.component';
 
 const casedContractMap = Object.keys(contractMap).reduce(

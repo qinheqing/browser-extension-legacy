@@ -688,7 +688,7 @@ function setupSourcemaps(buildConfiguration, { devMode }) {
       sourcemaps.write('../sourcemaps', {
         // add sourceMappingURL comment to the end
         //      # sourceMappingURL=http://localhost:31317/sourcemaps/ui.js.map
-        addComment: true,
+        addComment: devMode,
         sourceMappingURLPrefix: () => 'http://localhost:31317',
       });
     // writeSourceMapDev = () => sourcemaps.write();
@@ -703,7 +703,7 @@ function setupSourcemaps(buildConfiguration, { devMode }) {
       .push(
         devMode
           ? writeSourceMapDev()
-          : sourcemaps.write('../sourcemaps', { addComment: true }),
+          : sourcemaps.write('../sourcemaps', { addComment: devMode }),
       );
   });
 }
