@@ -2,9 +2,9 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
+import contractMap from '@onekeyhq/contract-metadata';
 import { checksumAddress } from '../../../helpers/utils/util';
 import Jazzicon from '../jazzicon';
-import contractMap from '../../../../../shared/contract-metadata';
 import BlockieIdenticon from './blockieIdenticon';
 
 const getStyles = (diameter) => ({

@@ -3,11 +3,11 @@ import sinon from 'sinon';
 import { ObservableStore } from '@onekeyhq/obs-store';
 import BigNumber from 'bignumber.js';
 
+import contracts from '@onekeyhq/contract-metadata';
 import DetectTokensController from '../../../../app/scripts/controllers/detect-tokens';
 import NetworkController from '../../../../app/scripts/controllers/network/network';
 import PreferencesController from '../../../../app/scripts/controllers/preferences';
 import { MAINNET, ROPSTEN } from '../../../../shared/constants/network';
-import contracts from '../../../../shared/contract-metadata';
 
 describe('DetectTokensController', function () {
   const sandbox = sinon.createSandbox();

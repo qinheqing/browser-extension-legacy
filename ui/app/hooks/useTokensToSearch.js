@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js';
 import { shuffle } from 'lodash';
+import contractMap from '@onekeyhq/contract-metadata';
 import { checksumAddress } from '../helpers/utils/util';
 import { getTokenFiatAmount } from '../helpers/utils/token-util';
-import contractMap from '../../../shared/contract-metadata';
 
 const tokenList = shuffle(
   Object.entries(contractMap)

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import TokenTracker from '@metamask/eth-token-tracker';
+import TokenTracker from '@onekeyhq/eth-token-tracker';
 import { useSelector } from 'react-redux';
 import { getCurrentNetwork, getSelectedAddress } from '../selectors';
 import { useEqualityCheck } from './useEqualityCheck';

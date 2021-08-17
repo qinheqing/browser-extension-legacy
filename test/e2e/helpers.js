@@ -15,14 +15,8 @@ const largeDelayMs = regularDelayMs * 2;
 const dappPort = 8080;
 
 async function withFixtures(options, testSuite) {
-  const {
-    dapp,
-    fixtures,
-    ganacheOptions,
-    driverOptions,
-    mockSegment,
-    title,
-  } = options;
+  const { dapp, fixtures, ganacheOptions, driverOptions, mockSegment, title } =
+    options;
   const fixtureServer = new FixtureServer();
   const ganacheServer = new Ganache();
   let dappServer;
@@ -40,7 +34,7 @@ async function withFixtures(options, testSuite) {
         '..',
         '..',
         'node_modules',
-        '@metamask',
+        '@onekeyhq',
         'test-dapp',
         'dist',
       );
@@ -51,6 +45,7 @@ async function withFixtures(options, testSuite) {
         dappServer.on('error', reject);
       });
     }
+
     if (mockSegment) {
       segmentStub = sinon.stub();
       segmentServer = createSegmentServer((_request, response, events) => {
@@ -95,6 +90,7 @@ async function withFixtures(options, testSuite) {
     if (webDriver) {
       await webDriver.quit();
     }
+
     if (dappServer) {
       await new Promise((resolve, reject) => {
         dappServer.close((error) => {
@@ -105,6 +101,7 @@ async function withFixtures(options, testSuite) {
         });
       });
     }
+
     if (segmentServer) {
       await segmentServer.stop();
     }

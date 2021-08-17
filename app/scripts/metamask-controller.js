@@ -21,12 +21,12 @@ import {
   ApprovalController,
   CurrencyRateController,
   PhishingController,
-} from '@metamask/controllers';
+} from '@onekeyhq/extension-controllers';
+import contractMap from '@onekeyhq/contract-metadata';
 import { TRANSACTION_STATUSES } from '../../shared/constants/transaction';
 import backgroundProxy from '../../src/wallets/bg/backgroundProxy';
 import bgHelpers from '../../src/wallets/bg/bgHelpers';
 import utilsApp from '../../src/utils/utilsApp';
-import contractMap from '../../shared/contract-metadata';
 import AddressKeyring from './lib/eth-address-keyring';
 import ComposableObservableStore from './lib/ComposableObservableStore';
 import AccountTracker from './lib/account-tracker';

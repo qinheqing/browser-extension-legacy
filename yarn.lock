@@ -2616,71 +2616,15 @@
     prop-types "^15.7.2"
     react-is "^16.8.0"
 
-"@metamask/contract-metadata@^1.19.0":
-  version "1.22.0"
-  resolved "https://registry.yarnpkg.com/@metamask/contract-metadata/-/contract-metadata-1.22.0.tgz#55cc84756c703c433176b484b1d34f0e03d16d1e"
-  integrity sha512-t4ijbU+4OH9UAlrPkfLPFo6KmkRTRZJHB+Vly4ajF8oZMnota5YjVVl/SmltsoRC9xvJtRn9DUVf3YMHMIdofw==
-
-"@metamask/controllers@^5.0.0", "@metamask/controllers@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.npmjs.org/@metamask/controllers/-/controllers-5.1.0.tgz#02c1957295bcb6db1655a716d165665d170e7f34"
-  integrity sha512-4piqkIrpphe+9nEy68WH+yBw9wsXZyCMVeBZeRtliVHAJFXUdz+KZDUi/R1Y+568JBzqAvsOtOzbUIU4btD3Fw==
-  dependencies:
-    "@metamask/contract-metadata" "^1.19.0"
-    await-semaphore "^0.1.3"
-    eth-ens-namehash "^2.0.8"
-    eth-json-rpc-infura "^5.1.0"
-    eth-keyring-controller "^6.1.0"
-    eth-method-registry "1.1.0"
-    eth-phishing-detect "^1.1.13"
-    eth-query "^2.1.2"
-    eth-rpc-errors "^4.0.0"
-    eth-sig-util "^3.0.0"
-    ethereumjs-util "^6.1.0"
-    ethereumjs-wallet "^0.6.4"
-    ethjs-query "^0.3.8"
-    human-standard-collectible-abi "^1.0.2"
-    human-standard-token-abi "^2.0.0"
-    isomorphic-fetch "^3.0.0"
-    jsonschema "^1.2.4"
-    nanoid "^3.1.12"
-    single-call-balance-checker-abi "^1.0.0"
-    uuid "^3.3.2"
-    web3 "^0.20.7"
-    web3-provider-engine "^16.0.1"
-
-"@metamask/eth-token-tracker@^3.0.1":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@metamask/eth-token-tracker/-/eth-token-tracker-3.1.0.tgz#1396c5d88401f3cd598b0c86d3a42951c8e78d73"
-  integrity sha512-SopDFnIu7lI8aloD9HGPEpqlcjZNzZ5BeXZqrNRSdSO+CGpuwmFoeyrCrgEmrlkKQvP8dQi6R6aYK/itFPhPrg==
-  dependencies:
-    deep-equal "^1.1.0"
-    eth-block-tracker "^4.4.2"
-    ethjs "^0.3.6"
-    ethjs-contract "^0.2.1"
-    ethjs-query "^0.3.7"
-    human-standard-token-abi "^1.0.2"
-    safe-event-emitter "^1.0.1"
-
-"@metamask/etherscan-link@^1.4.1":
-  version "1.5.0"
-  resolved "https://registry.npmjs.org/@metamask/etherscan-link/-/etherscan-link-1.5.0.tgz#c6940ea934b3a7dcf04e459d9ea3c630b69f6b5f"
-  integrity sha512-vPCkZJwZ5p933n20Zh+cC3umJv05un2CRZ8y+14KgMq3I4eOwllqmqxoYf9tn3BLGM8QXm/Nie+aBjmoe/T9ag==
-
-
-"@metamask/object-multiplex@^1.1.0":
+"@metamask/forwarder@^1.1.0":
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@metamask/object-multiplex/-/object-multiplex-1.1.0.tgz#6b1507c4d10caafd2ea82dd2a5360b91631e036e"
-  integrity sha512-ImDw5+NdO5qnzmK/rpSlPmQMQm6HIC6wAHdR9nBaDK8TpeuRik5H8DCUcoNrxSeUAk1iHwchZ03lpZu6mZfrdw==
-  dependencies:
-    end-of-stream "^1.4.4"
-    once "^1.4.0"
-    readable-stream "^2.3.3"
+  resolved "https://registry.yarnpkg.com/@metamask/forwarder/-/forwarder-1.1.0.tgz#13829d8244bbf19ea658c0b20d21a77b67de0bdd"
+  integrity sha512-Hggj4y0QIjDzKGTXzarhEPIQyFSB2bi2y6YLJNwaT4JmP30UB5Cj6gqoY0M4pj3QT57fzp0BUuGp7F/AUe28tw==
 
-"@metamask/safe-event-emitter@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@metamask/safe-event-emitter/-/safe-event-emitter-2.0.0.tgz#af577b477c683fad17c619a78208cede06f9605c"
-  integrity sha512-/kSXhY692qiV1MXu6EeOZvg5nECLclxNXcKCxJ3cXQgYuRymRHpdx/t7JXfsK+JLjwA1e1c1/SBrlQYpusC29Q==
+"@metamask/test-dapp@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@metamask/test-dapp/-/test-dapp-4.0.1.tgz#fbc66069687f0502ebb4c6ac0fa7c9862ea6563c"
+  integrity sha512-FN2Rz7ctY7Blx3iK6AmZmZEU+TkvEcpYvvebUmqZyOrmjh/DsYKVxfRicVAbyK9mDkeJ18Gx8r7swwFFR4rSgA==
 
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
@@ -2790,6 +2734,11 @@
     tiny-worker "^2.3.0"
     whatwg-fetch "^3.5.0"
 
+"@onekeyhq/contract-metadata@^1.28.0":
+  version "1.28.0"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/contract-metadata/1.28.0/592b746d57a485b93ea645dd95074a2c82fcf43fb711f112ccef9ac03757bbb8#21d3ce5ce4f1d5d6f2fb20a692d23440220b0c26"
+  integrity sha512-J6sDpMxJs3jZ7RhoFxkzsf15ZLe/kHy+KMPkRkQuU95G0+mhnU5g0gf9e3Oz9E4CZjBlGscBANaAca/7Ha05Nw==
+
 "@onekeyhq/eth-onekey-keyring@0.7.0":
   version "0.7.0"
   resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-onekey-keyring/0.7.0/bc20290f86a6d22568ff948b36f870c2c9120ed51448638b8717bffeab745d58#91778c9309f147e455c899b8f22d71e9f757112b"
@@ -2801,12 +2750,75 @@
     ethereumjs-util "^7.0.9"
     hdkey "0.8.0"
 
-"@onekeyhq/jazzicon@^2.0.0":
+"@onekeyhq/eth-token-tracker@^3.1.0":
+  version "3.1.0"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-token-tracker/3.1.0/faa2627d357d94d639a6bb2bdfcf4a48a7d57cb0169361b31963f1b9b92e6468#91e9bb9595a83cef050ae86295dd8ebf2070ab7d"
+  integrity sha512-VdKxzpBFq18JrTk+Kq6UNoFg9MP4+leud3PipQMnW54mpwgEkzIDgX1gN4SWBgh7undG3MIVjDqgjJNUuBXoFw==
+  dependencies:
+    deep-equal "^1.1.0"
+    eth-block-tracker "^4.4.2"
+    ethjs "^0.3.6"
+    ethjs-contract "^0.2.1"
+    ethjs-query "^0.3.7"
+    human-standard-token-abi "^1.0.2"
+    safe-event-emitter "^1.0.1"
+
+"@onekeyhq/etherscan-link@^2.1.0":
   version "2.1.0"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/jazzicon/2.1.0/81cf9d62c8bffe79120374250b6d6832447907b69d4974971f07c864ae053639#78c4cc3c4006655680a86a13170ba8c93acda6a1"
-  integrity sha512-bvifx7nr1nY32arEvXNuHYwYM6cNbncNMoihiU1JXV5duisds4BxoCm1nSQFp+0b79MnttUr84dxT64WGe8osA==
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/etherscan-link/2.1.0/e6d774f1d03e951443fc476e38dfa66e8f2cfe2dcb076e0acf30a01e35b8fdb4#581df8a3f0887a37ae6ca3aa2d50ac4b9a2798df"
+  integrity sha512-N6gbdOV2DbMqM3ubOK+gieax8UE2B6X0YHrCy7uAPi58u6qYCIm+H9lgyTT82zDO4JGnqrhX/hvbIWHMzClUFA==
+
+"@onekeyhq/extension-controllers@^5.1.0":
+  version "5.1.0"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/extension-controllers/5.1.0/d817f45be2268e3149f5d3c85f14da18243cb517a2798c0eb28c29cb1b455af5#73931d2d11bcaa3be475c7b6cf47df737238a556"
+  integrity sha512-NpvKxRaWry0nqI60nQDxdYL+T6Eld+Z1LNGVxJnanIX38hRLMwbZpluAWEdRPQUYVLnPUmzUJHiH6ohg46bsog==
+  dependencies:
+    "@onekeyhq/contract-metadata" "^1.28.0"
+    await-semaphore "^0.1.3"
+    eth-ens-namehash "^2.0.8"
+    eth-json-rpc-infura "^5.1.0"
+    eth-keyring-controller "^6.1.0"
+    eth-method-registry "1.1.0"
+    eth-phishing-detect "^1.1.13"
+    eth-query "^2.1.2"
+    eth-rpc-errors "^4.0.0"
+    eth-sig-util "^3.0.0"
+    ethereumjs-util "^6.1.0"
+    ethereumjs-wallet "^0.6.4"
+    ethjs-query "^0.3.8"
+    human-standard-collectible-abi "^1.0.2"
+    human-standard-token-abi "^2.0.0"
+    isomorphic-fetch "^3.0.0"
+    jsonschema "^1.2.4"
+    nanoid "^3.1.12"
+    single-call-balance-checker-abi "^1.0.0"
+    uuid "^3.3.2"
+    web3 "^0.20.7"
+    web3-provider-engine "^16.0.1"
+
+"@onekeyhq/jazzicon@^2.1.0":
+  version "2.1.0"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/jazzicon/2.1.0/751a6cb51aa8e9a479016e4d3bae445101e5caddd721280d2d7560f4210e7be3#e647b58d82c3cf2a651ac191a8e8bd3362a28e98"
+  integrity sha512-k257QDPDtbvDx0brdFcSPKW7PpO3XfEp4tf0Otz5p+zwjF/ErdKnMV/PkhvjcibCfXBssLfp/DYVNn+FTJeHCQ==
   dependencies:
     mersenne-twister "^1.1.0"
+
+"@onekeyhq/json-rpc-engine@^6.1.0":
+  version "6.1.0"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/json-rpc-engine/6.1.0/9aa04cfbdf6eab190308b69b16fd121e77af75f5b33095cb25d955fdb43ff737#1ec4d7d9f57b2bb4005f2b7442fedf9420bf399c"
+  integrity sha512-BYx8sXJ/zyWZkkmHU4S23R4ctEa8PAzdOasSbEf934IAFoWJinoX+6KIKd+LmuKEYyOcyXGFyygjNWLICJwQVQ==
+  dependencies:
+    "@onekeyhq/safe-event-emitter" "^2.0.0"
+    eth-rpc-errors "^4.0.2"
+
+"@onekeyhq/json-rpc-middleware-stream@^3.0.1":
+  version "3.0.1"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/json-rpc-middleware-stream/3.0.1/5015d495cb41268b2f88f25eeafa3bb473c7e6062d876a9a3c7b2985db3cf3db#c9ac877a9fcbea544000d8f34f5f3e2d2ff70da4"
+  integrity sha512-g6Y4tH1abrlQ4ehTVGLVk0upKTpU5K2VMUDh4Ok4ODLDyrTn+E6jmw2n1kRnOJzqXYGo+wFXtN83T5MOh7+iNw==
+  dependencies:
+    "@onekeyhq/json-rpc-engine" "^6.1.0"
+    "@onekeyhq/safe-event-emitter" "^2.0.0"
+    readable-stream "^2.3.3"
 
 "@onekeyhq/link@1.7.5":
   version "1.7.5"
@@ -2821,6 +2833,15 @@
     protobufjs-old-fixed-webpack "3.8.5"
     semver-compare "^1.0.0"
     whatwg-fetch "^3.5.0"
+
+"@onekeyhq/object-multiplex@^1.2.1":
+  version "1.2.1"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/object-multiplex/1.2.1/047180a2504c293875ccb0fa4fadb4b41335f36a2c280e66a1d59de2134fd9bb#f0efdadc77ae252618ad46baa7038f2e4e0e4bbe"
+  integrity sha512-Q/OH/z4GE3rsZl9nUd/0tcCP6ChcWWF3gkelDaCHcrgSUUyBrmA4RitedBoUbfc8DXgkJLHFBMlpEIaQAD9xGA==
+  dependencies:
+    end-of-stream "^1.4.4"
+    once "^1.4.0"
+    readable-stream "^2.3.3"
 
 "@onekeyhq/obs-store@^7.0.0":
   version "7.0.0"
@@ -2837,21 +2858,21 @@
   dependencies:
     readable-stream "2.3.3"
 
-"@onekeyhq/providers@8.1.1":
-  version "8.1.1"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/providers/8.1.1/dc6f8945dd49b19b25f36f9ce2bbd0ac3b71a187fa2032150752714bb51dca56#340375665e207e1cfb7e966d5e0749accde8a821"
-  integrity sha512-EvqmMrGfD0txqN4GZhOjdjdjkA+Yah7qYzoLSYdeq/4683OsbVzwFQbOhHxTLiUxDU2xhxRwgNhbRCzQI3lF4w==
+"@onekeyhq/providers@^8.1.3":
+  version "8.1.3"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/providers/8.1.3/e2206d3b764148042bbc89f22301c273098203ede09fc6b0b8ac2897b06b96ca#ecc104ad98ac30a8bd662733f6d68ea29e534294"
+  integrity sha512-Vcev3zbrbUOiRtASOMcTx/uuFM/8f/tJSmR0eqSllAtDQ0oAITdQAMpPYxRfO5XlWiFtCdd+gMfV+doWpnan8w==
   dependencies:
-    "@metamask/object-multiplex" "^1.1.0"
-    "@metamask/safe-event-emitter" "^2.0.0"
+    "@onekeyhq/json-rpc-engine" "^6.1.0"
+    "@onekeyhq/json-rpc-middleware-stream" "^3.0.1"
+    "@onekeyhq/object-multiplex" "^1.2.1"
+    "@onekeyhq/safe-event-emitter" "^2.0.0"
     "@types/chrome" "^0.0.136"
     detect-browser "^5.2.0"
     eth-rpc-errors "^4.0.2"
     extension-port-stream "^2.0.1"
     fast-deep-equal "^2.0.1"
     is-stream "^2.0.0"
-    json-rpc-engine "^6.1.0"
-    json-rpc-middleware-stream "^3.0.0"
     pump "^3.0.0"
     webextension-polyfill-ts "^0.25.0"
 
@@ -2863,15 +2884,21 @@
     cross-fetch "^3.0.6"
     runtypes "^5.0.1"
 
+"@onekeyhq/rpc-cap@3.2.1":
+  version "3.2.1"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/rpc-cap/3.2.1/ac620a943c400876cbe3906619d3457f10aa20d4d65ac0b4ab23f81594c99a04#bacaecd5dfea7a42a9a1851348660a3aa4036fd6"
+  integrity sha512-GYWwUiOXPPDYjjN4/EQsxoz6oFY8iPSoGFUfYbVwt3OETRjvG3r/+vgSsaBKh+cG5EInxw9kto8K/HynZhw4FQ==
+  dependencies:
+    "@onekeyhq/extension-controllers" "^5.1.0"
+    eth-rpc-errors "^3.0.0"
+    is-subset "^0.1.1"
+    json-rpc-engine "^5.3.0"
+    uuid "^3.3.2"
+
 "@onekeyhq/safe-event-emitter@^2.0.0":
   version "2.0.0"
   resolved "https://npm.pkg.github.com/download/@onekeyhq/safe-event-emitter/2.0.0/59b505b4e7289f9cfe6294947542b5e2ec25638709c7cc8d94a7eb6118f14403#0aa7b21ec9751b969fb0a6f43500b3dece15972e"
   integrity sha512-2fggvk1/QvPd04rlEUCpn9QMCPx8Lr/oyjYaAirXVbrFFzJ9SU7r0CVEfc50w/uGeF4ajWPW9LSR81CvGHtMAw==
-
-"@onekeyhq/test-dapp@^4.0.2":
-  version "4.0.2"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/test-dapp/4.0.2/05adf8661ddec7c96d86a1822275272c11e5fb83d1f6bb8e7a628926e4b59792#981356b998f79e2e3822a5514bcec4ac7ea15f6f"
-  integrity sha512-v41H4Oa9SSBeHeJGkf3eoV8EXhg/5wwIG0CPndRLnWxC0Drd1j1qIstRandmbuqKRZBf3TIm1uOUdbhtnKt16A==
 
 "@pmmmwh/react-refresh-webpack-plugin@^0.4.2":
   version "0.4.3"
@@ -11901,7 +11928,7 @@ eth-sig-util@^1.4.0, eth-sig-util@^1.4.2:
 
 eth-sig-util@^2.0.0, eth-sig-util@^2.4.4, eth-sig-util@^2.5.0:
   version "2.5.4"
-  resolved "https://registry.yarnpkg.com/eth-sig-util/-/eth-sig-util-2.5.4.tgz#577b01fe491b6bf59b0464be09633e20c1677bc5"
+  resolved "https://registry.npmjs.org/eth-sig-util/-/eth-sig-util-2.5.4.tgz#577b01fe491b6bf59b0464be09633e20c1677bc5"
   integrity sha512-aCMBwp8q/4wrW4QLsF/HYBOSA7TpLKmkVwP3pYQNkEEseW2Rr8Z5Uxc9/h6HX+OG3tuHo+2bINVSihIeBfym6A==
   dependencies:
     ethereumjs-abi "0.6.8"
@@ -17658,6 +17685,14 @@ json-parse-even-better-errors@^2.3.0:
   resolved "https://registry.yarnpkg.com/json-parse-even-better-errors/-/json-parse-even-better-errors-2.3.1.tgz#7c47805a94319928e05777405dc12e1f7a4ee02d"
   integrity sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==
 
+json-rpc-engine@5.3.0, json-rpc-engine@^5.3.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/json-rpc-engine/-/json-rpc-engine-5.3.0.tgz#7dc7291766b28766ebda33eb6d3f4c6301c44ff4"
+  integrity sha512-+diJ9s8rxB+fbJhT7ZEf8r8spaLRignLd8jTgQ/h5JSGppAHGtNMZtCoabipCaleR1B3GTGxbXBOqhaJSGmPGQ==
+  dependencies:
+    eth-rpc-errors "^3.0.0"
+    safe-event-emitter "^1.0.1"
+
 json-rpc-engine@^3.4.0, json-rpc-engine@^3.6.0:
   version "3.8.0"
   resolved "https://registry.yarnpkg.com/json-rpc-engine/-/json-rpc-engine-3.8.0.tgz#9d4ff447241792e1d0a232f6ef927302bb0c62a9"
@@ -17669,22 +17704,6 @@ json-rpc-engine@^3.4.0, json-rpc-engine@^3.6.0:
     json-rpc-error "^2.0.0"
     promise-to-callback "^1.0.0"
     safe-event-emitter "^1.0.1"
-
-json-rpc-engine@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/json-rpc-engine/-/json-rpc-engine-5.3.0.tgz#7dc7291766b28766ebda33eb6d3f4c6301c44ff4"
-  integrity sha512-+diJ9s8rxB+fbJhT7ZEf8r8spaLRignLd8jTgQ/h5JSGppAHGtNMZtCoabipCaleR1B3GTGxbXBOqhaJSGmPGQ==
-  dependencies:
-    eth-rpc-errors "^3.0.0"
-    safe-event-emitter "^1.0.1"
-
-json-rpc-engine@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/json-rpc-engine/-/json-rpc-engine-6.1.0.tgz#bf5ff7d029e1c1bf20cb6c0e9f348dcd8be5a393"
-  integrity sha512-NEdLrtrq1jUZyfjkr9OCz9EzCNhnRyWtt1PAnvnhwy6e8XETS0Dtc+ZNCO2gvuAoKsIn2+vCSowXTYE4CkgnAQ==
-  dependencies:
-    "@metamask/safe-event-emitter" "^2.0.0"
-    eth-rpc-errors "^4.0.2"
 
 json-rpc-error@^2.0.0:
   version "2.0.0"
@@ -17700,14 +17719,6 @@ json-rpc-middleware-stream@^2.1.1:
   dependencies:
     readable-stream "^2.3.3"
     safe-event-emitter "^1.0.1"
-
-json-rpc-middleware-stream@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/json-rpc-middleware-stream/-/json-rpc-middleware-stream-3.0.0.tgz#8540331d884f36b9e0ad31054cc68ac6b5a89b52"
-  integrity sha512-JmZmlehE0xF3swwORpLHny/GvW3MZxCsb2uFNBrn8TOqMqivzCfz232NSDLLOtIQlrPlgyEjiYpyzyOPFOzClw==
-  dependencies:
-    "@metamask/safe-event-emitter" "^2.0.0"
-    readable-stream "^2.3.3"
 
 json-rpc-random-id@^1.0.0, json-rpc-random-id@^1.0.1:
   version "1.0.1"
@@ -25412,17 +25423,6 @@ roarr@^2.15.3:
     json-stringify-safe "^5.0.1"
     semver-compare "^1.0.0"
     sprintf-js "^1.1.2"
-
-rpc-cap@^3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/rpc-cap/-/rpc-cap-3.2.1.tgz#95aba886c60562626261667d3637f9b4fe05b078"
-  integrity sha512-aNevLIJ/jIGR3by0b3pd7MWBUSJOkbOkjOCZ13Kk2ddToGZV1TaxclBsasLIdomFbxl0lyUQ8EeoMwYrS7yuBA==
-  dependencies:
-    "@metamask/controllers" "^5.0.0"
-    eth-rpc-errors "^3.0.0"
-    is-subset "^0.1.1"
-    json-rpc-engine "^5.3.0"
-    uuid "^3.3.2"
 
 rpc-websockets@^7.4.2:
   version "7.4.12"

@@ -1,5 +1,5 @@
 import extension from 'extensionizer';
-import { createExplorerLink as explorerLink } from '@metamask/etherscan-link';
+import { createExplorerLink as explorerLink } from '@onekeyhq/etherscan-link';
 import { getEnvironmentType, checkForError } from '../lib/util';
 import { ENVIRONMENT_TYPE_BACKGROUND } from '../../../shared/constants/app';
 import { TRANSACTION_STATUSES } from '../../../shared/constants/transaction';

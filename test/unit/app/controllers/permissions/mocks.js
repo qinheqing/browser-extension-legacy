@@ -1,7 +1,7 @@
 import { ethErrors, errorCodes } from 'eth-rpc-errors';
 import deepFreeze from 'deep-freeze-strict';
 
-import { ApprovalController } from '@metamask/controllers';
+import { ApprovalController } from '@onekeyhq/extension-controllers';
 
 import _getRestrictedMethods from '../../../../../app/scripts/controllers/permissions/restrictedMethods';
 
@@ -128,12 +128,11 @@ export function getPermissionsMiddleware(permController, origin, extensionId) {
  * @returns {Function} A function passed to the permissions controller at initialization,
  * for recording notifications.
  */
-export const getNotifyDomain = (notifications = {}) => (
-  origin,
-  notification,
-) => {
-  notifications[origin].push(notification);
-};
+export const getNotifyDomain =
+  (notifications = {}) =>
+  (origin, notification) => {
+    notifications[origin].push(notification);
+  };
 
 /**
  * @param {Object} notifications - An object that will store notifications produced
@@ -141,11 +140,13 @@ export const getNotifyDomain = (notifications = {}) => (
  * @returns {Function} A function passed to the permissions controller at initialization,
  * for recording notifications.
  */
-export const getNotifyAllDomains = (notifications = {}) => (notification) => {
-  Object.keys(notifications).forEach((origin) => {
-    notifications[origin].push(notification);
-  });
-};
+export const getNotifyAllDomains =
+  (notifications = {}) =>
+  (notification) => {
+    Object.keys(notifications).forEach((origin) => {
+      notifications[origin].push(notification);
+    });
+  };
 
 /**
  * Constants and Mock Objects
