@@ -2,6 +2,7 @@
 import React from 'react';
 import log from 'loglevel';
 import * as Sentry from '@sentry/browser';
+import { isString } from 'lodash';
 
 import getFetchWithTimeout from '../../../../shared/modules/fetch-with-timeout';
 
@@ -23,6 +24,7 @@ export const getMessage = (localeCode, localeMessages, key, substitutions) => {
   if (!localeMessages) {
     return null;
   }
+
   if (!localeMessages[key]) {
     if (localeCode === 'en') {
       if (!missingMessageErrors[key]) {
@@ -101,7 +103,22 @@ export async function fetchLocale(localeCode) {
     const response = await fetchWithTimeout(
       `./_locales/${localeCode}/messages.json`,
     );
-    return await response.json();
+    const localeJson = await response.json();
+    // convert to react-intl format json
+    Object.entries(localeJson).forEach(([k, v]) => {
+      let value = v || '';
+      if (!isString(value)) {
+        value = value?.message || '';
+      }
+
+      // replace {{1}} to {1}
+      value = value.replace(/\{\{\s*(\d+)\s*\}\}/giu, (m0, m1, index, str) => {
+        return `{${m1}}`;
+      });
+      localeJson[k] = value;
+    });
+
+    return localeJson;
   } catch (error) {
     log.error(`failed to fetch ${localeCode} locale because of ${error}`);
     return {};

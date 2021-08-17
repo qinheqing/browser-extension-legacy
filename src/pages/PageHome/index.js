@@ -1,7 +1,15 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  Component,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { useHistory } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import classnames from 'classnames';
+import { useIntl } from 'react-intl';
+import PropTypes from 'prop-types';
 import AppPageLayout from '../../components/AppPageLayout';
 import storeAccount from '../../store/storeAccount';
 import AccountCard from '../../components/AccountCard';
@@ -37,6 +45,7 @@ import {
 } from '../../consts/consts';
 import uiGetBgControllerAsync from '../../wallets/bg/uiGetBgControllerAsync';
 import uiBackgroundProxy from '../../wallets/bg/uiBackgroundProxy';
+import { I18nContext } from '../../../ui/app/contexts/i18n';
 
 const HomeTopActionsBar = observer(function () {
   const [copied, handleCopy] = useCopyToClipboard();

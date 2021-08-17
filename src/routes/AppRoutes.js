@@ -18,6 +18,7 @@ import {
   ROUTE_WALLET_SELECT,
   ROUTE_ACCOUNT_DETAIL,
   ROUTE_PRIVATE_KEY_EXPORT,
+  ROUTE_DEMO_I18N,
 } from './routeUrls';
 
 const PageConnectHardware = lazy(() => import('../pages/PageConnectHardware'));
@@ -35,6 +36,7 @@ const PageAccountDetail = lazy(() => import('../pages/PageAccountDetail'));
 const PagePrivateKeyExport = lazy(() =>
   import('../pages/PagePrivateKeyExport'),
 );
+const PageDemoI18n = lazy(() => import('../pages/PageDemoI18n'));
 
 errorsGlobalHandler.init();
 
@@ -108,6 +110,11 @@ export default function AppRoutes() {
           <RouteAuthenticated
             path={ROUTE_PRIVATE_KEY_EXPORT}
             component={PagePrivateKeyExport}
+            exact
+          />
+          <RouteAuthenticated
+            path={ROUTE_DEMO_I18N}
+            component={PageDemoI18n}
             exact
           />
           {/* Home route should be at last one */}
