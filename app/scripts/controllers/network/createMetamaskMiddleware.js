@@ -1,4 +1,7 @@
-import { createScaffoldMiddleware, mergeMiddleware } from 'json-rpc-engine';
+import {
+  createScaffoldMiddleware,
+  mergeMiddleware,
+} from '@onekeyhq/json-rpc-engine';
 import createWalletSubprovider from 'eth-json-rpc-middleware/wallet';
 import {
   createPendingNonceMiddleware,

@@ -1,4 +1,7 @@
-import { createScaffoldMiddleware, mergeMiddleware } from 'json-rpc-engine';
+import {
+  createScaffoldMiddleware,
+  mergeMiddleware,
+} from '@onekeyhq/json-rpc-engine';
 import createBlockReRefMiddleware from 'eth-json-rpc-middleware/block-ref';
 import createRetryOnEmptyMiddleware from 'eth-json-rpc-middleware/retryOnEmpty';
 import createBlockCacheMiddleware from 'eth-json-rpc-middleware/block-cache';
@@ -8,20 +11,34 @@ import providerFromMiddleware from 'eth-json-rpc-middleware/providerFromMiddlewa
 import createInfuraMiddleware from 'eth-json-rpc-infura';
 import BlockTracker from 'eth-block-tracker';
 
-import { createFetchMiddleware } from "./libs/fetch";
-import { NETWORK_TYPE_TO_ID_MAP, NETWORK_FALLBACK_URL } from '../../../../shared/constants/network';
-import { MAINNET, ETH_RPC_URL } from '../../../../shared/constants/network';
+import {
+  NETWORK_TYPE_TO_ID_MAP,
+  NETWORK_FALLBACK_URL,
+  MAINNET,
+  ETH_RPC_URL,
+} from '../../../../shared/constants/network';
+
+import { createFetchMiddleware } from './libs/fetch';
 
 export default function createInfuraClient({ network, projectId }) {
-  const rpcUrl = NETWORK_TYPE_TO_ID_MAP[network] && NETWORK_TYPE_TO_ID_MAP[network].rpcUrl
-  const fallbackUrls = NETWORK_FALLBACK_URL[network]
-  const infuraMiddleware =
-    rpcUrl
-      ? createFetchMiddleware({ rpcUrl, originHttpHeaderKey: undefined, fallbackUrls: fallbackUrls })
-      : createInfuraMiddleware({ network, projectId, maxAttempts: 5, source: 'metamask' });
+  const rpcUrl =
+    NETWORK_TYPE_TO_ID_MAP[network] && NETWORK_TYPE_TO_ID_MAP[network].rpcUrl;
+  const fallbackUrls = NETWORK_FALLBACK_URL[network];
+  const infuraMiddleware = rpcUrl
+    ? createFetchMiddleware({
+        rpcUrl,
+        originHttpHeaderKey: undefined,
+        fallbackUrls,
+      })
+    : createInfuraMiddleware({
+        network,
+        projectId,
+        maxAttempts: 5,
+        source: 'metamask',
+      });
   const infuraProvider = providerFromMiddleware(infuraMiddleware);
   const blockTracker = new BlockTracker({ provider: infuraProvider });
-  
+
   const networkMiddleware = mergeMiddleware([
     createNetworkAndChainIdMiddleware({ network }),
     createBlockCacheMiddleware({ blockTracker }),

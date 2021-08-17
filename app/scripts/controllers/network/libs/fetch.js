@@ -1,5 +1,5 @@
 import url from 'url';
-import { createAsyncMiddleware } from 'json-rpc-engine';
+import { createAsyncMiddleware } from '@onekeyhq/json-rpc-engine';
 import { ethErrors } from 'eth-rpc-errors';
 
 const RETRIABLE_ERRORS = [
@@ -111,6 +111,7 @@ function parseResponse(fetchRes, body) {
       data: body,
     });
   }
+
   // check for rpc error
   if (body.error) {
     throw ethErrors.rpc.internal({

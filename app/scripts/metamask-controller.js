@@ -3,7 +3,7 @@ import pump from 'pump';
 import Dnode from 'dnode';
 import { ObservableStore } from '@onekeyhq/obs-store';
 import { storeAsStream } from '@onekeyhq/obs-store/dist/asStream';
-import { JsonRpcEngine } from 'json-rpc-engine';
+import { JsonRpcEngine } from '@onekeyhq/json-rpc-engine';
 import { debounce } from 'lodash';
 import createEngineStream from 'json-rpc-middleware-stream/engineStream';
 import createFilterMiddleware from 'eth-json-rpc-filters';

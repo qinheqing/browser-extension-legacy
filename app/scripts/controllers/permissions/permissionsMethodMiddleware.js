@@ -1,4 +1,4 @@
-import { createAsyncMiddleware } from 'json-rpc-engine';
+import { createAsyncMiddleware } from '@onekeyhq/json-rpc-engine';
 import { ethErrors } from 'eth-rpc-errors';
 import bgHelpers from '../../../../src/wallets/bg/bgHelpers';
 import utilsApp from '../../../../src/utils/utilsApp';
@@ -33,6 +33,7 @@ export default function createPermissionsMethodMiddleware({
         res.result = MOCK_CHAIN_ID_WHEN_NEW_APP.chainId;
         return;
       }
+
       if (
         req.method === 'eth_requestAccounts' ||
         req.method === 'eth_accounts'

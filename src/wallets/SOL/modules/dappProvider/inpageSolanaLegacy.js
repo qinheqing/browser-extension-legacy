@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 import pump from 'pump';
 import { WindowPostMessageStream } from '@onekeyhq/post-message-stream';
-import { JsonRpcEngine } from 'json-rpc-engine';
+import { JsonRpcEngine } from '@onekeyhq/json-rpc-engine';
 import createJsonRpcStream from 'json-rpc-middleware-stream';
 // eslint-disable-next-line node/no-extraneous-import,import/no-extraneous-dependencies
 import debug from 'debug';
