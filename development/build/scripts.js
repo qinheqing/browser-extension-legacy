@@ -589,6 +589,7 @@ function setupBundlerDefaults(
       brfs,
     ].filter(Boolean),
     // use entryFilepath for moduleIds, easier to determine origin file (full path of OS)
+    //    module id, module path, module name, module hash
     fullPaths: false, // devMode,
     paths: configs.browserifyPaths,
     // for sourcemaps
@@ -704,7 +705,7 @@ function setupSourcemaps(buildConfiguration, { devMode }) {
         devMode
           ? writeSourceMapDev()
           : sourcemaps.write('../sourcemaps', {
-              addComment: false,
+              addComment: devMode,
               sourceMappingURLPrefix: () => 'http://localhost:31317',
             }),
       );
@@ -779,8 +780,6 @@ function getEnvironmentVariables({ devMode, testing }) {
     METAMASK_VERSION: version,
     NODE_ENV: devMode ? 'development' : 'production',
     IN_TEST: testing ? 'true' : false,
-    PUBNUB_SUB_KEY: process.env.PUBNUB_SUB_KEY || '',
-    PUBNUB_PUB_KEY: process.env.PUBNUB_PUB_KEY || '',
     // auto unlock on devMode, process.env.CONF?.password
     CONF: devMode ? metamaskrc : {},
     SENTRY_DSN: process.env.SENTRY_DSN || metamaskrc.SENTRY_DSN,

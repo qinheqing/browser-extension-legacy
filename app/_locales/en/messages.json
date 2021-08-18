@@ -1658,27 +1658,6 @@
   "symbolRequired": {
     "message": "Symbol required"
   },
-  "syncWithMobile": {
-    "message": "Sync with mobile"
-  },
-  "syncWithMobileBeCareful": {
-    "message": "Make sure nobody else is looking at your screen when you scan this code"
-  },
-  "syncWithMobileComplete": {
-    "message": "Your data has been synced successfully. Enjoy the OneKey mobile app!"
-  },
-  "syncWithMobileDesc": {
-    "message": "You can sync your accounts and information with your mobile device. Open the OneKey mobile app, go to \"Settings\" and tap on \"Sync from Browser Extension\""
-  },
-  "syncWithMobileDescNewUsers": {
-    "message": "If you just open the OneKey Mobile app for the first time, just follow the steps in your phone."
-  },
-  "syncWithMobileScanThisCode": {
-    "message": "Scan this code with your OneKey mobile app"
-  },
-  "syncWithMobileTitle": {
-    "message": "Sync with mobile"
-  },
   "terms": {
     "message": "Terms of Use"
   },

@@ -5,7 +5,6 @@ import { exportAsFile } from '../../../helpers/utils/util';
 import ToggleButton from '../../../components/ui/toggle-button';
 import TextField from '../../../components/ui/text-field';
 import Button from '../../../components/ui/button';
-import { MOBILE_SYNC_ROUTE } from '../../../helpers/constants/routes';
 
 export default class AdvancedTab extends PureComponent {
   static contextTypes = {
@@ -38,36 +37,6 @@ export default class AdvancedTab extends PureComponent {
     ipfsGateway: this.props.ipfsGateway,
     ipfsGatewayError: '',
   };
-
-  renderMobileSync() {
-    const { t } = this.context;
-    const { history } = this.props;
-
-    return (
-      <div
-        className="settings-page__content-row"
-        data-testid="advanced-setting-mobile-sync"
-      >
-        <div className="settings-page__content-item">
-          <span>{t('syncWithMobile')}</span>
-        </div>
-        <div className="settings-page__content-item">
-          <div className="settings-page__content-item-col">
-            <Button
-              type="secondary"
-              large
-              onClick={(event) => {
-                event.preventDefault();
-                history.push(MOBILE_SYNC_ROUTE);
-              }}
-            >
-              {t('syncWithMobile')}
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   renderStateLogs() {
     const { t } = this.context;
@@ -423,7 +392,6 @@ export default class AdvancedTab extends PureComponent {
         {this.renderUseNonceOptIn()}
         {this.renderAutoLockTimeLimit()}
         {this.renderIpfsGatewayControl()}
-        {/* {this.renderMobileSync()} */}
       </div>
     );
   }

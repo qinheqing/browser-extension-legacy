@@ -1658,27 +1658,6 @@
   "symbolRequired": {
     "message": "代币符号不能为空"
   },
-  "syncWithMobile": {
-    "message": "使用移动设备同步"
-  },
-  "syncWithMobileBeCareful": {
-    "message": "扫描这个代码时，请确保附近没有其他人在看您的屏幕。"
-  },
-  "syncWithMobileComplete": {
-    "message": "您的数据已同步成功。尽情体验 OneKey 应用程序！"
-  },
-  "syncWithMobileDesc": {
-    "message": "您可以使用个人移动设备同步个人账户与信息。打开 OneKey 移动应用程序，进入“设置”选项，点击“通过浏览器扩展程序同步”"
-  },
-  "syncWithMobileDescNewUsers": {
-    "message": "如果您是首次启用 OneKey 移动应用程序，请通过个人手机完成如下操作。"
-  },
-  "syncWithMobileScanThisCode": {
-    "message": "使用 OneKey 应用程序扫描代码"
-  },
-  "syncWithMobileTitle": {
-    "message": "使用移动设备进行同步"
-  },
   "terms": {
     "message": "使用条款"
   },

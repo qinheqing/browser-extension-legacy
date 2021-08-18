@@ -16,7 +16,6 @@ import Lock from '../lock';
 import PermissionsConnect from '../permissions-connect';
 import RestoreVaultPage from '../keychains/restore-vault';
 import RevealSeedConfirmation from '../keychains/reveal-seed';
-import MobileSyncPage from '../mobile-sync';
 import AddTokenPage from '../add-token';
 import ConfirmAddTokenPage from '../confirm-add-token';
 import ConfirmAddSuggestedTokenPage from '../confirm-add-suggested-token';
@@ -43,7 +42,6 @@ import {
   INITIALIZE_ROUTE,
   INITIALIZE_UNLOCK_ROUTE,
   LOCK_ROUTE,
-  MOBILE_SYNC_ROUTE,
   NEW_ACCOUNT_ROUTE,
   RESTORE_VAULT_ROUTE,
   REVEAL_SEED_ROUTE,
@@ -94,11 +92,6 @@ class AllRoutesComponents extends Component {
             <Authenticated
               path={REVEAL_SEED_ROUTE}
               component={RevealSeedConfirmation}
-              exact
-            />
-            <Authenticated
-              path={MOBILE_SYNC_ROUTE}
-              component={MobileSyncPage}
               exact
             />
             <Authenticated path={SETTINGS_ROUTE} component={Settings} />

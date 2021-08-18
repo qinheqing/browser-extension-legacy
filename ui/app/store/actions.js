@@ -241,22 +241,6 @@ export function tryReverseResolveAddress(address) {
   };
 }
 
-export function fetchInfoToSync() {
-  return (dispatch) => {
-    log.debug(`background.fetchInfoToSync`);
-    return new Promise((resolve, reject) => {
-      background.fetchInfoToSync((err, result) => {
-        if (err) {
-          dispatch(displayWarning(err.message));
-          reject(err);
-          return;
-        }
-        resolve(result);
-      });
-    });
-  };
-}
-
 export function resetAccount() {
   return (dispatch) => {
     dispatch(showLoadingIndication());
