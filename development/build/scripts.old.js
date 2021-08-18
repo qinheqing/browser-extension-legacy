@@ -68,7 +68,6 @@ const metamaskDepenendencies = [
   'ethers',
   'json-rpc-engine',
   'json-rpc-middleware-stream',
-  'safe-event-emitter',
   'ethereumjs-wallet',
   '@zxing/library',
   '@formatjs/intl-relativetimeformat',

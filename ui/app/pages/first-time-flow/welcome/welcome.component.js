@@ -1,4 +1,3 @@
-import EventEmitter from 'events';
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import trim from 'lodash/trim';
@@ -22,12 +21,6 @@ export default class Welcome extends PureComponent {
   static contextTypes = {
     t: PropTypes.func,
   };
-
-  constructor(props) {
-    super(props);
-
-    this.animationEventEmitter = new EventEmitter();
-  }
 
   componentDidMount() {
     const { history, welcomeScreenSeen } = this.props;

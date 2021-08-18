@@ -49,7 +49,6 @@ const onekeyDeps = [
   // 'ethers',
   // 'json-rpc-engine',
   // 'json-rpc-middleware-stream',
-  // 'safe-event-emitter',
   // 'rpc-cap',
   // 'ethereumjs-wallet',
   // '@zxing/library',

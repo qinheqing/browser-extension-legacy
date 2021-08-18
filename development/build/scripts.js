@@ -703,7 +703,10 @@ function setupSourcemaps(buildConfiguration, { devMode }) {
       .push(
         devMode
           ? writeSourceMapDev()
-          : sourcemaps.write('../sourcemaps', { addComment: devMode }),
+          : sourcemaps.write('../sourcemaps', {
+              addComment: false,
+              sourceMappingURLPrefix: () => 'http://localhost:31317',
+            }),
       );
   });
 }

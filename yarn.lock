@@ -11279,11 +11279,6 @@ es6-error@^4.0.1, es6-error@^4.1.1:
   resolved "https://registry.yarnpkg.com/es6-error/-/es6-error-4.1.1.tgz#9e3af407459deed47e9a91f9b885a84eb05c561d"
   integrity sha512-Um/+FxMr9CISWh0bi5Zv0iOD+4cFh5qLeks1qhAopKVAJw3drgKbKySikp7wGhDL0HPeaja0P5ULZrxLkniUVg==
 
-es6-event-emitter@^1.10.2:
-  version "1.10.2"
-  resolved "https://registry.npmjs.org/es6-event-emitter/-/es6-event-emitter-1.10.2.tgz#8f76b8b658f81e725c2050cf19095e0548a74b29"
-  integrity sha1-j3a4tlj4HnJcIFDPGQleBUinSyk=
-
 es6-iterator@2.0.3, es6-iterator@^2.0.1, es6-iterator@~2.0.1, es6-iterator@~2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/es6-iterator/-/es6-iterator-2.0.3.tgz#a7de889141a05a94b0854403b2d0a0fbfa98f3b7"
@@ -27929,11 +27924,6 @@ text-table@0.2.0, text-table@^0.2.0, text-table@~0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
-
-textarea-caret@^3.0.1:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/textarea-caret/-/textarea-caret-3.0.2.tgz#f360c48699aa1abf718680a43a31a850665c2caf"
-  integrity sha1-82DEhpmqGr9xhoCkOjGoUGZcLK8=
 
 throat@^5.0.0:
   version "5.0.0"
