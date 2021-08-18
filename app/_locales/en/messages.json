@@ -9,10 +9,10 @@
     "message": "* Accelerating a transaction by using a higher gas price increases its chances of getting processed by the network faster, but it is not always guaranteed."
   },
   "acceptTermsOfUse": {
-    "message": "I have read and agree to the {{1}}"
+    "message": "I have read and agree to the {1}"
   },
   "accessAndSpendNotice": {
-    "message": "{{1}} may access and spend up to this max amount"
+    "message": "{1} may access and spend up to this max amount"
   },
   "accessingYourCamera": {
     "message": "Accessing your camera..."
@@ -57,7 +57,7 @@
     "message": "OneKey does not verify custom networks."
   },
   "addEthereumChainConfirmationRisksLearnMore": {
-    "message": "Learn about {{1}}."
+    "message": "Learn about {1}."
   },
   "addEthereumChainConfirmationRisksLearnMoreLink": {
     "message": "scams and network security risks"
@@ -104,9 +104,6 @@
   "alertDisableTooltip": {
     "message": "This can be changed in \"Settings > Alerts\""
   },
-  "alerts": {
-    "message": "Alerts"
-  },
   "alertSettingsUnconnectedAccount": {
     "message": "Browsing a website with an unconnected account selected"
   },
@@ -119,6 +116,9 @@
   "alertSettingsWeb3ShimUsageDescription": {
     "message": "This alert is shown in the popup when you are browsing a site that tries to use the removed window.web3 API, and may be broken as a result."
   },
+  "alerts": {
+    "message": "Alerts"
+  },
   "alertsSettingsDescription": {
     "message": "Enable or disable each alert"
   },
@@ -126,19 +126,19 @@
     "message": "Allow this external extension to:"
   },
   "allowOriginSpendToken": {
-    "message": "Allow {{1}} to spend your {{2}}?"
+    "message": "Allow {1} to spend your {2}?"
   },
   "allowThisSiteTo": {
     "message": "Allow this site to:"
   },
   "allowWithdrawAndSpend": {
-    "message": "Allow {{1}} to withdraw and spend up to the following amount:"
+    "message": "Allow {1} to withdraw and spend up to the following amount:"
   },
   "amount": {
     "message": "Amount"
   },
   "amountInEth": {
-    "message": "{{1}} ETH"
+    "message": "{1} ETH"
   },
   "amountWithColon": {
     "message": "Amount:"
@@ -161,11 +161,11 @@
   "approveButtonText": {
     "message": "Approve"
   },
+  "approveSpendLimit": {
+    "message": "Approve {1} spend limit"
+  },
   "approved": {
     "message": "Approved"
-  },
-  "approveSpendLimit": {
-    "message": "Approve {{1}} spend limit"
   },
   "asset": {
     "message": "Asset"
@@ -173,14 +173,14 @@
   "assets": {
     "message": "Assets"
   },
-  "attemptingConnect": {
-    "message": "Attempting to connect to blockchain."
-  },
   "attemptToCancel": {
     "message": "Attempt to Cancel?"
   },
   "attemptToCancelDescription": {
     "message": "Submitting this attempt does not guarantee your original transaction will be cancelled. If the cancellation attempt is successful, you will be charged the transaction fee above."
+  },
+  "attemptingConnect": {
+    "message": "Attempting to connect to blockchain."
   },
   "attributions": {
     "message": "Attributions"
@@ -228,16 +228,13 @@
     "message": "The URL used as the block explorer for this network."
   },
   "blockExplorerView": {
-    "message": "View account at {{1}}"
+    "message": "View account at {1}"
   },
   "blockiesIdenticon": {
     "message": "Use Blockies Identicon"
   },
   "browserNotSupported": {
     "message": "Your Browser is not supported..."
-  },
-  "solana": {
-    "message": "Solana Mainnet"
   },
   "bsc": {
     "message": "BSC Mainnet"
@@ -260,6 +257,9 @@
   "bytes": {
     "message": "Bytes"
   },
+  "canToggleInSettings": {
+    "message": "You can re-enable this notification in Settings -> Alerts."
+  },
   "cancel": {
     "message": "Cancel"
   },
@@ -268,9 +268,6 @@
   },
   "cancelled": {
     "message": "Cancelled"
-  },
-  "canToggleInSettings": {
-    "message": "You can re-enable this notification in Settings -> Alerts."
   },
   "chainId": {
     "message": "Chain ID"
@@ -290,14 +287,14 @@
   "confirm": {
     "message": "Confirm"
   },
-  "confirmed": {
-    "message": "Confirmed"
-  },
   "confirmPassword": {
     "message": "Confirm password"
   },
   "confirmSecretBackupPhrase": {
     "message": "Confirm your Secret Backup Phrase"
+  },
+  "confirmed": {
+    "message": "Confirmed"
   },
   "congratulations": {
     "message": "Congratulations"
@@ -308,8 +305,32 @@
   "connectAccountOrCreate": {
     "message": "Connect account or create new"
   },
+  "connectHardwareWallet": {
+    "message": "Connect Hardware Wallet"
+  },
+  "connectManually": {
+    "message": "Manually connect to current site"
+  },
+  "connectTo": {
+    "message": "Connect to {1}"
+  },
+  "connectToAll": {
+    "message": "Connect to all your {1}"
+  },
+  "connectToAllAccounts": {
+    "message": "accounts"
+  },
+  "connectToMultiple": {
+    "message": "Connect to {1}"
+  },
+  "connectToMultipleNumberOfAccounts": {
+    "message": "{1} accounts"
+  },
+  "connectWithMetaMask": {
+    "message": "Connect With OneKey"
+  },
   "connectedAccountsDescriptionPlural": {
-    "message": "You have {{1}} accounts connected to this site."
+    "message": "You have {1} accounts connected to this site."
   },
   "connectedAccountsDescriptionSingular": {
     "message": "You have 1 account connected to this site."
@@ -321,19 +342,16 @@
     "message": "Connected sites"
   },
   "connectedSitesDescription": {
-    "message": "{{1}} is connected to these sites. They can view your account address."
+    "message": "{1} is connected to these sites. They can view your account address."
   },
   "connectedSitesEmptyDescription": {
-    "message": "{{1}} is not connected to any sites."
-  },
-  "connectHardwareWallet": {
-    "message": "Connect Hardware Wallet"
+    "message": "{1} is not connected to any sites."
   },
   "connecting": {
     "message": "Connecting..."
   },
   "connectingTo": {
-    "message": "Connecting to {{1}}"
+    "message": "Connecting to {1}"
   },
   "connectingToBsc": {
     "message": "Connecting to Bsc Mainnet"
@@ -359,35 +377,14 @@
   "connectingToRopsten": {
     "message": "Connecting to Ropsten Test Network"
   },
-  "connectManually": {
-    "message": "Manually connect to current site"
-  },
-  "connectTo": {
-    "message": "Connect to {{1}}"
-  },
-  "connectToAll": {
-    "message": "Connect to all your {{1}}"
-  },
-  "connectToAllAccounts": {
-    "message": "accounts"
-  },
-  "connectToMultiple": {
-    "message": "Connect to {{1}}"
-  },
-  "connectToMultipleNumberOfAccounts": {
-    "message": "{{1}} accounts"
-  },
-  "connectWithMetaMask": {
-    "message": "Connect With OneKey"
+  "contactUs": {
+    "message": "Contact us"
   },
   "contacts": {
     "message": "Contacts"
   },
   "contactsSettingsDescription": {
     "message": "Add, edit, remove, and manage your contacts"
-  },
-  "contactUs": {
-    "message": "Contact us"
   },
   "continue": {
     "message": "Continue"
@@ -422,11 +419,11 @@
   "create": {
     "message": "Create"
   },
-  "createAccount": {
-    "message": "Create Account"
-  },
   "createAWallet": {
     "message": "Create HD Wallet"
+  },
+  "createAccount": {
+    "message": "Create Account"
   },
   "createPassword": {
     "message": "Create Password"
@@ -480,10 +477,10 @@
     "message": "Copy encrypted message"
   },
   "decryptInlineError": {
-    "message": "This message cannot be decrypted due to error: {{1}}"
+    "message": "This message cannot be decrypted due to error: {1}"
   },
   "decryptMessageNotice": {
-    "message": "{{1}} would like to read this message to complete your action"
+    "message": "{1} would like to read this message to complete your action"
   },
   "decryptMetamask": {
     "message": "Decrypt message"
@@ -528,7 +525,7 @@
     "message": "Are you sure you want to disconnect? You may lose site functionality."
   },
   "disconnectPrompt": {
-    "message": "Disconnect {{1}}"
+    "message": "Disconnect {1}"
   },
   "disconnectThisAccount": {
     "message": "Disconnect this account"
@@ -567,7 +564,7 @@
     "message": "Edit Permission"
   },
   "encryptionPublicKeyNotice": {
-    "message": "{{1}} would like your public encryption key. By consenting, this site will be able to compose encrypted messages to you."
+    "message": "{1} would like your public encryption key. By consenting, this site will be able to compose encrypted messages to you."
   },
   "encryptionPublicKeyRequest": {
     "message": "Request encryption public key"
@@ -603,7 +600,7 @@
     "message": "Learn more."
   },
   "endpointReturnedDifferentChainId": {
-    "message": "The endpoint returned a different chain ID: {{1}}"
+    "message": "The endpoint returned a different chain ID: {1}"
   },
   "ensNotFoundOnCurrentNetwork": {
     "message": "ENS name not found on the current network. Try switching to Ethereum Mainnet."
@@ -624,16 +621,16 @@
     "message": "Enter password to continue"
   },
   "errorCode": {
-    "message": "Code: {{1}}"
+    "message": "Code: {1}"
   },
   "errorDetails": {
     "message": "Error Details"
   },
   "errorMessage": {
-    "message": "Message: {{1}}"
+    "message": "Message: {1}"
   },
   "errorName": {
-    "message": "Code: {{1}}"
+    "message": "Code: {1}"
   },
   "errorPageMessage": {
     "message": "Try again by reloading the page, or contact support at hi@onekey.so"
@@ -672,7 +669,7 @@
     "message": "External Extension"
   },
   "extraApprovalGas": {
-    "message": "+{{1}} approval gas"
+    "message": "+{1} approval gas"
   },
   "failed": {
     "message": "Failed"
@@ -711,7 +708,7 @@
     "message": "From"
   },
   "fromAddress": {
-    "message": "From: {{1}}"
+    "message": "From: {1}"
   },
   "functionApprove": {
     "message": "Function: Approve"
@@ -729,7 +726,7 @@
     "message": "Gas limit must be at least 21000"
   },
   "gasLimitTooLowWithDynamicFee": {
-    "message": "Gas limit must be at least {{1}}"
+    "message": "Gas limit must be at least {1}"
   },
   "gasPrice": {
     "message": "Gas Price (GWEI)"
@@ -744,7 +741,7 @@
     "message": "Gas Used"
   },
   "gdprMessage": {
-    "message": "This data is aggregated and is therefore anonymous for the purposes of General Data Protection Regulation (EU) 2016/679. For more information in relation to our privacy practices, please see our {{1}}."
+    "message": "This data is aggregated and is therefore anonymous for the purposes of General Data Protection Regulation (EU) 2016/679. For more information in relation to our privacy practices, please see our {1}."
   },
   "gdprMessagePrivacyPolicy": {
     "message": "Privacy Policy here"
@@ -759,7 +756,7 @@
     "message": "Get Ether"
   },
   "getEtherFromFaucet": {
-    "message": "Get Ether from a faucet for the {{1}}"
+    "message": "Get Ether from a faucet for the {1}"
   },
   "getHelp": {
     "message": "Get Help."
@@ -807,7 +804,7 @@
     "message": "Hide Token?"
   },
   "hideTokenSymbol": {
-    "message": "Hide {{1}}"
+    "message": "Hide {1}"
   },
   "history": {
     "message": "History"
@@ -830,9 +827,6 @@
   "importAccountSeedPhrase": {
     "message": "Import an account with seed phrase"
   },
-  "imported": {
-    "message": "Imported"
-  },
   "importUsingSeed": {
     "message": "Import using account seed phrase"
   },
@@ -841,6 +835,9 @@
   },
   "importYourExisting": {
     "message": "Import your existing wallet using a 12 word seed phrase"
+  },
+  "imported": {
+    "message": "Imported"
   },
   "infoHelp": {
     "message": "Info & Help"
@@ -873,13 +870,13 @@
     "message": "Invalid chain ID. The chain ID is too big."
   },
   "invalidCustomNetworkAlertContent1": {
-    "message": "The chain ID for custom network '{{1}}' has to be re-entered."
+    "message": "The chain ID for custom network '{1}' has to be re-entered."
   },
   "invalidCustomNetworkAlertContent2": {
     "message": "To protect you from malicious or faulty network providers, chain IDs are now required for all custom networks."
   },
   "invalidCustomNetworkAlertContent3": {
-    "message": "Go to Settings > Network and enter the chain ID. You can find the chain IDs of most popular networks on {{1}}."
+    "message": "Go to Settings > Network and enter the chain ID. You can find the chain IDs of most popular networks on {1}."
   },
   "invalidCustomNetworkAlertTitle": {
     "message": "Invalid Custom Network"
@@ -941,14 +938,14 @@
   "links": {
     "message": "Links"
   },
+  "loadMore": {
+    "message": "Load More"
+  },
   "loading": {
     "message": "Loading..."
   },
   "loadingTokens": {
     "message": "Loading Tokens..."
-  },
-  "loadMore": {
-    "message": "Load More"
   },
   "localhost": {
     "message": "Localhost 8545"
@@ -989,6 +986,9 @@
   "metamaskDescription": {
     "message": "Connecting you to Ethereum and the Decentralized Web."
   },
+  "metamaskSwapsOfflineDescription": {
+    "message": ""
+  },
   "metamaskVersion": {
     "message": "OneKey Version"
   },
@@ -1002,13 +1002,13 @@
     "message": "OneKey will.."
   },
   "metametricsCommitmentsNeverCollectIP": {
-    "message": "{{1}} collect your full IP address"
+    "message": "{1} collect your full IP address"
   },
   "metametricsCommitmentsNeverCollectKeysEtc": {
-    "message": "{{1}} collect keys, addresses, transactions, balances, hashes, or any personal information"
+    "message": "{1} collect keys, addresses, transactions, balances, hashes, or any personal information"
   },
   "metametricsCommitmentsNeverSellDataForProfit": {
-    "message": "{{1}} sell data for profit. Ever!"
+    "message": "{1} sell data for profit. Ever!"
   },
   "metametricsCommitmentsSendAnonymizedEvents": {
     "message": "Send anonymized click & pageview events"
@@ -1020,7 +1020,7 @@
     "message": "OneKey would like to gather usage data to better understand how our users interact with the extension. This data will be used to continually improve the usability and user experience of our product and the Ethereum ecosystem."
   },
   "mismatchedChain": {
-    "message": "The network details for this chain ID do not match our records. We recommend that you {{1}} before proceeding."
+    "message": "The network details for this chain ID do not match our records. We recommend that you {1} before proceeding."
   },
   "mobileSyncText": {
     "message": "Please enter your password to confirm it's you!"
@@ -1055,9 +1055,6 @@
   "networkNameDefinition": {
     "message": "The name associated with this network."
   },
-  "networks": {
-    "message": "Networks"
-  },
   "networkSettingsChainIdDescription": {
     "message": "The chain ID is used for signing transactions. It must match the chain ID returned by the network. You can enter a decimal or '0x'-prefixed hexadecimal number, but we will display the number in decimal."
   },
@@ -1070,6 +1067,9 @@
   "networkURLDefinition": {
     "message": "The URL used to access this network."
   },
+  "networks": {
+    "message": "Networks"
+  },
   "nevermind": {
     "message": "Nevermind"
   },
@@ -1080,7 +1080,7 @@
     "message": "New address detected! Click here to add to your address book."
   },
   "newAccountNumberName": {
-    "message": "Account {{1}}"
+    "message": "Account {1}"
   },
   "newContact": {
     "message": "New Contact"
@@ -1107,7 +1107,7 @@
     "message": "Next"
   },
   "nextNonceWarning": {
-    "message": "Nonce is higher than suggested nonce of {{1}}"
+    "message": "Nonce is higher than suggested nonce of {1}"
   },
   "noAccountsFound": {
     "message": "No accounts found for the given search query"
@@ -1120,6 +1120,18 @@
   },
   "noConversionRateAvailable": {
     "message": "No Conversion Rate Available"
+  },
+  "noThanks": {
+    "message": "No Thanks"
+  },
+  "noTransactions": {
+    "message": "You have no transactions"
+  },
+  "noWebcamFound": {
+    "message": "Your computer's webcam was not found. Please try again."
+  },
+  "noWebcamFoundTitle": {
+    "message": "Webcam not found"
   },
   "nonceField": {
     "message": "Customize transaction nonce"
@@ -1136,32 +1148,20 @@
   "notEnoughGas": {
     "message": "Not Enough Gas"
   },
-  "noThanks": {
-    "message": "No Thanks"
-  },
-  "noTransactions": {
-    "message": "You have no transactions"
-  },
   "notSupportSignTypedData": {
     "message": "Not supported on this device"
   },
   "notUseHardware": {
     "message": "Do not import Mnemonic Phrase from OneKey Hardware Device"
   },
-  "noWebcamFound": {
-    "message": "Your computer's webcam was not found. Please try again."
-  },
-  "noWebcamFoundTitle": {
-    "message": "Webcam not found"
+  "ofTextNofM": {
+    "message": "of"
   },
   "off": {
     "message": "Off"
   },
   "offlineForMaintenance": {
     "message": "Offline for maintenance"
-  },
-  "ofTextNofM": {
-    "message": "of"
   },
   "ok": {
     "message": "Ok"
@@ -1173,7 +1173,7 @@
     "message": "On"
   },
   "onboardingReturnNotice": {
-    "message": "\"{{1}}\" will close this tab and direct back to {{2}}"
+    "message": "\"{1}\" will close this tab and direct back to {2}"
   },
   "onlyAddTrustedNetworks": {
     "message": "A malicious Ethereum network provider can lie about the state of the blockchain and record your network activity. Only add custom networks you trust."
@@ -1202,7 +1202,6 @@
   "parameters": {
     "message": "Parameters"
   },
-
   "password": {
     "message": "Password"
   },
@@ -1224,17 +1223,17 @@
   "permissionCheckedIconDescription": {
     "message": "You have approved this permission"
   },
-  "permissions": {
-    "message": "Permissions"
-  },
   "permissionUncheckedIconDescription": {
     "message": "You have not approved this permission"
+  },
+  "permissions": {
+    "message": "Permissions"
   },
   "personalAddressDetected": {
     "message": "Personal address detected. Input the token contract address."
   },
   "plusXMore": {
-    "message": "+ {{1}} more"
+    "message": "+ {1} more"
   },
   "prev": {
     "message": "Prev"
@@ -1302,14 +1301,14 @@
   "rejectAll": {
     "message": "Reject All"
   },
-  "rejected": {
-    "message": "Rejected"
-  },
   "rejectTxsDescription": {
-    "message": "You are about to batch reject {{1}} transactions."
+    "message": "You are about to batch reject {1} transactions."
   },
   "rejectTxsN": {
-    "message": "Reject {{1}} transactions"
+    "message": "Reject {1} transactions"
+  },
+  "rejected": {
+    "message": "Rejected"
   },
   "remindMeLater": {
     "message": "Remind me later"
@@ -1348,7 +1347,7 @@
     "message": "Restore account?"
   },
   "restoreWalletPreferences": {
-    "message": "A backup of your data from {{1}} has been found. Would you like to restore your wallet preferences?"
+    "message": "A backup of your data from {1} has been found. Would you like to restore your wallet preferences?"
   },
   "retryTransaction": {
     "message": "Retry Transaction"
@@ -1434,11 +1433,11 @@
   "seedPhraseReq": {
     "message": "Seed phrases contain 12, 15, 18, 21, or 24 words"
   },
-  "selectAccounts": {
-    "message": "Select account(s)"
-  },
   "selectAHigherGasFee": {
     "message": "Select a higher gas fee to accelerate the processing of your transaction.*"
+  },
+  "selectAccounts": {
+    "message": "Select account(s)"
   },
   "selectAll": {
     "message": "Select all"
@@ -1458,14 +1457,14 @@
   "selectHdPath": {
     "message": "Select HD Path"
   },
-  "selectingAllWillAllow": {
-    "message": "Selecting all will allow this site to view all of your current accounts. Make sure you trust this site."
-  },
   "selectPathHelp": {
     "message": "If you don't see your existing Ledger accounts below, try switching paths to \"Legacy (MEW / MyCrypto)\""
   },
   "selectType": {
     "message": "Select Type"
+  },
+  "selectingAllWillAllow": {
+    "message": "Selecting all will allow this site to view all of your current accounts. Make sure you trust this site."
   },
   "send": {
     "message": "Send"
@@ -1477,7 +1476,7 @@
     "message": "Send"
   },
   "sendSpecifiedTokens": {
-    "message": "Send {{1}}"
+    "message": "Send {1}"
   },
   "sendTokens": {
     "message": "Send Tokens"
@@ -1524,8 +1523,14 @@
   "showSeedPhrase": {
     "message": "Show seed phrase"
   },
+  "sigRequest": {
+    "message": "Signature Request"
+  },
   "sign": {
     "message": "Sign"
+  },
+  "signNotice": {
+    "message": "Signing this message can have dangerous side effects. Only sign messages from sites you fully trust with your entire account. This dangerous method will be removed in a future version."
   },
   "signatureRequest": {
     "message": "Signature Request"
@@ -1536,14 +1541,11 @@
   "signed": {
     "message": "Signed"
   },
-  "signNotice": {
-    "message": "Signing this message can have dangerous side effects. Only sign messages from sites you fully trust with your entire account. This dangerous method will be removed in a future version."
-  },
-  "sigRequest": {
-    "message": "Signature Request"
-  },
   "slow": {
     "message": "Average"
+  },
+  "solana": {
+    "message": "Solana Mainnet"
   },
   "somethingWentWrong": {
     "message": "Oops! Something went wrong."
@@ -1570,7 +1572,7 @@
     "message": "Spend limit permission"
   },
   "spendLimitRequestedBy": {
-    "message": "Spend limit requested by {{1}}"
+    "message": "Spend limit requested by {1}"
   },
   "spendLimitTooLarge": {
     "message": "Spend limit too large"
@@ -1627,16 +1629,13 @@
     "message": "Swap"
   },
   "swapTokenToToken": {
-    "message": "Swap {{1}} to {{2}}"
+    "message": "Swap {1} to {2}"
   },
   "switchEthereumChainConfirmationDescription": {
     "message": "This will switch the selected network within OneKey to a previously added network:"
   },
   "switchEthereumChainConfirmationTitle": {
     "message": "Allow this site to switch the network?"
-  },
-  "switchingNetworksCancelsPendingConfirmations": {
-    "message": "Switching networks will cancel all pending confirmations"
   },
   "switchNetwork": {
     "message": "Switch network"
@@ -1646,6 +1645,9 @@
   },
   "switchToThisAccount": {
     "message": "Switch to this account"
+  },
+  "switchingNetworksCancelsPendingConfirmations": {
+    "message": "Switching networks will cancel all pending confirmations"
   },
   "symbol": {
     "message": "Symbol"
@@ -1708,7 +1710,10 @@
     "message": "To"
   },
   "toAddress": {
-    "message": "To: {{1}}"
+    "message": "To: {1}"
+  },
+  "toWithColon": {
+    "message": "To:"
   },
   "token": {
     "message": "Token"
@@ -1728,47 +1733,44 @@
   "total": {
     "message": "Total"
   },
-  "toWithColon": {
-    "message": "To:"
-  },
   "transaction": {
     "message": "transaction"
   },
   "transactionCancelAttempted": {
-    "message": "Transaction cancel attempted with gas fee of {{1}} at {{2}}"
+    "message": "Transaction cancel attempted with gas fee of {1} at {2}"
   },
   "transactionCancelSuccess": {
-    "message": "Transaction successfully cancelled at {{2}}"
+    "message": "Transaction successfully cancelled at {2}"
   },
   "transactionConfirmed": {
-    "message": "Transaction confirmed at {{2}}."
+    "message": "Transaction confirmed at {2}."
   },
   "transactionCreated": {
-    "message": "Transaction created with a value of {{1}} at {{2}}."
+    "message": "Transaction created with a value of {1} at {2}."
   },
   "transactionDropped": {
-    "message": "Transaction dropped at {{2}}."
+    "message": "Transaction dropped at {2}."
   },
   "transactionError": {
     "message": "Transaction Error. Exception thrown in contract code."
   },
-  "transactionErrored": {
-    "message": "Transaction encountered an error."
-  },
   "transactionErrorNoContract": {
     "message": "Trying to call a function on a non-contract address."
+  },
+  "transactionErrored": {
+    "message": "Transaction encountered an error."
   },
   "transactionFee": {
     "message": "Transaction Fee"
   },
   "transactionResubmitted": {
-    "message": "Transaction resubmitted with gas fee increased to {{1}} at {{2}}"
+    "message": "Transaction resubmitted with gas fee increased to {1} at {2}"
   },
   "transactionSubmitted": {
-    "message": "Transaction submitted with gas fee of {{1}} at {{2}}."
+    "message": "Transaction submitted with gas fee of {1} at {2}."
   },
   "transactionUpdated": {
-    "message": "Transaction updated at {{2}}."
+    "message": "Transaction updated at {2}."
   },
   "transfer": {
     "message": "Transfer"
@@ -1780,13 +1782,13 @@
     "message": "Transfer From"
   },
   "troubleConnectingToWallet": {
-    "message": "We had trouble connecting to your {{1}}, try reviewing {{2}} and try again."
+    "message": "We had trouble connecting to your {1}, try reviewing {2} and try again."
   },
   "troubleTokenBalances": {
     "message": "We had trouble loading your token balances. You can view them "
   },
   "trustSiteApprovePermission": {
-    "message": "Do you trust this site? By granting this permission, you’re allowing {{1}} to withdraw your {{2}} and automate transactions for you."
+    "message": "Do you trust this site? By granting this permission, you’re allowing {1} to withdraw your {2} and automate transactions for you."
   },
   "tryAgain": {
     "message": "Try again"
@@ -1825,13 +1827,13 @@
     "message": "The decentralized web awaits"
   },
   "unrecognizedChain": {
-    "message": "This custom network is not recognized. We recommend that you {{1}} before proceeding"
+    "message": "This custom network is not recognized. We recommend that you {1} before proceeding"
   },
   "unrecognizedChainLinkText": {
     "message": "verify the network details"
   },
   "updatedWithDate": {
-    "message": "Updated {{1}}"
+    "message": "Updated {1}"
   },
   "urlErrorMsg": {
     "message": "URLs require the appropriate HTTP/HTTPS prefix."
@@ -1842,20 +1844,20 @@
   "useAutoSwitchChain": {
     "message": "Auto Switch Network"
   },
-  "usedByClients": {
-    "message": "Used by a variety of different clients"
-  },
   "usePhishingDetection": {
     "message": "Use Phishing Detection"
   },
   "usePhishingDetectionDescription": {
     "message": "Display a warning for phishing domains targeting Ethereum users"
   },
+  "usedByClients": {
+    "message": "Used by a variety of different clients"
+  },
   "userName": {
     "message": "Username"
   },
   "verifyThisTokenOn": {
-    "message": "Verify this token on {{1}}"
+    "message": "Verify this token on {1}"
   },
   "viewAccount": {
     "message": "View Account"
@@ -1866,14 +1868,14 @@
   "viewContact": {
     "message": "View Contact"
   },
-  "viewinExplorer": {
-    "message": "View in Block Explorer"
-  },
   "viewOnCustomBlockExplorer": {
-    "message": "View at {{1}}"
+    "message": "View at {1}"
   },
   "viewOnEtherscan": {
     "message": "View on Etherscan"
+  },
+  "viewinExplorer": {
+    "message": "View in Block Explorer"
   },
   "visitWebSite": {
     "message": "Visit our web site"
@@ -1891,7 +1893,7 @@
     "message": "watched"
   },
   "web3ShimUsageNotification": {
-    "message": "We noticed that the current website tried to use the removed window.web3 API. If the site appears to be broken, please click {{1}} for more information."
+    "message": "We noticed that the current website tried to use the removed window.web3 API. If the site appears to be broken, please click {1} for more information."
   },
   "welcome": {
     "message": "Welcome to the OneKey Plugin"
@@ -1905,14 +1907,14 @@
   "writePhrase": {
     "message": "Write this phrase on a piece of paper and store in a secure location. If you want even more security, write it down on multiple pieces of paper and store each in 2 - 3 different locations."
   },
-  "xdai": {
-    "message": "xDai Mainnet"
-  },
   "xOfY": {
-    "message": "{{1}} of {{2}}"
+    "message": "{1} of {2}"
   },
   "xOfYPending": {
-    "message": "{{1}} of {{2}} pending"
+    "message": "{1} of {2} pending"
+  },
+  "xdai": {
+    "message": "xDai Mainnet"
   },
   "yesLetsTry": {
     "message": "Yes, let's try"
@@ -1920,11 +1922,11 @@
   "youNeedToAllowCameraAccess": {
     "message": "You need to allow camera access to use this feature."
   },
-  "yourPrivateSeedPhrase": {
-    "message": "Your private seed phrase"
-  },
   "youSign": {
     "message": "You are signing"
+  },
+  "yourPrivateSeedPhrase": {
+    "message": "Your private seed phrase"
   },
   "zeroGasPriceOnSpeedUpError": {
     "message": "Zero gas price on speed up"

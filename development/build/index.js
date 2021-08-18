@@ -36,6 +36,7 @@ browserPlatforms = browserPlatforms.split(',').map((item) => item.trim());
 
 const moduleCssFile = 'src/styles/tailwind.module.css';
 childProcess.execSync(`touch ${moduleCssFile}`);
+// childProcess.execSync('yarn i18n-update');
 
 defineAllTasks();
 detectAndRunEntryTask();
