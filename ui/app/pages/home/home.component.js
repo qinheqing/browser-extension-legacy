@@ -49,14 +49,8 @@ export default class Home extends PureComponent {
     shouldShowSeedPhraseReminder: PropTypes.bool.isRequired,
     isPopup: PropTypes.bool,
     isNotification: PropTypes.bool.isRequired,
-    threeBoxSynced: PropTypes.bool,
-    setupThreeBox: PropTypes.func,
-    turnThreeBoxSyncingOn: PropTypes.func,
     showRestorePrompt: PropTypes.bool,
     selectedAddress: PropTypes.string,
-    restoreFromThreeBox: PropTypes.func,
-    setShowRestorePromptToFalse: PropTypes.func,
-    threeBoxLastUpdated: PropTypes.number,
     firstPermissionsRequestId: PropTypes.string,
     totalUnapprovedCount: PropTypes.number.isRequired,
     setConnectedStatusPopoverHasBeenShown: PropTypes.func,
@@ -131,19 +125,10 @@ export default class Home extends PureComponent {
   }
 
   componentDidUpdate(_, prevState) {
-    const {
-      setupThreeBox,
-      showRestorePrompt,
-      threeBoxLastUpdated,
-      threeBoxSynced,
-    } = this.props;
+    const { showRestorePrompt } = this.props;
 
     if (!prevState.closing && this.state.closing) {
       global.platform.closeCurrentWindow();
-    }
-
-    if (threeBoxSynced && showRestorePrompt && threeBoxLastUpdated === null) {
-      setupThreeBox();
     }
   }
 
@@ -155,11 +140,7 @@ export default class Home extends PureComponent {
       hwOnlyMode,
       isPopup,
       selectedAddress,
-      restoreFromThreeBox,
-      turnThreeBoxSyncingOn,
-      setShowRestorePromptToFalse,
       showRestorePrompt,
-      threeBoxLastUpdated,
       shouldShowWeb3ShimUsageNotification,
       setWeb3ShimUsageAlertDismissed,
       originOfCurrentTab,
@@ -208,25 +189,6 @@ export default class Home extends PureComponent {
             }}
             infoText={t('backupApprovalInfo')}
             key="home-backupApprovalNotice"
-          />
-        ) : null}
-        {threeBoxLastUpdated && showRestorePrompt ? (
-          <HomeNotification
-            descriptionText={t('restoreWalletPreferences', [
-              formatDate(threeBoxLastUpdated, 'M/d/y'),
-            ])}
-            acceptText={t('restore')}
-            ignoreText={t('noThanks')}
-            infoText={t('dataBackupFoundInfo')}
-            onAccept={() => {
-              restoreFromThreeBox(selectedAddress).then(() => {
-                turnThreeBoxSyncingOn();
-              });
-            }}
-            onIgnore={() => {
-              setShowRestorePromptToFalse();
-            }}
-            key="home-privacyModeDefault"
           />
         ) : null}
       </MultipleNotifications>

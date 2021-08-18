@@ -24,7 +24,6 @@ const ignoreDeps = [
 const commonDeps = ['lodash'];
 const reactDeps = allDependencies.filter((dep) => dep.match(/react/u));
 const onekeyDeps = [
-  '3box',
   '@onekeyhq/eth-onekey-keyring ',
   '@formatjs/intl-relativetimeformat',
   '@solana/spl-token-registry',

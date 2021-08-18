@@ -92,18 +92,12 @@
     "**/redux-devtools-instrument/symbol-observable": "^2.0.3",
     "**/rxjs/symbol-observable": "^2.0.3",
     "**/xmlhttprequest-ssl": "^1.6.2",
-    "3box/ipfs/ipld-zcash/zcash-bitcore-lib/lodash": "^4.17.21",
-    "3box/ipfs/ipld-zcash/zcash-bitcore-lib/elliptic": "^6.5.4",
-    "3box/ipfs/libp2p-mdns/multicast-dns/dns-packet": "^5.2.2",
-    "3box/**/libp2p-crypto/node-forge": "^0.10.0",
-    "3box/**/libp2p-keychain/node-forge": "^0.10.0",
     "ganache-core/lodash": "^4.17.21",
     "netmask": "^2.0.1",
     "pull-ws": "^3.3.2",
     "ws": "^7.4.6"
   },
   "dependencies": {
-    "3box": "^1.10.2",
     "@download/blockies": "^1.0.3",
     "@ensdomains/content-hash": "^2.5.6",
     "@ethereumjs/common": "^2.3.1",

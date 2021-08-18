@@ -15,16 +15,11 @@ import {
 } from 'ui/app/selectors';
 
 import {
-  restoreFromThreeBox,
-  turnThreeBoxSyncingOn,
-  getThreeBoxLastUpdated,
-  setShowRestorePromptToFalse,
   setConnectedStatusPopoverHasBeenShown,
   setDefaultHomeActiveTabName,
   setWeb3ShimUsageAlertDismissed,
   setAlertEnabledness,
 } from 'ui/app/store/actions';
-import { setThreeBoxLastUpdated } from 'ui/app/ducks/app/app';
 import { getWeb3ShimUsageAlertEnabledness } from 'ui/app/ducks/metamask/metamask';
 import { getEnvironmentType } from 'app/scripts/lib/util';
 import {
@@ -43,7 +38,6 @@ const mapStateToProps = (state) => {
     suggestedTokens,
     seedPhraseBackedUp,
     tokens,
-    threeBoxSynced,
     showRestorePrompt,
     selectedAddress,
     connectedStatusPopoverHasBeenShown,
@@ -55,7 +49,7 @@ const mapStateToProps = (state) => {
   const accountType = getAccountType(state);
 
   const accountBalance = getCurrentEthBalance(state);
-  const { forgottenPassword, threeBoxLastUpdated } = appState;
+  const { forgottenPassword } = appState;
   const totalUnapprovedCount = getTotalUnapprovedCount(state);
 
   const envType = getEnvironmentType();
@@ -88,10 +82,8 @@ const mapStateToProps = (state) => {
       (parseInt(accountBalance, 16) > 0 || tokens.length > 0),
     isPopup,
     isNotification,
-    threeBoxSynced,
     showRestorePrompt,
     selectedAddress,
-    threeBoxLastUpdated,
     firstPermissionsRequestId,
     totalUnapprovedCount,
     connectedStatusPopoverHasBeenShown,
@@ -104,19 +96,6 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  turnThreeBoxSyncingOn: () => dispatch(turnThreeBoxSyncingOn()),
-  setupThreeBox: () => {
-    dispatch(getThreeBoxLastUpdated()).then((lastUpdated) => {
-      if (lastUpdated) {
-        dispatch(setThreeBoxLastUpdated(lastUpdated));
-      } else {
-        dispatch(setShowRestorePromptToFalse());
-        dispatch(turnThreeBoxSyncingOn());
-      }
-    });
-  },
-  restoreFromThreeBox: (address) => dispatch(restoreFromThreeBox(address)),
-  setShowRestorePromptToFalse: () => dispatch(setShowRestorePromptToFalse()),
   setConnectedStatusPopoverHasBeenShown: () =>
     dispatch(setConnectedStatusPopoverHasBeenShown()),
   onTabClick: (name) => dispatch(setDefaultHomeActiveTabName(name)),

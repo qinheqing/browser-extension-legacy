@@ -78,7 +78,7 @@ const metamaskDepenendencies = [
 const reactDepenendencies = dependencies.filter((dep) => dep.match(/react/u));
 
 const externalDependenciesMap = {
-  background: filterAvailableDeps([...commonDeps, '3box']),
+  background: filterAvailableDeps([...commonDeps]),
   ui: filterAvailableDeps([
     ...commonDeps,
     ...materialUIDependencies,
