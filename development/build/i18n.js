@@ -12,10 +12,10 @@ const log = debug('i18n_update:lokalise');
 debug.enable('i18n_update:lokalise');
 
 const projectId = process.env.ENV_I18N_LOKALISE_PROJECT_ID;
-const apiKey = process.env.ENV_I18N_LOKALISE_PROJECT_API_KEY;
+const apiKey = process.env.ENV_I18N_LOKALISE_API_KEY;
 
 assert(projectId, 'process.env.ENV_I18N_LOKALISE_PROJECT_ID missing');
-assert(apiKey, 'process.env.ENV_I18N_LOKALISE_PROJECT_API_KEY missing');
+assert(apiKey, 'process.env.ENV_I18N_LOKALISE_API_KEY missing');
 
 const lokaliseApi = new LokaliseApi({ apiKey });
 const tmpFolder = './.lokalise/';

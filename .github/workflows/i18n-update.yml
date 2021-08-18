@@ -1,0 +1,62 @@
+name: i18n-update
+
+on:
+  schedule:
+    - cron: '30 9 * * *'
+  workflow_dispatch:
+
+jobs:
+  i18n-update:
+    environment: daily-build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 'Checkout Source Code'
+        uses: actions/checkout@v2
+        with:
+          lfs: true
+
+      - name: 'Install Dependiences'
+        shell: bash
+        run: 'yarn setup && yarn'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install Dependiences
+        env:
+          ENV_I18N_LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
+          ENV_I18N_LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
+        run: |
+          yarn i18n-update
+
+      - name: Check Diff
+        id: git-status-check
+        run: |
+          git config --local user.email actions@github.com
+          git config --local user.name Github Actions
+          something_changed=`git status --porcelain`
+          if [ -n "$something_changed" ]
+          then
+              echo "::set-output name=changed::'1'"
+          fi
+
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v3
+        if: ${{ steps.git-status-check.outputs.changed == '1' }}
+        with:
+          token: ${{ github.token }}
+          commit-message: '[AUTO]: update lokalise formatter local files.'
+          committer: Github Actions <actions@github.com>
+          author: Github Actions <actions@github.com>
+          signoff: false
+          branch: lokalise
+          delete-branch: true
+          title: '[LOKALISE AUTO]: update i18n locale files.'
+          draft: false
+          body: '[LOKALISE AUTO]: update i18n locale files.'
+
+      - name: Check outputs
+        run: |
+          echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+          echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
