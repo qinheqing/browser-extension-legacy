@@ -7,7 +7,7 @@ on:
 
 jobs:
   i18n-update:
-    environment: daily-build
+    environment: daily-build-i18n
     runs-on: ubuntu-latest
 
     steps:
