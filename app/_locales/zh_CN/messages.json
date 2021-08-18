@@ -9,10 +9,10 @@
     "message": "* 设定更高燃料价格，可以加快交易完成进度，提高网络快速处理机率，但无法保证每次均能够实现提速。"
   },
   "acceptTermsOfUse": {
-    "message": "我已阅读并同意 {{1}}"
+    "message": "我已阅读并同意 {1}"
   },
   "accessAndSpendNotice": {
-    "message": "{{1}} 可以访问并使用此最大数额"
+    "message": "{1} 可以访问并使用此最大数额"
   },
   "accessingYourCamera": {
     "message": "正在获取您的相机……"
@@ -57,7 +57,7 @@
     "message": "Onekey不会验证自定义网络"
   },
   "addEthereumChainConfirmationRisksLearnMore": {
-    "message": "学习更多 {{1}}."
+    "message": "学习更多 {1}."
   },
   "addEthereumChainConfirmationRisksLearnMoreLink": {
     "message": "Matic Mainnet"
@@ -104,9 +104,6 @@
   "alertDisableTooltip": {
     "message": "这个可以在“设置 > 提醒”中进行更改"
   },
-  "alerts": {
-    "message": "提醒"
-  },
   "alertSettingsUnconnectedAccount": {
     "message": "选择了未连接的账户时浏览网站"
   },
@@ -119,6 +116,9 @@
   "alertSettingsWeb3ShimUsageDescription": {
     "message": "当您在浏览的网站尝试使用已经删除的 window.web3 API 时，该提醒会在弹出的窗口中显示。"
   },
+  "alerts": {
+    "message": "提醒"
+  },
   "alertsSettingsDescription": {
     "message": "启用或禁用每个提醒"
   },
@@ -126,19 +126,19 @@
     "message": "允许这个外部扩展到："
   },
   "allowOriginSpendToken": {
-    "message": "允许 {{1}} 使用您的 {{2}}?"
+    "message": "允许 {1} 使用您的 {2}?"
   },
   "allowThisSiteTo": {
     "message": "允许本网站："
   },
   "allowWithdrawAndSpend": {
-    "message": "允许 {{1}} 提取和最多消费以下数额："
+    "message": "允许 {1} 提取和最多消费以下数额："
   },
   "amount": {
     "message": "数额"
   },
   "amountInEth": {
-    "message": "{{1}} ETH"
+    "message": "{1} ETH"
   },
   "amountWithColon": {
     "message": "数额："
@@ -161,11 +161,11 @@
   "approveButtonText": {
     "message": "同意"
   },
+  "approveSpendLimit": {
+    "message": "批准 {1} 消费限额"
+  },
   "approved": {
     "message": "已批准"
-  },
-  "approveSpendLimit": {
-    "message": "批准 {{1}} 消费限额"
   },
   "asset": {
     "message": "资产"
@@ -173,14 +173,14 @@
   "assets": {
     "message": "资产"
   },
-  "attemptingConnect": {
-    "message": "正在尝试连接到区块链。"
-  },
   "attemptToCancel": {
     "message": "想要取消吗？"
   },
   "attemptToCancelDescription": {
     "message": "确认提交该操作无法保证能够成功取消您的原始交易。如取消成功，您将被收取上述交易费。"
+  },
+  "attemptingConnect": {
+    "message": "正在尝试连接到区块链。"
   },
   "attributions": {
     "message": "来源"
@@ -228,16 +228,13 @@
     "message": "区块链浏览器"
   },
   "blockExplorerView": {
-    "message": "通过 {{1}} 查看账户"
+    "message": "通过 {1} 查看账户"
   },
   "blockiesIdenticon": {
     "message": "使用 Blockies Identicon 图标头像"
   },
   "browserNotSupported": {
     "message": "您的浏览器不支持该功能……"
-  },
-  "solana": {
-    "message": "Solana 主网"
   },
   "bsc": {
     "message": " BSC 币安智能链主网"
@@ -260,6 +257,9 @@
   "bytes": {
     "message": "字节"
   },
+  "canToggleInSettings": {
+    "message": "您可以在 设置 -> 提醒 中重新启用该提醒通知。"
+  },
   "cancel": {
     "message": "取消"
   },
@@ -268,9 +268,6 @@
   },
   "cancelled": {
     "message": "已取消"
-  },
-  "canToggleInSettings": {
-    "message": "您可以在 设置 -> 提醒 中重新启用该提醒通知。"
   },
   "chainId": {
     "message": "链 ID"
@@ -290,14 +287,14 @@
   "confirm": {
     "message": "确认"
   },
-  "confirmed": {
-    "message": "确认"
-  },
   "confirmPassword": {
     "message": "确认密码"
   },
   "confirmSecretBackupPhrase": {
     "message": "请确认您的钱包助记词"
+  },
+  "confirmed": {
+    "message": "确认"
   },
   "congratulations": {
     "message": "恭喜"
@@ -308,8 +305,32 @@
   "connectAccountOrCreate": {
     "message": "连接账户或创建新账户"
   },
+  "connectHardwareWallet": {
+    "message": "连接硬件设备"
+  },
+  "connectManually": {
+    "message": "手动连接到当前站点"
+  },
+  "connectTo": {
+    "message": "连接到 {1}"
+  },
+  "connectToAll": {
+    "message": "连接到您的全部{1}"
+  },
+  "connectToAllAccounts": {
+    "message": "账户"
+  },
+  "connectToMultiple": {
+    "message": "连接到  {1}"
+  },
+  "connectToMultipleNumberOfAccounts": {
+    "message": "{1} 个账户"
+  },
+  "connectWithMetaMask": {
+    "message": "使用 OneKey 连接"
+  },
   "connectedAccountsDescriptionPlural": {
-    "message": "您有 {{1}} 个账户连接到了该网站。"
+    "message": "您有 {1} 个账户连接到了该网站。"
   },
   "connectedAccountsDescriptionSingular": {
     "message": "您有 1 个账户连接到了该网站。"
@@ -321,19 +342,16 @@
     "message": "已连接的网站"
   },
   "connectedSitesDescription": {
-    "message": "{{1}} 已连接到这些网站。他们可以查看您的账户地址。"
+    "message": "{1} 已连接到这些网站。他们可以查看您的账户地址。"
   },
   "connectedSitesEmptyDescription": {
-    "message": "{{1}} 还没连接任何网站。"
-  },
-  "connectHardwareWallet": {
-    "message": "连接硬件设备"
+    "message": "{1} 还没连接任何网站。"
   },
   "connecting": {
     "message": "连接中……"
   },
   "connectingTo": {
-    "message": "正在连接 {{1}}"
+    "message": "正在连接 {1}"
   },
   "connectingToBsc": {
     "message": "正在连接到 BSC 币安智能链主网"
@@ -359,26 +377,8 @@
   "connectingToRopsten": {
     "message": "正在连接到 Ropsten 测试网络"
   },
-  "connectManually": {
-    "message": "手动连接到当前站点"
-  },
-  "connectTo": {
-    "message": "连接到 {{1}}"
-  },
-  "connectToAll": {
-    "message": "连接到您的全部{{1}}"
-  },
-  "connectToAllAccounts": {
-    "message": "账户"
-  },
-  "connectToMultiple": {
-    "message": "连接到  {{1}}"
-  },
-  "connectToMultipleNumberOfAccounts": {
-    "message": "{{1}} 个账户"
-  },
-  "connectWithMetaMask": {
-    "message": "使用 OneKey 连接"
+  "contactUs": {
+    "message": "联系我们"
   },
   "contacts": {
     "message": "联系人"
@@ -386,11 +386,8 @@
   "contactsSettingsDescription": {
     "message": "添加、编辑、删除和管理您的联系人。"
   },
-  "contactUs": {
-    "message": "联系我们"
-  },
   "continue": {
-    "message": ""
+    "message": "继续"
   },
   "continueToWyre": {
     "message": "继续前往 Wyre"
@@ -422,11 +419,11 @@
   "create": {
     "message": "创建"
   },
-  "createAccount": {
-    "message": "添加账号"
-  },
   "createAWallet": {
     "message": "创建钱包"
+  },
+  "createAccount": {
+    "message": "添加账号"
   },
   "createPassword": {
     "message": "创建密码"
@@ -480,10 +477,10 @@
     "message": "复制加密信息"
   },
   "decryptInlineError": {
-    "message": "无法解密此消息，错误：{{1}}"
+    "message": "无法解密此消息，错误：{1}"
   },
   "decryptMessageNotice": {
-    "message": "{{1}} 希望阅读此信息来完成您的操作。"
+    "message": "{1} 希望阅读此信息来完成您的操作。"
   },
   "decryptMetamask": {
     "message": "解密信息"
@@ -528,7 +525,7 @@
     "message": "您确定要断开连接吗？您可能会失去网站功能。"
   },
   "disconnectPrompt": {
-    "message": "断开 {{1}}"
+    "message": "断开 {1}"
   },
   "disconnectThisAccount": {
     "message": "断开此账户的连接"
@@ -567,7 +564,7 @@
     "message": "编辑权限"
   },
   "encryptionPublicKeyNotice": {
-    "message": "{{1}} 希望得到您的加密公钥。同意后该网站将可以想您发送加密信息。"
+    "message": "{1} 希望得到您的加密公钥。同意后该网站将可以想您发送加密信息。"
   },
   "encryptionPublicKeyRequest": {
     "message": "申请加密公钥"
@@ -603,7 +600,7 @@
     "message": "了解详情。"
   },
   "endpointReturnedDifferentChainId": {
-    "message": "RPC 端点使用链不同的链 ID: {{1}}"
+    "message": "RPC 端点使用链不同的链 ID: {1}"
   },
   "ensNotFoundOnCurrentNetwork": {
     "message": "未在当前网络找到 ENS 名称。请尝试切换至主以太坊网络。"
@@ -624,16 +621,16 @@
     "message": "输入密码以继续"
   },
   "errorCode": {
-    "message": "代码：{{1}}"
+    "message": "代码：{1}"
   },
   "errorDetails": {
     "message": "错误详情"
   },
   "errorMessage": {
-    "message": "信息：{{1}}"
+    "message": "信息：{1}"
   },
   "errorName": {
-    "message": "代码：{{1}}"
+    "message": "代码：{1}"
   },
   "errorPageMessage": {
     "message": "请重新加载页面重试，或通过 hi@onekey.so 联系支持。"
@@ -672,7 +669,7 @@
     "message": "外部扩展"
   },
   "extraApprovalGas": {
-    "message": "+{{1}} 批准燃料"
+    "message": "+{1} 批准燃料"
   },
   "failed": {
     "message": "失败"
@@ -711,7 +708,7 @@
     "message": "从"
   },
   "fromAddress": {
-    "message": "从：{{1}}"
+    "message": "从：{1}"
   },
   "functionApprove": {
     "message": "功能：同意"
@@ -729,7 +726,7 @@
     "message": "燃料限制至少要 21000"
   },
   "gasLimitTooLowWithDynamicFee": {
-    "message": "燃料限制至少要 {{1}}"
+    "message": "燃料限制至少要 {1}"
   },
   "gasPrice": {
     "message": "燃料价格（GWEI）"
@@ -744,7 +741,7 @@
     "message": "燃料使用"
   },
   "gdprMessage": {
-    "message": "这些数据是汇总的，因此，根据《GDPR 通用数据保护条例》(EU)2016/679，这些数据是匿名的。有关我们隐私惯例的更多信息，请参见我们的 {{1}}。"
+    "message": "这些数据是汇总的，因此，根据《GDPR 通用数据保护条例》(EU)2016/679，这些数据是匿名的。有关我们隐私惯例的更多信息，请参见我们的 {1}。"
   },
   "gdprMessagePrivacyPolicy": {
     "message": "隐私政策"
@@ -759,7 +756,7 @@
     "message": "获取 Ether"
   },
   "getEtherFromFaucet": {
-    "message": "从水管获取 {{1}} 网络的 Ether"
+    "message": "从水管获取 {1} 网络的 Ether"
   },
   "getHelp": {
     "message": "获取帮助。"
@@ -807,7 +804,7 @@
     "message": "隐藏代币？"
   },
   "hideTokenSymbol": {
-    "message": "隐藏 {{1}}"
+    "message": "隐藏 {1}"
   },
   "history": {
     "message": "历史记录"
@@ -830,9 +827,6 @@
   "importAccountSeedPhrase": {
     "message": "导入钱包的助记词"
   },
-  "imported": {
-    "message": "已导入"
-  },
   "importUsingSeed": {
     "message": "使用钱包助记词导入"
   },
@@ -841,6 +835,9 @@
   },
   "importYourExisting": {
     "message": "使用 12 个单词的助记词导入您现有的钱包。"
+  },
+  "imported": {
+    "message": "已导入"
   },
   "infoHelp": {
     "message": "信息 & 帮助"
@@ -873,13 +870,13 @@
     "message": "无效的链 ID，该链 ID 数字过大。"
   },
   "invalidCustomNetworkAlertContent1": {
-    "message": "需要重新输入自定义网络'{{1}}'的链 ID。"
+    "message": "需要重新输入自定义网络'{1}'的链 ID。"
   },
   "invalidCustomNetworkAlertContent2": {
     "message": "为了保护您免受恶意或有问题的网络提供商的侵害，现在所有的自定义网络都需要提供链 ID。"
   },
   "invalidCustomNetworkAlertContent3": {
-    "message": "进入设置 > 网络并输入链 ID。您可以通过 {{1}} 查找常用的链 ID。"
+    "message": "进入设置 > 网络并输入链 ID。您可以通过 {1} 查找常用的链 ID。"
   },
   "invalidCustomNetworkAlertTitle": {
     "message": "无效的自定义网络"
@@ -941,14 +938,14 @@
   "links": {
     "message": "链接"
   },
+  "loadMore": {
+    "message": "加载更多"
+  },
   "loading": {
     "message": "加载中……"
   },
   "loadingTokens": {
     "message": "加载代币中……"
-  },
-  "loadMore": {
-    "message": "加载更多"
   },
   "localhost": {
     "message": "Localhost 8545"
@@ -1005,13 +1002,13 @@
     "message": "OneKey……"
   },
   "metametricsCommitmentsNeverCollectIP": {
-    "message": "{{1}}收集您的完整IP地址"
+    "message": "{1}收集您的完整IP地址"
   },
   "metametricsCommitmentsNeverCollectKeysEtc": {
-    "message": "{{1}}收集密钥、地址、交易记录、余额、哈希或任何个人信息"
+    "message": "{1}收集密钥、地址、交易记录、余额、哈希或任何个人信息"
   },
   "metametricsCommitmentsNeverSellDataForProfit": {
-    "message": "{{1}}为利益而出售您的数据，永远不会！"
+    "message": "{1}为利益而出售您的数据，永远不会！"
   },
   "metametricsCommitmentsSendAnonymizedEvents": {
     "message": "发送匿名的点击和页面浏览事件信息"
@@ -1023,7 +1020,7 @@
     "message": "OneKey 希望收集使用数据，以更好地了解我们的用户如何与扩展进行互动。这些数据将被用于持续改进我们产品和 Ethereum 生态系统的可用性和用户体验。"
   },
   "mismatchedChain": {
-    "message": "网络 ChainId 和我们的记录不匹配. 我们建议你使用前先 {{1}}"
+    "message": "网络 ChainId 和我们的记录不匹配. 我们建议你使用前先 {1}"
   },
   "mobileSyncText": {
     "message": "请输入密码确认个人身份！"
@@ -1058,9 +1055,6 @@
   "networkNameDefinition": {
     "message": "网络名称"
   },
-  "networks": {
-    "message": "网络"
-  },
   "networkSettingsChainIdDescription": {
     "message": "链 ID 用于签署交易。它必须与网络返回的链 ID 相匹配。您可以输入十进制或'0x'前缀的十六进制数字，但我们将以十进制显示。"
   },
@@ -1073,6 +1067,9 @@
   "networkURLDefinition": {
     "message": "网络 URL 值"
   },
+  "networks": {
+    "message": "网络"
+  },
   "nevermind": {
     "message": "无所谓"
   },
@@ -1083,7 +1080,7 @@
     "message": "检测到新地址！点击添加至地址簿。"
   },
   "newAccountNumberName": {
-    "message": "账户 {{1}}"
+    "message": "账户 {1}"
   },
   "newContact": {
     "message": "新联系人"
@@ -1110,7 +1107,7 @@
     "message": "下一步"
   },
   "nextNonceWarning": {
-    "message": "Nonce 高于建议的 nouce 值 {{1}}"
+    "message": "Nonce 高于建议的 nouce 值 {1}"
   },
   "noAccountsFound": {
     "message": "没找到查询的账户"
@@ -1123,6 +1120,18 @@
   },
   "noConversionRateAvailable": {
     "message": "无可用转换率"
+  },
+  "noThanks": {
+    "message": "不，谢谢"
+  },
+  "noTransactions": {
+    "message": "没有交易"
+  },
+  "noWebcamFound": {
+    "message": "未找到您的电脑摄像头。请重试。"
+  },
+  "noWebcamFoundTitle": {
+    "message": "未找到摄像头"
   },
   "nonceField": {
     "message": "自定义交易 nonce"
@@ -1139,32 +1148,20 @@
   "notEnoughGas": {
     "message": "燃料不足"
   },
-  "noThanks": {
-    "message": "不，谢谢"
-  },
-  "noTransactions": {
-    "message": "没有交易"
-  },
   "notSupportSignTypedData": {
     "message": "当前硬件不支持该签名方法"
   },
   "notUseHardware": {
     "message": "请勿导入OneKey硬件设备内的助记词"
   },
-  "noWebcamFound": {
-    "message": "未找到您的电脑摄像头。请重试。"
-  },
-  "noWebcamFoundTitle": {
-    "message": "未找到摄像头"
+  "ofTextNofM": {
+    "message": "/"
   },
   "off": {
     "message": "关"
   },
   "offlineForMaintenance": {
     "message": "脱机维护"
-  },
-  "ofTextNofM": {
-    "message": "/"
   },
   "ok": {
     "message": "确定"
@@ -1176,7 +1173,7 @@
     "message": "启用"
   },
   "onboardingReturnNotice": {
-    "message": "“{{1}}”会关闭此标签，直接回到 {{2}}"
+    "message": "“{1}”会关闭此标签，直接回到 {2}"
   },
   "onlyAddTrustedNetworks": {
     "message": "恶意的 Ethereum 以太坊网络提供商可以伪造区块链状态，并记录您的网络活动。只添加您信任的自定义网络。"
@@ -1205,7 +1202,6 @@
   "parameters": {
     "message": "参数"
   },
-
   "password": {
     "message": "密码"
   },
@@ -1227,17 +1223,17 @@
   "permissionCheckedIconDescription": {
     "message": "您已同意该权限"
   },
-  "permissions": {
-    "message": "权限"
-  },
   "permissionUncheckedIconDescription": {
     "message": "您还未同意该权限"
+  },
+  "permissions": {
+    "message": "权限"
   },
   "personalAddressDetected": {
     "message": "检测到个人地址。请输入代币合约地址。"
   },
   "plusXMore": {
-    "message": "+ {{1}}"
+    "message": "+ {1}"
   },
   "prev": {
     "message": "上一个"
@@ -1305,14 +1301,14 @@
   "rejectAll": {
     "message": "拒绝全部"
   },
-  "rejected": {
-    "message": "拒绝"
-  },
   "rejectTxsDescription": {
-    "message": "您将批量拒绝 {{1}} 笔交易。"
+    "message": "您将批量拒绝 {1} 笔交易。"
   },
   "rejectTxsN": {
-    "message": "拒绝 {{1}} 笔交易"
+    "message": "拒绝 {1} 笔交易"
+  },
+  "rejected": {
+    "message": "拒绝"
   },
   "remindMeLater": {
     "message": "稍后提醒"
@@ -1351,7 +1347,7 @@
     "message": "从助记词还原"
   },
   "restoreWalletPreferences": {
-    "message": "已找到于 {{1}} 的数据备份。您想恢复您的钱包设置吗？"
+    "message": "已找到于 {1} 的数据备份。您想恢复您的钱包设置吗？"
   },
   "retryTransaction": {
     "message": "重试交易"
@@ -1437,11 +1433,11 @@
   "seedPhraseReq": {
     "message": "账户助记词由 12、15、18、21 或 24 个单词组成"
   },
-  "selectAccounts": {
-    "message": "选择账户"
-  },
   "selectAHigherGasFee": {
     "message": "选择更高的燃料费用，提高交易处理速度。*"
+  },
+  "selectAccounts": {
+    "message": "选择账户"
   },
   "selectAll": {
     "message": "全部选择"
@@ -1461,14 +1457,14 @@
   "selectHdPath": {
     "message": "选择 HD 路径"
   },
-  "selectingAllWillAllow": {
-    "message": "选择全部将允许本网站查看您当前的所有账户。确保您信任这个网站。"
-  },
   "selectPathHelp": {
     "message": "如果下列账户中没有您当前所持有的 Ledger 账户，请将路径切换至“Legacy (MEW / MyCrypto)”"
   },
   "selectType": {
     "message": "选择类型"
+  },
+  "selectingAllWillAllow": {
+    "message": "选择全部将允许本网站查看您当前的所有账户。确保您信任这个网站。"
   },
   "send": {
     "message": "发送"
@@ -1480,7 +1476,7 @@
     "message": "发送"
   },
   "sendSpecifiedTokens": {
-    "message": "发送 {{1}}"
+    "message": "发送 {1}"
   },
   "sendTokens": {
     "message": "发送代币"
@@ -1527,8 +1523,14 @@
   "showSeedPhrase": {
     "message": "显示钱包助记词"
   },
+  "sigRequest": {
+    "message": "请求签名"
+  },
   "sign": {
     "message": "签名"
+  },
+  "signNotice": {
+    "message": "签署此消息可能会产生危险的副作用。只从您完全信任的网站上签名。 未来的版本将移除这种危险的方法。"
   },
   "signatureRequest": {
     "message": "请求签名"
@@ -1539,14 +1541,11 @@
   "signed": {
     "message": "已签名"
   },
-  "signNotice": {
-    "message": "签署此消息可能会产生危险的副作用。只从您完全信任的网站上签名。 未来的版本将移除这种危险的方法。"
-  },
-  "sigRequest": {
-    "message": "请求签名"
-  },
   "slow": {
     "message": "普通"
+  },
+  "solana": {
+    "message": "Solana 主网"
   },
   "somethingWentWrong": {
     "message": "糟糕！出问题了。"
@@ -1573,7 +1572,7 @@
     "message": "消费限制权限"
   },
   "spendLimitRequestedBy": {
-    "message": "消费限制申请来自 {{1}}"
+    "message": "消费限制申请来自 {1}"
   },
   "spendLimitTooLarge": {
     "message": "消费限制过大"
@@ -1630,16 +1629,13 @@
     "message": "兑换 Swap"
   },
   "swapTokenToToken": {
-    "message": "兑换 {{1}} 到 {{2}}"
+    "message": "兑换 {1} 到 {2}"
   },
   "switchEthereumChainConfirmationDescription": {
     "message": "这将把Onekey中选定的网络切换到以前添加的网络: "
   },
   "switchEthereumChainConfirmationTitle": {
     "message": "允许该站点切换网络"
-  },
-  "switchingNetworksCancelsPendingConfirmations": {
-    "message": "切换网络将会导致未完成的交易被取消"
   },
   "switchNetwork": {
     "message": "切换网络"
@@ -1649,6 +1645,9 @@
   },
   "switchToThisAccount": {
     "message": "切换到该账户"
+  },
+  "switchingNetworksCancelsPendingConfirmations": {
+    "message": "切换网络将会导致未完成的交易被取消"
   },
   "symbol": {
     "message": "符号"
@@ -1711,7 +1710,10 @@
     "message": "至"
   },
   "toAddress": {
-    "message": "至：{{1}}"
+    "message": "至：{1}"
+  },
+  "toWithColon": {
+    "message": "至："
   },
   "token": {
     "message": "代币"
@@ -1731,47 +1733,44 @@
   "total": {
     "message": "总额"
   },
-  "toWithColon": {
-    "message": "至："
-  },
   "transaction": {
     "message": "交易"
   },
   "transactionCancelAttempted": {
-    "message": "尝试取消交易 {{2}}，燃料费用：{{1}}。"
+    "message": "尝试取消交易 {2}，燃料费用：{1}。"
   },
   "transactionCancelSuccess": {
-    "message": "取消交易成功 {{2}}。"
+    "message": "取消交易成功 {2}。"
   },
   "transactionConfirmed": {
-    "message": "交易已确认 {{2}}。"
+    "message": "交易已确认 {2}。"
   },
   "transactionCreated": {
-    "message": "交易已创建 {{2}}，交易数额：{{1}}。"
+    "message": "交易已创建 {2}，交易数额：{1}。"
   },
   "transactionDropped": {
-    "message": "交易终止 {{2}}。"
+    "message": "交易终止 {2}。"
   },
   "transactionError": {
     "message": "交易出错。合约代码执行异常。"
   },
-  "transactionErrored": {
-    "message": "交易出现错误。"
-  },
   "transactionErrorNoContract": {
     "message": "试图在一个非合约地址上调用一个函数。"
+  },
+  "transactionErrored": {
+    "message": "交易出现错误。"
   },
   "transactionFee": {
     "message": "交易费"
   },
   "transactionResubmitted": {
-    "message": "重新提交交易 {{2}}，交易费升至：{{1}}。"
+    "message": "重新提交交易 {2}，交易费升至：{1}。"
   },
   "transactionSubmitted": {
-    "message": "交易已提交 {{2}}，交易费：{{1}}。"
+    "message": "交易已提交 {2}，交易费：{1}。"
   },
   "transactionUpdated": {
-    "message": "交易更新时间 {{2}}。"
+    "message": "交易更新时间 {2}。"
   },
   "transfer": {
     "message": "转账"
@@ -1783,13 +1782,13 @@
     "message": "转自"
   },
   "troubleConnectingToWallet": {
-    "message": "我们在连接您的  {{1}} 遇到问题，尝试检查 {{2}} 并重试。"
+    "message": "我们在连接您的  {1} 遇到问题，尝试检查 {2} 并重试。"
   },
   "troubleTokenBalances": {
     "message": "我们无法加载您的代币余额。您可以查看它们"
   },
   "trustSiteApprovePermission": {
-    "message": "您信任这个网站吗？授权即表示您允许 {{1}} 提取您的 {{2}}，并为您自动进行交易。"
+    "message": "您信任这个网站吗？授权即表示您允许 {1} 提取您的 {2}，并为您自动进行交易。"
   },
   "tryAgain": {
     "message": "重试"
@@ -1828,13 +1827,13 @@
     "message": "即将进入去中心化网络"
   },
   "unrecognizedChain": {
-    "message": "无法识别此自定义网络。 我们建议您在继续之前先 {{1}}"
+    "message": "无法识别此自定义网络。 我们建议您在继续之前先 {1}"
   },
   "unrecognizedChainLinkText": {
     "message": "验证网络详细信息"
   },
   "updatedWithDate": {
-    "message": "已更新 {{1}}"
+    "message": "已更新 {1}"
   },
   "urlErrorMsg": {
     "message": "URL 需要相应的 HTTP/HTTPS 前缀。"
@@ -1845,38 +1844,38 @@
   "useAutoSwitchChain": {
     "message": "自动切换网络"
   },
-  "usedByClients": {
-    "message": "可用于各种不同的客户端"
-  },
   "usePhishingDetection": {
     "message": "使用网络钓鱼检测"
   },
   "usePhishingDetectionDescription": {
     "message": "显示针对 Ethereum 用户钓鱼域名的警告。"
   },
+  "usedByClients": {
+    "message": "可用于各种不同的客户端"
+  },
   "userName": {
     "message": "名称"
   },
   "verifyThisTokenOn": {
-    "message": "在 {{1}} 上验证此代币"
+    "message": "在 {1} 上验证此代币"
   },
   "viewAccount": {
     "message": "查看账户"
   },
   "viewAllDetails": {
-    "message": ""
+    "message": "查看所有详情"
   },
   "viewContact": {
     "message": "查看联系人"
   },
-  "viewinExplorer": {
-    "message": "在区块链浏览器中查看"
-  },
   "viewOnCustomBlockExplorer": {
-    "message": "在 {{1}} 查看"
+    "message": "在 {1} 查看"
   },
   "viewOnEtherscan": {
     "message": "在以太坊浏览器上查看"
+  },
+  "viewinExplorer": {
+    "message": "在区块链浏览器中查看"
   },
   "visitWebSite": {
     "message": "访问我们的网站"
@@ -1894,7 +1893,7 @@
     "message": "观察"
   },
   "web3ShimUsageNotification": {
-    "message": "我们发现当前的网站尝试使用已经删除的 window.web3 API。如果这个网站网站已经无法正常使用，请点击 {{1}} 获取更多信息。"
+    "message": "我们发现当前的网站尝试使用已经删除的 window.web3 API。如果这个网站网站已经无法正常使用，请点击 {1} 获取更多信息。"
   },
   "welcome": {
     "message": "欢迎使用 OneKey 插件"
@@ -1908,14 +1907,14 @@
   "writePhrase": {
     "message": "请将该钱包助记词记录在纸上，并保存在安全的地方。如果希望提升信息安全性，请将信息记录在多张纸上，并分别保存在 2 - 3 个不同的地方。"
   },
-  "xdai": {
-    "message": "xDai 主网"
-  },
   "xOfY": {
-    "message": "{{1}} / {{2}}"
+    "message": "{1} / {2}"
   },
   "xOfYPending": {
-    "message": "{{1}} of {{2}} 进行中"
+    "message": "{1} of {2} 进行中"
+  },
+  "xdai": {
+    "message": "xDai 主网"
   },
   "yesLetsTry": {
     "message": "是的，尝试下"
@@ -1923,11 +1922,11 @@
   "youNeedToAllowCameraAccess": {
     "message": "需要开启相机访问权限，才能使用该功能。"
   },
-  "yourPrivateSeedPhrase": {
-    "message": "您的账户助记词"
-  },
   "youSign": {
     "message": "正在签名"
+  },
+  "yourPrivateSeedPhrase": {
+    "message": "您的账户助记词"
   },
   "zeroGasPriceOnSpeedUpError": {
     "message": "加速时无燃料价格"
