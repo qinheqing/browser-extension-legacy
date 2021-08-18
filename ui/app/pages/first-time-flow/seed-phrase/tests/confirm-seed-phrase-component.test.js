@@ -60,6 +60,7 @@ describe('ConfirmSeedPhrase Component', function () {
       .find('.confirm-seed-phrase__seed-word--sorted')
       .at(1)
       .simulate('click');
+
     assert.deepStrictEqual(
       root.state().selectedSeedIndices,
       [0, 2],
@@ -150,13 +151,11 @@ describe('ConfirmSeedPhrase Component', function () {
     ];
     const trackEventSpy = sinon.spy();
     const pushSpy = sinon.spy();
-    const initialize3BoxSpy = sinon.spy();
     const root = shallowRender(
       {
         seedPhrase: '鼠 牛 虎 兔 龍 蛇 馬 羊 猴 雞 狗 豬',
         history: { push: pushSpy },
         setSeedPhraseBackedUp: () => Promise.resolve(),
-        initializeThreeBox: initialize3BoxSpy,
       },
       {
         trackEvent: trackEventSpy,
@@ -184,7 +183,6 @@ describe('ConfirmSeedPhrase Component', function () {
         name: 'Verify Complete',
       },
     });
-    assert(initialize3BoxSpy.calledOnce);
     assert.strictEqual(pushSpy.args[0][0], '/initialize/end-of-flow');
   });
 });

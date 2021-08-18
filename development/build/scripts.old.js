@@ -68,7 +68,6 @@ const metamaskDepenendencies = [
   'ethers',
   'json-rpc-engine',
   'json-rpc-middleware-stream',
-  'safe-event-emitter',
   'ethereumjs-wallet',
   '@zxing/library',
   '@formatjs/intl-relativetimeformat',
@@ -79,7 +78,7 @@ const metamaskDepenendencies = [
 const reactDepenendencies = dependencies.filter((dep) => dep.match(/react/u));
 
 const externalDependenciesMap = {
-  background: filterAvailableDeps([...commonDeps, '3box']),
+  background: filterAvailableDeps([...commonDeps]),
   ui: filterAvailableDeps([
     ...commonDeps,
     ...materialUIDependencies,
@@ -496,8 +495,6 @@ function createScriptTasks({ browserPlatforms, livereload }) {
         METAMASK_VERSION: baseManifest.version,
         NODE_ENV: opts.devMode ? 'development' : 'production',
         IN_TEST: opts.testing ? 'true' : false,
-        PUBNUB_SUB_KEY: process.env.PUBNUB_SUB_KEY || '',
-        PUBNUB_PUB_KEY: process.env.PUBNUB_PUB_KEY || '',
         CONF: opts.devMode ? conf : {},
         SENTRY_DSN: process.env.SENTRY_DSN || conf.SENTRY_DSN,
         SENTRY_DSN_DEV: process.env.SENTRY_DSN_DEV || conf.SENTRY_DSN_DEV,

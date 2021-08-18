@@ -1,4 +1,4 @@
-import EventEmitter from 'safe-event-emitter';
+import EventEmitter from '@onekeyhq/safe-event-emitter';
 import { ObservableStore } from '@onekeyhq/obs-store';
 import log from 'loglevel';
 import createId from '../../lib/random-id';

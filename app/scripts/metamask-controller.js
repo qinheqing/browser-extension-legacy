@@ -43,7 +43,6 @@ import AppStateController from './controllers/app-state';
 import CachedBalancesController from './controllers/cached-balances';
 import AlertController from './controllers/alert';
 import OnboardingController from './controllers/onboarding';
-import ThreeBoxController from './controllers/threebox';
 import IncomingTransactionsController from './controllers/incoming-transactions';
 import MessageManager from './lib/message-manager';
 import DecryptMessageManager from './lib/decrypt-message-manager';
@@ -260,17 +259,6 @@ export default class MetamaskController extends EventEmitter {
       preferencesStore: this.preferencesController.store,
     });
 
-    this.threeBoxController = new ThreeBoxController({
-      preferencesController: this.preferencesController,
-      addressBookController: this.addressBookController,
-      keyringController: this.keyringController,
-      initState: initState.ThreeBoxController,
-      getKeyringControllerState: this.keyringController.memStore.getState.bind(
-        this.keyringController.memStore,
-      ),
-      version,
-    });
-
     this.txController = new TransactionController({
       initState:
         initState.TransactionController || initState.TransactionManager,
@@ -364,7 +352,6 @@ export default class MetamaskController extends EventEmitter {
       IncomingTransactionsController: this.incomingTransactionsController.store,
       PermissionsController: this.permissionsController.permissions,
       PermissionsMetadata: this.permissionsController.store,
-      ThreeBoxController: this.threeBoxController.store,
     });
 
     this.memStore = new ComposableObservableStore(null, {
@@ -388,7 +375,6 @@ export default class MetamaskController extends EventEmitter {
       IncomingTransactionsController: this.incomingTransactionsController.store,
       PermissionsController: this.permissionsController.permissions,
       PermissionsMetadata: this.permissionsController.store,
-      ThreeBoxController: this.threeBoxController.store,
       EnsController: this.ensController.store,
       ApprovalController: this.approvalController,
     });
@@ -562,7 +548,6 @@ export default class MetamaskController extends EventEmitter {
       onboardingController,
       permissionsController,
       preferencesController,
-      threeBoxController,
       txController,
     } = this;
 
@@ -612,9 +597,6 @@ export default class MetamaskController extends EventEmitter {
         this.unlockHardwareWalletAccount,
         this,
       ),
-
-      // mobile
-      fetchInfoToSync: nodeify(this.fetchInfoToSync, this),
 
       // vault management
       submitPassword: nodeify(this.submitPassword, this),
@@ -770,29 +752,6 @@ export default class MetamaskController extends EventEmitter {
         alertController.setWeb3ShimUsageAlertDismissed,
         alertController,
       ),
-
-      // 3Box
-      setThreeBoxSyncingPermission: nodeify(
-        threeBoxController.setThreeBoxSyncingPermission,
-        threeBoxController,
-      ),
-      restoreFromThreeBox: nodeify(
-        threeBoxController.restoreFromThreeBox,
-        threeBoxController,
-      ),
-      setShowRestorePromptToFalse: nodeify(
-        threeBoxController.setShowRestorePromptToFalse,
-        threeBoxController,
-      ),
-      getThreeBoxLastUpdated: nodeify(
-        threeBoxController.getLastUpdated,
-        threeBoxController,
-      ),
-      turnThreeBoxSyncingOn: nodeify(
-        threeBoxController.turnThreeBoxSyncingOn,
-        threeBoxController,
-      ),
-      initializeThreeBox: nodeify(this.initializeThreeBox, this),
 
       // permissions
       approvePermissionsRequest: nodeify(
@@ -977,97 +936,6 @@ export default class MetamaskController extends EventEmitter {
 
   getCurrentNetwork = () => this.networkController.store.getState().network;
 
-  /**
-   * Collects all the information that we want to share
-   * with the mobile client for syncing purposes
-   * @returns {Promise<Object>} Parts of the state that we want to syncx
-   */
-  async fetchInfoToSync() {
-    // Preferences
-    const {
-      accountTokens,
-      currentLocale,
-      frequentRpcList,
-      identities,
-      selectedAddress,
-      tokens,
-    } = this.preferencesController.store.getState();
-
-    // Filter ERC20 tokens
-    const filteredAccountTokens = {};
-    Object.keys(accountTokens).forEach((address) => {
-      const checksummedAddress = ethUtil.toChecksumAddress(address);
-      filteredAccountTokens[checksummedAddress] = {};
-      Object.keys(accountTokens[address]).forEach((networkType) => {
-        filteredAccountTokens[checksummedAddress][networkType] =
-          networkType === 'mainnet'
-            ? accountTokens[address][networkType].filter(
-                ({ address: tokenAddress }) => {
-                  const checksumAddress =
-                    ethUtil.toChecksumAddress(tokenAddress);
-                  return contractMap[checksumAddress]
-                    ? contractMap[checksumAddress].erc20
-                    : true;
-                },
-              )
-            : accountTokens[address][networkType];
-      });
-    });
-
-    const preferences = {
-      accountTokens: filteredAccountTokens,
-      currentLocale,
-      frequentRpcList,
-      identities,
-      selectedAddress,
-      tokens,
-    };
-
-    // Accounts
-    const hdKeyring =
-      this.keyringController.getKeyringsByType('HD Key Tree')[0];
-    const simpleKeyPairKeyrings =
-      this.keyringController.getKeyringsByType('Simple Key Pair');
-    const addressKeyrings =
-      this.keyringController.getKeyringsByType('Watch Mode');
-    const hdAccounts = await hdKeyring.getAccounts();
-    const simpleKeyPairKeyringAccounts = await Promise.all(
-      simpleKeyPairKeyrings.map((keyring) => keyring.getAccounts()),
-    );
-    const simpleKeyPairAccounts = simpleKeyPairKeyringAccounts.reduce(
-      (acc, accounts) => [...acc, ...accounts],
-      [],
-    );
-    const addressAccounts = await addressKeyrings.getAccounts();
-    const accounts = {
-      hd: hdAccounts
-        .filter((item, pos) => hdAccounts.indexOf(item) === pos)
-        .map((address) => ethUtil.toChecksumAddress(address)),
-      simpleKeyPair: simpleKeyPairAccounts
-        .filter((item, pos) => simpleKeyPairAccounts.indexOf(item) === pos)
-        .map((address) => ethUtil.toChecksumAddress(address)),
-      watchMode: addressAccounts,
-      ledger: [],
-      trezor: [],
-    };
-
-    // transactions
-
-    let { transactions } = this.txController.store.getState();
-    // delete tx for other accounts that we're not importing
-    transactions = transactions.filter((tx) => {
-      const checksummedTxFrom = ethUtil.toChecksumAddress(tx.txParams.from);
-      return accounts.hd.includes(checksummedTxFrom);
-    });
-
-    return {
-      accounts,
-      preferences,
-      transactions,
-      network: this.networkController.store.getState(),
-    };
-  }
-
   /*
    * Submits the user's password and attempts to unlock the vault.
    * Also synchronizes the preferencesController, to ensure its schema
@@ -1081,20 +949,6 @@ export default class MetamaskController extends EventEmitter {
 
     try {
       await this.blockTracker.checkForLatestBlock();
-    } catch (error) {
-      log.error('Error while unlocking extension.', error);
-    }
-
-    try {
-      const threeBoxSyncingAllowed =
-        this.threeBoxController.getThreeBoxSyncingState();
-      if (threeBoxSyncingAllowed && !this.threeBoxController.box) {
-        // 'await' intentionally omitted to avoid waiting for initialization
-        this.threeBoxController.init();
-        this.threeBoxController.turnThreeBoxSyncingOn();
-      } else if (threeBoxSyncingAllowed && this.threeBoxController.box) {
-        this.threeBoxController.turnThreeBoxSyncingOn();
-      }
     } catch (error) {
       log.error('Error while unlocking extension.', error);
     }
@@ -2621,10 +2475,6 @@ export default class MetamaskController extends EventEmitter {
       }
     }
     return null;
-  }
-
-  async initializeThreeBox() {
-    await this.threeBoxController.init();
   }
 
   /**

@@ -1,4 +1,4 @@
-import EventEmitter from 'safe-event-emitter';
+import EventEmitter from '@onekeyhq/safe-event-emitter';
 import log from 'loglevel';
 import EthQuery from 'ethjs-query';
 import { TRANSACTION_STATUSES } from '../../../../shared/constants/transaction';
@@ -79,6 +79,7 @@ export default class PendingTransactionTracker extends EventEmitter {
     if (!pending.length) {
       return;
     }
+
     for (const txMeta of pending) {
       try {
         await this._resubmitTx(txMeta, blockNumber);
@@ -102,6 +103,7 @@ export default class PendingTransactionTracker extends EventEmitter {
         if (isKnownTx) {
           return;
         }
+
         // encountered real error - transition to error state
         txMeta.warning = {
           error: errorMessage,

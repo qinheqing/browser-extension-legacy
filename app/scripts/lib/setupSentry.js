@@ -47,10 +47,6 @@ export const SENTRY_STATE = {
     },
     seedPhraseBackedUp: true,
     showRestorePrompt: true,
-    threeBoxDisabled: true,
-    threeBoxLastUpdated: true,
-    threeBoxSynced: true,
-    threeBoxSyncingAllowed: true,
     unapprovedDecryptMsgCount: true,
     unapprovedEncryptionPublicKeyMsgCount: true,
     unapprovedMsgCount: true,
@@ -73,6 +69,7 @@ export default function setupSentry({ release, getState }) {
         `Missing SENTRY_DSN_DEV environment variable in development environment`,
       );
     }
+
     console.log(
       `Setting up Sentry Remote Error Reporting for '${METAMASK_ENVIRONMENT}': SENTRY_DSN_DEV`,
     );
@@ -83,6 +80,7 @@ export default function setupSentry({ release, getState }) {
         `Missing SENTRY_DSN environment variable in production environment`,
       );
     }
+
     console.log(
       `Setting up Sentry Remote Error Reporting for '${METAMASK_ENVIRONMENT}': SENTRY_DSN`,
     );
@@ -149,6 +147,7 @@ function rewriteErrorMessages(report, rewriteFn) {
   if (typeof report.message === 'string') {
     report.message = rewriteFn(report.message);
   }
+
   // rewrite each exception message
   if (report.exception && report.exception.values) {
     report.exception.values.forEach((item) => {

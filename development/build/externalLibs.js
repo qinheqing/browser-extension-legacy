@@ -11,20 +11,21 @@ const ignoreDeps = [
   '@solana/web3.js', // global standalone
   '@onekeyhq/ui-components',
 
+  'bip39', // mnemonic will not working correctly when make bip39 to external-libs
+
   // * ignore modules below, cause background error ( only start by "yarn start-legacy" ):
   'tailwindcss', // Error: Parsing file /tailwindcss/lib/util/withAlphaVariable.js: Unexpected token
   'readable-stream', // Cannot find module '/readable-stream/readable-browser.js'
   'ethereumjs-wallet', // Cannot find module '/ethereumjs-wallet/index.js'
+  'ethereumjs-util', // ethUtil.keccak is not a function (first time on-boarding finished)
   'eth-json-rpc-infura', // Cannot find module '/eth-json-rpc-infura/src/index.js'
   'eth-json-rpc-filters', // Cannot find module '/eth-json-rpc-filters/index.js'
   'json-rpc-engine', // TypeError: JsonRpcEngine is not a constructor
   '@onekeyhq/json-rpc-engine', //  (0 , _jsonRpcEngine.createAsyncMiddleware) is not a function
-  'ethereumjs-util', // ethUtil.keccak is not a function (first time on-boarding finished)
 ];
 const commonDeps = ['lodash'];
 const reactDeps = allDependencies.filter((dep) => dep.match(/react/u));
 const onekeyDeps = [
-  '3box',
   '@onekeyhq/eth-onekey-keyring ',
   '@formatjs/intl-relativetimeformat',
   '@solana/spl-token-registry',
@@ -49,7 +50,6 @@ const onekeyDeps = [
   // 'ethers',
   // 'json-rpc-engine',
   // 'json-rpc-middleware-stream',
-  // 'safe-event-emitter',
   // 'rpc-cap',
   // 'ethereumjs-wallet',
   // '@zxing/library',

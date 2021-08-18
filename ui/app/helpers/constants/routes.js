@@ -20,7 +20,6 @@ const CONTACT_MY_ACCOUNTS_VIEW_ROUTE =
 const CONTACT_MY_ACCOUNTS_EDIT_ROUTE =
   '/settings/contact-list/my-accounts/edit';
 const REVEAL_SEED_ROUTE = '/seed';
-const MOBILE_SYNC_ROUTE = '/mobile-sync';
 const RESTORE_VAULT_ROUTE = '/restore-vault';
 const ADD_TOKEN_ROUTE = '/add-token';
 const CONFIRM_ADD_TOKEN_ROUTE = '/confirm-add-token';
@@ -81,7 +80,6 @@ const PATH_NAME_MAP = {
   [`${CONTACT_MY_ACCOUNTS_VIEW_ROUTE}/:account`]: 'View Account Settings Page',
   [`${CONTACT_MY_ACCOUNTS_EDIT_ROUTE}/:account`]: 'Edit Account Settings Page',
   [REVEAL_SEED_ROUTE]: 'Reveal Seed Page',
-  [MOBILE_SYNC_ROUTE]: 'Sync With Mobile Page',
   [RESTORE_VAULT_ROUTE]: 'Restore Vault Page',
   [ADD_TOKEN_ROUTE]: 'Add Token Page',
   [CONFIRM_ADD_TOKEN_ROUTE]: 'Confirm Add Token Page',
@@ -139,7 +137,6 @@ export {
   LOCK_ROUTE,
   SETTINGS_ROUTE,
   REVEAL_SEED_ROUTE,
-  MOBILE_SYNC_ROUTE,
   RESTORE_VAULT_ROUTE,
   ADD_TOKEN_ROUTE,
   CONFIRM_ADD_TOKEN_ROUTE,

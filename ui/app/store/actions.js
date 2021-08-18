@@ -241,22 +241,6 @@ export function tryReverseResolveAddress(address) {
   };
 }
 
-export function fetchInfoToSync() {
-  return (dispatch) => {
-    log.debug(`background.fetchInfoToSync`);
-    return new Promise((resolve, reject) => {
-      background.fetchInfoToSync((err, result) => {
-        if (err) {
-          dispatch(displayWarning(err.message));
-          reject(err);
-          return;
-        }
-        resolve(result);
-      });
-    });
-  };
-}
-
 export function resetAccount() {
   return (dispatch) => {
     dispatch(showLoadingIndication());
@@ -311,6 +295,7 @@ export function importWatchAccount(address) {
     dispatch(
       showLoadingIndication('This may take a while, please be patient.'),
     );
+
     try {
       log.debug(`background.importWatchAccount`);
       await promisifiedBackground.importWatchAccount(address);
@@ -340,6 +325,7 @@ export function importNewAccount(strategy, args) {
     dispatch(
       showLoadingIndication('This may take a while, please be patient.'),
     );
+
     try {
       log.debug(`background.importAccountWithStrategy`);
       await promisifiedBackground.importAccountWithStrategy(strategy, args);
@@ -474,6 +460,7 @@ export function unlockHardwareWalletAccounts(
     hdPath,
     hdPathDescription,
   );
+
   return async (dispatch) => {
     dispatch(showLoadingIndication());
 
@@ -1258,6 +1245,7 @@ export function updateMetamaskState(newState) {
     if (currentLocale && newLocale && currentLocale !== newLocale) {
       dispatch(updateCurrentLocale(newLocale));
     }
+
     if (selectedAddress !== newSelectedAddress) {
       dispatch({ type: actionConstants.SELECTED_ADDRESS_CHANGED });
     }
@@ -1361,6 +1349,7 @@ export function showAccountDetail(address) {
       type: actionConstants.SHOW_ACCOUNT_DETAIL,
       value: address,
     });
+
     if (
       unconnectedAccountAccountAlertIsEnabled &&
       switchingToUnconnectedAddress
@@ -1810,6 +1799,7 @@ export function addToAddressBook(recipient, nickname = '', memo = '') {
       dispatch(displayWarning('Address book failed to update'));
       throw error;
     }
+
     if (!set) {
       dispatch(displayWarning('Address book failed to update'));
     }
@@ -2229,6 +2219,7 @@ export function setUseBlockie(val) {
         dispatch(displayWarning(err.message));
       }
     });
+
     dispatch({
       type: actionConstants.SET_USE_BLOCKIE,
       value: val,
@@ -2246,6 +2237,7 @@ export function setUseAutoSwitchChain(val) {
         dispatch(displayWarning(err.message));
       }
     });
+
     dispatch({
       type: actionConstants.SET_USE_AUTO_SWITCH_CHAIN,
       value: val,
@@ -2263,6 +2255,7 @@ export function setUseNonceField(val) {
         dispatch(displayWarning(err.message));
       }
     });
+
     dispatch({
       type: actionConstants.SET_USE_NONCEFIELD,
       value: val,
@@ -2461,6 +2454,7 @@ export function setFirstTimeFlowType(type) {
         dispatch(displayWarning(err.message));
       }
     });
+
     dispatch({
       type: actionConstants.SET_FIRST_TIME_FLOW_TYPE,
       value: type,
@@ -2603,104 +2597,6 @@ export function setSeedPhraseBackedUp(seedPhraseBackupState) {
         forceUpdateMetamaskState(dispatch).then(resolve).catch(reject);
       });
     });
-  };
-}
-
-export function initializeThreeBox() {
-  return (dispatch) => {
-    return new Promise((resolve, reject) => {
-      background.initializeThreeBox((err) => {
-        if (err) {
-          dispatch(displayWarning(err.message));
-          reject(err);
-          return;
-        }
-        resolve();
-      });
-    });
-  };
-}
-
-export function setShowRestorePromptToFalse() {
-  return (dispatch) => {
-    return new Promise((resolve, reject) => {
-      background.setShowRestorePromptToFalse((err) => {
-        if (err) {
-          dispatch(displayWarning(err.message));
-          reject(err);
-          return;
-        }
-        resolve();
-      });
-    });
-  };
-}
-
-export function turnThreeBoxSyncingOn() {
-  return (dispatch) => {
-    return new Promise((resolve, reject) => {
-      background.turnThreeBoxSyncingOn((err) => {
-        if (err) {
-          dispatch(displayWarning(err.message));
-          reject(err);
-          return;
-        }
-        resolve();
-      });
-    });
-  };
-}
-
-export function restoreFromThreeBox(accountAddress) {
-  return (dispatch) => {
-    return new Promise((resolve, reject) => {
-      background.restoreFromThreeBox(accountAddress, (err) => {
-        if (err) {
-          dispatch(displayWarning(err.message));
-          reject(err);
-          return;
-        }
-        resolve();
-      });
-    });
-  };
-}
-
-export function getThreeBoxLastUpdated() {
-  return (dispatch) => {
-    return new Promise((resolve, reject) => {
-      background.getThreeBoxLastUpdated((err, lastUpdated) => {
-        if (err) {
-          dispatch(displayWarning(err.message));
-          reject(err);
-          return;
-        }
-        resolve(lastUpdated);
-      });
-    });
-  };
-}
-
-export function setThreeBoxSyncingPermission(threeBoxSyncingAllowed) {
-  return (dispatch) => {
-    return new Promise((resolve, reject) => {
-      background.setThreeBoxSyncingPermission(threeBoxSyncingAllowed, (err) => {
-        if (err) {
-          dispatch(displayWarning(err.message));
-          reject(err);
-          return;
-        }
-        resolve();
-      });
-    });
-  };
-}
-
-export function turnThreeBoxSyncingOnAndInitialize() {
-  return async (dispatch) => {
-    await dispatch(setThreeBoxSyncingPermission(true));
-    await dispatch(turnThreeBoxSyncingOn());
-    await dispatch(initializeThreeBox(true));
   };
 }
 

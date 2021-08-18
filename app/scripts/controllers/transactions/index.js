@@ -1,4 +1,4 @@
-import EventEmitter from 'safe-event-emitter';
+import EventEmitter from '@onekeyhq/safe-event-emitter';
 import { ObservableStore } from '@onekeyhq/obs-store';
 import ethUtil from 'ethereumjs-util';
 import Transaction from 'ethereumjs-tx';

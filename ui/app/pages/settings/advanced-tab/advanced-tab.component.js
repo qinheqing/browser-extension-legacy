@@ -5,7 +5,6 @@ import { exportAsFile } from '../../../helpers/utils/util';
 import ToggleButton from '../../../components/ui/toggle-button';
 import TextField from '../../../components/ui/text-field';
 import Button from '../../../components/ui/button';
-import { MOBILE_SYNC_ROUTE } from '../../../helpers/constants/routes';
 
 export default class AdvancedTab extends PureComponent {
   static contextTypes = {
@@ -28,9 +27,6 @@ export default class AdvancedTab extends PureComponent {
     autoLockTimeLimit: PropTypes.number,
     setAutoLockTimeLimit: PropTypes.func.isRequired,
     setShowFiatConversionOnTestnetsPreference: PropTypes.func.isRequired,
-    threeBoxSyncingAllowed: PropTypes.bool.isRequired,
-    setThreeBoxSyncingPermission: PropTypes.func.isRequired,
-    threeBoxDisabled: PropTypes.bool.isRequired,
     setIpfsGateway: PropTypes.func.isRequired,
     ipfsGateway: PropTypes.string.isRequired,
   };
@@ -41,36 +37,6 @@ export default class AdvancedTab extends PureComponent {
     ipfsGateway: this.props.ipfsGateway,
     ipfsGatewayError: '',
   };
-
-  renderMobileSync() {
-    const { t } = this.context;
-    const { history } = this.props;
-
-    return (
-      <div
-        className="settings-page__content-row"
-        data-testid="advanced-setting-mobile-sync"
-      >
-        <div className="settings-page__content-item">
-          <span>{t('syncWithMobile')}</span>
-        </div>
-        <div className="settings-page__content-item">
-          <div className="settings-page__content-item-col">
-            <Button
-              type="secondary"
-              large
-              onClick={(event) => {
-                event.preventDefault();
-                history.push(MOBILE_SYNC_ROUTE);
-              }}
-            >
-              {t('syncWithMobile')}
-            </Button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   renderStateLogs() {
     const { t } = this.context;
@@ -334,54 +300,6 @@ export default class AdvancedTab extends PureComponent {
     );
   }
 
-  renderThreeBoxControl() {
-    const { t } = this.context;
-    const {
-      threeBoxSyncingAllowed,
-      setThreeBoxSyncingPermission,
-      threeBoxDisabled,
-    } = this.props;
-
-    let allowed = threeBoxSyncingAllowed;
-    let description = t('syncWithThreeBoxDescription');
-
-    if (threeBoxDisabled) {
-      allowed = false;
-      description = t('syncWithThreeBoxDisabled');
-    }
-    return (
-      <div
-        className="settings-page__content-row"
-        data-testid="advanced-setting-3box"
-      >
-        <div className="settings-page__content-item">
-          <span>{t('syncWithThreeBox')}</span>
-          <div className="settings-page__content-description">
-            {description}
-          </div>
-        </div>
-        <div
-          className={classnames('settings-page__content-item', {
-            'settings-page__content-item--disabled': threeBoxDisabled,
-          })}
-        >
-          <div className="settings-page__content-item-col">
-            <ToggleButton
-              value={allowed}
-              onToggle={(value) => {
-                if (!threeBoxDisabled) {
-                  setThreeBoxSyncingPermission(!value);
-                }
-              }}
-              offLabel={t('off')}
-              onLabel={t('on')}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   handleIpfsGatewayChange(url) {
     const { t } = this.context;
 
@@ -473,9 +391,7 @@ export default class AdvancedTab extends PureComponent {
         {this.renderShowConversionInTestnets()}
         {this.renderUseNonceOptIn()}
         {this.renderAutoLockTimeLimit()}
-        {this.renderThreeBoxControl()}
         {this.renderIpfsGatewayControl()}
-        {/* {this.renderMobileSync()} */}
       </div>
     );
   }
