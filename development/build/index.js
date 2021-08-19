@@ -3,8 +3,8 @@
 //
 // run any task with "yarn build ${taskName}"
 //
-const childProcess = require('child_process');
 require('../dotEnvLoad');
+const childProcess = require('child_process');
 const livereload = require('gulp-livereload');
 const {
   createTask,

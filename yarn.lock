@@ -2478,10 +2478,10 @@
   resolved "https://npm.pkg.github.com/download/@onekeyhq/contract-metadata/1.28.0/592b746d57a485b93ea645dd95074a2c82fcf43fb711f112ccef9ac03757bbb8#21d3ce5ce4f1d5d6f2fb20a692d23440220b0c26"
   integrity sha512-J6sDpMxJs3jZ7RhoFxkzsf15ZLe/kHy+KMPkRkQuU95G0+mhnU5g0gf9e3Oz9E4CZjBlGscBANaAca/7Ha05Nw==
 
-"@onekeyhq/eth-onekey-keyring@0.7.0":
-  version "0.7.0"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-onekey-keyring/0.7.0/bc20290f86a6d22568ff948b36f870c2c9120ed51448638b8717bffeab745d58#91778c9309f147e455c899b8f22d71e9f757112b"
-  integrity sha512-Ufa5viCD8Y0Ql8EfZDtk26fyt8nRqk8QYb5sUB0W5xFEf0KCYtgF30TjxlnT+SXHOlA7iuS0o2PYjwUWl687Gg==
+"@onekeyhq/eth-onekey-keyring@0.7.1":
+  version "0.7.1"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-onekey-keyring/0.7.1/150d0b40c8f8473afb9db601a791475feeb0233b8e3370256aac60245267dd30#61e8bc175fcdff990b79412a7403fce6ae40fcd9"
+  integrity sha512-RukK71OKfpquy3fhw+Q9MKTn9Fn8WIB+Y7aQEQLX3WCgdEDFu53llCfsHFOBIHDg3lEuHznBSM2Qle2PGPkqtw==
   dependencies:
     "@onekeyhq/connect" "8.2.3-extended"
     eth-sig-util "^1.4.2"
@@ -2542,21 +2542,21 @@
   dependencies:
     mersenne-twister "^1.1.0"
 
-"@onekeyhq/json-rpc-engine@^6.1.0":
-  version "6.1.0"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/json-rpc-engine/6.1.0/9aa04cfbdf6eab190308b69b16fd121e77af75f5b33095cb25d955fdb43ff737#1ec4d7d9f57b2bb4005f2b7442fedf9420bf399c"
-  integrity sha512-BYx8sXJ/zyWZkkmHU4S23R4ctEa8PAzdOasSbEf934IAFoWJinoX+6KIKd+LmuKEYyOcyXGFyygjNWLICJwQVQ==
+"@onekeyhq/json-rpc-engine@^6.1.1":
+  version "6.1.1"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/json-rpc-engine/6.1.1/be5d8c44624f0edf7408d7031820ca5295316042ef1d47814ed158aade3a5b3f#880a60db470c3c9712d1c024bdba7496f5fef74a"
+  integrity sha512-1rW2Sq91Wf7AYkE0l6xIPjYJ6sj2MoKgtdAKR+mSXRbwrQcivBiPTLOKaHTAaqY8Qj+DtCuKujMh7peaQ4YuKw==
   dependencies:
-    "@onekeyhq/safe-event-emitter" "^2.0.0"
+    "@onekeyhq/safe-event-emitter" "^2.0.1"
     eth-rpc-errors "^4.0.2"
 
-"@onekeyhq/json-rpc-middleware-stream@^3.0.1":
-  version "3.0.1"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/json-rpc-middleware-stream/3.0.1/5015d495cb41268b2f88f25eeafa3bb473c7e6062d876a9a3c7b2985db3cf3db#c9ac877a9fcbea544000d8f34f5f3e2d2ff70da4"
-  integrity sha512-g6Y4tH1abrlQ4ehTVGLVk0upKTpU5K2VMUDh4Ok4ODLDyrTn+E6jmw2n1kRnOJzqXYGo+wFXtN83T5MOh7+iNw==
+"@onekeyhq/json-rpc-middleware-stream@^3.0.3":
+  version "3.0.3"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/json-rpc-middleware-stream/3.0.3/7fa4e7a22dfdc81f3fed21f7b89dbccc268f165cc766abd76fef8c3c1d58858d#3764fc55bcb7fb510a52bede57cc2f96c0793dc4"
+  integrity sha512-HT+upRhK4tUFGPjd1rkilrC+cZZ/mGLENx8SEWHEP80gNRGBwHhJp+sB5yTs/A8M3UIyW04LRia0GFiQOdsc2w==
   dependencies:
-    "@onekeyhq/json-rpc-engine" "^6.1.0"
-    "@onekeyhq/safe-event-emitter" "^2.0.0"
+    "@onekeyhq/json-rpc-engine" "^6.1.1"
+    "@onekeyhq/safe-event-emitter" "^2.0.1"
     readable-stream "^2.3.3"
 
 "@onekeyhq/link@1.7.5":
@@ -2573,39 +2573,39 @@
     semver-compare "^1.0.0"
     whatwg-fetch "^3.5.0"
 
-"@onekeyhq/object-multiplex@^1.2.1":
-  version "1.2.1"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/object-multiplex/1.2.1/047180a2504c293875ccb0fa4fadb4b41335f36a2c280e66a1d59de2134fd9bb#f0efdadc77ae252618ad46baa7038f2e4e0e4bbe"
-  integrity sha512-Q/OH/z4GE3rsZl9nUd/0tcCP6ChcWWF3gkelDaCHcrgSUUyBrmA4RitedBoUbfc8DXgkJLHFBMlpEIaQAD9xGA==
+"@onekeyhq/object-multiplex@^1.2.2":
+  version "1.2.2"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/object-multiplex/1.2.2/f1da22ae6ed4391f70e59675899047dd6aaf3db7a76375ea6472d5effeac691d#f543a821708df28e30d2a2a2b989f6016bc77771"
+  integrity sha512-9m0v0Qi5CUj01W78/JAErRKahFkA95xZFGyYclmFpOUJehEaq7P8krkE4gT7rxlhZMsC6IUW7iPw6YUAv+PxFQ==
   dependencies:
     end-of-stream "^1.4.4"
     once "^1.4.0"
     readable-stream "^2.3.3"
 
-"@onekeyhq/obs-store@^7.0.0":
-  version "7.0.0"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/obs-store/7.0.0/405c7b281e6e5bf8357b5b50ee10fd16f8a456e7518cf71fff0c4210d0eae771#11a45c42603ae2a8334ff9ce229c49cce964d27b"
-  integrity sha512-DLm2YAmmCmQw4fwA0HaKZaG1eIk0L8B2U5+6pz6unRr6oC/7rjI5zvKYT1512puPZBauYUbCxURxGvAFnWEArQ==
+"@onekeyhq/obs-store@^7.0.2":
+  version "7.0.2"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/obs-store/7.0.2/ca4f5b1bb225aa5656bcff624db79b00bab3f1ad17a80f66e2bcb44801998c57#1dd4f6b66d46c8e95ec69a4bf6b647ee342fdec1"
+  integrity sha512-a9A4m3vNTJkkr1gP9vCZjcYEmPxXgZ8nMm0bw/URWK1m+I5JBOtNKGuf4e3QJNt/pE2z6aVTBaYO6E8d4uBJEg==
   dependencies:
-    "@onekeyhq/safe-event-emitter" "^2.0.0"
+    "@onekeyhq/safe-event-emitter" "^2.0.1"
     through2 "^2.0.3"
 
-"@onekeyhq/post-message-stream@^4.0.0":
-  version "4.0.0"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/post-message-stream/4.0.0/a043a13ffa3ec0f200da8204579bc75e1e745ce4e542939ceac80ea794039b01#48e93ecaf6f931c16178eed00e495a63449a066a"
-  integrity sha512-Z1a75KI8KReY/qLcaiPS43Ai9X4Im3GVNRTPylb7SdpcXojr+arAyw9f075BXuheQZ0yYE3sz2AlfLegN/oh+w==
+"@onekeyhq/post-message-stream@^4.0.1":
+  version "4.0.1"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/post-message-stream/4.0.1/1b88af2b09df926ebf8270c670d19a17563a471154b36a2925fabd07e178fc33#d720e8824287f3e09f4514fdc30c4d83fc72b4fb"
+  integrity sha512-oHmuXConwBhQ2uuBW3dR7Id179kgkBSj1qSiO4+Egk7T1CS+IRtrrmG6afxe4KslgJb3KkUP/At8tJPAhBlVhA==
   dependencies:
     readable-stream "2.3.3"
 
-"@onekeyhq/providers@^8.1.3":
-  version "8.1.3"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/providers/8.1.3/e2206d3b764148042bbc89f22301c273098203ede09fc6b0b8ac2897b06b96ca#ecc104ad98ac30a8bd662733f6d68ea29e534294"
-  integrity sha512-Vcev3zbrbUOiRtASOMcTx/uuFM/8f/tJSmR0eqSllAtDQ0oAITdQAMpPYxRfO5XlWiFtCdd+gMfV+doWpnan8w==
+"@onekeyhq/providers@^8.1.4":
+  version "8.1.4"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/providers/8.1.4/9c7a476bebe9e6ea5a71ae0a69a05b342c1af028ac428b621e69ebb8fb157d17#014d4dac82da383c7b5ea2d091dfc08f18dffe7f"
+  integrity sha512-wByYMczc9X9M3mvEibv0NjZO8Qd310s+VGWEn/3ig1GCDsX16dDwJuJ6GhB+ydW5SonqjSOHjdzAZ7GlNwr5Gw==
   dependencies:
-    "@onekeyhq/json-rpc-engine" "^6.1.0"
-    "@onekeyhq/json-rpc-middleware-stream" "^3.0.1"
-    "@onekeyhq/object-multiplex" "^1.2.1"
-    "@onekeyhq/safe-event-emitter" "^2.0.0"
+    "@onekeyhq/json-rpc-engine" "^6.1.1"
+    "@onekeyhq/json-rpc-middleware-stream" "^3.0.3"
+    "@onekeyhq/object-multiplex" "^1.2.2"
+    "@onekeyhq/safe-event-emitter" "^2.0.1"
     "@types/chrome" "^0.0.136"
     detect-browser "^5.2.0"
     eth-rpc-errors "^4.0.2"
@@ -2634,10 +2634,10 @@
     json-rpc-engine "^5.3.0"
     uuid "^3.3.2"
 
-"@onekeyhq/safe-event-emitter@^2.0.0":
-  version "2.0.0"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/safe-event-emitter/2.0.0/59b505b4e7289f9cfe6294947542b5e2ec25638709c7cc8d94a7eb6118f14403#0aa7b21ec9751b969fb0a6f43500b3dece15972e"
-  integrity sha512-2fggvk1/QvPd04rlEUCpn9QMCPx8Lr/oyjYaAirXVbrFFzJ9SU7r0CVEfc50w/uGeF4ajWPW9LSR81CvGHtMAw==
+"@onekeyhq/safe-event-emitter@^2.0.1":
+  version "2.0.1"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/safe-event-emitter/2.0.1/1d44756a93b551a0026feb7d0d27c02442bad0237a49cf6bbf41071590959f6f#70df0795017e684a42d41112ecbfd6413497a206"
+  integrity sha512-Qqi1H7tzF/prQnry+xVoqp5unwrmj8nbKoMHYS0uIovIorbTbdN6aPMADhORN3wBqI1Q16UwarH914vjNZVW3w==
 
 "@onekeyhq/test-dapp@^4.0.2":
   version "4.0.2"

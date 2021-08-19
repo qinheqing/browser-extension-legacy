@@ -7,7 +7,7 @@ on:
 
 jobs:
   i18n-update:
-    environment: daily-build
+    environment: daily-build-i18n
     runs-on: ubuntu-latest
 
     steps:
@@ -16,20 +16,28 @@ jobs:
         with:
           lfs: true
 
+      - name: 'Setup Node'
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.x'
+          registry-url: 'https://npm.pkg.github.com'
+          always-auth: true
+          scope: '@onekeyhq'
+
       - name: 'Install Dependiences'
         shell: bash
         run: 'yarn setup && yarn'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install Dependiences
+      - name: 'Update Lokalise i18n json'
         env:
           ENV_I18N_LOKALISE_PROJECT_ID: ${{ secrets.LOKALISE_PROJECT_ID }}
           ENV_I18N_LOKALISE_API_KEY: ${{ secrets.LOKALISE_API_KEY }}
         run: |
           yarn i18n-update
 
-      - name: Check Diff
+      - name: 'Check Diff'
         id: git-status-check
         run: |
           git config --local user.email actions@github.com
@@ -40,7 +48,7 @@ jobs:
               echo "::set-output name=changed::'1'"
           fi
 
-      - name: Create Pull Request
+      - name: 'Create Pull Request'
         id: cpr
         uses: peter-evans/create-pull-request@v3
         if: ${{ steps.git-status-check.outputs.changed == '1' }}
@@ -56,7 +64,7 @@ jobs:
           draft: false
           body: '[LOKALISE AUTO]: update i18n locale files.'
 
-      - name: Check outputs
+      - name: 'Check outputs'
         run: |
           echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
           echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"

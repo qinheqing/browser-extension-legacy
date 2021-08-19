@@ -24,6 +24,7 @@ on:
 
 jobs:
   release:
+    environment: auto-release
     runs-on: 'ubuntu-latest'
     env:
       buildEveryTime: 'true'
