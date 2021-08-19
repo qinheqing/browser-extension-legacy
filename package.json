@@ -406,7 +406,7 @@
       "@lavamoat/preinstall-always-fail": false,
       "fsevents": false,
       "postinstall-postinstall": false,
-      "registry.npm.taobao.org:/postinstall-postinstall/download/postinstall-postinstall-2.1.0.tgz": false,
+      "registry.yarnpkg.com/postinstall-postinstall/-/postinstall-postinstall-2.1.0.tgz": false,
       "scrypt": false
     }
   }
