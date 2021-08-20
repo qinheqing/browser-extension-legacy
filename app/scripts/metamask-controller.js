@@ -230,6 +230,9 @@ export default class MetamaskController extends EventEmitter {
       getNetwork: this.networkController.getNetworkState.bind(
         this.networkController,
       ),
+      getCurrentChainId: this.networkController.getCurrentChainId.bind(
+        this.networkController,
+      ),
       initState: initState.CachedBalancesController,
     });
 

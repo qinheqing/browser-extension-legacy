@@ -85,6 +85,7 @@ export default class TransactionController extends EventEmitter {
       initState: opts.initState,
       txHistoryLimit: opts.txHistoryLimit,
       getNetwork: this.getNetwork.bind(this),
+      getCurrentChainId: this._getCurrentChainId,
     });
     this._onBootCleanUp();
 

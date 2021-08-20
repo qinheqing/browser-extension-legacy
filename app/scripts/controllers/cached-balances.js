@@ -1,9 +1,11 @@
 import { ObservableStore } from '@metamask/obs-store';
+import { isFunction, isNil } from 'lodash';
 
 /**
  * @typedef {Object} CachedBalancesOptions
  * @property {Object} accountTracker An {@code AccountTracker} reference
  * @property {Function} getNetwork A function to get the current network
+ * @property {Function} getCurrentChainId A function to get the current chainId
  * @property {Object} initState The initial controller state
  */
 
@@ -18,15 +20,27 @@ export default class CachedBalancesController {
    * @param {CachedBalancesOptions} [opts] - Controller configuration parameters
    */
   constructor(opts = {}) {
-    const { accountTracker, getNetwork } = opts;
+    const { accountTracker, getNetwork, getCurrentChainId } = opts;
 
     this.accountTracker = accountTracker;
     this.getNetwork = getNetwork;
+    this.getCurrentChainId = getCurrentChainId;
 
     const initState = { cachedBalances: {}, ...opts.initState };
     this.store = new ObservableStore(initState);
 
     this._registerUpdates();
+  }
+
+  async getBalanceCacheKey() {
+    let key;
+    if (isFunction(this.getCurrentChainId)) {
+      key = this.getCurrentChainId();
+    }
+    if (isNil(key)) {
+      key = await this.getNetwork();
+    }
+    return key;
   }
 
   /**
@@ -37,30 +51,27 @@ export default class CachedBalancesController {
    * @returns {Promise<void>}
    */
   async updateCachedBalances({ accounts }) {
-    const network = await this.getNetwork();
-    const balancesToCache = await this._generateBalancesToCache(
-      accounts,
-      network,
-    );
+    const key = await this.getBalanceCacheKey();
+    const balancesToCache = await this._generateBalancesToCache(accounts, key);
     this.store.updateState({
       cachedBalances: balancesToCache,
     });
   }
 
-  _generateBalancesToCache(newAccounts, currentNetwork) {
+  _generateBalancesToCache(newAccounts, cacheKey) {
     const { cachedBalances } = this.store.getState();
-    const currentNetworkBalancesToCache = { ...cachedBalances[currentNetwork] };
+    const currentChainBalancesToCache = { ...cachedBalances[cacheKey] };
 
     Object.keys(newAccounts).forEach((accountID) => {
       const account = newAccounts[accountID];
 
       if (account.balance) {
-        currentNetworkBalancesToCache[accountID] = account.balance;
+        currentChainBalancesToCache[accountID] = account.balance;
       }
     });
     const balancesToCache = {
       ...cachedBalances,
-      [currentNetwork]: currentNetworkBalancesToCache,
+      [cacheKey]: currentChainBalancesToCache,
     };
 
     return balancesToCache;

@@ -27,17 +27,17 @@ export default class MetaMetricsOptInModal extends Component {
               <img src="images/metrics-chart.svg" alt="" />
             </div>
             <div className="metametrics-opt-in__title">
-              Help Us Improve MetaMask
+              Help Us Improve OneKey
             </div>
             <div className="metametrics-opt-in__body">
               <div className="metametrics-opt-in__description">
-                MetaMask would like to gather usage data to better understand
-                how our users interact with the extension. This data will be
-                used to continually improve the usability and user experience of
-                our product and the Ethereum ecosystem.
+                OneKey would like to gather usage data to better understand how
+                our users interact with the extension. This data will be used to
+                continually improve the usability and user experience of our
+                product and the Ethereum ecosystem.
               </div>
               <div className="metametrics-opt-in__description">
-                MetaMask will..
+                OneKey will..
               </div>
 
               <div className="metametrics-opt-in__committments">
@@ -90,7 +90,7 @@ export default class MetaMetricsOptInModal extends Component {
               more information in relation to our privacy practices, please see
               our&nbsp;
               <a
-                href="https://metamask.io/privacy.html"
+                href="https://help.onekey.so/hc/en/articles/360002003315"
                 target="_blank"
                 rel="noopener noreferrer"
               >

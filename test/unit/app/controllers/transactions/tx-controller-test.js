@@ -31,8 +31,9 @@ describe('Transaction Controller', function () {
       // by default, all accounts are external accounts (not contracts)
       eth_getCode: '0x',
     };
-    provider = createTestProviderTools({ scaffold: providerResultStub })
-      .provider;
+    provider = createTestProviderTools({
+      scaffold: providerResultStub,
+    }).provider;
     fromAccount = getTestAccounts()[0];
     const blockTrackerStub = new EventEmitter();
     blockTrackerStub.getCurrentBlock = noop;
@@ -43,6 +44,7 @@ describe('Transaction Controller', function () {
         return '0xee6b2800';
       },
       networkStore: new ObservableStore(currentNetworkId),
+      getCurrentChainId: () => currentChainId,
       txHistoryLimit: 10,
       blockTracker: blockTrackerStub,
       signTransaction: (ethTx) =>
@@ -51,7 +53,6 @@ describe('Transaction Controller', function () {
           resolve();
         }),
       getPermittedAccounts: () => undefined,
-      getCurrentChainId: () => currentChainId,
       getParticipateInMetrics: () => false,
     });
     txController.nonceTracker.getNonceLock = () =>
@@ -790,8 +791,7 @@ describe('Transaction Controller', function () {
     it('should return a token transfer transactionCategory when data is for the respective method call', async function () {
       const result = await txController._determineTransactionCategory({
         to: '0xabc',
-        data:
-          '0xa9059cbb0000000000000000000000002f318C334780961FB129D2a6c30D0763d9a5C970000000000000000000000000000000000000000000000000000000000000000a',
+        data: '0xa9059cbb0000000000000000000000002f318C334780961FB129D2a6c30D0763d9a5C970000000000000000000000000000000000000000000000000000000000000000a',
       });
       assert.deepEqual(result, {
         transactionCategory: TRANSACTION_CATEGORIES.TOKEN_METHOD_TRANSFER,
@@ -802,8 +802,7 @@ describe('Transaction Controller', function () {
     it('should return a token approve transactionCategory when data is for the respective method call', async function () {
       const result = await txController._determineTransactionCategory({
         to: '0xabc',
-        data:
-          '0x095ea7b30000000000000000000000002f318C334780961FB129D2a6c30D0763d9a5C9700000000000000000000000000000000000000000000000000000000000000005',
+        data: '0x095ea7b30000000000000000000000002f318C334780961FB129D2a6c30D0763d9a5C9700000000000000000000000000000000000000000000000000000000000000005',
       });
       assert.deepEqual(result, {
         transactionCategory: TRANSACTION_CATEGORIES.TOKEN_METHOD_APPROVE,
@@ -864,6 +863,7 @@ describe('Transaction Controller', function () {
           return '0xee6b2800';
         },
         networkStore: new ObservableStore(currentNetworkId),
+        getCurrentChainId: () => currentChainId,
         txHistoryLimit: 10,
         blockTracker: _blockTrackerStub,
         signTransaction: (ethTx) =>
@@ -903,6 +903,7 @@ describe('Transaction Controller', function () {
           return '0xee6b2800';
         },
         networkStore: new ObservableStore(currentNetworkId),
+        getCurrentChainId: () => currentChainId,
         txHistoryLimit: 10,
         blockTracker: _blockTrackerStub,
         signTransaction: (ethTx) =>

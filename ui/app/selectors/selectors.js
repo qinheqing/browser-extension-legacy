@@ -140,9 +140,13 @@ export function getMetaMaskAccountsRaw(state) {
 }
 
 export function getMetaMaskCachedBalances(state) {
+  const chainId = getCurrentChainId(state);
   const network = getCurrentNetworkId(state);
 
-  return state.metamask.cachedBalances[network];
+  return (
+    state.metamask.cachedBalances[chainId] ??
+    state.metamask.cachedBalances[network]
+  );
 }
 
 /**
@@ -187,7 +191,7 @@ export function isBalanceCached(state) {
 }
 
 export function getSelectedAccountCachedBalance(state) {
-  const cachedBalances = state.metamask.cachedBalances[state.metamask.network];
+  const cachedBalances = getMetaMaskCachedBalances(state);
   const selectedAddress = getSelectedAddress(state);
 
   return cachedBalances && cachedBalances[selectedAddress];
