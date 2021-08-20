@@ -6,6 +6,11 @@ import {
   contractExchangeRateSelector,
   conversionRateSelector,
 } from '../confirm-transaction';
+import {
+  KOVAN_CHAIN_ID,
+  KOVAN_NETWORK_ID,
+  MAINNET_CHAIN_ID,
+} from '../../../../shared/constants/network';
 
 const getEthersArrayLikeFromObj = (obj) => {
   const arr = [];
@@ -22,16 +27,19 @@ describe('Confirm Transaction Selector', function () {
       metamask: {
         unapprovedTxs: {
           1: {
-            metamaskNetworkId: 'test',
+            metamaskNetworkId: KOVAN_NETWORK_ID,
           },
           2: {
-            metmaskNetworkId: 'other network',
+            chainId: MAINNET_CHAIN_ID,
           },
         },
         unapprovedMsgCount: 1,
         unapprovedPersonalMsgCount: 1,
         unapprovedTypedMessagesCount: 1,
-        network: 'test',
+        network: KOVAN_NETWORK_ID,
+        provider: {
+          chainId: KOVAN_CHAIN_ID,
+        },
       },
     };
 
@@ -68,6 +76,9 @@ describe('Confirm Transaction Selector', function () {
   describe('contractExchangeRateSelector', function () {
     const state = {
       metamask: {
+        provider: {
+          chainId: KOVAN_CHAIN_ID,
+        },
         contractExchangeRates: {
           '0xTokenAddress': '10',
         },
@@ -89,7 +100,12 @@ describe('Confirm Transaction Selector', function () {
   describe('conversionRateSelector', function () {
     it('returns conversionRate from state', function () {
       const state = {
-        metamask: { conversionRate: 556.12 },
+        metamask: {
+          provider: {
+            chainId: KOVAN_CHAIN_ID,
+          },
+          conversionRate: 556.12,
+        },
       };
       assert.strictEqual(conversionRateSelector(state), 556.12);
     });
