@@ -2909,10 +2909,10 @@
     tiny-worker "^2.3.0"
     whatwg-fetch "^3.5.0"
 
-"@onekeyhq/eth-onekey-keyring@0.7.0":
-  version "0.7.0"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-onekey-keyring/0.7.0/bc20290f86a6d22568ff948b36f870c2c9120ed51448638b8717bffeab745d58#91778c9309f147e455c899b8f22d71e9f757112b"
-  integrity sha512-Ufa5viCD8Y0Ql8EfZDtk26fyt8nRqk8QYb5sUB0W5xFEf0KCYtgF30TjxlnT+SXHOlA7iuS0o2PYjwUWl687Gg==
+"@onekeyhq/eth-onekey-keyring@0.7.1":
+  version "0.7.1"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-onekey-keyring/0.7.1/150d0b40c8f8473afb9db601a791475feeb0233b8e3370256aac60245267dd30#61e8bc175fcdff990b79412a7403fce6ae40fcd9"
+  integrity sha512-RukK71OKfpquy3fhw+Q9MKTn9Fn8WIB+Y7aQEQLX3WCgdEDFu53llCfsHFOBIHDg3lEuHznBSM2Qle2PGPkqtw==
   dependencies:
     "@onekeyhq/connect" "8.2.3-extended"
     eth-sig-util "^1.4.2"

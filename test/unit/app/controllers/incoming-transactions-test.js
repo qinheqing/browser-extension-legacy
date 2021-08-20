@@ -164,9 +164,8 @@ describe('IncomingTransactionsController', function () {
         incomingTransactionsController.networkController.on.getCall(0).args[0],
         NETWORK_EVENTS.NETWORK_DID_CHANGE,
       );
-      const networkControllerListenerCallback = incomingTransactionsController.networkController.on.getCall(
-        0,
-      ).args[1];
+      const networkControllerListenerCallback =
+        incomingTransactionsController.networkController.on.getCall(0).args[1];
       assert.equal(incomingTransactionsController._update.callCount, 0);
       networkControllerListenerCallback('testNetworkType');
       assert.equal(incomingTransactionsController._update.callCount, 1);
@@ -229,8 +228,8 @@ describe('IncomingTransactionsController', function () {
           initState: getNonEmptyInitState(),
         },
       );
-      const startBlock = getNonEmptyInitState()
-        .incomingTxLastFetchedBlocksByNetwork[ROPSTEN];
+      const startBlock =
+        getNonEmptyInitState().incomingTxLastFetchedBlocksByNetwork[ROPSTEN];
       nock('https://api-ropsten.etherscan.io')
         .get(
           `/api?module=account&action=txlist&address=${MOCK_SELECTED_ADDRESS}&tag=latest&page=1&startBlock=${startBlock}`,
@@ -272,7 +271,8 @@ describe('IncomingTransactionsController', function () {
             '0xfake': {
               blockNumber: '10',
               hash: '0xfake',
-              metamaskNetworkId: '3',
+              metamaskNetworkId: ROPSTEN_NETWORK_ID,
+              chainId: ROPSTEN_CHAIN_ID,
               status: TRANSACTION_STATUSES.CONFIRMED,
               time: 16000000000000000,
               transactionCategory: TRANSACTION_CATEGORIES.INCOMING,
@@ -565,8 +565,8 @@ describe('IncomingTransactionsController', function () {
         },
       );
       const NEW_MOCK_SELECTED_ADDRESS = `${MOCK_SELECTED_ADDRESS}9`;
-      const startBlock = getNonEmptyInitState()
-        .incomingTxLastFetchedBlocksByNetwork[ROPSTEN];
+      const startBlock =
+        getNonEmptyInitState().incomingTxLastFetchedBlocksByNetwork[ROPSTEN];
       nock('https://api-ropsten.etherscan.io')
         .get(
           `/api?module=account&action=txlist&address=${NEW_MOCK_SELECTED_ADDRESS}&tag=latest&page=1&startBlock=${startBlock}`,
@@ -587,9 +587,10 @@ describe('IncomingTransactionsController', function () {
         incomingTransactionsController.store,
       );
 
-      const subscription = incomingTransactionsController.preferencesController.store.subscribe.getCall(
-        1,
-      ).args[0];
+      const subscription =
+        incomingTransactionsController.preferencesController.store.subscribe.getCall(
+          1,
+        ).args[0];
       // The incoming transactions controller will always skip the first event
       // We need to call subscription twice to test the event handling
       // TODO: stop skipping the first event
@@ -615,7 +616,8 @@ describe('IncomingTransactionsController', function () {
             '0xfake': {
               blockNumber: '10',
               hash: '0xfake',
-              metamaskNetworkId: '3',
+              metamaskNetworkId: ROPSTEN_NETWORK_ID,
+              chainId: ROPSTEN_CHAIN_ID,
               status: TRANSACTION_STATUSES.CONFIRMED,
               time: 16000000000000000,
               transactionCategory: TRANSACTION_CATEGORIES.INCOMING,
@@ -688,9 +690,10 @@ describe('IncomingTransactionsController', function () {
         incomingTransactionsController.store,
       );
 
-      const subscription = incomingTransactionsController.preferencesController.store.subscribe.getCall(
-        1,
-      ).args[0];
+      const subscription =
+        incomingTransactionsController.preferencesController.store.subscribe.getCall(
+          1,
+        ).args[0];
       // The incoming transactions controller will always skip the first event
       // We need to call subscription twice to test the event handling
       // TODO: stop skipping the first event
@@ -720,8 +723,8 @@ describe('IncomingTransactionsController', function () {
           initState: getNonEmptyInitState(),
         },
       );
-      const startBlock = getNonEmptyInitState()
-        .incomingTxLastFetchedBlocksByNetwork[ROPSTEN];
+      const startBlock =
+        getNonEmptyInitState().incomingTxLastFetchedBlocksByNetwork[ROPSTEN];
       nock('https://api-ropsten.etherscan.io')
         .get(
           `/api?module=account&action=txlist&address=${MOCK_SELECTED_ADDRESS}&tag=latest&page=1&startBlock=${startBlock}`,
@@ -742,12 +745,10 @@ describe('IncomingTransactionsController', function () {
         incomingTransactionsController.store,
       );
 
-      const subscription = incomingTransactionsController.networkController.on.getCall(
-        0,
-      ).args[1];
-      incomingTransactionsController.networkController = getMockNetworkController(
-        ROPSTEN_CHAIN_ID,
-      );
+      const subscription =
+        incomingTransactionsController.networkController.on.getCall(0).args[1];
+      incomingTransactionsController.networkController =
+        getMockNetworkController(ROPSTEN_CHAIN_ID);
       await subscription(ROPSTEN);
       await updateStateCalled();
 
@@ -769,7 +770,8 @@ describe('IncomingTransactionsController', function () {
             '0xfake': {
               blockNumber: '10',
               hash: '0xfake',
-              metamaskNetworkId: '3',
+              metamaskNetworkId: ROPSTEN_NETWORK_ID,
+              chainId: ROPSTEN_CHAIN_ID,
               status: TRANSACTION_STATUSES.CONFIRMED,
               time: 16000000000000000,
               transactionCategory: TRANSACTION_CATEGORIES.INCOMING,
@@ -842,9 +844,8 @@ describe('IncomingTransactionsController', function () {
         incomingTransactionsController.store,
       );
 
-      const subscription = incomingTransactionsController.networkController.on.getCall(
-        0,
-      ).args[1];
+      const subscription =
+        incomingTransactionsController.networkController.on.getCall(0).args[1];
 
       networkController.getCurrentChainId = () => FAKE_CHAIN_ID;
       await subscription();
@@ -1347,6 +1348,7 @@ describe('IncomingTransactionsController', function () {
         blockNumber: 333,
         id: 54321,
         metamaskNetworkId: ROPSTEN_NETWORK_ID,
+        chainId: ROPSTEN_CHAIN_ID,
         status: TRANSACTION_STATUSES.FAILED,
         time: 4444000,
         txParams: {
@@ -1392,6 +1394,7 @@ describe('IncomingTransactionsController', function () {
         blockNumber: 333,
         id: 54321,
         metamaskNetworkId: ROPSTEN_NETWORK_ID,
+        chainId: ROPSTEN_CHAIN_ID,
         status: TRANSACTION_STATUSES.CONFIRMED,
         time: 4444000,
         txParams: {
