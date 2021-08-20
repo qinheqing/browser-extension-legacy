@@ -6,16 +6,21 @@ import { TRANSACTION_STATUSES } from '../../../../../shared/constants/transactio
 import {
   KOVAN_CHAIN_ID,
   KOVAN_NETWORK_ID,
+  MAINNET_CHAIN_ID,
   MORDEN_NETWORK_ID,
+  ROPSTEN_CHAIN_ID,
 } from '../../../../../shared/constants/network';
+import { transactionMatchesNetwork } from '../../../../../shared/modules/transaction.utils';
 
 const noop = () => true;
 
 describe('TransactionStateManager', function () {
   let txStateManager;
-  const currentNetworkId = KOVAN_NETWORK_ID;
-  const currentChainId = KOVAN_CHAIN_ID;
-  const otherNetworkId = MORDEN_NETWORK_ID;
+  const currentNetworkId = KOVAN_NETWORK_ID; // network=42
+  const currentChainId = ROPSTEN_CHAIN_ID; // chainId=3
+
+  const otherNetworkId = MORDEN_NETWORK_ID; // network=2
+  const otherChainId = MAINNET_CHAIN_ID; // chainId=1
 
   beforeEach(function () {
     txStateManager = new TxStateManager({
@@ -400,7 +405,7 @@ describe('TransactionStateManager', function () {
         id: 2,
         status: TRANSACTION_STATUSES.CONFIRMED,
         metamaskNetworkId: otherNetworkId,
-        chainId: currentChainId,
+        chainId: otherChainId,
         txParams: {},
       };
       txStateManager.addTx(tx, noop);
@@ -890,14 +895,14 @@ describe('TransactionStateManager', function () {
           status: TRANSACTION_STATUSES.CONFIRMED,
           txParams: { from: specificAddress, to: otherAddress },
           metamaskNetworkId: otherNetworkId,
-          chainId: currentChainId,
+          chainId: otherChainId,
         },
         {
           id: 2,
           status: TRANSACTION_STATUSES.CONFIRMED,
           txParams: { from: specificAddress, to: otherAddress },
           metamaskNetworkId: otherNetworkId,
-          chainId: currentChainId,
+          chainId: otherChainId,
         },
       ];
 
@@ -910,7 +915,9 @@ describe('TransactionStateManager', function () {
         .filter((txMeta) => txMeta.txParams.from === specificAddress);
       const txFromOtherNetworks = txStateManager
         .getFullTxList()
-        .filter((txMeta) => txMeta.metamaskNetworkId === otherNetworkId);
+        .filter((txMeta) =>
+          transactionMatchesNetwork(txMeta, otherChainId, otherNetworkId),
+        );
 
       assert.equal(txsFromCurrentNetworkAndAddress.length, 0);
       assert.equal(txFromOtherNetworks.length, 2);
