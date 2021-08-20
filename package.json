@@ -332,6 +332,7 @@
     "mocha": "^7.2.0",
     "nock": "^9.0.14",
     "node-fetch": "^2.6.1",
+    "node-notifier": "^10.0.0",
     "nyc": "^15.0.0",
     "patch-package": "^6.4.7",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
@@ -405,9 +406,7 @@
       "tiny-secp256k1": false,
       "@lavamoat/preinstall-always-fail": false,
       "fsevents": false,
-      "postinstall-postinstall": false,
-      "registry.yarnpkg.com/postinstall-postinstall/-/postinstall-postinstall-2.1.0.tgz": false,
-      "scrypt": false
+      "postinstall-postinstall": false
     }
   }
 }

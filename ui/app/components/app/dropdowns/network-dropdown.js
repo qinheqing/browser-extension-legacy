@@ -148,7 +148,7 @@ class NetworkDropdown extends Component {
           }}
         >
           {isCurrentRpcTarget ? (
-            <i className="fa fa-check" />
+            <i className="fa fa-check" style={{ color: '#00b812' }} />
           ) : (
             <div className="network-check__transparent">✓</div>
           )}
@@ -161,7 +161,7 @@ class NetworkDropdown extends Component {
           <span
             className="network-name-item"
             style={{
-              color: isCurrentRpcTarget ? '#ffffff' : '#9b9b9b',
+              color: isCurrentRpcTarget ? '#000' : '#9b9b9b',
             }}
           >
             {nickname || rpcUrl}

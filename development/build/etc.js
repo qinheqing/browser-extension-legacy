@@ -6,6 +6,7 @@ const del = require('del');
 const pify = require('pify');
 const pump = pify(require('pump'));
 const httpServer = require('http-server');
+const notifier = require('node-notifier');
 const { version } = require('../../package.json');
 const { createTask, composeParallel } = require('./task');
 const buildUtils = require('./buildUtils');
@@ -44,7 +45,11 @@ function createEtcTasks({ browserPlatforms, livereload }) {
     server.listen(31317);
   });
 
-  return { clean, reload, zip, moduleFix, sourcemapServer };
+  const done = createTask('done', function () {
+    notifier.notify('Build complete!');
+  });
+
+  return { done, clean, reload, zip, moduleFix, sourcemapServer };
 }
 
 function createZipTask(target, filename) {
