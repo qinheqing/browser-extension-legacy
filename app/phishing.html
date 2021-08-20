@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <title>区块链嗅探检测 - OneKey</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+
+    <script src="./globalthis.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./lockdown-install.js" type="text/javascript" charset="utf-8"></script>
+
+    {{@each(it.jsBundles) => val}}
+      <script src="{{val}}" type="text/javascript" charset="utf-8"></script>
+    {{/each}}
+
+    <link rel="stylesheet" type="text/css" href="./index.css" title="ltr">
+    <link rel="stylesheet" type="text/css" href="./index-rtl.css" title="rtl" disabled>
+
+    <style>
+      *                          { margin: 0; padding: 0; box-sizing: border-box; }
+      body, html                 { background-color: rgb(217, 88, 70);
+                                   display: flex; flex-direction: column;
+                                   justify-content: center; align-items: center;
+                                   font-family: Roboto, Arial, sans-serif;
+                                   width: 100vw; min-height: 100vh; }
+      .content                   { display: flex; flex-direction: column; align-items: center;
+                                   width: 80%;
+                                   background-color: white; box-shadow: 0 0 15px #737373; }
+      .content__header           { display: flex; flex-direction: column; align-items: center; justify-content: center;
+                                   width: 100%;
+                                   color: rgb(217, 88, 70); border-bottom: 1px solid rgb(212, 212, 212);
+                                   padding: 2em; }
+      .content__header h1        { font-size: 24px; font-weight: normal; }
+      .content__header h1 i      { margin-right: 0.25em; }
+      .content__header img       { margin-bottom: 3em; width: 160px; }
+      .content__body             { background-color: rgb(245, 245, 245); font-size: 12pt; }
+      .content__body p           { margin: 2em; }
+      .content__body p a         { text-decoration: underline; color: rgb(217, 88, 70); cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <div class="content">
+      <div class="content__header">
+        <img src="./images/info-logo.png" alt="">
+        <h1>
+          <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+            区块链嗅探检测
+        </h1>
+      </div>
+      <div class="content__body">
+        <p>
+          此域名当前在OneKey域名警告列表中。这意味着根据我们掌握的信息，
+          OneKey认为这个域名目前可能会危及您的安全，作为一个额外的安全功能，OneKey
+          限制了对该网站的访问。要忽略这一点，请阅读本警告的其余部分，了解如何继续操作的说明，风险自负。
+        </p>
+        <p>
+          我们的警告列表是从其他广泛使用的行业列表中整理而来的，域名出现在我们的警告列表中有很多原因，
+          这些原因可能包括已知的欺诈或安全风险, 比如
+          <a href="https://github.com/metamask/eth-phishing-detect">区块链嗅探</a> 认为有风险.
+          这些警告列表中的域名可能包括完全恶意的网站和被恶意行为者破坏的合法网站。
+        </p>
+        <p>为了了解更多关于该站点的信息 <a id="csdbLink">请在CryptoScamDB上搜索该域名</a> .</p>
+        <p>
+          请注意，此警告列表是在自愿的基础上编制的。此列表可能不准确或不完整。
+          不能因为一个域名不在列表上，就证明它是有安全的。反之亦然。
+          一如既往，你的交易是你自己的责任。如果您希望与我们警告列表中的任何域名进行交互,
+          你可以自担风险 <a id="unsafe-continue">继续</a> 操作.
+        </p>
+        <p>
+          如果您认为此域名标记不正确，或者被阻止的合法网站已经解决了其安全问题,
+          <a href="https://github.com/metamask/eth-phishing-detect/issues/new">请告诉我们</a> .
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

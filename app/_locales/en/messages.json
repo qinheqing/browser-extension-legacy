@@ -1,0 +1,1904 @@
+{
+  "about": {
+    "message": "About"
+  },
+  "aboutSettingsDescription": {
+    "message": "Version, support center, and contact info"
+  },
+  "acceleratingATransaction": {
+    "message": "* Accelerating a transaction by using a higher gas price increases its chances of getting processed by the network faster, but it is not always guaranteed."
+  },
+  "acceptTermsOfUse": {
+    "message": "I have read and agree to the {1}"
+  },
+  "accessAndSpendNotice": {
+    "message": "{1} may access and spend up to this max amount"
+  },
+  "accessingYourCamera": {
+    "message": "Accessing your camera..."
+  },
+  "account": {
+    "message": "Account"
+  },
+  "accountDetails": {
+    "message": "Account details"
+  },
+  "accountName": {
+    "message": "Account Name"
+  },
+  "accountOptions": {
+    "message": "Account Options"
+  },
+  "accountSelectionRequired": {
+    "message": "You need to select an account!"
+  },
+  "active": {
+    "message": "Active"
+  },
+  "activity": {
+    "message": "Activity"
+  },
+  "activityLog": {
+    "message": "activity log"
+  },
+  "addAccount": {
+    "message": "Add an account"
+  },
+  "addAcquiredTokens": {
+    "message": "Add the tokens you've acquired using OneKey"
+  },
+  "addAlias": {
+    "message": "Add alias"
+  },
+  "addEthereumChainConfirmationDescription": {
+    "message": "This will allow this network to be used within OneKey."
+  },
+  "addEthereumChainConfirmationRisks": {
+    "message": "OneKey does not verify custom networks."
+  },
+  "addEthereumChainConfirmationRisksLearnMore": {
+    "message": "Learn about {1}."
+  },
+  "addEthereumChainConfirmationRisksLearnMoreLink": {
+    "message": "scams and network security risks"
+  },
+  "addEthereumChainConfirmationTitle": {
+    "message": "Allow this site to add a network?"
+  },
+  "addNetwork": {
+    "message": "Add Network"
+  },
+  "addRecipient": {
+    "message": "Add Recipient"
+  },
+  "addSuggestedTokens": {
+    "message": "Add Suggested Tokens"
+  },
+  "addToAddressBook": {
+    "message": "Add to address book"
+  },
+  "addToAddressBookModalPlaceholder": {
+    "message": "e.g. John D."
+  },
+  "addToken": {
+    "message": "Add Token"
+  },
+  "addTokens": {
+    "message": "Add Tokens"
+  },
+  "advanced": {
+    "message": "Advanced"
+  },
+  "advancedOptions": {
+    "message": "Advanced Options"
+  },
+  "advancedSettingsDescription": {
+    "message": "Access developer features, download State Logs, Reset Account, setup testnets and custom RPC"
+  },
+  "affirmAgree": {
+    "message": "I Agree"
+  },
+  "aggregatorFeeCost": {
+    "message": "Aggregator network fee"
+  },
+  "alertDisableTooltip": {
+    "message": "This can be changed in \"Settings > Alerts\""
+  },
+  "alertSettingsUnconnectedAccount": {
+    "message": "Browsing a website with an unconnected account selected"
+  },
+  "alertSettingsUnconnectedAccountDescription": {
+    "message": "This alert is shown in the popup when you are browsing a connected web3 site, but the currently selected account is not connected."
+  },
+  "alertSettingsWeb3ShimUsage": {
+    "message": "When a website tries to use the removed window.web3 API"
+  },
+  "alertSettingsWeb3ShimUsageDescription": {
+    "message": "This alert is shown in the popup when you are browsing a site that tries to use the removed window.web3 API, and may be broken as a result."
+  },
+  "alerts": {
+    "message": "Alerts"
+  },
+  "alertsSettingsDescription": {
+    "message": "Enable or disable each alert"
+  },
+  "allowExternalExtensionTo": {
+    "message": "Allow this external extension to:"
+  },
+  "allowOriginSpendToken": {
+    "message": "Allow {1} to spend your {2}?"
+  },
+  "allowThisSiteTo": {
+    "message": "Allow this site to:"
+  },
+  "allowWithdrawAndSpend": {
+    "message": "Allow {1} to withdraw and spend up to the following amount:"
+  },
+  "amount": {
+    "message": "Amount"
+  },
+  "amountInEth": {
+    "message": "{1} ETH"
+  },
+  "amountWithColon": {
+    "message": "Amount:"
+  },
+  "appDescription": {
+    "message": "An Ethereum Wallet in your Browser"
+  },
+  "appName": {
+    "message": "OneKey"
+  },
+  "approvalAndAggregatorTxFeeCost": {
+    "message": "Approval and aggregator network fee"
+  },
+  "approvalTxGasCost": {
+    "message": "Approval Tx Gas Cost"
+  },
+  "approve": {
+    "message": "Approve spend limit"
+  },
+  "approveButtonText": {
+    "message": "Approve"
+  },
+  "approveSpendLimit": {
+    "message": "Approve {1} spend limit"
+  },
+  "approved": {
+    "message": "Approved"
+  },
+  "asset": {
+    "message": "Asset"
+  },
+  "assets": {
+    "message": "Assets"
+  },
+  "attemptToCancel": {
+    "message": "Attempt to Cancel?"
+  },
+  "attemptToCancelDescription": {
+    "message": "Submitting this attempt does not guarantee your original transaction will be cancelled. If the cancellation attempt is successful, you will be charged the transaction fee above."
+  },
+  "attemptingConnect": {
+    "message": "Attempting to connect to blockchain."
+  },
+  "attributions": {
+    "message": "Attributions"
+  },
+  "authorizedPermissions": {
+    "message": "You have authorized the following permissions"
+  },
+  "autoLockTimeLimit": {
+    "message": "Auto-Lock Timer (minutes)"
+  },
+  "autoLockTimeLimitDescription": {
+    "message": "Set the idle time in minutes before OneKey will become locked."
+  },
+  "average": {
+    "message": "Fast"
+  },
+  "back": {
+    "message": "Back"
+  },
+  "backToAll": {
+    "message": "Back to All"
+  },
+  "backupApprovalInfo": {
+    "message": "This secret code is required to recover your wallet in case you lose your device, forget your password, have to re-install OneKey, or want to access your wallet on another device."
+  },
+  "backupApprovalNotice": {
+    "message": "Backup your Secret Recovery code to keep your wallet and funds secure."
+  },
+  "backupNow": {
+    "message": "Backup now"
+  },
+  "balance": {
+    "message": "Balance"
+  },
+  "balanceOutdated": {
+    "message": "Balance may be outdated"
+  },
+  "basic": {
+    "message": "Basic"
+  },
+  "blockExplorerUrl": {
+    "message": "Block Explorer"
+  },
+  "blockExplorerUrlDefinition": {
+    "message": "The URL used as the block explorer for this network."
+  },
+  "blockExplorerView": {
+    "message": "View account at {1}"
+  },
+  "blockiesIdenticon": {
+    "message": "Use Blockies Identicon"
+  },
+  "browserNotSupported": {
+    "message": "Your Browser is not supported..."
+  },
+  "bsc": {
+    "message": "BSC Mainnet"
+  },
+  "bsc_test": {
+    "message": "BSC Testnet"
+  },
+  "builtInCalifornia": {
+    "message": "OneKey is designed and built in Beijing."
+  },
+  "buy": {
+    "message": "Buy"
+  },
+  "buyWithWyre": {
+    "message": "Buy ETH with Wyre"
+  },
+  "buyWithWyreDescription": {
+    "message": "Wyre lets you use a debit card to deposit ETH right in to your OneKey account."
+  },
+  "bytes": {
+    "message": "Bytes"
+  },
+  "canToggleInSettings": {
+    "message": "You can re-enable this notification in Settings -> Alerts."
+  },
+  "cancel": {
+    "message": "Cancel"
+  },
+  "cancellationGasFee": {
+    "message": "Cancellation Gas Fee"
+  },
+  "cancelled": {
+    "message": "Cancelled"
+  },
+  "chainId": {
+    "message": "Chain ID"
+  },
+  "chainIdDefinition": {
+    "message": "The chain ID used to sign transactions for this network."
+  },
+  "chromeRequiredForHardwareWallets": {
+    "message": "You need to use OneKey on Google Chrome in order to connect to your Hardware Wallet."
+  },
+  "clickToRevealSeed": {
+    "message": "Click here to reveal secret words"
+  },
+  "close": {
+    "message": "Close"
+  },
+  "confirm": {
+    "message": "Confirm"
+  },
+  "confirmPassword": {
+    "message": "Confirm password"
+  },
+  "confirmSecretBackupPhrase": {
+    "message": "Confirm your Secret Backup Phrase"
+  },
+  "confirmed": {
+    "message": "Confirmed"
+  },
+  "congratulations": {
+    "message": "Congratulations"
+  },
+  "connect": {
+    "message": "Connect"
+  },
+  "connectAccountOrCreate": {
+    "message": "Connect account or create new"
+  },
+  "connectHardwareWallet": {
+    "message": "Connect Hardware Wallet"
+  },
+  "connectManually": {
+    "message": "Manually connect to current site"
+  },
+  "connectTo": {
+    "message": "Connect to {1}"
+  },
+  "connectToAll": {
+    "message": "Connect to all your {1}"
+  },
+  "connectToAllAccounts": {
+    "message": "accounts"
+  },
+  "connectToMultiple": {
+    "message": "Connect to {1}"
+  },
+  "connectToMultipleNumberOfAccounts": {
+    "message": "{1} accounts"
+  },
+  "connectWithMetaMask": {
+    "message": "Connect With OneKey"
+  },
+  "connectedAccountsDescriptionPlural": {
+    "message": "You have {1} accounts connected to this site."
+  },
+  "connectedAccountsDescriptionSingular": {
+    "message": "You have 1 account connected to this site."
+  },
+  "connectedAccountsEmptyDescription": {
+    "message": "OneKey is not connected this site. To connect to a web3 site, find the connect button on their site."
+  },
+  "connectedSites": {
+    "message": "Connected sites"
+  },
+  "connectedSitesDescription": {
+    "message": "{1} is connected to these sites. They can view your account address."
+  },
+  "connectedSitesEmptyDescription": {
+    "message": "{1} is not connected to any sites."
+  },
+  "connecting": {
+    "message": "Connecting..."
+  },
+  "connectingTo": {
+    "message": "Connecting to {1}"
+  },
+  "connectingToBsc": {
+    "message": "Connecting to Bsc Mainnet"
+  },
+  "connectingToGoerli": {
+    "message": "Connecting to Goerli Test Network"
+  },
+  "connectingToHeco": {
+    "message": "Connecting to Heco Mainnet"
+  },
+  "connectingToKovan": {
+    "message": "Connecting to Kovan Test Network"
+  },
+  "connectingToMainnet": {
+    "message": "Connecting to Ethereum Mainnet"
+  },
+  "connectingToMatic": {
+    "message": "Connecting to Polygon Mainnet"
+  },
+  "connectingToRinkeby": {
+    "message": "Connecting to Rinkeby Test Network"
+  },
+  "connectingToRopsten": {
+    "message": "Connecting to Ropsten Test Network"
+  },
+  "contactUs": {
+    "message": "Contact us"
+  },
+  "contacts": {
+    "message": "Contacts"
+  },
+  "contactsSettingsDescription": {
+    "message": "Add, edit, remove, and manage your contacts"
+  },
+  "continue": {
+    "message": "Continue"
+  },
+  "continueToWyre": {
+    "message": "Continue to Wyre"
+  },
+  "contractDeployment": {
+    "message": "Contract Deployment"
+  },
+  "contractInteraction": {
+    "message": "Contract Interaction"
+  },
+  "copiedExclamation": {
+    "message": "Copied!"
+  },
+  "copiedTransactionId": {
+    "message": "Copied Transaction ID"
+  },
+  "copyAddress": {
+    "message": "Copy address to clipboard"
+  },
+  "copyPrivateKey": {
+    "message": "This is your private key (click to copy)"
+  },
+  "copyToClipboard": {
+    "message": "Copy to clipboard"
+  },
+  "copyTransactionId": {
+    "message": "Copy Transaction ID"
+  },
+  "create": {
+    "message": "Create"
+  },
+  "createAWallet": {
+    "message": "Create HD Wallet"
+  },
+  "createAccount": {
+    "message": "Create Account"
+  },
+  "createPassword": {
+    "message": "Create Password"
+  },
+  "currencyConversion": {
+    "message": "Currency Conversion"
+  },
+  "currencySymbol": {
+    "message": "Currency Symbol"
+  },
+  "currencySymbolDefinition": {
+    "message": "The ticker symbol displayed for this network’s currency."
+  },
+  "currentAccountNotConnected": {
+    "message": "Your current account is not connected"
+  },
+  "currentExtension": {
+    "message": "Current extension page"
+  },
+  "currentLanguage": {
+    "message": "Current Language"
+  },
+  "customGas": {
+    "message": "Customize Gas"
+  },
+  "customGasSubTitle": {
+    "message": "Increasing fee may decrease processing times, but it is not guaranteed."
+  },
+  "customRPC": {
+    "message": "Custom RPC"
+  },
+  "customSpendLimit": {
+    "message": "Custom Spend Limit"
+  },
+  "customToken": {
+    "message": "Custom Token"
+  },
+  "dataBackupFoundInfo": {
+    "message": "Some of your account data was backed up during a previous installation of OneKey. This could include your settings, contacts, and tokens. Would you like to restore this data now?"
+  },
+  "decimal": {
+    "message": "Decimals of Precision"
+  },
+  "decimalsMustZerotoTen": {
+    "message": "Decimals must be at least 0, and not over 36."
+  },
+  "decrypt": {
+    "message": "Decrypt"
+  },
+  "decryptCopy": {
+    "message": "Copy encrypted message"
+  },
+  "decryptInlineError": {
+    "message": "This message cannot be decrypted due to error: {1}"
+  },
+  "decryptMessageNotice": {
+    "message": "{1} would like to read this message to complete your action"
+  },
+  "decryptMetamask": {
+    "message": "Decrypt message"
+  },
+  "decryptRequest": {
+    "message": "Decrypt request"
+  },
+  "defaultNetwork": {
+    "message": "The default network for Ether transactions is Main Net."
+  },
+  "delete": {
+    "message": "Delete"
+  },
+  "deleteAccount": {
+    "message": "Delete Account"
+  },
+  "deleteNetwork": {
+    "message": "Delete Network?"
+  },
+  "deleteNetworkDescription": {
+    "message": "Are you sure you want to delete this network?"
+  },
+  "depositEther": {
+    "message": "Deposit Ether"
+  },
+  "details": {
+    "message": "Details"
+  },
+  "directDepositEther": {
+    "message": "Directly Deposit Ether"
+  },
+  "directDepositEtherExplainer": {
+    "message": "If you already have some Ether, the quickest way to get Ether in your new wallet by direct deposit."
+  },
+  "disconnect": {
+    "message": "Disconnect"
+  },
+  "disconnectAllAccounts": {
+    "message": "Disconnect all accounts"
+  },
+  "disconnectAllAccountsConfirmationDescription": {
+    "message": "Are you sure you want to disconnect? You may lose site functionality."
+  },
+  "disconnectPrompt": {
+    "message": "Disconnect {1}"
+  },
+  "disconnectThisAccount": {
+    "message": "Disconnect this account"
+  },
+  "dismiss": {
+    "message": "Dismiss"
+  },
+  "done": {
+    "message": "Done"
+  },
+  "dontHaveAHardwareWallet": {
+    "message": "Don’t have a hardware wallet?"
+  },
+  "dontShowThisAgain": {
+    "message": "Don't show this again"
+  },
+  "downloadGoogleChrome": {
+    "message": "Download Google Chrome"
+  },
+  "downloadSecretBackup": {
+    "message": "Download this Secret Backup Phrase and keep it stored safely on an external encrypted hard drive or storage medium."
+  },
+  "downloadStateLogs": {
+    "message": "Download State Logs"
+  },
+  "dropped": {
+    "message": "Dropped"
+  },
+  "edit": {
+    "message": "Edit"
+  },
+  "editContact": {
+    "message": "Edit Contact"
+  },
+  "editPermission": {
+    "message": "Edit Permission"
+  },
+  "encryptionPublicKeyNotice": {
+    "message": "{1} would like your public encryption key. By consenting, this site will be able to compose encrypted messages to you."
+  },
+  "encryptionPublicKeyRequest": {
+    "message": "Request encryption public key"
+  },
+  "endOfFlowMessage1": {
+    "message": "You passed the test - keep your seedphrase safe, it's your responsibility!"
+  },
+  "endOfFlowMessage10": {
+    "message": "All Done"
+  },
+  "endOfFlowMessage2": {
+    "message": "Tips on storing it safely"
+  },
+  "endOfFlowMessage3": {
+    "message": "Save a backup in multiple places."
+  },
+  "endOfFlowMessage4": {
+    "message": "Never share the phrase with anyone."
+  },
+  "endOfFlowMessage5": {
+    "message": "Be careful of phishing! OneKey will never spontaneously ask for your seed phrase."
+  },
+  "endOfFlowMessage6": {
+    "message": "If you need to back up your seed phrase again, you can find it in Settings -> Security."
+  },
+  "endOfFlowMessage7": {
+    "message": "If you ever have questions or see something fishy, email hi@onekey.so."
+  },
+  "endOfFlowMessage8": {
+    "message": "OneKey cannot recover your seedphrase."
+  },
+  "endOfFlowMessage9": {
+    "message": "Learn more."
+  },
+  "endpointReturnedDifferentChainId": {
+    "message": "The endpoint returned a different chain ID: {1}"
+  },
+  "ensNotFoundOnCurrentNetwork": {
+    "message": "ENS name not found on the current network. Try switching to Ethereum Mainnet."
+  },
+  "ensRegistrationError": {
+    "message": "Error in ENS name registration"
+  },
+  "enterAnAlias": {
+    "message": "Enter an alias"
+  },
+  "enterMaxSpendLimit": {
+    "message": "Enter Max Spend Limit"
+  },
+  "enterPassword": {
+    "message": "Enter password"
+  },
+  "enterPasswordContinue": {
+    "message": "Enter password to continue"
+  },
+  "errorCode": {
+    "message": "Code: {1}"
+  },
+  "errorDetails": {
+    "message": "Error Details"
+  },
+  "errorMessage": {
+    "message": "Message: {1}"
+  },
+  "errorName": {
+    "message": "Code: {1}"
+  },
+  "errorPageMessage": {
+    "message": "Try again by reloading the page, or contact support at hi@onekey.so"
+  },
+  "errorPagePopupMessage": {
+    "message": "Try again by closing and reopening the popup, or contact support at hi@onekey.so"
+  },
+  "errorPageTitle": {
+    "message": "OneKey encountered an error"
+  },
+  "errorStack": {
+    "message": "Stack:"
+  },
+  "estimatedProcessingTimes": {
+    "message": "Estimated Processing Times"
+  },
+  "eth_accounts": {
+    "message": "View the addresses of your permitted accounts (required)"
+  },
+  "ethereumPublicAddress": {
+    "message": "Ethereum Public Address"
+  },
+  "etherscan": {
+    "message": "Etherscan"
+  },
+  "etherscanView": {
+    "message": "View account on Etherscan"
+  },
+  "expandView": {
+    "message": "Expand view"
+  },
+  "exportPrivateKey": {
+    "message": "Export Private Key"
+  },
+  "externalExtension": {
+    "message": "External Extension"
+  },
+  "extraApprovalGas": {
+    "message": "+{1} approval gas"
+  },
+  "failed": {
+    "message": "Failed"
+  },
+  "failedToFetchChainId": {
+    "message": "Could not fetch chain ID. Is your RPC URL correct?"
+  },
+  "failureMessage": {
+    "message": "Something went wrong, and we were unable to complete the action"
+  },
+  "fantom": {
+    "message": "Fantom Mainnet"
+  },
+  "fast": {
+    "message": "Rapid"
+  },
+  "fastest": {
+    "message": "Fastest"
+  },
+  "feeAssociatedRequest": {
+    "message": "A fee is associated with this request."
+  },
+  "fiat": {
+    "message": "Fiat"
+  },
+  "fileImportFail": {
+    "message": "File import not working? Click here!"
+  },
+  "forbiddenIpfsGateway": {
+    "message": "Forbidden IPFS Gateway: Please specify a CID gateway"
+  },
+  "forgetDevice": {
+    "message": "Forget this device"
+  },
+  "from": {
+    "message": "From"
+  },
+  "fromAddress": {
+    "message": "From: {1}"
+  },
+  "functionApprove": {
+    "message": "Function: Approve"
+  },
+  "functionType": {
+    "message": "Function Type"
+  },
+  "gasLimit": {
+    "message": "Gas Limit"
+  },
+  "gasLimitInfoTooltipContent": {
+    "message": "Gas limit is the maximum amount of units of gas you are willing to spend."
+  },
+  "gasLimitTooLow": {
+    "message": "Gas limit must be at least 21000"
+  },
+  "gasLimitTooLowWithDynamicFee": {
+    "message": "Gas limit must be at least {1}"
+  },
+  "gasPrice": {
+    "message": "Gas Price (GWEI)"
+  },
+  "gasPriceExtremelyLow": {
+    "message": "Gas Price Extremely Low"
+  },
+  "gasPriceInfoTooltipContent": {
+    "message": "Gas price specifies the amount of Ether you are willing to pay for each unit of gas."
+  },
+  "gasUsed": {
+    "message": "Gas Used"
+  },
+  "gdprMessage": {
+    "message": "This data is aggregated and is therefore anonymous for the purposes of General Data Protection Regulation (EU) 2016/679. For more information in relation to our privacy practices, please see our {1}."
+  },
+  "gdprMessagePrivacyPolicy": {
+    "message": "Privacy Policy here"
+  },
+  "general": {
+    "message": "General"
+  },
+  "generalSettingsDescription": {
+    "message": "Currency conversion, primary currency, language, blockies identicon"
+  },
+  "getEther": {
+    "message": "Get Ether"
+  },
+  "getEtherFromFaucet": {
+    "message": "Get Ether from a faucet for the {1}"
+  },
+  "getHelp": {
+    "message": "Get Help."
+  },
+  "getStarted": {
+    "message": "Get Started"
+  },
+  "goerli": {
+    "message": "Goerli Test Network"
+  },
+  "happyToSeeYou": {
+    "message": "We’re happy to see you."
+  },
+  "hardware": {
+    "message": "Hardware"
+  },
+  "hardwareWalletConnected": {
+    "message": "Hardware wallet connected"
+  },
+  "hardwareWalletLegacyDescription": {
+    "message": "(legacy)"
+  },
+  "hardwareWallets": {
+    "message": "Connect a hardware wallet"
+  },
+  "hardwareWalletsMsg": {
+    "message": "Select a hardware wallet you'd like to use with OneKey"
+  },
+  "havingTroubleConnecting": {
+    "message": "Having trouble connecting?"
+  },
+  "heco": {
+    "message": "HECO Mainnet"
+  },
+  "here": {
+    "message": "here"
+  },
+  "hexData": {
+    "message": "Hex Data"
+  },
+  "hide": {
+    "message": "Hide"
+  },
+  "hideTokenPrompt": {
+    "message": "Hide Token?"
+  },
+  "hideTokenSymbol": {
+    "message": "Hide {1}"
+  },
+  "history": {
+    "message": "History"
+  },
+  "hwOnlyModeSwitch": {
+    "message": "HW Only Mode"
+  },
+  "hwOnlyStarted": {
+    "message": "Get Started as HW Only"
+  },
+  "import": {
+    "message": "Import"
+  },
+  "importAccount": {
+    "message": "Import Account"
+  },
+  "importAccountMsg": {
+    "message": " Imported accounts will not be associated with your originally created OneKey account seedphrase. Learn more about imported accounts "
+  },
+  "importAccountSeedPhrase": {
+    "message": "Import an account with seed phrase"
+  },
+  "importUsingSeed": {
+    "message": "Import using account seed phrase"
+  },
+  "importWallet": {
+    "message": "Import HD wallet"
+  },
+  "importYourExisting": {
+    "message": "Import your existing wallet using a 12 word seed phrase"
+  },
+  "imported": {
+    "message": "Imported"
+  },
+  "infoHelp": {
+    "message": "Info & Help"
+  },
+  "initialTransactionConfirmed": {
+    "message": "Your initial transaction was confirmed by the network. Click OK to go back."
+  },
+  "insufficientBalance": {
+    "message": "Insufficient balance."
+  },
+  "insufficientFunds": {
+    "message": "Insufficient funds."
+  },
+  "insufficientTokens": {
+    "message": "Insufficient tokens."
+  },
+  "invalidAddress": {
+    "message": "Invalid address"
+  },
+  "invalidAddressRecipient": {
+    "message": "Recipient address is invalid"
+  },
+  "invalidAddressRecipientNotEthNetwork": {
+    "message": "Not ETH network, set to lowercase"
+  },
+  "invalidBlockExplorerURL": {
+    "message": "Invalid Block Explorer URL"
+  },
+  "invalidChainIdTooBig": {
+    "message": "Invalid chain ID. The chain ID is too big."
+  },
+  "invalidCustomNetworkAlertContent1": {
+    "message": "The chain ID for custom network '{1}' has to be re-entered."
+  },
+  "invalidCustomNetworkAlertContent2": {
+    "message": "To protect you from malicious or faulty network providers, chain IDs are now required for all custom networks."
+  },
+  "invalidCustomNetworkAlertContent3": {
+    "message": "Go to Settings > Network and enter the chain ID. You can find the chain IDs of most popular networks on {1}."
+  },
+  "invalidCustomNetworkAlertTitle": {
+    "message": "Invalid Custom Network"
+  },
+  "invalidHexNumber": {
+    "message": "Invalid hexadecimal number."
+  },
+  "invalidHexNumberLeadingZeros": {
+    "message": "Invalid hexadecimal number. Remove any leading zeros."
+  },
+  "invalidIpfsGateway": {
+    "message": "Invalid IPFS Gateway: The value must be a valid URL"
+  },
+  "invalidNumber": {
+    "message": "Invalid number. Enter a decimal or '0x'-prefixed hexadecimal number."
+  },
+  "invalidNumberLeadingZeros": {
+    "message": "Invalid number. Remove any leading zeros."
+  },
+  "invalidRPC": {
+    "message": "Invalid RPC URL"
+  },
+  "invalidSeedPhrase": {
+    "message": "Invalid seed phrase"
+  },
+  "ipfsGateway": {
+    "message": "IPFS Gateway"
+  },
+  "ipfsGatewayDescription": {
+    "message": "Enter the URL of the IPFS CID gateway to use for ENS content resolution."
+  },
+  "jsonFile": {
+    "message": "JSON File"
+  },
+  "knownAddressRecipient": {
+    "message": "Known contract address."
+  },
+  "knownTokenWarning": {
+    "message": "This action will edit tokens that are already listed in your wallet, which can be used to phish you. Only approve if you are certain that you mean to change what these tokens represent."
+  },
+  "kovan": {
+    "message": "Kovan Test Network"
+  },
+  "lastConnected": {
+    "message": "Last Connected"
+  },
+  "learnMore": {
+    "message": "Learn more"
+  },
+  "ledgerAccountRestriction": {
+    "message": "You need to make use your last account before you can add a new one."
+  },
+  "letsGoSetUp": {
+    "message": "Yes, let’s get set up!"
+  },
+  "likeToAddTokens": {
+    "message": "Would you like to add these tokens?"
+  },
+  "links": {
+    "message": "Links"
+  },
+  "loadMore": {
+    "message": "Load More"
+  },
+  "loading": {
+    "message": "Loading..."
+  },
+  "loadingTokens": {
+    "message": "Loading Tokens..."
+  },
+  "localhost": {
+    "message": "Localhost 8545"
+  },
+  "lock": {
+    "message": "Lock"
+  },
+  "lockTimeTooGreat": {
+    "message": "Lock time is too great"
+  },
+  "mainnet": {
+    "message": "Ethereum Mainnet"
+  },
+  "matic": {
+    "message": "Polygon Mainnet"
+  },
+  "max": {
+    "message": "Max"
+  },
+  "memo": {
+    "message": "memo"
+  },
+  "memorizePhrase": {
+    "message": "Memorize this phrase."
+  },
+  "message": {
+    "message": "Message"
+  },
+  "metaMaskConnectStatusParagraphOne": {
+    "message": "You now have more control over your account connections in OneKey."
+  },
+  "metaMaskConnectStatusParagraphThree": {
+    "message": "Click it to manage your connected accounts."
+  },
+  "metaMaskConnectStatusParagraphTwo": {
+    "message": "The connection status button shows if the website you’re visiting is connected to your currently selected account."
+  },
+  "metamaskDescription": {
+    "message": "Connecting you to Ethereum and the Decentralized Web."
+  },
+  "metamaskSwapsOfflineDescription": {
+    "message": ""
+  },
+  "metamaskVersion": {
+    "message": "OneKey Version"
+  },
+  "metametricsCommitmentsAllowOptOut": {
+    "message": "Always allow you to opt-out via Settings"
+  },
+  "metametricsCommitmentsBoldNever": {
+    "message": "Never"
+  },
+  "metametricsCommitmentsIntro": {
+    "message": "OneKey will.."
+  },
+  "metametricsCommitmentsNeverCollectIP": {
+    "message": "{1} collect your full IP address"
+  },
+  "metametricsCommitmentsNeverCollectKeysEtc": {
+    "message": "{1} collect keys, addresses, transactions, balances, hashes, or any personal information"
+  },
+  "metametricsCommitmentsNeverSellDataForProfit": {
+    "message": "{1} sell data for profit. Ever!"
+  },
+  "metametricsCommitmentsSendAnonymizedEvents": {
+    "message": "Send anonymized click & pageview events"
+  },
+  "metametricsHelpImproveMetaMask": {
+    "message": "Help Us Improve OneKey"
+  },
+  "metametricsOptInDescription": {
+    "message": "OneKey would like to gather usage data to better understand how our users interact with the extension. This data will be used to continually improve the usability and user experience of our product and the Ethereum ecosystem."
+  },
+  "mismatchedChain": {
+    "message": "The network details for this chain ID do not match our records. We recommend that you {1} before proceeding."
+  },
+  "mobileSyncText": {
+    "message": "Please enter your password to confirm it's you!"
+  },
+  "mustSelectOne": {
+    "message": "Must select at least 1 token."
+  },
+  "myAccounts": {
+    "message": "My Accounts"
+  },
+  "myWalletAccounts": {
+    "message": "My Wallet Accounts"
+  },
+  "myWalletAccountsDescription": {
+    "message": "All of your OneKey created accounts will automatically be added to this section."
+  },
+  "needEtherInWallet": {
+    "message": "To interact with decentralized applications using OneKey, you’ll need Ether in your wallet."
+  },
+  "needImportFile": {
+    "message": "You must select a file to import."
+  },
+  "negativeETH": {
+    "message": "Can not send negative amounts of ETH."
+  },
+  "networkDetails": {
+    "message": "Network Details"
+  },
+  "networkName": {
+    "message": "Network Name"
+  },
+  "networkNameDefinition": {
+    "message": "The name associated with this network."
+  },
+  "networkSettingsChainIdDescription": {
+    "message": "The chain ID is used for signing transactions. It must match the chain ID returned by the network. You can enter a decimal or '0x'-prefixed hexadecimal number, but we will display the number in decimal."
+  },
+  "networkSettingsDescription": {
+    "message": "Add and edit custom RPC networks"
+  },
+  "networkURL": {
+    "message": "Network URL"
+  },
+  "networkURLDefinition": {
+    "message": "The URL used to access this network."
+  },
+  "networks": {
+    "message": "Networks"
+  },
+  "nevermind": {
+    "message": "Nevermind"
+  },
+  "newAccount": {
+    "message": "New Account"
+  },
+  "newAccountDetectedDialogMessage": {
+    "message": "New address detected! Click here to add to your address book."
+  },
+  "newAccountNumberName": {
+    "message": "Account {1}"
+  },
+  "newContact": {
+    "message": "New Contact"
+  },
+  "newContract": {
+    "message": "New Contract"
+  },
+  "newNetwork": {
+    "message": "New Network"
+  },
+  "newPassword": {
+    "message": "New password (min 8 chars)"
+  },
+  "newToMetaMask": {
+    "message": "New to OneKey Plugin?"
+  },
+  "newTotal": {
+    "message": "New Total"
+  },
+  "newTransactionFee": {
+    "message": "New Transaction Fee"
+  },
+  "next": {
+    "message": "Next"
+  },
+  "nextNonceWarning": {
+    "message": "Nonce is higher than suggested nonce of {1}"
+  },
+  "noAccountsFound": {
+    "message": "No accounts found for the given search query"
+  },
+  "noAddressForName": {
+    "message": "No address has been set for this name."
+  },
+  "noAlreadyHaveSeed": {
+    "message": "No, I already have a seed phrase"
+  },
+  "noConversionRateAvailable": {
+    "message": "No Conversion Rate Available"
+  },
+  "noThanks": {
+    "message": "No Thanks"
+  },
+  "noTransactions": {
+    "message": "You have no transactions"
+  },
+  "noWebcamFound": {
+    "message": "Your computer's webcam was not found. Please try again."
+  },
+  "noWebcamFoundTitle": {
+    "message": "Webcam not found"
+  },
+  "nonceField": {
+    "message": "Customize transaction nonce"
+  },
+  "nonceFieldDescription": {
+    "message": "Turn this on to change the nonce (transaction number) on confirmation screens. This is an advanced feature, use cautiously."
+  },
+  "nonceFieldHeading": {
+    "message": "Custom Nonce"
+  },
+  "notCurrentAccount": {
+    "message": "Is this the correct account? It's different from the currently selected account in your wallet"
+  },
+  "notEnoughGas": {
+    "message": "Not Enough Gas"
+  },
+  "notSupportSignTypedData": {
+    "message": "Not supported on this device"
+  },
+  "notUseHardware": {
+    "message": "Do not import Mnemonic Phrase from OneKey Hardware Device"
+  },
+  "ofTextNofM": {
+    "message": "of"
+  },
+  "off": {
+    "message": "Off"
+  },
+  "offlineForMaintenance": {
+    "message": "Offline for maintenance"
+  },
+  "ok": {
+    "message": "Ok"
+  },
+  "okex": {
+    "message": "OEC Mainnet"
+  },
+  "on": {
+    "message": "On"
+  },
+  "onboardingReturnNotice": {
+    "message": "\"{1}\" will close this tab and direct back to {2}"
+  },
+  "onlyAddTrustedNetworks": {
+    "message": "A malicious Ethereum network provider can lie about the state of the blockchain and record your network activity. Only add custom networks you trust."
+  },
+  "onlyAvailableOnMainnet": {
+    "message": "not available on current network"
+  },
+  "onlyConnectTrust": {
+    "message": "Only connect with sites you trust."
+  },
+  "optionalBlockExplorerUrl": {
+    "message": "Block Explorer URL (optional)"
+  },
+  "optionalCurrencySymbol": {
+    "message": "Currency Symbol (optional)"
+  },
+  "orderOneHere": {
+    "message": "Order a Trezor or Ledger and keep your funds in cold storage"
+  },
+  "origin": {
+    "message": "Origin"
+  },
+  "ownedOnekey": {
+    "message": "Have already owned Onekey hardware devices"
+  },
+  "parameters": {
+    "message": "Parameters"
+  },
+  "password": {
+    "message": "Password"
+  },
+  "passwordNotLongEnough": {
+    "message": "Password not long enough"
+  },
+  "passwordsDontMatch": {
+    "message": "Passwords Don't Match"
+  },
+  "pastePrivateKey": {
+    "message": "Paste your private key string here:"
+  },
+  "pasteWatchAccount": {
+    "message": "Paste your interested account address here:"
+  },
+  "pending": {
+    "message": "Pending"
+  },
+  "permissionCheckedIconDescription": {
+    "message": "You have approved this permission"
+  },
+  "permissionUncheckedIconDescription": {
+    "message": "You have not approved this permission"
+  },
+  "permissions": {
+    "message": "Permissions"
+  },
+  "personalAddressDetected": {
+    "message": "Personal address detected. Input the token contract address."
+  },
+  "plusXMore": {
+    "message": "+ {1} more"
+  },
+  "prev": {
+    "message": "Prev"
+  },
+  "primaryCurrencySetting": {
+    "message": "Primary Currency"
+  },
+  "primaryCurrencySettingDescription": {
+    "message": "Select native to prioritize displaying values in the native currency of the chain (e.g. ETH). Select Fiat to prioritize displaying values in your selected fiat currency."
+  },
+  "privacyMsg": {
+    "message": "Privacy Policy"
+  },
+  "privateKey": {
+    "message": "Private Key"
+  },
+  "privateKeyWarning": {
+    "message": "Warning: Never disclose this key. Anyone with your private keys can steal any assets held in your account."
+  },
+  "privateNetwork": {
+    "message": "Private Network"
+  },
+  "proposedApprovalLimit": {
+    "message": "Proposed Approval Limit"
+  },
+  "protectYourKeys": {
+    "message": "Protect Your Keys!"
+  },
+  "protectYourKeysMessage1": {
+    "message": "Be careful with your seed phrase — there have been reports of websites that attempt to imitate OneKey. OneKey will never ask for your seed phrase!"
+  },
+  "protectYourKeysMessage2": {
+    "message": "Keep your phrase safe. If you see something fishy, or you’re uncertain about a website, email hi@onekey.so"
+  },
+  "provide": {
+    "message": "Provide"
+  },
+  "queue": {
+    "message": "Queue"
+  },
+  "queued": {
+    "message": "Queued"
+  },
+  "readdToken": {
+    "message": "You can add this token back in the future by going to “Add token” in your accounts options menu."
+  },
+  "readyToConnect": {
+    "message": "Ready to Connect?"
+  },
+  "receive": {
+    "message": "Receive"
+  },
+  "recents": {
+    "message": "Recents"
+  },
+  "recipientAddress": {
+    "message": "Recipient Address"
+  },
+  "recipientAddressPlaceholder": {
+    "message": "Search, public address (0x), or ENS"
+  },
+  "reject": {
+    "message": "Reject"
+  },
+  "rejectAll": {
+    "message": "Reject All"
+  },
+  "rejectTxsDescription": {
+    "message": "You are about to batch reject {1} transactions."
+  },
+  "rejectTxsN": {
+    "message": "Reject {1} transactions"
+  },
+  "rejected": {
+    "message": "Rejected"
+  },
+  "remindMeLater": {
+    "message": "Remind me later"
+  },
+  "remove": {
+    "message": "Remove"
+  },
+  "removeAccount": {
+    "message": "Remove account"
+  },
+  "removeAccountDescription": {
+    "message": "This account will be removed from your wallet. Please make sure you have the original seed phrase or private key for this imported account before continuing. You can import or create accounts again from the account drop-down. "
+  },
+  "requestsAwaitingAcknowledgement": {
+    "message": "requests waiting to be acknowledged"
+  },
+  "required": {
+    "message": "Required"
+  },
+  "reset": {
+    "message": "Reset"
+  },
+  "resetAccount": {
+    "message": "Reset Account"
+  },
+  "resetAccountDescription": {
+    "message": "Resetting your account will clear your transaction history. This will not change the balances in your accounts or require you to re-enter your seed phrase."
+  },
+  "restore": {
+    "message": "Restore"
+  },
+  "restoreAccountWithSeed": {
+    "message": "Restore your Account with Seed Phrase"
+  },
+  "restoreFromSeed": {
+    "message": "Restore account?"
+  },
+  "restoreWalletPreferences": {
+    "message": "A backup of your data from {1} has been found. Would you like to restore your wallet preferences?"
+  },
+  "retryTransaction": {
+    "message": "Retry Transaction"
+  },
+  "reusedTokenNameWarning": {
+    "message": "A token here reuses a symbol from another token you watch, this can be confusing or deceptive."
+  },
+  "revealSeedWords": {
+    "message": "Reveal Seed Phrase"
+  },
+  "revealSeedWordsDescription": {
+    "message": "If you ever change browsers or move computers, you will need this seed phrase to access your accounts. Save them somewhere safe and secret."
+  },
+  "revealSeedWordsTitle": {
+    "message": "Seed Phrase"
+  },
+  "revealSeedWordsWarning": {
+    "message": "These words can be used to steal all your accounts."
+  },
+  "revealSeedWordsWarningTitle": {
+    "message": "DO NOT share this phrase with anyone!"
+  },
+  "rinkeby": {
+    "message": "Rinkeby Test Network"
+  },
+  "ropsten": {
+    "message": "Ropsten Test Network"
+  },
+  "rpcUrl": {
+    "message": "New RPC URL"
+  },
+  "save": {
+    "message": "Save"
+  },
+  "saveAsCsvFile": {
+    "message": "Save as CSV File"
+  },
+  "scanInstructions": {
+    "message": "Place the QR code in front of your camera"
+  },
+  "scanQrCode": {
+    "message": "Scan QR Code"
+  },
+  "scrollDown": {
+    "message": "Scroll down"
+  },
+  "search": {
+    "message": "Search"
+  },
+  "searchAccounts": {
+    "message": "Search Accounts"
+  },
+  "searchResults": {
+    "message": "Search Results"
+  },
+  "searchTokens": {
+    "message": "Search Tokens"
+  },
+  "secretBackupPhrase": {
+    "message": "Secret Backup Phrase"
+  },
+  "secretBackupPhraseDescription": {
+    "message": "Your secret backup phrase makes it easy to back up and restore your account."
+  },
+  "secretBackupPhraseWarning": {
+    "message": "WARNING: Never disclose your backup phrase. Anyone with this phrase can take your Ether forever."
+  },
+  "secretPhrase": {
+    "message": "Enter your secret twelve word phrase here to restore your vault."
+  },
+  "securityAndPrivacy": {
+    "message": "Security & Privacy"
+  },
+  "securitySettingsDescription": {
+    "message": "Privacy settings and wallet seed phrase"
+  },
+  "seedPhrasePlaceholder": {
+    "message": "Separate each word with a single space"
+  },
+  "seedPhrasePlaceholderPaste": {
+    "message": "Paste seed phrase from clipboard"
+  },
+  "seedPhraseReq": {
+    "message": "Seed phrases contain 12, 15, 18, 21, or 24 words"
+  },
+  "selectAHigherGasFee": {
+    "message": "Select a higher gas fee to accelerate the processing of your transaction.*"
+  },
+  "selectAccounts": {
+    "message": "Select account(s)"
+  },
+  "selectAll": {
+    "message": "Select all"
+  },
+  "selectAnAccount": {
+    "message": "Select an Account"
+  },
+  "selectAnAccountAlreadyConnected": {
+    "message": "This account has already been connected to OneKey"
+  },
+  "selectAnAccountHelp": {
+    "message": "Select the account to view in OneKey"
+  },
+  "selectEachPhrase": {
+    "message": "Please select each phrase in order to make sure it is correct."
+  },
+  "selectHdPath": {
+    "message": "Select HD Path"
+  },
+  "selectPathHelp": {
+    "message": "If you don't see your existing Ledger accounts below, try switching paths to \"Legacy (MEW / MyCrypto)\""
+  },
+  "selectType": {
+    "message": "Select Type"
+  },
+  "selectingAllWillAllow": {
+    "message": "Selecting all will allow this site to view all of your current accounts. Make sure you trust this site."
+  },
+  "send": {
+    "message": "Send"
+  },
+  "sendAmount": {
+    "message": "Send Amount"
+  },
+  "sendETH": {
+    "message": "Send"
+  },
+  "sendSpecifiedTokens": {
+    "message": "Send {1}"
+  },
+  "sendTokens": {
+    "message": "Send Tokens"
+  },
+  "sentEther": {
+    "message": "sent ether"
+  },
+  "separateEachWord": {
+    "message": "Separate each word with a single space"
+  },
+  "settings": {
+    "message": "Settings"
+  },
+  "showAdvancedGasInline": {
+    "message": "Advanced gas controls"
+  },
+  "showAdvancedGasInlineDescription": {
+    "message": "Select this to show gas price and limit controls directly on the send and confirm screens."
+  },
+  "showFiatConversionInTestnets": {
+    "message": "Show Conversion on Testnets"
+  },
+  "showFiatConversionInTestnetsDescription": {
+    "message": "Select this to show fiat conversion on Testnets"
+  },
+  "showHexData": {
+    "message": "Show Hex Data"
+  },
+  "showHexDataDescription": {
+    "message": "Select this to show the hex data field on the send screen"
+  },
+  "showIncomingTransactions": {
+    "message": "Show Incoming Transactions"
+  },
+  "showIncomingTransactionsDescription": {
+    "message": "Select this to use Etherscan to show incoming transactions in the transactions list"
+  },
+  "showPermissions": {
+    "message": "Show permissions"
+  },
+  "showPrivateKeys": {
+    "message": "Show Private Keys"
+  },
+  "showSeedPhrase": {
+    "message": "Show seed phrase"
+  },
+  "sigRequest": {
+    "message": "Signature Request"
+  },
+  "sign": {
+    "message": "Sign"
+  },
+  "signNotice": {
+    "message": "Signing this message can have dangerous side effects. Only sign messages from sites you fully trust with your entire account. This dangerous method will be removed in a future version."
+  },
+  "signatureRequest": {
+    "message": "Signature Request"
+  },
+  "signatureRequest1": {
+    "message": "Message"
+  },
+  "signed": {
+    "message": "Signed"
+  },
+  "slow": {
+    "message": "Average"
+  },
+  "solana": {
+    "message": "Solana Mainnet"
+  },
+  "somethingWentWrong": {
+    "message": "Oops! Something went wrong."
+  },
+  "speedUp": {
+    "message": "Speed Up"
+  },
+  "speedUpCancellation": {
+    "message": "Speed up this cancellation"
+  },
+  "speedUpTransaction": {
+    "message": "Speed up this transaction"
+  },
+  "spendLimitAmount": {
+    "message": "Spend limit amount"
+  },
+  "spendLimitInsufficient": {
+    "message": "Spend limit insufficient"
+  },
+  "spendLimitInvalid": {
+    "message": "Spend limit invalid; must be a positive number"
+  },
+  "spendLimitPermission": {
+    "message": "Spend limit permission"
+  },
+  "spendLimitRequestedBy": {
+    "message": "Spend limit requested by {1}"
+  },
+  "spendLimitTooLarge": {
+    "message": "Spend limit too large"
+  },
+  "stateLogError": {
+    "message": "Error in retrieving state logs."
+  },
+  "stateLogFileName": {
+    "message": "OneKey State Logs"
+  },
+  "stateLogs": {
+    "message": "State Logs"
+  },
+  "stateLogsDescription": {
+    "message": "State logs contain your public account addresses and sent transactions."
+  },
+  "statusConnected": {
+    "message": "Connected"
+  },
+  "statusNotConnected": {
+    "message": "Not connected"
+  },
+  "step1HardwareWallet": {
+    "message": "1. Connect Hardware Wallet"
+  },
+  "step1HardwareWalletMsg": {
+    "message": "Connect your hardware wallet directly to your computer."
+  },
+  "step2HardwareWallet": {
+    "message": "2. Select an Account"
+  },
+  "step2HardwareWalletMsg": {
+    "message": "Select the account you want to view. You can only choose one at a time."
+  },
+  "step3HardwareWallet": {
+    "message": "3. Start using web3 sites and more!"
+  },
+  "step3HardwareWalletMsg": {
+    "message": "Use your hardware account like you would with any Ethereum account. Connect to web3 sites, send ETH, buy and store ERC20 tokens and non-fungible tokens like CryptoKitties."
+  },
+  "storePhrase": {
+    "message": "Store this phrase in a password manager like 1Password."
+  },
+  "submit": {
+    "message": "Submit"
+  },
+  "submitted": {
+    "message": "Submitted"
+  },
+  "supportCenter": {
+    "message": "Visit our Support Center"
+  },
+  "swap": {
+    "message": "Swap"
+  },
+  "swapTokenToToken": {
+    "message": "Swap {1} to {2}"
+  },
+  "switchEthereumChainConfirmationDescription": {
+    "message": "This will switch the selected network within OneKey to a previously added network:"
+  },
+  "switchEthereumChainConfirmationTitle": {
+    "message": "Allow this site to switch the network?"
+  },
+  "switchNetwork": {
+    "message": "Switch network"
+  },
+  "switchNetworks": {
+    "message": "Switch Networks"
+  },
+  "switchToThisAccount": {
+    "message": "Switch to this account"
+  },
+  "switchingNetworksCancelsPendingConfirmations": {
+    "message": "Switching networks will cancel all pending confirmations"
+  },
+  "symbol": {
+    "message": "Symbol"
+  },
+  "symbolBetweenZeroTwelve": {
+    "message": "Symbol must be 11 characters or fewer."
+  },
+  "symbolRequired": {
+    "message": "Symbol required"
+  },
+  "terms": {
+    "message": "Terms of Use"
+  },
+  "termsOfService": {
+    "message": "Terms of Service"
+  },
+  "testFaucet": {
+    "message": "Test Faucet"
+  },
+  "thankToMetaMask": {
+    "message": "Powered by MetaMask Source Code"
+  },
+  "thisWillCreate": {
+    "message": "This will create a new wallet and seed phrase"
+  },
+  "tips": {
+    "message": "Tips"
+  },
+  "to": {
+    "message": "To"
+  },
+  "toAddress": {
+    "message": "To: {1}"
+  },
+  "toWithColon": {
+    "message": "To:"
+  },
+  "token": {
+    "message": "Token"
+  },
+  "tokenAlreadyAdded": {
+    "message": "Token has already been added."
+  },
+  "tokenContractAddress": {
+    "message": "Token Contract Address"
+  },
+  "tokenOptions": {
+    "message": "Token options"
+  },
+  "tokenSymbol": {
+    "message": "Token Symbol"
+  },
+  "total": {
+    "message": "Total"
+  },
+  "transaction": {
+    "message": "transaction"
+  },
+  "transactionCancelAttempted": {
+    "message": "Transaction cancel attempted with gas fee of {1} at {2}"
+  },
+  "transactionCancelSuccess": {
+    "message": "Transaction successfully cancelled at {2}"
+  },
+  "transactionConfirmed": {
+    "message": "Transaction confirmed at {2}."
+  },
+  "transactionCreated": {
+    "message": "Transaction created with a value of {1} at {2}."
+  },
+  "transactionDropped": {
+    "message": "Transaction dropped at {2}."
+  },
+  "transactionError": {
+    "message": "Transaction Error. Exception thrown in contract code."
+  },
+  "transactionErrorNoContract": {
+    "message": "Trying to call a function on a non-contract address."
+  },
+  "transactionErrored": {
+    "message": "Transaction encountered an error."
+  },
+  "transactionFee": {
+    "message": "Transaction Fee"
+  },
+  "transactionResubmitted": {
+    "message": "Transaction resubmitted with gas fee increased to {1} at {2}"
+  },
+  "transactionSubmitted": {
+    "message": "Transaction submitted with gas fee of {1} at {2}."
+  },
+  "transactionUpdated": {
+    "message": "Transaction updated at {2}."
+  },
+  "transfer": {
+    "message": "Transfer"
+  },
+  "transferBetweenAccounts": {
+    "message": "Transfer between my accounts"
+  },
+  "transferFrom": {
+    "message": "Transfer From"
+  },
+  "troubleConnectingToWallet": {
+    "message": "We had trouble connecting to your {1}, try reviewing {2} and try again."
+  },
+  "troubleTokenBalances": {
+    "message": "We had trouble loading your token balances. You can view them "
+  },
+  "trustSiteApprovePermission": {
+    "message": "Do you trust this site? By granting this permission, you’re allowing {1} to withdraw your {2} and automate transactions for you."
+  },
+  "tryAgain": {
+    "message": "Try again"
+  },
+  "typePassword": {
+    "message": "Type your OneKey password"
+  },
+  "unapproved": {
+    "message": "Unapproved"
+  },
+  "units": {
+    "message": "units"
+  },
+  "unknown": {
+    "message": "Unknown"
+  },
+  "unknownCameraError": {
+    "message": "There was an error while trying to access your camera. Please try again..."
+  },
+  "unknownCameraErrorTitle": {
+    "message": "Ooops! Something went wrong...."
+  },
+  "unknownNetwork": {
+    "message": "Unknown Private Network"
+  },
+  "unknownQrCode": {
+    "message": "Error: We couldn't identify that QR code"
+  },
+  "unlimited": {
+    "message": "Unlimited"
+  },
+  "unlock": {
+    "message": "Unlock"
+  },
+  "unlockMessage": {
+    "message": "The decentralized web awaits"
+  },
+  "unrecognizedChain": {
+    "message": "This custom network is not recognized. We recommend that you {1} before proceeding"
+  },
+  "unrecognizedChainLinkText": {
+    "message": "verify the network details"
+  },
+  "updatedWithDate": {
+    "message": "Updated {1}"
+  },
+  "urlErrorMsg": {
+    "message": "URLs require the appropriate HTTP/HTTPS prefix."
+  },
+  "urlExistsErrorMsg": {
+    "message": "URL is already present in existing list of networks"
+  },
+  "useAutoSwitchChain": {
+    "message": "Auto Switch Network"
+  },
+  "usePhishingDetection": {
+    "message": "Use Phishing Detection"
+  },
+  "usePhishingDetectionDescription": {
+    "message": "Display a warning for phishing domains targeting Ethereum users"
+  },
+  "usedByClients": {
+    "message": "Used by a variety of different clients"
+  },
+  "userName": {
+    "message": "Username"
+  },
+  "verifyThisTokenOn": {
+    "message": "Verify this token on {1}"
+  },
+  "viewAccount": {
+    "message": "View Account"
+  },
+  "viewAllDetails": {
+    "message": "View all details"
+  },
+  "viewContact": {
+    "message": "View Contact"
+  },
+  "viewOnCustomBlockExplorer": {
+    "message": "View at {1}"
+  },
+  "viewOnEtherscan": {
+    "message": "View on Etherscan"
+  },
+  "viewinExplorer": {
+    "message": "View in Block Explorer"
+  },
+  "visitWebSite": {
+    "message": "Visit our web site"
+  },
+  "walletConnectionGuide": {
+    "message": "our hardware wallet connection guide"
+  },
+  "walletSeed": {
+    "message": "Seed phrase"
+  },
+  "watchAcccount": {
+    "message": "Watch Wallet"
+  },
+  "watched": {
+    "message": "watched"
+  },
+  "web3ShimUsageNotification": {
+    "message": "We noticed that the current website tried to use the removed window.web3 API. If the site appears to be broken, please click {1} for more information."
+  },
+  "welcome": {
+    "message": "Welcome to the OneKey Plugin"
+  },
+  "welcomeBack": {
+    "message": "Welcome Back!"
+  },
+  "whatsThis": {
+    "message": "What's this?"
+  },
+  "writePhrase": {
+    "message": "Write this phrase on a piece of paper and store in a secure location. If you want even more security, write it down on multiple pieces of paper and store each in 2 - 3 different locations."
+  },
+  "xOfY": {
+    "message": "{1} of {2}"
+  },
+  "xOfYPending": {
+    "message": "{1} of {2} pending"
+  },
+  "xdai": {
+    "message": "xDai Mainnet"
+  },
+  "yesLetsTry": {
+    "message": "Yes, let's try"
+  },
+  "youNeedToAllowCameraAccess": {
+    "message": "You need to allow camera access to use this feature."
+  },
+  "youSign": {
+    "message": "You are signing"
+  },
+  "yourPrivateSeedPhrase": {
+    "message": "Your private seed phrase"
+  },
+  "zeroGasPriceOnSpeedUpError": {
+    "message": "Zero gas price on speed up"
+  }
+}

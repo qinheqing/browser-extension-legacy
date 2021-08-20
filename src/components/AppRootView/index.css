@@ -1,0 +1,16 @@
+.root {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content {
+  position: relative;
+  transform: scale(1);
+  width: 100%;
+  height: 100vh;
+
+  @apply bg-root-body xs:max-w-[364px] xs:max-h-[601px];
+}
