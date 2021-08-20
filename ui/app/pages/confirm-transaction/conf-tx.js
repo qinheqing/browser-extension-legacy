@@ -104,6 +104,8 @@ class ConfirmTxScreen extends Component {
       unapprovedMsgs,
       unapprovedPersonalMsgs,
       unapprovedTypedMessages,
+      {},
+      {},
       network,
       chainId,
     );
@@ -184,7 +186,16 @@ class ConfirmTxScreen extends Component {
       chainId,
       send,
     } = this.props;
-    const unconfTxList = txHelper(unapprovedTxs, {}, {}, {}, network, chainId);
+    const unconfTxList = txHelper(
+      unapprovedTxs,
+      {},
+      {},
+      {},
+      {},
+      {},
+      network,
+      chainId,
+    );
 
     if (
       unconfTxList.length === 0 &&
@@ -218,6 +229,8 @@ class ConfirmTxScreen extends Component {
         {},
         {},
         {},
+        {},
+        {},
         network,
         chainId,
       );
@@ -226,7 +239,16 @@ class ConfirmTxScreen extends Component {
         currentNetworkTxList.find(({ id }) => id === prevTxData.id) || {};
     }
 
-    const unconfTxList = txHelper(unapprovedTxs, {}, {}, {}, network, chainId);
+    const unconfTxList = txHelper(
+      unapprovedTxs,
+      {},
+      {},
+      {},
+      {},
+      {},
+      network,
+      chainId,
+    );
 
     if (prevTx && prevTx.status === TRANSACTION_STATUSES.DROPPED) {
       this.props.dispatch(

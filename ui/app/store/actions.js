@@ -983,6 +983,8 @@ export function completedTx(id) {
       unapprovedMsgs,
       unapprovedPersonalMsgs,
       unapprovedTypedMessages,
+      {},
+      {},
       network,
       chainId,
     );

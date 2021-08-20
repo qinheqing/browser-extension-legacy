@@ -48,7 +48,7 @@ describe('CachedBalancesController', function () {
         },
         initState: {
           cachedBalances: {
-            KOVAN_CHAIN_ID: {
+            [KOVAN_CHAIN_ID]: {
               a: '0x1',
               b: '0x2',
               c: '0x3',
@@ -72,7 +72,7 @@ describe('CachedBalancesController', function () {
       );
 
       assert.deepEqual(result, {
-        KOVAN_CHAIN_ID: {
+        [KOVAN_CHAIN_ID]: {
           a: '0x4',
           b: '0x2',
           c: '0x5',
@@ -95,7 +95,7 @@ describe('CachedBalancesController', function () {
         },
         initState: {
           cachedBalances: {
-            KOVAN_CHAIN_ID: {
+            [KOVAN_CHAIN_ID]: {
               a: '0x1',
               b: '0x2',
               c: '0x3',
@@ -114,7 +114,7 @@ describe('CachedBalancesController', function () {
       );
 
       assert.deepEqual(result, {
-        KOVAN_CHAIN_ID: {
+        [KOVAN_CHAIN_ID]: {
           a: '0x1',
           b: '0x2',
           c: '0x3',

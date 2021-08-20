@@ -90,7 +90,7 @@ export default class MetaMetricsOptInModal extends Component {
               more information in relation to our privacy practices, please see
               our&nbsp;
               <a
-                href="https://OneKey.io/privacy.html"
+                href="https://help.onekey.so/hc/en/articles/360002003315"
                 target="_blank"
                 rel="noopener noreferrer"
               >

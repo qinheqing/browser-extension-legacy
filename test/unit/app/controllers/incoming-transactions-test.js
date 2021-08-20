@@ -6,14 +6,18 @@ import { cloneDeep } from 'lodash';
 
 import waitUntilCalled from '../../../lib/wait-until-called';
 import {
+  BSC,
   GOERLI,
+  HECO,
   KOVAN,
   MAINNET,
   MAINNET_CHAIN_ID,
+  MATIC,
   RINKEBY,
   ROPSTEN,
   ROPSTEN_CHAIN_ID,
   ROPSTEN_NETWORK_ID,
+  XDAI,
 } from '../../../../shared/constants/network';
 import {
   TRANSACTION_CATEGORIES,
@@ -36,11 +40,15 @@ function getEmptyInitState() {
   return {
     incomingTransactions: {},
     incomingTxLastFetchedBlocksByNetwork: {
+      [BSC]: null,
       [GOERLI]: null,
+      [HECO]: null,
       [KOVAN]: null,
       [MAINNET]: null,
+      [MATIC]: null,
       [RINKEBY]: null,
       [ROPSTEN]: null,
+      [XDAI]: null,
     },
   };
 }
