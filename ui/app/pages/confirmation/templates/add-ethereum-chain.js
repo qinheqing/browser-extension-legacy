@@ -19,8 +19,7 @@ const UNRECOGNIZED_CHAIN = {
             element: 'a',
             key: 'unrecognizedChainLink',
             props: {
-              href:
-                'https://metamask.zendesk.com/hc/en-us/articles/360057142392',
+              href: 'https://metamask.zendesk.com/hc/en-us/articles/360057142392',
               target: '__blank',
               tabIndex: 0,
             },
@@ -51,8 +50,7 @@ const INVALID_CHAIN = {
             element: 'a',
             key: 'mismatchedChainLink',
             props: {
-              href:
-                'https://metamask.zendesk.com/hc/en-us/articles/360057142392',
+              href: 'https://metamask.zendesk.com/hc/en-us/articles/360057142392',
               target: '__blank',
               tabIndex: 0,
             },
@@ -71,14 +69,21 @@ const INVALID_CHAIN = {
 
 async function getAlerts(pendingApproval) {
   const alerts = [];
-  // CORS on firefox
-  const safeChainsList = await fetchWithCache(
-    `https://www.onekey.so/api/image?imgUrl=${encodeURIComponent('https://chainid.network/chains.json')}`,
-  );
-  const matchedChain = safeChainsList.find(
-    (chain) =>
-      chain.chainId === parseInt(pendingApproval.requestData.chainId, 16),
-  );
+  let safeChainsList;
+  try {
+    safeChainsList = await fetchWithCache(
+      'https://chainid.network/chains.json',
+    );
+  } catch (e) {
+    return alerts;
+  }
+
+  const matchedChain =
+    safeChainsList &&
+    safeChainsList.find(
+      (chain) =>
+        chain.chainId === parseInt(pendingApproval.requestData.chainId, 16),
+    );
   let validated = Boolean(matchedChain);
 
   if (matchedChain) {
@@ -141,7 +146,7 @@ function getValues(pendingApproval, t, actions) {
             element: 'b',
             key: 'bolded-text',
             children: `${t('addEthereumChainConfirmationRisks')} `,
-          }
+          },
         ],
         props: {
           variant: TYPOGRAPHY.H7,
@@ -168,8 +173,8 @@ function getValues(pendingApproval, t, actions) {
             [t('networkURL')]: pendingApproval.requestData.rpcUrl,
             [t('chainId')]: parseInt(pendingApproval.requestData.chainId, 16),
             [t('currencySymbol')]: pendingApproval.requestData.ticker,
-            [t('blockExplorerUrl')]: pendingApproval.requestData
-              .blockExplorerUrl,
+            [t('blockExplorerUrl')]:
+              pendingApproval.requestData.blockExplorerUrl,
           },
           prefaceKeys: [t('networkName'), t('networkURL'), t('chainId')],
         },
