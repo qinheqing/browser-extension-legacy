@@ -34,6 +34,12 @@ import {
   OKEX_CHAIN_ID,
   OKEX_RPC_URL,
   OKEX_TICKER,
+  AVAX,
+  AVAX_COLOR,
+  AVAX_BLOCK_EXPLORER_URL,
+  AVAX_RPC_URL,
+  AVAX_CHAIN_ID,
+  AVAX_TICKER,
 } from '../../../../../shared/constants/network';
 
 const defaultNetworksData = [
@@ -100,6 +106,17 @@ const defaultNetworksData = [
     ticker: OKEX_TICKER,
     blockExplorerUrl: 'https://www.oklink.com/okexchain',
   },
+
+  {
+    labelKey: AVAX,
+    providerType: AVAX,
+    iconColor: AVAX_COLOR,
+    rpcUrl: AVAX_RPC_URL,
+    chainId: AVAX_CHAIN_ID,
+    ticker: AVAX_TICKER,
+    blockExplorerUrl: AVAX_BLOCK_EXPLORER_URL,
+  },
+
   {
     labelKey: ROPSTEN,
     iconColor: '#FF4A8D',

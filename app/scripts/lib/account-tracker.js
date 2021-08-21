@@ -21,6 +21,7 @@ import {
   KOVAN_CHAIN_ID,
   BSC_CHAIN_ID,
   HECO_CHAIN_ID,
+  AVAX_CHAIN_ID,
 } from '../../../shared/constants/network';
 
 import {
@@ -30,6 +31,7 @@ import {
   SINGLE_CALL_BALANCES_ADDRESS_KOVAN,
   SINGLE_CALL_BALANCES_ADDRESS_BSC,
   SINGLE_CALL_BALANCES_ADDRESS_HECO,
+  SINGLE_CALL_BALANCES_ADDRESS_AVAX,
 } from '../constants/contracts';
 import { bnToHex } from './util';
 
@@ -212,6 +214,13 @@ export default class AccountTracker {
     const chainId = this.getCurrentChainId();
 
     switch (chainId) {
+      case AVAX_CHAIN_ID:
+        await this._updateAccountsViaBalanceChecker(
+          addresses,
+          SINGLE_CALL_BALANCES_ADDRESS_AVAX,
+        );
+        break;
+
       case MAINNET_CHAIN_ID:
         await this._updateAccountsViaBalanceChecker(
           addresses,

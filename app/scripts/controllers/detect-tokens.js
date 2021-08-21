@@ -10,6 +10,7 @@ import {
   MATIC_CHAIN_ID,
   XDAI_CHAIN_ID,
   OKEX_CHAIN_ID,
+  AVAX_CHAIN_ID,
 } from '../../../shared/constants/network';
 import {
   SINGLE_CALL_BALANCES_ADDRESS,
@@ -19,6 +20,7 @@ import {
   SINGLE_CALL_BALANCES_ADDRESS_MATIC,
   SINGLE_CALL_BALANCES_ADDRESS_XDAI,
   SINGLE_CALL_BALANCES_ADDRESS_OKEX,
+  SINGLE_CALL_BALANCES_ADDRESS_AVAX,
 } from '../constants/contracts';
 import { contractMap } from '../../../shared/tokens';
 import { stringifyBalance } from '../lib/util';
@@ -35,9 +37,11 @@ const supportedChainIds = [
   MATIC_CHAIN_ID,
   XDAI_CHAIN_ID,
   OKEX_CHAIN_ID,
+  AVAX_CHAIN_ID,
 ];
 
 const contractAddresses = {
+  [AVAX_CHAIN_ID]: SINGLE_CALL_BALANCES_ADDRESS_AVAX,
   [MAINNET_CHAIN_ID]: SINGLE_CALL_BALANCES_ADDRESS,
   [BSC_CHAIN_ID]: SINGLE_CALL_BALANCES_ADDRESS_BSC,
   [HECO_CHAIN_ID]: SINGLE_CALL_BALANCES_ADDRESS_HECO,

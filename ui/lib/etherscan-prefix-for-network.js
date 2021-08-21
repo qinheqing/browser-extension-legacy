@@ -4,6 +4,8 @@ import {
   KOVAN_NETWORK_ID,
   GOERLI_NETWORK_ID,
   BSC_TEST_NETWORK_ID,
+  AVAX_NETWORK_ID,
+  AVAX_BLOCK_EXPLORER_URL,
 } from '../../shared/constants/network';
 
 /**
@@ -22,8 +24,6 @@ export function getEtherscanNetworkPrefix(networkId) {
       return 'kovan.';
     case GOERLI_NETWORK_ID:
       return 'goerli.';
-    case BSC_TEST_NETWORK_ID:
-      return 'bsc_test.';
     default:
       // also covers mainnet
       return '';
@@ -34,6 +34,13 @@ export function getEtherscanNetwork(networkId, rpcPrefs = {}) {
   if (rpcPrefs.blockExplorerUrl) {
     return `${rpcPrefs.blockExplorerUrl.replace(/\/+$/u, '')}`;
   }
+
+  switch (String(networkId)) {
+    case AVAX_NETWORK_ID:
+      return AVAX_BLOCK_EXPLORER_URL;
+    default:
+  }
+
   switch (Number(networkId)) {
     case 1: // main net
       return `https://etherscan.io`;

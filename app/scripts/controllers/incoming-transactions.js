@@ -31,6 +31,8 @@ import {
   MATIC,
   XDAI_CHAIN_ID,
   XDAI,
+  AVAX_CHAIN_ID,
+  AVAX,
 } from '../../../shared/constants/network';
 import { NETWORK_EVENTS } from './network';
 
@@ -44,6 +46,7 @@ const fetchWithTimeout = getFetchWithTimeout(30000);
  * attempt to retrieve incoming transactions on any custom RPC endpoints.
  */
 const etherscanSupportedNetworks = [
+  AVAX_CHAIN_ID,
   GOERLI_CHAIN_ID,
   KOVAN_CHAIN_ID,
   MAINNET_CHAIN_ID,
@@ -74,6 +77,7 @@ export default class IncomingTransactionsController {
     const initState = {
       incomingTransactions: {},
       incomingTxLastFetchedBlocksByNetwork: {
+        [AVAX]: null,
         [GOERLI]: null,
         [KOVAN]: null,
         [MAINNET]: null,

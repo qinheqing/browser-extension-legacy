@@ -9,6 +9,10 @@ import {
   TRANSACTION_STATUSES,
   TRANSACTION_TYPES,
 } from '../../../../shared/constants/transaction';
+import {
+  AVAX_BLOCK_EXPLORER_URL,
+  AVAX_NETWORK_ID,
+} from '../../../../shared/constants/network';
 import fetchWithCache from './fetch-with-cache';
 
 import { addCurrencies } from './conversion-util';
@@ -211,6 +215,13 @@ export function getBlockExplorerUrlForTx(networkId, hash, rpcPrefs = {}) {
   if (rpcPrefs.blockExplorerUrl) {
     return `${rpcPrefs.blockExplorerUrl.replace(/\/+$/u, '')}/tx/${hash}`;
   }
+
+  switch (String(networkId)) {
+    case AVAX_NETWORK_ID:
+      return `${AVAX_BLOCK_EXPLORER_URL}/tx/${hash}`;
+    default:
+  }
+
   switch (Number(networkId)) {
     case 1: // main net
       return `https://etherscan.io/tx/${hash}`;
@@ -254,27 +265,35 @@ export function getTransactionCategoryTitle(t, transactionCategory) {
     case TRANSACTION_CATEGORIES.TOKEN_METHOD_TRANSFER: {
       return t('transfer');
     }
+
     case TRANSACTION_CATEGORIES.TOKEN_METHOD_TRANSFER_FROM: {
       return t('transferFrom');
     }
+
     case TRANSACTION_CATEGORIES.TOKEN_METHOD_APPROVE: {
       return t('approve');
     }
+
     case TRANSACTION_CATEGORIES.SENT_ETHER: {
       return t('sentEther');
     }
+
     case TRANSACTION_CATEGORIES.CONTRACT_INTERACTION: {
       return t('contractInteraction');
     }
+
     case TRANSACTION_CATEGORIES.DEPLOY_CONTRACT: {
       return t('contractDeployment');
     }
+
     case TRANSACTION_CATEGORIES.SWAP: {
       return t('swap');
     }
+
     case TRANSACTION_CATEGORIES.SWAP_APPROVAL: {
       return t('swapApproval');
     }
+
     default: {
       throw new Error(
         `Unrecognized transaction category: ${transactionCategory}`,

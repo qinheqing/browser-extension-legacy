@@ -57,8 +57,21 @@ export const MATIC_DISPLAY_NAME = 'Polygon Mainnet';
 export const FANTOM_DISPLAY_NAME = 'Fantom Opera';
 export const OKEX_DISPLAY_NAME = 'OEC Mainnet';
 
+// ----------------------------------------------
+export const AVAX = 'avalanche';
+export const AVAX_NETWORK_ID = '43114'; // 1 or 43114?
+export const AVAX_CHAIN_ID = '0xa86a'; // hex in chainId
+export const AVAX_DISPLAY_NAME = 'Avax Main C-Chain';
+export const AVAX_RPC_URL = 'https://api.avax.network/ext/bc/C/rpc';
+export const AVAX_BLOCK_EXPLORER_URL = 'https://cchain.explorer.avax.network';
+// export const AVAX_BLOCK_API_URL = 'https://cchain.explorer.avax.network';
+export const AVAX_TICKER = 'AVAX';
+export const AVAX_IMAGE = './images/avalanche_logo.svg';
+export const AVAX_COLOR = '#e84142';
+
 export const INFURA_PROVIDER_TYPES = [ROPSTEN, RINKEBY, KOVAN, MAINNET, GOERLI];
 export const BUILDINT_PROVIDER_TYPES = [
+  AVAX,
   HECO,
   BSC,
   BSC_TEST,
@@ -100,6 +113,7 @@ export const OKEX_TICKER = 'OKT';
 export const OKEX_IMAGE = './images/okex_logo.svg';
 
 export const NETWORK_TYPE_TO_TICKER_MAP = {
+  [AVAX]: AVAX_TICKER,
   [HECO]: HECO_TICKER,
   [BSC]: BSC_TICKER,
   [BSC_TEST]: BSC_TICKER,
@@ -116,6 +130,7 @@ export const TEST_CHAINS = [
 ];
 
 export const NETWORK_FALLBACK_URL = {
+  [AVAX]: [AVAX_RPC_URL],
   [MAINNET]: [
     'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
     'https://mainnet.infura.io/v3/0f1946aacbeb4f98a83cc1058764dbc1',
@@ -144,6 +159,13 @@ export const NETWORK_FALLBACK_URL = {
 };
 
 export const NETWORK_TYPE_TO_ID_MAP = {
+  [AVAX]: {
+    networkId: AVAX_NETWORK_ID,
+    chainId: AVAX_CHAIN_ID,
+    ticker: AVAX_TICKER,
+    rpcUrl: AVAX_RPC_URL,
+    image: AVAX_IMAGE,
+  },
   [OKEX]: {
     networkId: OKEX_NETWORK_ID,
     chainId: OKEX_CHAIN_ID,
@@ -205,6 +227,10 @@ export const NETWORK_TYPE_TO_ID_MAP = {
 };
 
 export const NETWORK_TO_NAME_MAP = {
+  [AVAX]: AVAX_DISPLAY_NAME,
+  [AVAX_CHAIN_ID]: AVAX_DISPLAY_NAME,
+  [AVAX_NETWORK_ID]: AVAX_DISPLAY_NAME,
+
   [ROPSTEN]: ROPSTEN_DISPLAY_NAME,
   [RINKEBY]: RINKEBY_DISPLAY_NAME,
   [KOVAN]: KOVAN_DISPLAY_NAME,
