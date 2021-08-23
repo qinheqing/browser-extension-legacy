@@ -39,6 +39,8 @@ export function getRenderableTokenData(
       symbol,
       false,
     ) || '';
+
+  // lintbug
   const usedIconUrl =
     iconUrl ||
     (contractMap[checksumAddress(address)] &&

@@ -105,6 +105,7 @@ const mapStateToProps = (state, ownProps) => {
   const { name: fromName } = identities[fromAddress];
   const toAddress = propsToAddress || txParamsToAddress;
 
+  // lintbug
   const toName =
     identities[toAddress]?.name ||
     casedContractMap[toAddress]?.name ||
