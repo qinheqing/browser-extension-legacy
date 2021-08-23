@@ -39,10 +39,10 @@ export function getRenderableTokenData(
       symbol,
       false,
     ) || '';
-  const usedIconUrl = iconUrl(
-    contractMap[checksumAddress(address)] &&
-      `images/contract/${contractMap[checksumAddress(address)].logo}`,
-  );
+  const usedIconUrl =
+    iconUrl ||
+    (contractMap[checksumAddress(address)] &&
+      `images/contract/${contractMap[checksumAddress(address)].logo}`);
   return {
     ...token,
     primaryLabel: symbol,
