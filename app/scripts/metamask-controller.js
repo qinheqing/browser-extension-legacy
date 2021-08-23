@@ -60,6 +60,7 @@ import accountImporter from './account-import-strategies';
 import seedPhraseVerifier from './lib/seed-phrase-verifier';
 import DetectChainController from './controllers/detect-chain';
 import { MOCK_CHAIN_ID_WHEN_NEW_APP } from './controllers/permissions/permissionsMethodMiddleware';
+import { STREAM_CONTROLLER, STREAM_PROVIDER } from './constants/consts';
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)
@@ -1792,7 +1793,7 @@ export default class MetamaskController extends EventEmitter {
     const mux = setupMultiplex(connectionStream);
 
     // messages between inpage and background
-    this.setupProviderConnection(mux.createStream('onekey-provider'), sender);
+    this.setupProviderConnection(mux.createStream(STREAM_PROVIDER), sender);
 
     // TODO:LegacyProvider: Delete
     // legacy streams
@@ -1825,9 +1826,9 @@ export default class MetamaskController extends EventEmitter {
     // setup multiplexing
     const mux = setupMultiplex(connectionStream);
     // connect features
-    this.setupControllerConnection(mux.createStream('onekey-controller'));
+    this.setupControllerConnection(mux.createStream(STREAM_CONTROLLER));
     this.setupProviderConnection(
-      mux.createStream('onekey-provider'),
+      mux.createStream(STREAM_PROVIDER),
       sender,
       true,
     );

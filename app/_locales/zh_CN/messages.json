@@ -195,7 +195,7 @@
     "message": "请设置 OneKey 自动锁定前的空闲时间（单位：分钟）"
   },
   "avalanche": {
-    "message": "Avax 主网 C 链"
+    "message": "Avax 主网C链"
   },
   "average": {
     "message": "快"
@@ -1198,6 +1198,9 @@
   },
   "origin": {
     "message": "来源"
+  },
+  "overwriteMetaMask": {
+    "message": "替代 MetaMask"
   },
   "ownedOnekey": {
     "message": "已经拥有 Onekey 硬件设备"

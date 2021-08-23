@@ -6,6 +6,7 @@ import extension from 'extensionizer';
 import { setupMultiplex } from './lib/stream-utils';
 import { getEnvironmentType } from './lib/util';
 import ExtensionPlatform from './platforms/extension';
+import { STREAM_CONTROLLER } from './constants/consts';
 
 document.addEventListener('DOMContentLoaded', start);
 
@@ -23,7 +24,7 @@ function start() {
   const connectionStream = new PortStream(extensionPort);
   const mx = setupMultiplex(connectionStream);
   setupControllerConnection(
-    mx.createStream('onekey-controller'),
+    mx.createStream(STREAM_CONTROLLER),
     (err, metaMaskController) => {
       if (err) {
         return;
