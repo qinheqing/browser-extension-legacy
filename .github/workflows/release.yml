@@ -94,7 +94,9 @@ jobs:
       - name: 'Install Dependiences'
         if: env.buildEveryTime
         shell: bash
-        run: 'yarn setup && yarn'
+        run: |
+          yarn setup
+          yarn
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -223,3 +225,13 @@ jobs:
           custom-issue-url: '${{ steps.pr_info.outputs.issue }}'
           custom-message-title: ''
           custom-message-payload: ''
+
+      - name: 'Upload to Sentry'
+        if: env.buildEveryTime
+        shell: bash
+        run: |
+          yarn sentry:publish
+        env:
+          SENTRY_ORG: onekey_hq
+          SENTRY_PROJECT: ext
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
