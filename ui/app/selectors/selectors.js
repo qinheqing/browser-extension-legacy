@@ -7,6 +7,7 @@ import {
   NETWORK_TYPE_RPC,
   NETWORK_TYPE_TO_ID_MAP,
   BUILDINT_PROVIDER_TYPES,
+  MAINNET_CHAIN_ID,
 } from '../../../shared/constants/network';
 import {
   shortenAddress,
@@ -339,8 +340,8 @@ function getSuggestedTokenCount(state) {
 }
 
 export function getIsMainnet(state) {
-  const { type } = getProvider(state);
-  return type === MAINNET;
+  const chainId = getCurrentChainId(state);
+  return chainId === MAINNET_CHAIN_ID;
 }
 
 export function getUnapprovedConfirmations(state) {

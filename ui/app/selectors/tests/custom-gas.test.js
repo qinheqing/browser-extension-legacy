@@ -1,5 +1,9 @@
 import assert from 'assert';
 import proxyquire from 'proxyquire';
+import {
+  MAINNET_CHAIN_ID,
+  RINKEBY_CHAIN_ID,
+} from '../../../../shared/constants/network';
 
 const {
   getCustomGasLimit,
@@ -55,6 +59,7 @@ describe('custom-gas selectors', function () {
             },
             provider: {
               type: 'mainnet',
+              chainId: MAINNET_CHAIN_ID,
             },
           },
           gas: {
@@ -105,6 +110,7 @@ describe('custom-gas selectors', function () {
             },
             provider: {
               type: 'mainnet',
+              chainId: MAINNET_CHAIN_ID,
             },
           },
           gas: {
@@ -155,6 +161,7 @@ describe('custom-gas selectors', function () {
             },
             provider: {
               type: 'rinkeby',
+              chainId: RINKEBY_CHAIN_ID,
             },
           },
           gas: {
@@ -205,6 +212,7 @@ describe('custom-gas selectors', function () {
             },
             provider: {
               type: 'rinkeby',
+              chainId: RINKEBY_CHAIN_ID,
             },
           },
           gas: {
@@ -249,6 +257,7 @@ describe('custom-gas selectors', function () {
             },
             provider: {
               type: 'mainnet',
+              chainId: MAINNET_CHAIN_ID,
             },
           },
           gas: {
@@ -310,6 +319,7 @@ describe('custom-gas selectors', function () {
             },
             provider: {
               type: 'mainnet',
+              chainId: MAINNET_CHAIN_ID,
             },
           },
           gas: {
@@ -354,6 +364,7 @@ describe('custom-gas selectors', function () {
             },
             provider: {
               type: 'mainnet',
+              chainId: MAINNET_CHAIN_ID,
             },
           },
           gas: {
@@ -404,6 +415,7 @@ describe('custom-gas selectors', function () {
             },
             provider: {
               type: 'rinkeby',
+              chainId: RINKEBY_CHAIN_ID,
             },
           },
           gas: {
@@ -454,6 +466,7 @@ describe('custom-gas selectors', function () {
             },
             provider: {
               type: 'rinkeby',
+              chainId: RINKEBY_CHAIN_ID,
             },
           },
           gas: {
@@ -498,6 +511,7 @@ describe('custom-gas selectors', function () {
             },
             provider: {
               type: 'mainnet',
+              chainId: MAINNET_CHAIN_ID,
             },
           },
           gas: {

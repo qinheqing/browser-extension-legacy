@@ -1,5 +1,9 @@
 import assert from 'assert';
 import proxyquire from 'proxyquire';
+import {
+  MAINNET_CHAIN_ID,
+  RINKEBY_CHAIN_ID,
+} from '../../../../../../shared/constants/network';
 
 let mapStateToProps, mergeProps;
 
@@ -29,6 +33,7 @@ describe('CurrencyInput container', function () {
             },
             provider: {
               type: 'mainnet',
+              chainId: MAINNET_CHAIN_ID,
             },
           },
         },
@@ -53,6 +58,7 @@ describe('CurrencyInput container', function () {
             },
             provider: {
               type: 'rinkeby',
+              chainId: RINKEBY_CHAIN_ID,
             },
           },
         },
@@ -77,6 +83,7 @@ describe('CurrencyInput container', function () {
             },
             provider: {
               type: 'rinkeby',
+              chainId: RINKEBY_CHAIN_ID,
             },
           },
         },
@@ -101,6 +108,7 @@ describe('CurrencyInput container', function () {
             },
             provider: {
               type: 'mainnet',
+              chainId: MAINNET_CHAIN_ID,
             },
           },
         },

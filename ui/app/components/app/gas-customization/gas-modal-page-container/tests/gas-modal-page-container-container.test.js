@@ -2,6 +2,10 @@ import assert from 'assert';
 import proxyquire from 'proxyquire';
 import sinon from 'sinon';
 import { TRANSACTION_STATUSES } from '../../../../../../../shared/constants/transaction';
+import {
+  MAINNET_CHAIN_ID,
+  RINKEBY_CHAIN_ID,
+} from '../../../../../../../shared/constants/network';
 
 let mapStateToProps;
 let mapDispatchToProps;
@@ -78,6 +82,7 @@ describe('gas-modal-page-container container', function () {
           },
           provider: {
             type: 'mainnet',
+            chainId: MAINNET_CHAIN_ID,
           },
           currentNetworkTxList: [
             {
@@ -200,6 +205,7 @@ describe('gas-modal-page-container container', function () {
               provider: {
                 ...baseMockState.metamask.provider,
                 type: 'rinkeby',
+                chainId: RINKEBY_CHAIN_ID,
               },
             },
           },
@@ -225,6 +231,7 @@ describe('gas-modal-page-container container', function () {
               provider: {
                 ...baseMockState.metamask.provider,
                 type: 'rinkeby',
+                chainId: RINKEBY_CHAIN_ID,
               },
             },
           },
@@ -246,6 +253,7 @@ describe('gas-modal-page-container container', function () {
               provider: {
                 ...baseMockState.metamask.provider,
                 type: 'mainnet',
+                chainId: MAINNET_CHAIN_ID,
               },
             },
           },
@@ -366,6 +374,7 @@ describe('gas-modal-page-container container', function () {
         someOtherStateProp: 'baz',
         transaction: {},
       };
+
       dispatchProps = {
         updateCustomGasPrice: sinon.spy(),
         hideGasButtonGroup: sinon.spy(),
@@ -390,6 +399,7 @@ describe('gas-modal-page-container container', function () {
       dispatchProps.hideSidebar.resetHistory();
       dispatchProps.hideModal.resetHistory();
     });
+
     it('should return the expected props when isConfirm is true', function () {
       const result = mergeProps(stateProps, dispatchProps, ownProps);
 
@@ -399,6 +409,7 @@ describe('gas-modal-page-container container', function () {
         result.gasPriceButtonGroupProps.someGasPriceButtonGroupProp,
         'foo',
       );
+
       assert.strictEqual(
         result.gasPriceButtonGroupProps.anotherGasPriceButtonGroupProp,
         'bar',
@@ -447,6 +458,7 @@ describe('gas-modal-page-container container', function () {
         result.gasPriceButtonGroupProps.someGasPriceButtonGroupProp,
         'foo',
       );
+
       assert.strictEqual(
         result.gasPriceButtonGroupProps.anotherGasPriceButtonGroupProp,
         'bar',
