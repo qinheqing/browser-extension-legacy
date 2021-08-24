@@ -47,13 +47,13 @@ function upload_bundle {
   filename="$( basename "${filepath}" )"
 
   printf 'Uploading %s\n' "${filename}"
-  sentry-cli releases --org 'onekey_hq' --project 'ext' files "${release}" upload "${filepath}" "metamask/${filename}"
+  sentry-cli releases  files "${release}" upload "${filepath}" "metamask/${filename}"
 }
 
 function upload_sourcemaps {
   local release="${1}"; shift
 
-  sentry-cli releases --org 'onekey_hq' --project 'ext' files "${release}" upload-sourcemaps ./dist/sourcemaps/ --url-prefix 'sourcemaps'
+  sentry-cli releases  files "${release}" upload-sourcemaps ./dist/sourcemaps/ --url-prefix 'sourcemaps'
 }
 
 function main {
