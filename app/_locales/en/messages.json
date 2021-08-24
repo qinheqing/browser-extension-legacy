@@ -194,6 +194,9 @@
   "autoLockTimeLimitDescription": {
     "message": "Set the idle time in minutes before OneKey will become locked."
   },
+  "avalanche": {
+    "message": "Avax Main C-Chain"
+  },
   "average": {
     "message": "Fast"
   },

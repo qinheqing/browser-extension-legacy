@@ -194,6 +194,9 @@
   "autoLockTimeLimitDescription": {
     "message": "请设置 OneKey 自动锁定前的空闲时间（单位：分钟）"
   },
+  "avalanche": {
+    "message": "Avax 主网 C 链"
+  },
   "average": {
     "message": "快"
   },

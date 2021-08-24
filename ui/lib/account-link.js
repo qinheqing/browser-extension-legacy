@@ -1,4 +1,6 @@
 import {
+  AVAX_BLOCK_EXPLORER_URL,
+  AVAX_NETWORK_ID,
   BSC_NETWORK_ID,
   BSC_TEST,
   BSC_TEST_NETWORK_ID,
@@ -26,6 +28,8 @@ export default function getAccountLink(address, network, rpcPrefs) {
   // eslint-disable-next-line radix
   const net = String(network);
   switch (net) {
+    case AVAX_NETWORK_ID: // main net
+      return `${AVAX_BLOCK_EXPLORER_URL}/address/${address}`;
     case MAINNET_NETWORK_ID: // main net
       return `https://etherscan.io/address/${address}`;
     case MORDEN_NETWORK_ID: // morden test net

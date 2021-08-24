@@ -39,6 +39,7 @@ export const COLORS = {
   XDAI: 'xdai',
   FANTOM: 'fantom',
   OKEX: 'okex',
+  AVAX: 'avalanche',
 };
 
 export const TYPOGRAPHY = {
