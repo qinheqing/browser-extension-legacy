@@ -5,9 +5,11 @@ import { normalize as normalizeAddress } from 'eth-sig-util';
 import { isValidAddress } from 'ethereumjs-util';
 import ethers from 'ethers';
 import log from 'loglevel';
+import { isNil } from 'lodash';
 import { LISTED_CONTRACT_ADDRESSES } from '../../../shared/constants/tokens';
 import { NETWORK_TYPE_TO_ID_MAP } from '../../../shared/constants/network';
 import { isPrefixedFormattedHexString } from '../../../shared/modules/network.utils';
+import { NETWORK_EVENTS } from './network';
 
 export default class PreferencesController {
   /**
@@ -76,7 +78,7 @@ export default class PreferencesController {
     this.store.setMaxListeners(12);
     this.openPopup = opts.openPopup;
     this.migrateAddressBookState = opts.migrateAddressBookState;
-    this._subscribeProviderType();
+    this._subscribeToNetworkDidChange();
 
     global.setPreference = (key, value) => {
       return this.setFeatureFlag(key, value);
@@ -684,8 +686,8 @@ export default class PreferencesController {
    *
    *
    */
-  _subscribeProviderType() {
-    this.network.providerStore.subscribe(() => {
+  _subscribeToNetworkDidChange() {
+    this.network.on(NETWORK_EVENTS.NETWORK_DID_CHANGE, () => {
       const {
         tokens,
         hiddenTokens,
@@ -707,12 +709,14 @@ export default class PreferencesController {
   _updateAccountTokens(tokens, assetImages, hiddenTokens) {
     const {
       accountTokens,
+      chainId,
       providerType,
       selectedAddress,
       accountHiddenTokens,
     } = this._getTokenRelatedStates();
-    accountTokens[selectedAddress][providerType] = tokens;
-    accountHiddenTokens[selectedAddress][providerType] = hiddenTokens;
+    const tokenKey = isNil(chainId) ? providerType : chainId;
+    accountTokens[selectedAddress][tokenKey] = tokens;
+    accountHiddenTokens[selectedAddress][tokenKey] = hiddenTokens;
     this.store.updateState({
       accountTokens,
       tokens,
@@ -756,6 +760,8 @@ export default class PreferencesController {
       selectedAddress = this.store.getState().selectedAddress;
     }
     const providerType = this.network.providerStore.getState().type;
+    const chainId = this.network.getCurrentChainId();
+    const tokenKey = isNil(chainId) ? providerType : chainId;
     if (!(selectedAddress in accountTokens)) {
       accountTokens[selectedAddress] = {};
     }
@@ -768,21 +774,21 @@ export default class PreferencesController {
       accountTokensWithBalance[selectedAddress] = {};
     }
 
-    if (!(providerType in accountTokens[selectedAddress])) {
-      accountTokens[selectedAddress][providerType] = [];
+    if (!(tokenKey in accountTokens[selectedAddress])) {
+      accountTokens[selectedAddress][tokenKey] = [];
     }
 
-    if (!(providerType in accountHiddenTokens[selectedAddress])) {
-      accountHiddenTokens[selectedAddress][providerType] = [];
+    if (!(tokenKey in accountHiddenTokens[selectedAddress])) {
+      accountHiddenTokens[selectedAddress][tokenKey] = [];
     }
 
-    if (!(providerType in accountTokensWithBalance[selectedAddress])) {
-      accountTokensWithBalance[selectedAddress][providerType] = [];
+    if (!(tokenKey in accountTokensWithBalance[selectedAddress])) {
+      accountTokensWithBalance[selectedAddress][tokenKey] = [];
     }
-    const tokens = accountTokens[selectedAddress][providerType];
-    const hiddenTokens = accountHiddenTokens[selectedAddress][providerType];
+    const tokens = accountTokens[selectedAddress][tokenKey];
+    const hiddenTokens = accountHiddenTokens[selectedAddress][tokenKey];
     const tokensWithBalance =
-      accountTokensWithBalance[selectedAddress][providerType];
+      accountTokensWithBalance[selectedAddress][tokenKey];
     return {
       tokens,
       accountTokens,
@@ -791,6 +797,7 @@ export default class PreferencesController {
       tokensWithBalance,
       accountTokensWithBalance,
       providerType,
+      chainId,
       selectedAddress,
     };
   }
