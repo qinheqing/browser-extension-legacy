@@ -1,11 +1,12 @@
-import log from 'loglevel';
+import logger from 'loglevel';
 
-global.$$logger = log;
+global.$$logger = logger;
 
 // [setDefaultLevel] and [setLevel] will save [loglevel] to localStorage.
-log.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn');
+logger.setDefaultLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn');
+
 // log.setLevel(process.env.METAMASK_DEBUG ? 'debug' : 'warn');
 
 // levels:  ["trace", "debug", "info", "warn", "error"]
 
-export default log;
+export default logger;

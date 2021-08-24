@@ -5,6 +5,11 @@ const allDependencies = Object.keys(
   (packageJSON && packageJSON.dependencies) || {},
 );
 
+/*
+UNKNOWN ERRORS in [ yarn start-legacy ]
+
+    nanoid_1.nanoid is not a function (add custom chain on dapp)
+ */
 const ignoreDeps = [
   'mobx', // global standalone
   'mobx-react-lite', // global standalone
@@ -20,8 +25,11 @@ const ignoreDeps = [
   'ethereumjs-util', // ethUtil.keccak is not a function (first time on-boarding finished)
   'eth-json-rpc-infura', // Cannot find module '/eth-json-rpc-infura/src/index.js'
   'eth-json-rpc-filters', // Cannot find module '/eth-json-rpc-filters/index.js'
+  'json-rpc-middleware-stream', // nanoid_1.nanoid is not a function
   'json-rpc-engine', // TypeError: JsonRpcEngine is not a constructor
   '@onekeyhq/json-rpc-engine', //  (0 , _jsonRpcEngine.createAsyncMiddleware) is not a function
+  '@onekeyhq/providers', // nanoid_1.nanoid is not a function
+  '@onekeyhq/post-message-stream',
 ];
 const commonDeps = ['lodash'];
 const reactDeps = allDependencies.filter((dep) => dep.match(/react/u));

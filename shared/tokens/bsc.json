@@ -29,9 +29,9 @@
       "chainId": 56
     },
     {
-      "name": "Binance-Peg BUSD-T",
-      "symbol": "BUSD-T",
-      "logoURI": "https://bscscan.com/token/images/busdt_32.png",
+      "name": "Binance-Peg BSC-USD",
+      "symbol": "USDT",
+      "logoURI": "https://onekey-asset.com/assets/bsc/0x55d398326f99059ff775485246999027b3197955.png",
       "address": "0x55d398326f99059ff775485246999027b3197955",
       "decimals": 18,
       "chainId": 56

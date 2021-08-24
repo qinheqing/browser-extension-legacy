@@ -4,6 +4,7 @@ import availableCurrencies from '../../../helpers/constants/available-conversion
 import Dropdown from '../../../components/ui/dropdown';
 import ToggleButton from '../../../components/ui/toggle-button';
 import locales from '../../../../../app/_locales/index.json';
+import { RESOLVE_CONFLICT_ONEKEY_NOT_REPLACING } from '../../../../../app/scripts/constants/consts';
 
 const sortedCurrencies = availableCurrencies.sort((a, b) => {
   return a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase());
@@ -45,6 +46,12 @@ export default class SettingsTab extends PureComponent {
     nativeCurrency: PropTypes.string,
     useNativeCurrencyAsPrimaryCurrency: PropTypes.bool,
     setUseNativeCurrencyAsPrimaryCurrencyPreference: PropTypes.func,
+  };
+
+  state = {
+    conflictReplacingMetaMask: !localStorage.getItem(
+      RESOLVE_CONFLICT_ONEKEY_NOT_REPLACING,
+    ),
   };
 
   renderCurrentConversion() {
@@ -177,6 +184,38 @@ export default class SettingsTab extends PureComponent {
     );
   }
 
+  renderConflictMetamaskOptIn() {
+    const { t } = this.context;
+
+    return (
+      <div className="settings-page__content-row">
+        <div className="settings-page__content-item">
+          <span>{t('overwriteMetaMask')}</span>
+        </div>
+        <div className="settings-page__content-item">
+          <div className="settings-page__content-item-col">
+            <ToggleButton
+              value={this.state.conflictReplacingMetaMask}
+              onToggle={async (value) => {
+                const newVal = !value;
+                localStorage.setItem(
+                  RESOLVE_CONFLICT_ONEKEY_NOT_REPLACING,
+                  newVal ? '' : 'true',
+                );
+
+                this.setState({
+                  conflictReplacingMetaMask: newVal,
+                });
+              }}
+              offLabel={t('off')}
+              onLabel={t('on')}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   renderUsePrimaryCurrencyOptions() {
     const { t } = this.context;
     const {
@@ -247,6 +286,7 @@ export default class SettingsTab extends PureComponent {
         {this.renderBlockieOptIn()}
         {this.renderAutoSwitchChainOptIn()}
         {this.renderHWOnlyOptIn()}
+        {this.renderConflictMetamaskOptIn()}
       </div>
     );
   }

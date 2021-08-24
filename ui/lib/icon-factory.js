@@ -29,6 +29,8 @@ IconFactory.prototype.iconForAddress = function (address, diameter) {
 IconFactory.prototype.generateIdenticonSvg = function (address, diameter) {
   const cacheId = `${address}:${diameter}`;
   // check cache, lazily generate and populate cache
+
+  // lintbug
   const identicon =
     this.cache[cacheId] ||
     (this.cache[cacheId] = this.generateNewIdenticon(address, diameter));

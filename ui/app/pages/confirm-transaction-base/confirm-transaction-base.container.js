@@ -105,8 +105,10 @@ const mapStateToProps = (state, ownProps) => {
   const { name: fromName } = identities[fromAddress];
   const toAddress = propsToAddress || txParamsToAddress;
 
-  const toName = identities[toAddress]?.name;
-  casedContractMap[toAddress]?.name ||
+  // lintbug
+  const toName =
+    identities[toAddress]?.name ||
+    casedContractMap[toAddress]?.name ||
     shortenAddress(checksumAddress(toAddress));
 
   const checksummedAddress = checksumAddress(toAddress);

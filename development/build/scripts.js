@@ -30,6 +30,7 @@ const cssModulesify = require('css-modulesify');
 const browserPack = require('browser-pack');
 const pump = require('pump');
 const vfs = require('vinyl-fs');
+const notifier = require('node-notifier');
 
 // https://github.com/browserify/browserify#browserifyfiles--opts
 
@@ -92,6 +93,7 @@ function createScriptTasks({ browserPlatforms, livereload }) {
       devMode: true,
       browserPlatforms,
       livereload,
+      notify: true,
     }),
     testDev: createTasksForBuildJsExtension({
       taskPrefix: 'scripts:core:test-live',
@@ -127,6 +129,7 @@ function createTasksForBuildJsExtension({
   testing,
   browserPlatforms,
   livereload,
+  notify,
 }) {
   const standardEntryPoints = ['background', 'ui', 'phishing-detect'];
   const standardSubtask = createTask(
@@ -139,6 +142,7 @@ function createTasksForBuildJsExtension({
       devMode,
       testing,
       browserPlatforms,
+      notify,
     }),
   );
 
@@ -338,6 +342,7 @@ function createFactoredBuild({
   devMode,
   testing,
   browserPlatforms,
+  notify,
 }) {
   if (IS_LEGACY_BUILD) {
     const normalBundles = standardEntryPoints.map((label) => {
@@ -349,6 +354,7 @@ function createFactoredBuild({
         devMode,
         testing,
         browserPlatforms,
+        notify: notify && label === 'ui',
       });
     });
     return composeSeries(...normalBundles);
@@ -457,6 +463,7 @@ function createFactoredBuild({
           commonSet,
           browserPlatforms,
         });
+        notify && groupLabel === 'ui' && handleBundleDone();
       }
     });
 
@@ -476,6 +483,7 @@ function createNormalBundle({
   devMode,
   testing,
   browserPlatforms,
+  notify,
 }) {
   return async function () {
     // create bundler setup and apply defaults
@@ -540,10 +548,15 @@ function createNormalBundle({
         browserPlatforms,
         failOnUnknownLabel: false,
       });
+      notify && handleBundleDone();
     });
 
     await bundleIt(buildConfiguration);
   };
+}
+
+function handleBundleDone() {
+  notifier.notify('onekey-extension build complete.');
 }
 
 function createBuildConfiguration() {
@@ -806,7 +819,7 @@ function getEnvironmentVariables({ devMode, testing }) {
     ENV_ON_BOARDING_START_CHOICE: process.env.ENV_ON_BOARDING_START_CHOICE,
     ENV_DEFAULT_PASSWORD_AUTO_FILLED:
       process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED || '',
-    GITHUB_TAG: process.env.GITHUB_TAG,
+    GITHUB_TAG: process.env.GITHUB_TAG || (devMode && 'DEV'),
   };
 }
 

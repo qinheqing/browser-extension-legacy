@@ -50,7 +50,7 @@ import backgroundContainer from './backgroundContainer';
 const mboxReferences = {
   autorun,
   observer,
-  name:1,
+  name: 1,
 };
 
 const { sentry } = global;

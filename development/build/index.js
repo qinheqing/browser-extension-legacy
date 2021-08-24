@@ -46,10 +46,11 @@ function defineAllTasks() {
   const manifestTasks = createManifestTasks({ browserPlatforms });
   const styleTasks = createStyleTasks({ livereload });
   const scriptTasks = createScriptTasks({ livereload, browserPlatforms });
-  const { clean, reload, zip, moduleFix, sourcemapServer } = createEtcTasks({
-    livereload,
-    browserPlatforms,
-  });
+  const { done, clean, reload, zip, moduleFix, sourcemapServer } =
+    createEtcTasks({
+      livereload,
+      browserPlatforms,
+    });
 
   // build for development (livereload)
   createTask(
@@ -66,6 +67,7 @@ function defineAllTasks() {
         reload,
         sourcemapServer,
       ),
+      // done,
     ),
   );
 

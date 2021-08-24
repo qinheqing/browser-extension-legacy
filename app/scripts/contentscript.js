@@ -5,6 +5,11 @@ import ObjectMultiplex from 'obj-multiplex';
 import extension from 'extensionizer';
 import PortStream from 'extension-port-stream';
 import contentscriptSolana from '../../src/wallets/SOL/modules/dappProvider/contentscript';
+import {
+  STREAM_CONTENT_SCRIPT,
+  STREAM_INPAGE,
+  STREAM_PROVIDER,
+} from './constants/consts';
 // import { obj as createThoughStream } from 'through2';
 
 // These require calls need to use require to be statically recognized by browserify
@@ -17,10 +22,6 @@ const inpageContent = fs.readFileSync(
 );
 const inpageSuffix = `//# sourceURL=${extension.runtime.getURL('inpage.js')}\n`;
 const inpageBundle = inpageContent + inpageSuffix;
-
-const CONTENT_SCRIPT = 'onekey-contentscript';
-const INPAGE = 'onekey-inpage';
-const PROVIDER = 'onekey-provider';
 
 // TODO:LegacyProvider: Delete
 const LEGACY_CONTENT_SCRIPT = 'contentscript';
@@ -59,10 +60,12 @@ function injectScript(content) {
 async function setupStreams() {
   // the transport-specific streams for communication between inpage and background
   const pageStream = new WindowPostMessageStream({
-    name: CONTENT_SCRIPT,
-    target: INPAGE,
+    name: STREAM_CONTENT_SCRIPT,
+    target: STREAM_INPAGE,
   });
-  const extensionPort = extension.runtime.connect({ name: CONTENT_SCRIPT });
+  const extensionPort = extension.runtime.connect({
+    name: STREAM_CONTENT_SCRIPT,
+  });
   const extensionStream = new PortStream(extensionPort);
 
   // create and connect channel muxers
@@ -83,7 +86,7 @@ async function setupStreams() {
   });
 
   // forward communication across inpage-background for these channels only
-  forwardTrafficBetweenMuxes(PROVIDER, pageMux, extensionMux);
+  forwardTrafficBetweenMuxes(STREAM_PROVIDER, pageMux, extensionMux);
 
   // connect "phishing" channel to warning system
   const phishingStream = extensionMux.createStream('phishing');
@@ -122,10 +125,10 @@ function logStreamDisconnectWarning(remoteLabel, error) {
 function notifyInpageOfStreamFailure() {
   window.postMessage(
     {
-      target: INPAGE, // the post-message-stream "target"
+      target: STREAM_INPAGE, // the post-message-stream "target"
       data: {
         // this object gets passed to obj-multiplex
-        name: PROVIDER, // the obj-multiplex channel name
+        name: STREAM_PROVIDER, // the obj-multiplex channel name
         data: {
           jsonrpc: '2.0',
           method: 'METAMASK_STREAM_FAILURE',

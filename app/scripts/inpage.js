@@ -32,9 +32,19 @@ cleanContextForImports();
 
 /* eslint-disable import/first */
 import { WindowPostMessageStream } from '@onekeyhq/post-message-stream';
-import { initializeProvider } from '@onekeyhq/providers';
+import {
+  initializeProvider,
+  shimWeb3,
+  setGlobalProvider,
+} from '@onekeyhq/providers';
 import log from '../../src/log/logger';
 import inpageSolana from '../../src/wallets/SOL/modules/dappProvider/inpage';
+import {
+  STREAM_CONTENT_SCRIPT,
+  STREAM_INPAGE,
+  STREAM_PROVIDER,
+} from './constants/consts';
+import inpageConflict from './inpageConflict';
 // import inpageSolanaLegacy from '../../src/wallets/SOL/modules/dappProvider/inpageSolanaLegacy';
 
 restoreContextAfterImports();
@@ -45,16 +55,19 @@ restoreContextAfterImports();
 
 // setup background connection
 const metamaskStream = new WindowPostMessageStream({
-  name: 'onekey-inpage',
-  target: 'onekey-contentscript',
+  name: STREAM_INPAGE,
+  target: STREAM_CONTENT_SCRIPT,
 });
 
-initializeProvider({
+const provider = initializeProvider({
   connectionStream: metamaskStream,
-  jsonRpcStreamName: 'onekey-provider',
+  jsonRpcStreamName: STREAM_PROVIDER,
   logger: log,
-  shouldShimWeb3: true,
+  shouldShimWeb3: false, // manually set window.ethereum by setGlobalProvider()
+  shouldSetOnWindow: false, // manually shimWeb3 by shimWeb3()
 });
+
+inpageConflict.resolveConflict({ provider });
 
 inpageSolana.init();
 // inpageSolanaLegacy.init();
