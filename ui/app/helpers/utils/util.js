@@ -11,6 +11,14 @@ import {
 import { WALLET_ACCOUNT_TYPES } from '../constants/common';
 import { ENVIRONMENT_TYPE_POPUP } from '../../../../shared/constants/app';
 import { CONNECT_HARDWARE_ROUTE } from '../constants/routes';
+import {
+  GOERLI_CHAIN_ID,
+  KOVAN_CHAIN_ID,
+  LOCALHOST_CHAIN_ID,
+  MAINNET_CHAIN_ID,
+  RINKEBY_CHAIN_ID,
+  ROPSTEN_CHAIN_ID,
+} from '../../../../shared/constants/network';
 
 // formatData :: ( date: <Unix Timestamp> ) -> String
 export function formatDate(date, format = "M/d/y 'at' T") {
@@ -58,18 +66,18 @@ function getBnTable() {
 }
 global.$$getBnTable = getBnTable;
 
-export function isEthNetwork(netId) {
+export function isDefaultMetaMaskChain(chainId) {
   if (
-    !netId ||
-    netId === '1' ||
-    netId === '3' ||
-    netId === '4' ||
-    netId === '42' ||
-    netId === '1337'
+    !chainId ||
+    chainId === MAINNET_CHAIN_ID ||
+    chainId === ROPSTEN_CHAIN_ID ||
+    chainId === RINKEBY_CHAIN_ID ||
+    chainId === KOVAN_CHAIN_ID ||
+    chainId === GOERLI_CHAIN_ID ||
+    chainId === LOCALHOST_CHAIN_ID
   ) {
     return true;
   }
-
   return false;
 }
 
@@ -156,6 +164,7 @@ export function parseBalance(balance) {
   afterDecimal = `000000000000000000${wei}`
     .slice(-18)
     .replace(trailingZeros, '');
+
   if (afterDecimal === '') {
     afterDecimal = '0';
   }
@@ -260,6 +269,7 @@ export function normalizeEthStringToWei(str) {
     while (decimal.length < 18) {
       decimal += '0';
     }
+
     if (decimal.length > 18) {
       decimal = decimal.slice(0, 18);
     }

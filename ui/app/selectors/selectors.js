@@ -7,6 +7,7 @@ import {
   NETWORK_TYPE_RPC,
   NETWORK_TYPE_TO_ID_MAP,
   BUILDINT_PROVIDER_TYPES,
+  MAINNET_CHAIN_ID,
 } from '../../../shared/constants/network';
 import {
   shortenAddress,
@@ -19,6 +20,10 @@ import {
 import { contractMap } from '../../../shared/tokens';
 import { WALLET_ACCOUNT_TYPES } from '../helpers/constants/common';
 import { getPermissionsRequestCount } from './permissions';
+
+export function isNetworkLoading(state) {
+  return state.metamask.network === 'loading';
+}
 
 export function getNetworkIdentifier(state) {
   const {
@@ -61,7 +66,16 @@ export function getAccountType(state) {
   return keyringTypeToAccountType(keyringType);
 }
 
-export function getCurrentNetworkId(state) {
+/**
+ * get the currently selected networkId which will be 'loading' when the
+ * network changes. The network id should not be used in most cases,
+ * instead use chainId in most situations. There are a limited number of
+ * use cases to use this method still, such as when comparing transaction
+ * metadata that predates the switch to using chainId.
+ * @deprecated - use getCurrentChainId instead
+ * @param {Object} state - redux state object
+ */
+export function deprecatedGetCurrentNetworkId(state) {
   return state.metamask.network;
 }
 
@@ -141,7 +155,7 @@ export function getMetaMaskAccountsRaw(state) {
 
 export function getMetaMaskCachedBalances(state) {
   const chainId = getCurrentChainId(state);
-  const network = getCurrentNetworkId(state);
+  const network = deprecatedGetCurrentNetworkId(state);
 
   return (
     state.metamask.cachedBalances[chainId] ??
@@ -339,8 +353,8 @@ function getSuggestedTokenCount(state) {
 }
 
 export function getIsMainnet(state) {
-  const { type } = getProvider(state);
-  return type === MAINNET;
+  const chainId = getCurrentChainId(state);
+  return chainId === MAINNET_CHAIN_ID;
 }
 
 export function getUnapprovedConfirmations(state) {

@@ -8,6 +8,7 @@ import sinon from 'sinon';
 import { MemoryRouter } from 'react-router-dom';
 
 import Identicon from '../../ui/identicon';
+import { MAINNET_CHAIN_ID } from '../../../../../shared/constants/network';
 import TokenCell from '.';
 
 describe('Token Cell', function () {
@@ -23,7 +24,7 @@ describe('Token Cell', function () {
       conversionRate: 7.0,
       preferences: {},
       provider: {
-        chainId: '1',
+        chainId: MAINNET_CHAIN_ID,
         ticker: 'ETH',
         type: 'mainnet',
       },

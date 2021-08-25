@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import * as actions from '../../../store/actions';
 import {
+  getCurrentChainId,
   getMetaMaskAccounts,
   getMetaMaskAccountsConnected,
   getProvider,
@@ -73,6 +74,7 @@ class ConnectHardwareForm extends Component {
       device: this.state.device,
       path,
     });
+
     this.setState({
       selectedAccounts: [],
     });
@@ -268,6 +270,7 @@ class ConnectHardwareForm extends Component {
         selectedAccounts={this.state.selectedAccounts}
         onAccountChange={this.onAccountChange}
         network={this.props.network}
+        chainId={this.props.chainId}
         getPage={this.getPage}
         onUnlockAccounts={this.onUnlockAccounts}
         onForgetDevice={this.onForgetDevice}
@@ -298,6 +301,7 @@ ConnectHardwareForm.propTypes = {
   setHardwareWalletDefaultHdPath: PropTypes.func,
   history: PropTypes.object,
   network: PropTypes.string,
+  chainId: PropTypes.string,
   accounts: PropTypes.object,
   connectedAccounts: PropTypes.array.isRequired,
   defaultHdPaths: PropTypes.object,
@@ -315,9 +319,9 @@ const mapStateToProps = (state) => {
   const {
     appState: { defaultHdPaths },
   } = state;
-
   return {
     network,
+    chainId: getCurrentChainId(state),
     accounts,
     connectedAccounts,
     defaultHdPaths,

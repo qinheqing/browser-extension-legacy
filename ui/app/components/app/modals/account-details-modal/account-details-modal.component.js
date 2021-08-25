@@ -10,6 +10,7 @@ export default class AccountDetailsModal extends Component {
   static propTypes = {
     selectedIdentity: PropTypes.object,
     network: PropTypes.string,
+    chainId: PropTypes.string,
     showExportPrivateKeyModal: PropTypes.func,
     setAccountLabel: PropTypes.func,
     keyrings: PropTypes.array,
@@ -24,6 +25,7 @@ export default class AccountDetailsModal extends Component {
     const {
       selectedIdentity,
       network,
+      chainId,
       showExportPrivateKeyModal,
       setAccountLabel,
       keyrings,
@@ -37,7 +39,10 @@ export default class AccountDetailsModal extends Component {
 
     let exportPrivateKeyFeatureEnabled = true;
     // This feature is disabled for hardware wallets
-    if (keyring?.type?.search('Hardware') !== -1 || keyring?.type?.search('Watch Account') !== -1) {
+    if (
+      keyring?.type?.search('Hardware') !== -1 ||
+      keyring?.type?.search('Watch Account') !== -1
+    ) {
       exportPrivateKeyFeatureEnabled = false;
     }
 
@@ -62,7 +67,7 @@ export default class AccountDetailsModal extends Component {
           className="account-details-modal__button"
           onClick={() => {
             global.platform.openTab({
-              url: getAccountLink(address, network, rpcPrefs),
+              url: getAccountLink(address, chainId, rpcPrefs, network),
             });
           }}
         >

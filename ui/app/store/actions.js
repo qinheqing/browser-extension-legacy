@@ -2,7 +2,6 @@ import abi from 'human-standard-token-abi';
 import pify from 'pify';
 import log from 'loglevel';
 import { capitalize } from 'lodash';
-import getBuyEthUrl from '../../../app/scripts/lib/buy-eth-url';
 import { checksumAddress } from '../helpers/utils/util';
 import { calcTokenBalance, estimateGasForSend } from '../pages/send/send.utils';
 import {
@@ -2052,16 +2051,6 @@ export function clearAccountDetails() {
 export function showSendTokenPage() {
   return {
     type: actionConstants.SHOW_SEND_TOKEN_PAGE,
-  };
-}
-
-export function buyEth(opts) {
-  return (dispatch) => {
-    const url = getBuyEthUrl(opts);
-    global.platform.openTab({ url });
-    dispatch({
-      type: actionConstants.BUY_ETH,
-    });
   };
 }
 

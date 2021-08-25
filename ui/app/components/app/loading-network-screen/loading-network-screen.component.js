@@ -21,7 +21,7 @@ export default class LoadingNetworkScreen extends PureComponent {
     setProviderArgs: PropTypes.array,
     setProviderType: PropTypes.func,
     rollbackToPreviousProvider: PropTypes.func,
-    isLoadingNetwork: PropTypes.bool,
+    isNetworkLoading: PropTypes.bool,
   };
 
   componentDidMount = () => {
@@ -56,8 +56,7 @@ export default class LoadingNetworkScreen extends PureComponent {
       name = this.context.t('connectingToBsc');
     } else if (providerName === 'matic') {
       name = this.context.t('connectingToMatic');
-    }  
-    else {
+    } else {
       name = this.context.t('connectingTo', [providerId]);
     }
 
@@ -65,11 +64,8 @@ export default class LoadingNetworkScreen extends PureComponent {
   };
 
   renderErrorScreenContent = () => {
-    const {
-      showNetworkDropdown,
-      setProviderArgs,
-      setProviderType,
-    } = this.props;
+    const { showNetworkDropdown, setProviderArgs, setProviderType } =
+      this.props;
 
     return (
       <div className="loading-overlay__error-screen">
@@ -106,9 +102,9 @@ export default class LoadingNetworkScreen extends PureComponent {
   };
 
   cancelCall = () => {
-    const { isLoadingNetwork } = this.props;
+    const { isNetworkLoading } = this.props;
 
-    if (isLoadingNetwork) {
+    if (isNetworkLoading) {
       this.setState({ showErrorScreen: true });
     }
   };

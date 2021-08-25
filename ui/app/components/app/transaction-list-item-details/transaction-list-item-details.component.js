@@ -63,7 +63,7 @@ export default class TransactionListItemDetails extends PureComponent {
     });
 
     global.platform.openTab({
-      url: getBlockExplorerUrlForTx(metamaskNetworkId, hash, rpcPrefs),
+      url: getBlockExplorerUrlForTx(primaryTransaction, rpcPrefs),
     });
   };
 

@@ -13,6 +13,7 @@ import {
 } from '../../../helpers/constants/design-system';
 import Chip from '../../ui/chip/chip';
 import { useI18nContext } from '../../../hooks/useI18nContext';
+import { isNetworkLoading } from '../../../selectors';
 
 export default function NetworkDisplay({
   colored,
@@ -22,8 +23,8 @@ export default function NetworkDisplay({
   labelProps,
   onClick,
 }) {
-  const { network, networkNickname, networkType } = useSelector((state) => ({
-    network: state.metamask.network,
+  const networkIsLoading = useSelector(isNetworkLoading);
+  const { networkNickname, networkType } = useSelector((state) => ({
     networkNickname: state.metamask.provider.nickname,
     networkType: state.metamask.provider.type,
   }));
@@ -37,7 +38,7 @@ export default function NetworkDisplay({
         <LoadingIndicator
           alt={t('attemptingConnect')}
           title={t('attemptingConnect')}
-          isLoading={network === 'loading'}
+          isLoading={networkIsLoading}
         >
           <ColorIndicator
             color={networkType === NETWORK_TYPE_RPC ? COLORS.UI4 : networkType}
@@ -71,6 +72,7 @@ export default function NetworkDisplay({
     />
   );
 }
+
 NetworkDisplay.propTypes = {
   colored: PropTypes.bool,
   indicatorSize: PropTypes.oneOf(Object.values(SIZES)),

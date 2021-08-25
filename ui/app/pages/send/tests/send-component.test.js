@@ -9,6 +9,11 @@ import AddRecipient from '../send-content/add-recipient/add-recipient.container'
 import SendHeader from '../send-header/send-header.container';
 import SendContent from '../send-content/send-content.container';
 import SendFooter from '../send-footer/send-footer.container';
+import {
+  MORDEN_CHAIN_ID,
+  RINKEBY_CHAIN_ID,
+  ROPSTEN_CHAIN_ID,
+} from '../../../../../shared/constants/network';
 
 describe('Send Component', function () {
   let wrapper;
@@ -59,7 +64,7 @@ describe('Send Component', function () {
         gasPrice="mockGasPrice"
         gasTotal="mockGasTotal"
         history={{ mockProp: 'history-abc' }}
-        network="3"
+        chainId={ROPSTEN_CHAIN_ID}
         primaryCurrency="mockPrimaryCurrency"
         selectedAddress="mockSelectedAddress"
         sendToken={{ address: 'mockTokenAddress', decimals: 18, symbol: 'TST' }}
@@ -265,6 +270,7 @@ describe('Send Component', function () {
       wrapper.setProps({
         sendToken: { address: 'mockTokenAddress', decimals: 18, symbol: 'TST' },
       });
+
       wrapper.instance().componentDidUpdate({
         from: {
           balance: 'balanceChanged',
@@ -287,7 +293,7 @@ describe('Send Component', function () {
         from: {
           balance: 'balanceChanged',
         },
-        network: '3',
+        chainId: ROPSTEN_CHAIN_ID,
         sendToken: { address: 'mockTokenAddress', decimals: 18, symbol: 'TST' }, // Make sure not to hit updateGas when changing asset
       });
       assert.strictEqual(propsMethodSpies.updateSendTokenBalance.callCount, 0);
@@ -298,14 +304,14 @@ describe('Send Component', function () {
     });
 
     it('should not call updateSendTokenBalance or this.updateGas if network === loading', function () {
-      wrapper.setProps({ network: 'loading' });
+      wrapper.setProps({ chainId: undefined });
       SendTransactionScreen.prototype.updateGas.resetHistory();
       propsMethodSpies.updateSendTokenBalance.resetHistory();
       wrapper.instance().componentDidUpdate({
         from: {
           balance: 'balanceChanged',
         },
-        network: '3',
+        chainId: ROPSTEN_CHAIN_ID,
         sendToken: { address: 'mockTokenAddress', decimals: 18, symbol: 'TST' }, // Make sure not to hit updateGas when changing asset
       });
       assert.strictEqual(propsMethodSpies.updateSendTokenBalance.callCount, 0);
@@ -322,7 +328,7 @@ describe('Send Component', function () {
         from: {
           balance: 'balanceChanged',
         },
-        network: '2',
+        chainId: MORDEN_CHAIN_ID,
         sendToken: { address: 'mockTokenAddress', decimals: 18, symbol: 'TST' }, // Make sure not to hit updateGas when changing asset
       });
       assert.strictEqual(propsMethodSpies.updateSendTokenBalance.callCount, 1);
@@ -338,10 +344,12 @@ describe('Send Component', function () {
           address: 'mockAddress',
         },
       );
+
       assert.strictEqual(
         SendTransactionScreen.prototype.updateGas.callCount,
         1,
       );
+
       assert.deepStrictEqual(
         SendTransactionScreen.prototype.updateGas.getCall(0).args,
         [],
@@ -355,9 +363,10 @@ describe('Send Component', function () {
         from: {
           balance: 'balancedChanged',
         },
-        network: '3', // Make sure not to hit updateGas when changing network
+        chainId: ROPSTEN_CHAIN_ID,
         sendToken: { address: 'newSelectedToken' },
       });
+
       assert.strictEqual(
         propsMethodSpies.updateToNicknameIfNecessary.callCount,
         0,
@@ -482,7 +491,7 @@ describe('Send Component', function () {
     });
 
     it('should validate when input changes and has error on a bad network', function () {
-      wrapper.setProps({ network: 'bad' });
+      wrapper.setProps({ chainId: 'bad' });
       const instance = wrapper.instance();
       instance.onRecipientInputChange(
         '0x80F061544cC398520615B5d3e7a3BedD70cd4510',
@@ -498,7 +507,7 @@ describe('Send Component', function () {
     });
 
     it('should synchronously validate when input changes to ""', function () {
-      wrapper.setProps({ network: 'bad' });
+      wrapper.setProps({ chainId: 'bad' });
       const instance = wrapper.instance();
       instance.onRecipientInputChange(
         '0x80F061544cC398520615B5d3e7a3BedD70cd4510',

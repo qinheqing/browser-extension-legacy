@@ -4,6 +4,7 @@ import { compose } from 'redux';
 import {
   getNetworkIdentifier,
   getPreferences,
+  isNetworkLoading,
   submittedPendingTransactionsSelector,
 } from '../../selectors';
 import {
@@ -31,7 +32,7 @@ function mapStateToProps(state) {
     loadingMessage,
     isUnlocked: state.metamask.isUnlocked,
     submittedPendingTransactions: submittedPendingTransactionsSelector(state),
-    network: state.metamask.network,
+    isNetworkLoading: isNetworkLoading(state),
     provider: state.metamask.provider,
     frequentRpcListDetail: state.metamask.frequentRpcListDetail || [],
     currentCurrency: state.metamask.currentCurrency,

@@ -12,6 +12,7 @@ export const FANTOM = 'fantom';
 export const OKEX = 'okex';
 export const NETWORK_TYPE_RPC = 'rpc';
 
+export const LOCALHOST_NETWORK_ID = '1337';
 export const MAINNET_NETWORK_ID = '1';
 export const MORDEN_NETWORK_ID = '2';
 export const ROPSTEN_NETWORK_ID = '3';
@@ -26,7 +27,9 @@ export const MATIC_NETWORK_ID = '137';
 export const FANTOM_NETWORK_ID = '250';
 export const OKEX_NETWORK_ID = '66';
 
+export const LOCALHOST_CHAIN_ID = '0x539';
 export const MAINNET_CHAIN_ID = '0x1';
+export const MORDEN_CHAIN_ID = '0x2';
 export const ROPSTEN_CHAIN_ID = '0x3';
 export const RINKEBY_CHAIN_ID = '0x4';
 export const GOERLI_CHAIN_ID = '0x5';

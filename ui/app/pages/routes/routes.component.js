@@ -166,7 +166,7 @@ export default class Routes extends Component {
     loadingMessage: PropTypes.string,
     alertMessage: PropTypes.string,
     textDirection: PropTypes.string,
-    network: PropTypes.string,
+    isNetworkLoading: PropTypes.bool,
     provider: PropTypes.object,
     frequentRpcListDetail: PropTypes.array,
     sidebar: PropTypes.object,
@@ -289,7 +289,7 @@ export default class Routes extends Component {
       alertMessage,
       textDirection,
       loadingMessage,
-      network,
+      isNetworkLoading,
       provider,
       frequentRpcListDetail,
       setMouseUserState,
@@ -297,9 +297,8 @@ export default class Routes extends Component {
       submittedPendingTransactions,
       isMouseUser,
     } = this.props;
-    const isLoadingNetwork = network === 'loading';
     const loadMessage =
-      loadingMessage || isLoadingNetwork
+      loadingMessage || isNetworkLoading
         ? this.getConnectingLabel(loadingMessage)
         : null;
 
@@ -353,7 +352,7 @@ export default class Routes extends Component {
         <AccountMenu />
         <div className={classnames('main-container-wrapper')}>
           {isLoading && <Loading loadingMessage={loadMessage} />}
-          {!isLoading && isLoadingNetwork && <LoadingNetwork />}
+          {!isLoading && isNetworkLoading && <LoadingNetwork />}
           <UniversalRoutesWrapper>
             {utilsApp.isNewHome() ? (
               <AllRoutesComponentsPure />

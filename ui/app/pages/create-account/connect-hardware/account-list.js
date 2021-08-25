@@ -112,7 +112,12 @@ class AccountList extends Component {
               </div>
               <a
                 className="hw-account-list__item__link"
-                href={getAccountLink(account.address, this.props.network)}
+                href={getAccountLink(
+                  account.address,
+                  this.props.chainId,
+                  {},
+                  this.props.network,
+                )}
                 target="_blank"
                 rel="noopener noreferrer"
                 title={this.context.t('etherscanView')}
@@ -212,6 +217,7 @@ AccountList.propTypes = {
   onForgetDevice: PropTypes.func.isRequired,
   getPage: PropTypes.func.isRequired,
   network: PropTypes.string,
+  chainId: PropTypes.string,
   selectedAccounts: PropTypes.array.isRequired,
   onUnlockAccounts: PropTypes.func,
   onCancel: PropTypes.func,

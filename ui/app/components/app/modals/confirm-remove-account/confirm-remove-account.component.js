@@ -11,6 +11,7 @@ export default class ConfirmRemoveAccount extends Component {
     removeAccount: PropTypes.func.isRequired,
     identity: PropTypes.object.isRequired,
     network: PropTypes.string.isRequired,
+    chainId: PropTypes.string.isRequired,
   };
 
   static contextTypes = {
@@ -28,7 +29,7 @@ export default class ConfirmRemoveAccount extends Component {
   };
 
   renderSelectedAccount() {
-    const { identity } = this.props;
+    const { identity, chainId, network } = this.props;
     return (
       <div className="confirm-remove-account__account">
         <div className="confirm-remove-account__account__identicon">
@@ -49,7 +50,7 @@ export default class ConfirmRemoveAccount extends Component {
         <div className="confirm-remove-account__account__link">
           <a
             className=""
-            href={getAccountLink(identity.address, this.props.network)}
+            href={getAccountLink(identity.address, chainId, {}, network)}
             target="_blank"
             rel="noopener noreferrer"
             title={this.context.t('etherscanView')}

@@ -2,18 +2,43 @@ import assert from 'assert';
 import { ObservableStore } from '@onekeyhq/obs-store';
 import sinon from 'sinon';
 import PreferencesController from '../../../../app/scripts/controllers/preferences';
+import {
+  MAINNET_CHAIN_ID,
+  RINKEBY_CHAIN_ID,
+} from '../../../../shared/constants/network';
 
 describe('preferences controller', function () {
   let preferencesController;
   let network;
+  let currentChainId;
+  let triggerNetworkChange;
+  let switchToMainnet;
+  let switchToRinkeby;
   const migrateAddressBookState = sinon.stub();
 
   beforeEach(function () {
-    network = { providerStore: new ObservableStore({ type: 'mainnet' }) };
+    currentChainId = MAINNET_CHAIN_ID;
+    network = {
+      providerStore: new ObservableStore({ type: 'mainnet' }),
+      getCurrentChainId: () => currentChainId,
+      on: sinon.spy(),
+    };
+
     preferencesController = new PreferencesController({
       migrateAddressBookState,
       network,
     });
+
+    triggerNetworkChange = network.on.firstCall.args[1];
+    switchToMainnet = () => {
+      currentChainId = MAINNET_CHAIN_ID;
+      triggerNetworkChange();
+    };
+
+    switchToRinkeby = () => {
+      currentChainId = RINKEBY_CHAIN_ID;
+      triggerNetworkChange();
+    };
   });
 
   afterEach(function () {
@@ -231,11 +256,11 @@ describe('preferences controller', function () {
       const symbolSecond = 'ABBB';
       const decimals = 5;
 
-      network.providerStore.updateState({ type: 'mainnet' });
+      switchToMainnet();
       await preferencesController.addToken(addressFirst, symbolFirst, decimals);
       const tokensFirstAddress = preferencesController.getTokens();
 
-      network.providerStore.updateState({ type: 'rinkeby' });
+      switchToRinkeby();
       await preferencesController.addToken(
         addressSecond,
         symbolSecond,
@@ -304,14 +329,14 @@ describe('preferences controller', function () {
     });
 
     it('should remove a token from its state on corresponding network', async function () {
-      network.providerStore.updateState({ type: 'mainnet' });
+      switchToMainnet();
       await preferencesController.addToken('0xa', 'A', 4);
       await preferencesController.addToken('0xb', 'B', 5);
-      network.providerStore.updateState({ type: 'rinkeby' });
+      switchToRinkeby();
       await preferencesController.addToken('0xa', 'A', 4);
       await preferencesController.addToken('0xb', 'B', 5);
       const initialTokensSecond = preferencesController.getTokens();
-      network.providerStore.updateState({ type: 'mainnet' });
+      switchToMainnet();
       await preferencesController.removeToken('0xa');
 
       const tokensFirst = preferencesController.getTokens();
@@ -320,7 +345,7 @@ describe('preferences controller', function () {
       const [token1] = tokensFirst;
       assert.deepEqual(token1, { address: '0xb', symbol: 'B', decimals: 5 });
 
-      network.providerStore.updateState({ type: 'rinkeby' });
+      switchToRinkeby();
       const tokensSecond = preferencesController.getTokens();
       assert.deepEqual(
         tokensSecond,
@@ -372,11 +397,11 @@ describe('preferences controller', function () {
 
   describe('on updateStateNetworkType', function () {
     it('should remove a token from its state on corresponding network', async function () {
-      network.providerStore.updateState({ type: 'mainnet' });
+      switchToMainnet();
       await preferencesController.addToken('0xa', 'A', 4);
       await preferencesController.addToken('0xb', 'B', 5);
       const initialTokensFirst = preferencesController.getTokens();
-      network.providerStore.updateState({ type: 'rinkeby' });
+      switchToRinkeby();
       await preferencesController.addToken('0xa', 'C', 4);
       await preferencesController.addToken('0xb', 'D', 5);
       const initialTokensSecond = preferencesController.getTokens();
@@ -387,9 +412,9 @@ describe('preferences controller', function () {
         'tokens not equal for different networks and tokens',
       );
 
-      network.providerStore.updateState({ type: 'mainnet' });
+      switchToMainnet();
       const tokensFirst = preferencesController.getTokens();
-      network.providerStore.updateState({ type: 'rinkeby' });
+      switchToRinkeby();
       const tokensSecond = preferencesController.getTokens();
       assert.deepEqual(
         tokensFirst,

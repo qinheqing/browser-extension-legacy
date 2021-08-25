@@ -5,19 +5,25 @@ import { useHistory } from 'react-router-dom';
 
 import TransactionList from '../../../components/app/transaction-list';
 import { TokenOverview } from '../../../components/app/wallet-overview';
-import { getCurrentNetworkId, getSelectedIdentity } from '../../../selectors';
+import {
+  deprecatedGetCurrentNetworkId,
+  getCurrentChainId,
+  getSelectedIdentity,
+} from '../../../selectors';
 import { DEFAULT_ROUTE } from '../../../helpers/constants/routes';
 import { showModal } from '../../../store/actions';
 
-import { getEtherscanNetwork } from '../../../../lib/etherscan-prefix-for-network';
+import getAccountLink from '../../../../lib/account-link';
 import AssetNavigation from './asset-navigation';
 import TokenOptions from './token-options';
 
 export default function TokenAsset({ token }) {
   const dispatch = useDispatch();
-  const network = useSelector(getCurrentNetworkId);
+  const chainId = useSelector(getCurrentChainId);
+  const network = useSelector(deprecatedGetCurrentNetworkId);
   const selectedIdentity = useSelector(getSelectedIdentity);
   const selectedAccountName = selectedIdentity.name;
+  const selectedAddress = selectedIdentity.address;
   const history = useHistory();
 
   return (
@@ -32,8 +38,7 @@ export default function TokenAsset({ token }) {
               dispatch(showModal({ name: 'HIDE_TOKEN_CONFIRMATION', token }))
             }
             onViewEtherscan={() => {
-              const prefix = getEtherscanNetwork(network);
-              const url = `${prefix}/address/${token.address}`;
+              const url = getAccountLink(token.address, chainId, {}, network);
               global.platform.openTab({ url });
             }}
             tokenSymbol={token.symbol}

@@ -2,13 +2,13 @@ import assert from 'assert';
 import sinon from 'sinon';
 import {
   accountsWithSendEtherInfoSelector,
+  deprecatedGetCurrentNetworkId,
   getCurrentAccountWithSendEtherInfo,
 } from '..';
 import { TRANSACTION_STATUSES } from '../../../../shared/constants/transaction';
 import {
   getBlockGasLimit,
   getConversionRate,
-  getCurrentNetwork,
   getNativeCurrency,
   getGasLimit,
   getGasPrice,
@@ -116,9 +116,9 @@ describe('send selectors', function () {
     });
   });
 
-  describe('getCurrentNetwork()', function () {
+  describe('deprecatedGetCurrentNetworkId()', function () {
     it('should return the id of the currently selected network', function () {
-      assert.strictEqual(getCurrentNetwork(mockState), '3');
+      assert.strictEqual(deprecatedGetCurrentNetworkId(mockState), '3');
     });
   });
 
@@ -532,6 +532,7 @@ describe('send selectors', function () {
           ),
           false,
         );
+
         assert.strictEqual(
           isSendFormInError(
             getSendMockState({
