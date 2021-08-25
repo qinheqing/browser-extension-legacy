@@ -2,6 +2,11 @@ import { MethodRegistry } from 'eth-method-registry';
 import abi from 'human-standard-token-abi';
 import { ethers } from 'ethers';
 import log from 'loglevel';
+import {
+  createExplorerLink,
+  createExplorerLinkForChain,
+} from '@onekeyhq/etherscan-link';
+import { isNil } from 'lodash';
 import { addHexPrefix } from '../../../../app/scripts/lib/util';
 import {
   TRANSACTION_CATEGORIES,
@@ -11,7 +16,19 @@ import {
 } from '../../../../shared/constants/transaction';
 import {
   AVAX_BLOCK_EXPLORER_URL,
-  AVAX_NETWORK_ID,
+  AVAX_CHAIN_ID,
+  BSC_CHAIN_ID,
+  FANTOM_CHAIN_ID,
+  GOERLI_CHAIN_ID,
+  HECO_CHAIN_ID,
+  KOVAN_CHAIN_ID,
+  MAINNET_CHAIN_ID,
+  MATIC_CHAIN_ID,
+  MORDEN_CHAIN_ID,
+  OKEX_CHAIN_ID,
+  RINKEBY_CHAIN_ID,
+  ROPSTEN_CHAIN_ID,
+  XDAI_CHAIN_ID,
 } from '../../../../shared/constants/network';
 import fetchWithCache from './fetch-with-cache';
 
@@ -207,45 +224,52 @@ export function getStatusKey(transaction) {
 
 /**
  * Returns an external block explorer URL at which a transaction can be viewed.
- * @param {number} networkId
- * @param {string} hash
+ * @param {Object} transaction
  * @param {Object} rpcPrefs
  */
-export function getBlockExplorerUrlForTx(networkId, hash, rpcPrefs = {}) {
-  if (rpcPrefs.blockExplorerUrl) {
+export function getBlockExplorerUrlForTx(transaction, rpcPrefs = {}) {
+  const { chainId, networkId, hash } = transaction;
+  if (rpcPrefs && rpcPrefs.blockExplorerUrl) {
     return `${rpcPrefs.blockExplorerUrl.replace(/\/+$/u, '')}/tx/${hash}`;
   }
 
-  switch (String(networkId)) {
-    case AVAX_NETWORK_ID:
-      return `${AVAX_BLOCK_EXPLORER_URL}/tx/${hash}`;
-    default:
+  // ETH link only
+  // if (transaction.chainId) {
+  //   return createExplorerLinkForChain(transaction.hash, transaction.chainId);
+  // }
+  // return createExplorerLink(transaction.hash, transaction.metamaskNetworkId);
+  let chainIdStr = isNil(chainId) ? '' : String(chainId);
+  const networkIdStr = isNil(networkId) ? '' : String(networkId);
+  if (!chainIdStr && networkIdStr) {
+    chainIdStr = `0x${parseInt(networkIdStr, 10).toString(16)}`;
   }
 
-  switch (Number(networkId)) {
-    case 1: // main net
+  switch (chainIdStr) {
+    case AVAX_CHAIN_ID:
+      return `${AVAX_BLOCK_EXPLORER_URL}/tx/${hash}`;
+    case MAINNET_CHAIN_ID: // main net
       return `https://etherscan.io/tx/${hash}`;
-    case 2: // morden test net
+    case MORDEN_CHAIN_ID: // morden test net
       return `https://morden.etherscan.io/tx/${hash}`;
-    case 3: // ropsten test net
+    case ROPSTEN_CHAIN_ID: // ropsten test net
       return `https://ropsten.etherscan.io/tx/${hash}`;
-    case 4: // rinkeby test net
+    case RINKEBY_CHAIN_ID: // rinkeby test net
       return `https://rinkeby.etherscan.io/tx/${hash}`;
-    case 42: // kovan test net
+    case KOVAN_CHAIN_ID: // kovan test net
       return `https://kovan.etherscan.io/tx/${hash}`;
-    case 5: // goerli test net
+    case GOERLI_CHAIN_ID: // goerli test net
       return `https://goerli.etherscan.io/tx/${hash}`;
-    case 128:
+    case HECO_CHAIN_ID:
       return `https://hecoinfo.com/tx/${hash}`;
-    case 56:
+    case BSC_CHAIN_ID:
       return `https://bscscan.com/tx/${hash}`;
-    case 137:
+    case MATIC_CHAIN_ID:
       return `https://explorer-mainnet.maticvigil.com/tx/${hash}`;
-    case 100:
+    case XDAI_CHAIN_ID:
       return `https://blockscout.com/xdai/mainnet/tx/${hash}`;
-    case 250:
+    case FANTOM_CHAIN_ID:
       return `https://ftmscan.com/tx/${hash}`;
-    case 66:
+    case OKEX_CHAIN_ID:
       return `https://www.oklink.com/okexchain/tx/${hash}`;
     default:
       return `https://etherscan.io/tx/${hash}`;

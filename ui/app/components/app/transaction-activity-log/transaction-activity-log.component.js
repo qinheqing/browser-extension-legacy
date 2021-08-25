@@ -8,6 +8,7 @@ import {
 import { formatDate } from '../../../helpers/utils/util';
 import { getEtherscanNetwork } from '../../../../lib/etherscan-prefix-for-network';
 import { ETH } from '../../../helpers/constants/common';
+import { getBlockExplorerUrlForTx } from '../../../helpers/utils/transactions.util';
 import TransactionActivityLogIcon from './transaction-activity-log-icon';
 import { CONFIRMED_STATUS } from './transaction-activity-log.constants';
 
@@ -31,15 +32,9 @@ export default class TransactionActivityLog extends PureComponent {
     isEarliestNonce: PropTypes.bool,
   };
 
-  handleActivityClick = (hash) => {
-    if (!hash) {
-      return;
-    }
+  handleActivityClick = (activity) => {
     const { primaryTransaction, rpcPrefs } = this.props;
-    const { metamaskNetworkId } = primaryTransaction;
-
-    const prefix = getEtherscanNetwork(metamaskNetworkId, rpcPrefs);
-    const etherscanUrl = `${prefix}/tx/${hash}`;
+    const etherscanUrl = getBlockExplorerUrlForTx(activity, rpcPrefs);
 
     global.platform.openTab({ url: etherscanUrl });
   };
@@ -117,7 +112,7 @@ export default class TransactionActivityLog extends PureComponent {
           <div
             className="transaction-activity-log__activity-text"
             title={activityText}
-            onClick={() => this.handleActivityClick(hash)}
+            onClick={() => this.handleActivityClick(activity)}
           >
             {activityText}
           </div>

@@ -1,6 +1,10 @@
 import { connect } from 'react-redux';
 import { findLastIndex } from 'lodash';
-import { conversionRateSelector, getNativeCurrency, getRpcPrefsForCurrentProvider } from '../../../selectors';
+import {
+  conversionRateSelector,
+  getNativeCurrency,
+  getRpcPrefsForCurrentProvider,
+} from '../../../selectors';
 import TransactionActivityLog from './transaction-activity-log.component';
 import { combineTransactionHistories } from './transaction-activity-log.util';
 import {
@@ -8,8 +12,10 @@ import {
   TRANSACTION_CANCEL_ATTEMPTED_EVENT,
 } from './transaction-activity-log.constants';
 
-const matchesEventKey = (matchEventKey) => ({ eventKey }) =>
-  eventKey === matchEventKey;
+const matchesEventKey =
+  (matchEventKey) =>
+  ({ eventKey }) =>
+    eventKey === matchEventKey;
 
 const mapStateToProps = (state) => {
   return {

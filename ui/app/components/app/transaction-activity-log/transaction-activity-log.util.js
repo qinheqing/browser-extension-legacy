@@ -49,6 +49,8 @@ const statusHash = {
 export function getActivities(transaction, isFirstTransaction = false) {
   const {
     id,
+    chainId,
+    metamaskNetworkId,
     hash,
     history = [],
     txParams: { gas: paramsGasLimit, gasPrice: paramsGasPrice },
@@ -83,6 +85,8 @@ export function getActivities(transaction, isFirstTransaction = false) {
       if (isFirstTransaction) {
         return acc.concat({
           id,
+          chainId,
+          metamaskNetworkId,
           hash,
           eventKey: TRANSACTION_CREATED_EVENT,
           timestamp,
@@ -132,6 +136,8 @@ export function getActivities(transaction, isFirstTransaction = false) {
 
                 events.push({
                   id,
+                  chainId,
+                  metamaskNetworkId,
                   hash,
                   eventKey,
                   timestamp,
@@ -172,6 +178,8 @@ export function getActivities(transaction, isFirstTransaction = false) {
             default: {
               events.push({
                 id,
+                chainId,
+                metamaskNetworkId,
                 hash,
                 eventKey: TRANSACTION_UPDATED_EVENT,
                 timestamp,
@@ -194,6 +202,8 @@ export function getActivities(transaction, isFirstTransaction = false) {
   return status === '0x0'
     ? historyActivities.concat({
         id,
+        chainId,
+        metamaskNetworkId,
         hash,
         eventKey: TRANSACTION_ERRORED_EVENT,
         timestamp: lastTimestamp,

@@ -27,6 +27,7 @@ export const FANTOM_NETWORK_ID = '250';
 export const OKEX_NETWORK_ID = '66';
 
 export const MAINNET_CHAIN_ID = '0x1';
+export const MORDEN_CHAIN_ID = '0x2';
 export const ROPSTEN_CHAIN_ID = '0x3';
 export const RINKEBY_CHAIN_ID = '0x4';
 export const GOERLI_CHAIN_ID = '0x5';

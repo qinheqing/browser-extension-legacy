@@ -4,6 +4,10 @@ import {
   TRANSACTION_GROUP_STATUSES,
   TRANSACTION_STATUSES,
 } from '../../../../shared/constants/transaction';
+import {
+  MAINNET_CHAIN_ID,
+  ROPSTEN_CHAIN_ID,
+} from '../../../../shared/constants/network';
 import * as utils from './transactions.util';
 
 describe('Transactions utils', function () {
@@ -67,11 +71,13 @@ describe('Transactions utils', function () {
         {
           expected: 'https://etherscan.io/tx/0xabcd',
           networkId: '1',
+          chainId: MAINNET_CHAIN_ID,
           hash: '0xabcd',
         },
         {
           expected: 'https://ropsten.etherscan.io/tx/0xdef0',
           networkId: '3',
+          chainId: ROPSTEN_CHAIN_ID,
           hash: '0xdef0',
           rpcPrefs: {},
         },
@@ -79,6 +85,7 @@ describe('Transactions utils', function () {
           // test handling of `blockExplorerUrl` for a custom RPC
           expected: 'https://block.explorer/tx/0xabcd',
           networkId: '31',
+          chainId: ROPSTEN_CHAIN_ID,
           hash: '0xabcd',
           rpcPrefs: {
             blockExplorerUrl: 'https://block.explorer',
@@ -88,6 +95,7 @@ describe('Transactions utils', function () {
           // test handling of trailing `/` in `blockExplorerUrl` for a custom RPC
           expected: 'https://another.block.explorer/tx/0xdef0',
           networkId: '33',
+          chainId: ROPSTEN_CHAIN_ID,
           hash: '0xdef0',
           rpcPrefs: {
             blockExplorerUrl: 'https://another.block.explorer/',
@@ -95,9 +103,16 @@ describe('Transactions utils', function () {
         },
       ];
 
-      tests.forEach(({ expected, networkId, hash, rpcPrefs }) => {
+      tests.forEach(({ expected, chainId, networkId, hash, rpcPrefs }) => {
         assert.strictEqual(
-          utils.getBlockExplorerUrlForTx(networkId, hash, rpcPrefs),
+          utils.getBlockExplorerUrlForTx(
+            {
+              chainId,
+              networkId,
+              hash,
+            },
+            rpcPrefs,
+          ),
           expected,
         );
       });
