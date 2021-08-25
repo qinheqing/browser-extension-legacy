@@ -1,5 +1,6 @@
 import extension from 'extensionizer';
 import getFetchWithTimeout from '../../../../shared/modules/fetch-with-timeout';
+import { MAINNET_CHAIN_ID } from '../../../../shared/constants/network';
 import resolveEnsToIpfsContentId from './resolver';
 
 const fetchWithTimeout = getFetchWithTimeout(30000);
@@ -7,9 +8,9 @@ const fetchWithTimeout = getFetchWithTimeout(30000);
 const supportedTopLevelDomains = ['eth'];
 
 export default function setupEnsIpfsResolver({
-  provider,
-  getCurrentNetwork,
+  getCurrentChainId,
   getIpfsGateway,
+  provider,
 }) {
   // install listener
   const urlPatterns = supportedTopLevelDomains.map((tld) => `*://*.${tld}/*`);
@@ -30,7 +31,7 @@ export default function setupEnsIpfsResolver({
     const { tabId, url } = details;
     // ignore requests that are not associated with tabs
     // only attempt ENS resolution on mainnet
-    if (tabId === -1 || getCurrentNetwork() !== '1') {
+    if (tabId === -1 || getCurrentChainId() !== MAINNET_CHAIN_ID) {
       return;
     }
     // parse ens name

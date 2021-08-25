@@ -9,10 +9,10 @@ import { Menu, MenuItem } from '../../ui/menu';
 import getAccountLink from '../../../../lib/account-link';
 import {
   getCurrentKeyring,
-  getCurrentNetwork,
   getRpcPrefsForCurrentProvider,
   getSelectedIdentity,
   getCurrentChainId,
+  deprecatedGetCurrentNetworkId,
 } from '../../../selectors';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import { useTrackEvent } from '../../../hooks/useTrackEvent';
@@ -53,7 +53,7 @@ export default function AccountOptionsMenu({ anchorElement, onClose }) {
   });
 
   const keyring = useSelector(getCurrentKeyring);
-  const network = useSelector(getCurrentNetwork);
+  const network = useSelector(deprecatedGetCurrentNetworkId);
   const chainId = useSelector(getCurrentChainId);
   const rpcPrefs = useSelector(getRpcPrefsForCurrentProvider);
   const selectedIdentity = useSelector(getSelectedIdentity);

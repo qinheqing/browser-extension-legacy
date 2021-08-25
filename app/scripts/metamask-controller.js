@@ -303,7 +303,7 @@ export default class MetamaskController extends EventEmitter {
 
         const { txReceipt } = txMeta;
         if (txReceipt && txReceipt.status === '0x0') {
-          // noop
+          // noop trackEvent();
         }
       }
     });
@@ -538,6 +538,7 @@ export default class MetamaskController extends EventEmitter {
     const isInitialized = Boolean(vault);
 
     return {
+      isInitialized,
       ...{ isInitialized },
       ...this.memStore.getFlatState(),
     };
@@ -946,8 +947,6 @@ export default class MetamaskController extends EventEmitter {
       }
     });
   }
-
-  getCurrentNetwork = () => this.networkController.store.getState().network;
 
   /*
    * Submits the user's password and attempts to unlock the vault.

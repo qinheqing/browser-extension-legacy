@@ -34,6 +34,7 @@ export default class SendTransactionScreen extends Component {
     hasHexData: PropTypes.bool,
     history: PropTypes.object,
     network: PropTypes.string,
+    chainId: PropTypes.string,
     primaryCurrency: PropTypes.string,
     resetSendState: PropTypes.func.isRequired,
     selectedAddress: PropTypes.string,
@@ -80,6 +81,7 @@ export default class SendTransactionScreen extends Component {
       from: { address, balance },
       gasTotal,
       network,
+      chainId,
       primaryCurrency,
       sendToken,
       tokenBalance,
@@ -101,6 +103,7 @@ export default class SendTransactionScreen extends Component {
       gasTotal: prevGasTotal,
       tokenBalance: prevTokenBalance,
       network: prevNetwork,
+      chainId: prevChainId,
       sendToken: prevSendToken,
       to: prevTo,
     } = prevProps;
@@ -140,7 +143,7 @@ export default class SendTransactionScreen extends Component {
     }
 
     if (!uninitialized) {
-      if (network !== prevNetwork && network !== 'loading') {
+      if (chainId !== prevChainId && chainId !== undefined) {
         updateSendTokenBalance({
           sendToken,
           tokenContract,
@@ -234,7 +237,7 @@ export default class SendTransactionScreen extends Component {
   }
 
   validate(query) {
-    const { hasHexData, tokens, sendToken, network } = this.props;
+    const { hasHexData, tokens, sendToken, chainId } = this.props;
 
     const { internalSearch } = this.state;
 
@@ -243,7 +246,7 @@ export default class SendTransactionScreen extends Component {
       return;
     }
 
-    const toErrorObject = getToErrorObject(query, hasHexData, network);
+    const toErrorObject = getToErrorObject(query, hasHexData, chainId);
     const toWarningObject = getToWarningObject(query, tokens, sendToken);
 
     this.setState({
