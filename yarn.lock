@@ -2502,11 +2502,6 @@
     human-standard-token-abi "^1.0.2"
     safe-event-emitter "^1.0.1"
 
-"@onekeyhq/etherscan-link@^2.1.0":
-  version "2.1.0"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/etherscan-link/2.1.0/e6d774f1d03e951443fc476e38dfa66e8f2cfe2dcb076e0acf30a01e35b8fdb4#581df8a3f0887a37ae6ca3aa2d50ac4b9a2798df"
-  integrity sha512-N6gbdOV2DbMqM3ubOK+gieax8UE2B6X0YHrCy7uAPi58u6qYCIm+H9lgyTT82zDO4JGnqrhX/hvbIWHMzClUFA==
-
 "@onekeyhq/extension-controllers@^5.1.0":
   version "5.1.0"
   resolved "https://npm.pkg.github.com/download/@onekeyhq/extension-controllers/5.1.0/d817f45be2268e3149f5d3c85f14da18243cb517a2798c0eb28c29cb1b455af5#73931d2d11bcaa3be475c7b6cf47df737238a556"

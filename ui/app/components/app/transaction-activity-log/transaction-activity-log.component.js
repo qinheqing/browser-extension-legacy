@@ -6,7 +6,6 @@ import {
   getValueFromWeiHex,
 } from '../../../helpers/utils/conversions.util';
 import { formatDate } from '../../../helpers/utils/util';
-import { getEtherscanNetwork } from '../../../../lib/etherscan-prefix-for-network';
 import { ETH } from '../../../helpers/constants/common';
 import { getBlockExplorerUrlForTx } from '../../../helpers/utils/transactions.util';
 import TransactionActivityLogIcon from './transaction-activity-log-icon';

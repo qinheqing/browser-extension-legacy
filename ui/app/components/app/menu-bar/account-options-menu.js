@@ -95,7 +95,7 @@ export default function AccountOptionsMenu({ anchorElement, onClose }) {
         onClick={() => {
           viewOnEtherscanEvent();
           global.platform.openTab({
-            url: getAccountLink(address, network, rpcPrefs),
+            url: getAccountLink(address, chainId, rpcPrefs, network),
           });
           onClose();
         }}

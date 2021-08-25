@@ -1,3 +1,4 @@
+import { isNil } from 'lodash';
 import { MAX_SAFE_CHAIN_ID } from '../constants/network';
 
 /**
@@ -27,4 +28,17 @@ export function isPrefixedFormattedHexString(value) {
     return false;
   }
   return /^0x[1-9a-f]+[0-9a-f]*$/iu.test(value);
+}
+
+export function getChainIdFromNetworkId({ chainId, networkId }) {
+  let chainIdStr = isNil(chainId) ? '' : String(chainId);
+  if (!chainIdStr) {
+    const networkIdStr = isNil(networkId) ? '' : String(networkId);
+    chainIdStr = networkIdStr && `0x${parseInt(networkIdStr, 10).toString(16)}`;
+  }
+  return chainIdStr || '';
+}
+
+export function removeUrlLastSlash(url = '') {
+  return url.replace(/\/+$/giu, '');
 }

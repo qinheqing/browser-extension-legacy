@@ -2,10 +2,6 @@ import { MethodRegistry } from 'eth-method-registry';
 import abi from 'human-standard-token-abi';
 import { ethers } from 'ethers';
 import log from 'loglevel';
-import {
-  createExplorerLink,
-  createExplorerLinkForChain,
-} from '@onekeyhq/etherscan-link';
 import { isNil } from 'lodash';
 import { addHexPrefix } from '../../../../app/scripts/lib/util';
 import {
@@ -30,6 +26,10 @@ import {
   ROPSTEN_CHAIN_ID,
   XDAI_CHAIN_ID,
 } from '../../../../shared/constants/network';
+import {
+  getChainIdFromNetworkId,
+  removeUrlLastSlash,
+} from '../../../../shared/modules/network.utils';
 import fetchWithCache from './fetch-with-cache';
 
 import { addCurrencies } from './conversion-util';
@@ -228,9 +228,10 @@ export function getStatusKey(transaction) {
  * @param {Object} rpcPrefs
  */
 export function getBlockExplorerUrlForTx(transaction, rpcPrefs = {}) {
+  // instead of @onekeyhq/etherscan-link
   const { chainId, networkId, hash } = transaction;
   if (rpcPrefs && rpcPrefs.blockExplorerUrl) {
-    return `${rpcPrefs.blockExplorerUrl.replace(/\/+$/u, '')}/tx/${hash}`;
+    return `${removeUrlLastSlash(rpcPrefs.blockExplorerUrl)}/tx/${hash}`;
   }
 
   // ETH link only
@@ -238,15 +239,14 @@ export function getBlockExplorerUrlForTx(transaction, rpcPrefs = {}) {
   //   return createExplorerLinkForChain(transaction.hash, transaction.chainId);
   // }
   // return createExplorerLink(transaction.hash, transaction.metamaskNetworkId);
-  let chainIdStr = isNil(chainId) ? '' : String(chainId);
-  const networkIdStr = isNil(networkId) ? '' : String(networkId);
-  if (!chainIdStr && networkIdStr) {
-    chainIdStr = `0x${parseInt(networkIdStr, 10).toString(16)}`;
-  }
+  const chainIdStr = getChainIdFromNetworkId({
+    chainId,
+    networkId,
+  });
 
   switch (chainIdStr) {
     case AVAX_CHAIN_ID:
-      return `${AVAX_BLOCK_EXPLORER_URL}/tx/${hash}`;
+      return `${removeUrlLastSlash(AVAX_BLOCK_EXPLORER_URL)}/tx/${hash}`;
     case MAINNET_CHAIN_ID: // main net
       return `https://etherscan.io/tx/${hash}`;
     case MORDEN_CHAIN_ID: // morden test net

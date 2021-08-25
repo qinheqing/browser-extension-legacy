@@ -1,5 +1,11 @@
 import assert from 'assert';
 import getAccountLink from '../../../ui/lib/account-link';
+import {
+  GOERLI_CHAIN_ID,
+  KOVAN_CHAIN_ID,
+  MAINNET_CHAIN_ID,
+  ROPSTEN_CHAIN_ID,
+} from '../../../shared/constants/network';
 
 describe('Account link', function () {
   describe('getAccountLink', function () {
@@ -8,11 +14,13 @@ describe('Account link', function () {
         {
           expected: 'https://etherscan.io/address/0xabcd',
           network: 1,
+          chainId: MAINNET_CHAIN_ID,
           address: '0xabcd',
         },
         {
           expected: 'https://ropsten.etherscan.io/address/0xdef0',
           network: 3,
+          chainId: ROPSTEN_CHAIN_ID,
           address: '0xdef0',
           rpcPrefs: {},
         },
@@ -20,6 +28,7 @@ describe('Account link', function () {
           // test handling of `blockExplorerUrl` for a custom RPC
           expected: 'https://block.explorer/address/0xabcd',
           network: 31,
+          chainId: KOVAN_CHAIN_ID,
           address: '0xabcd',
           rpcPrefs: {
             blockExplorerUrl: 'https://block.explorer',
@@ -29,6 +38,7 @@ describe('Account link', function () {
           // test handling of trailing `/` in `blockExplorerUrl` for a custom RPC
           expected: 'https://another.block.explorer/address/0xdef0',
           network: 33,
+          chainId: GOERLI_CHAIN_ID,
           address: '0xdef0',
           rpcPrefs: {
             blockExplorerUrl: 'https://another.block.explorer/',
@@ -36,8 +46,11 @@ describe('Account link', function () {
         },
       ];
 
-      tests.forEach(({ expected, address, network, rpcPrefs }) => {
-        assert.equal(getAccountLink(address, network, rpcPrefs), expected);
+      tests.forEach(({ expected, address, network, chainId, rpcPrefs }) => {
+        assert.equal(
+          getAccountLink(address, chainId, rpcPrefs, network),
+          expected,
+        );
       });
     });
   });

@@ -34,6 +34,7 @@ import {
   AVAX_CHAIN_ID,
   AVAX,
 } from '../../../shared/constants/network';
+import { removeUrlLastSlash } from '../../../shared/modules/network.utils';
 import { NETWORK_EVENTS } from './network';
 
 const fetchWithTimeout = getFetchWithTimeout(30000);
@@ -238,18 +239,18 @@ export default class IncomingTransactionsController {
 
   getBlockApiUrl(chainId) {
     if (chainId === MAINNET_CHAIN_ID) {
-      return 'https://api.etherscan.io';
+      return removeUrlLastSlash('https://api.etherscan.io');
     } else if (chainId === HECO_CHAIN_ID) {
-      return 'https://api.hecoinfo.com';
+      return removeUrlLastSlash('https://api.hecoinfo.com');
     } else if (chainId === BSC_CHAIN_ID) {
-      return 'https://api.bscscan.com';
+      return removeUrlLastSlash('https://api.bscscan.com');
     } else if (chainId === MATIC_CHAIN_ID) {
-      return 'https://api.polygonscan.com';
+      return removeUrlLastSlash('https://api.polygonscan.com');
     } else if (chainId === XDAI_CHAIN_ID) {
-      return 'https://blockscout.com/xdai/mainnet/api';
+      return removeUrlLastSlash('https://blockscout.com/xdai/mainnet/api');
     }
     const etherscanSubdomain = `api-${CHAIN_ID_TO_TYPE_MAP[chainId]}`;
-    return `https://${etherscanSubdomain}.etherscan.io`;
+    return removeUrlLastSlash(`https://${etherscanSubdomain}.etherscan.io`);
   }
 
   async _fetchTxs(address, fromBlock, chainId) {
