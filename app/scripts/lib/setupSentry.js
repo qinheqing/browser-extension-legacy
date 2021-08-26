@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/browser';
 import { Dedupe, ExtraErrorData } from '@sentry/integrations';
 import { Integrations } from '@sentry/tracing';
-
+import * as uuid from 'uuid';
 import extractEthjsErrorMessage from './extractEthjsErrorMessage';
 
 /* eslint-disable prefer-destructuring */
@@ -87,6 +87,13 @@ export default function setupSentry({ release, getState }) {
     sentryTarget = SENTRY_DSN;
   }
 
+  sentryTarget = sentryTarget || SENTRY_DSN || SENTRY_DSN_DEV;
+  if (!sentryTarget) {
+    throw new Error(
+      `Missing SENTRY_DSN environment variable in production environment`,
+    );
+  }
+
   Sentry.init({
     dsn: sentryTarget,
     debug: METAMASK_DEBUG,
@@ -100,6 +107,12 @@ export default function setupSentry({ release, getState }) {
     beforeSend: (report) => rewriteReport(report),
     // Setup Apdex
     tracesSampleRate: METAMASK_DEBUG ? 1.0 : 0.2,
+  });
+
+  // https://docs.sentry.io/platforms/javascript/enriching-events/identify-user/
+  Sentry.setUser({
+    id: getOrCreateSentryUserId(),
+    // ip_address: '{{auto}}',
   });
 
   function rewriteReport(report) {
@@ -180,4 +193,18 @@ function toMetamaskUrl(origUrl) {
   }
   const metamaskUrl = `metamask${filePath}`;
   return metamaskUrl;
+}
+
+function getOrCreateSentryUserId() {
+  try {
+    const key = 'ONEKEY_SENTRY_USER_ID';
+    let id = localStorage.getItem(key);
+    if (!id) {
+      id = uuid.v4();
+      localStorage.setItem(key, id);
+    }
+    return id;
+  } catch (ex) {
+    return undefined;
+  }
 }

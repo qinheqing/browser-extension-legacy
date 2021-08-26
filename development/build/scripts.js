@@ -657,6 +657,9 @@ function setupReloadOnChange({ bundlerOpts, events }) {
 
 function setupMinification(buildConfiguration) {
   const minifyOpts = {
+    compress: {
+      dead_code: true,
+    },
     format: {
       comments: false, // some, all, false, Regex
     },
@@ -718,8 +721,7 @@ function setupSourcemaps(buildConfiguration, { devMode }) {
         devMode
           ? writeSourceMapDev()
           : sourcemaps.write('../sourcemaps', {
-              addComment: devMode,
-              sourceMappingURLPrefix: () => 'http://localhost:31317',
+              addComment: false, // DO NOT add sourceMappingURL comment, sentry will use same path
             }),
       );
   });
