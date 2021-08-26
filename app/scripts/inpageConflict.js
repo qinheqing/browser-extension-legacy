@@ -36,45 +36,57 @@ function setGlobalsVars({ provider, overwrite = true }) {
     otherProvider = window.ethereum;
   }
 
-  // setGlobalProvider(provider);
-  Object.defineProperty(window, 'ethereum', {
-    get() {
-      let _provider = onekeyProvider;
-      if (switchProviderName) {
-        const name = (switchProviderName || '').toLowerCase();
-        if (name === 'onekey') {
-          _provider = onekeyProvider;
-          _provider.isOneKey = true;
-          _provider.isMetaMask = false;
-        }
+  /*
+  let canDefineProperty = true;
+  const propDesc = Object.getOwnPropertyDescriptor(window, 'ethereum');
+  if (propDesc && !propDesc.value) {
+    canDefineProperty = false;
+  }
+  */
 
-        if (name === 'metamask' && otherProvider) {
+  try {
+    Object.defineProperty(window, 'ethereum', {
+      get() {
+        let _provider = onekeyProvider;
+        if (switchProviderName) {
+          const name = (switchProviderName || '').toLowerCase();
+          if (name === 'onekey') {
+            _provider = onekeyProvider;
+            _provider.isOneKey = true;
+            _provider.isMetaMask = false;
+          }
+
+          if (name === 'metamask' && otherProvider) {
+            _provider = otherProvider;
+          }
+        } else if (otherProvider && !overwrite) {
           _provider = otherProvider;
         }
-      } else if (otherProvider && !overwrite) {
-        _provider = otherProvider;
-      }
 
-      if (!_provider.switchProvider) {
-        _provider.switchProvider = switchProvider;
-      }
-      return _provider;
-    },
-    set(val) {
-      otherProvider = val;
-      provider.request({
-        method: METHOD_OTHER_PROVIDER_STATUS,
-        params: [
-          {
-            message: 'MetaMask provider inject last',
-            inject: true,
-            step: 'last',
-            overwrite,
-          },
-        ],
-      });
-    },
-  });
+        if (!_provider.switchProvider) {
+          _provider.switchProvider = switchProvider;
+        }
+        return _provider;
+      },
+      set(val) {
+        otherProvider = val;
+        provider.request({
+          method: METHOD_OTHER_PROVIDER_STATUS,
+          params: [
+            {
+              message: 'MetaMask provider inject last',
+              inject: true,
+              step: 'last',
+              overwrite,
+            },
+          ],
+        });
+      },
+    });
+  } catch (ex) {
+    // setGlobalProvider(provider);
+    window.ethereum = provider;
+  }
 
   setTimeout(() => {
     if (!otherProvider) {

@@ -64,6 +64,7 @@ function PageDemoI18n() {
   return (
     <AppPageLayout title="OneKey">
       <Link to={GENERAL_ROUTE}>切换语言 &gt;</Link>
+      <button onClick={() => window.abd389234.bbb7732923}>抛异常测试</button>
       <hr />
       <I18nTextFunctionComponent />
       <I18nTextClassComponent />
