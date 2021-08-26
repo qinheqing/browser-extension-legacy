@@ -718,8 +718,7 @@ function setupSourcemaps(buildConfiguration, { devMode }) {
         devMode
           ? writeSourceMapDev()
           : sourcemaps.write('../sourcemaps', {
-              addComment: devMode,
-              sourceMappingURLPrefix: () => 'http://localhost:31317',
+              addComment: false, // DO NOT add sourceMappingURL comment, sentry will use same path
             }),
       );
   });

@@ -116,7 +116,7 @@ async function addEthereumChainHandler(
   if (CHAIN_ID_TO_NETWORK_ID_MAP[_chainId]) {
     return end(
       ethErrors.rpc.invalidParams({
-        message: `May not specify default MetaMask chain.`,
+        message: `May not specify default OneKey chain.`,
       }),
     );
   }
@@ -129,6 +129,7 @@ async function addEthereumChainHandler(
       res.result = null;
       return end();
     }
+
     try {
       await updateRpcTarget(
         await requestUserApproval({
@@ -189,6 +190,7 @@ async function addEthereumChainHandler(
         }),
       );
     }
+
     if (nativeCurrency.decimals !== 18) {
       return end(
         ethErrors.rpc.invalidParams({
