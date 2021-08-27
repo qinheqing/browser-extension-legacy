@@ -77,7 +77,7 @@ class StoreBalance extends BaseStore {
         if (!this.fetchBalancePendingQueue[address]) {
           return storeStorage.tokenBalancesRaw[tokenKey];
         }
-        const result = await wallet.chainProvider.getAccountInfo({ address });
+        const result = await wallet.chainManager.getAccountInfo({ address });
         await utilsApp.delay(150);
         this.deletePendingBalanceFetchTask(address);
         return result;

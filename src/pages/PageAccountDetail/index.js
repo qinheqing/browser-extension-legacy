@@ -48,6 +48,7 @@ function PageAccountDetail() {
 
           <EditableLabel
             className="pt-2"
+            maxLength={36}
             defaultValue={storeAccount.currentAccount.name}
             onSubmit={storeAccount.changeAccountName}
           />

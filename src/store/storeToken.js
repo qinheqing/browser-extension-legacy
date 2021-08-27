@@ -96,8 +96,8 @@ class StoreToken extends BaseStore {
   }
 
   newTokenInfo() {
-    const tokenController = storeWallet.currentWallet?.tokenController;
-    return tokenController.newTokenInfo();
+    const tokenManager = storeWallet.currentWallet?.tokenManager;
+    return tokenManager.newTokenInfo();
   }
 
   buildNativeToken({ account, chainInfo }) {
@@ -108,7 +108,7 @@ class StoreToken extends BaseStore {
       name,
       symbol: chainInfo.currency || symbol,
       decimals: storeWallet.currentWallet.options.balanceDecimals,
-      icon: chainInfo?.currencyIcon,
+      logoURI: chainInfo?.currencyLogo,
       address,
       isNative: true,
       tokenId,
@@ -158,7 +158,7 @@ class StoreToken extends BaseStore {
       return;
     }
     const tokensRes =
-      await storeWallet.currentWallet.chainProvider.getAccountTokens();
+      await storeWallet.currentWallet.chainManager.getAccountTokens();
     console.log('fetchCurrentAccountTokens', tokensRes);
     await this.setCurrentTokens({ ...tokensRes, forceUpdateTokenMeta });
   }
@@ -261,12 +261,12 @@ class StoreToken extends BaseStore {
 
   @action.bound
   async fetchAllTokenListMeta() {
-    const tokenController = storeWallet.currentWallet?.tokenController;
-    if (tokenController?.getTokenListMetaAsync) {
-      const list = await tokenController.getTokenListMetaAsync();
-      if (Array.isArray(list) && tokenController?.getRecommendTokenAddresses) {
+    const tokenManager = storeWallet.currentWallet?.tokenManager;
+    if (tokenManager?.getTokenListMetaAsync) {
+      const list = await tokenManager.getTokenListMetaAsync();
+      if (Array.isArray(list) && tokenManager?.getRecommendTokenAddresses) {
         this.recommended = null;
-        const addresses = tokenController.getRecommendTokenAddresses();
+        const addresses = tokenManager.getRecommendTokenAddresses();
         const recommended = list.filter((item) => addresses[item.address]);
         if (Array.isArray(recommended) && recommended.length > 0) {
           this.recommended = recommended;

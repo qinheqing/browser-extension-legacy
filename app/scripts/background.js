@@ -43,7 +43,7 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import errorsGlobalHandler from './errorsGlobalHandler';
-import backgroundSolana from '../../src/wallets/SOL/modules/dappProvider/background';
+import backgroundSolana from '../../src/wallets/providers/SOL/dapp/background';
 import backgroundContainer from './backgroundContainer';
 import i18nBackground from './i18nBackground';
 /* eslint-enable import/first */

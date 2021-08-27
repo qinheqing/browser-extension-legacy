@@ -84,7 +84,7 @@ function PageTokenAdd() {
       '.OneKey-AppPageLayoutBody',
     );
     storeToken.fetchAllTokenListMeta().then(triggerScrollEvent);
-    storeWallet.currentWallet.chainProvider
+    storeWallet.currentWallet.chainManager
       .getAddAssociateTokenFee()
       .then(setFee);
 

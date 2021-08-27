@@ -60,7 +60,7 @@ const AccountsGroupItemChain = observer(function ({ chainKey, ...others }) {
   const chainInfo = storeChain.getChainInfoByKey(chainKey);
   return (
     <AccountsGroupItem
-      icon={chainInfo.logo}
+      icon={chainInfo.chainLogo}
       onClick={() => {
         storeStorage.accountsGroupFilter = {
           type: CONST_ACCOUNTS_GROUP_FILTER_TYPES.chain,

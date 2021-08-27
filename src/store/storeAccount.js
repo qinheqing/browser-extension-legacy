@@ -110,7 +110,7 @@ class StoreAccount extends BaseStore {
         break;
       }
 
-      case CONSTS_ACCOUNT_TYPES.Observer: {
+      case CONSTS_ACCOUNT_TYPES.WatchOnly: {
         type = '观察账户';
         break;
       }

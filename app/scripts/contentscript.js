@@ -4,7 +4,7 @@ import { WindowPostMessageStream } from '@onekeyhq/post-message-stream';
 import ObjectMultiplex from 'obj-multiplex';
 import extension from 'extensionizer';
 import PortStream from 'extension-port-stream';
-import contentscriptSolana from '../../src/wallets/SOL/modules/dappProvider/contentscript';
+import contentscriptSolana from '../../src/wallets/providers/SOL/dapp/contentscript';
 import {
   STREAM_CONTENT_SCRIPT,
   STREAM_INPAGE,
