@@ -24,20 +24,12 @@ class UiBackgroundProxy {
 
   // ----------------------------------------------
 
-  async keyringProxyCall({ options, method, params }) {
-    return this.baseProxyCall({
-      module: BACKGROUND_PROXY_MODULE_NAMES.keyring,
-      options,
-      method,
-      params,
-    });
-  }
-
   // ----------------------------------------------
 
   async hardwareProxyCall({ method, params }) {
     return this.baseProxyCall({
       module: BACKGROUND_PROXY_MODULE_NAMES.hardware,
+      options: {},
       method,
       params,
     });
@@ -63,3 +55,4 @@ class UiBackgroundProxy {
 const uiBackgroundProxy = new UiBackgroundProxy();
 global.$$uiBackgroundProxy = uiBackgroundProxy;
 export default uiBackgroundProxy;
+export { UiBackgroundProxy };

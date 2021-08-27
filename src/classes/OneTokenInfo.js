@@ -9,6 +9,7 @@ class OneTokenInfo {
     name = '',
     symbol = '',
     icon = '',
+    logoURI = '',
     decimals,
     isNative = false, // isNativeToken like=BNB、ETH、SOL
     address = '', // token address
@@ -26,6 +27,7 @@ class OneTokenInfo {
     this.symbol = symbol;
     this.symbolOrName = this.symbol || this.name || '未知资产';
     this.icon = icon;
+    this.logoURI = logoURI;
     this.decimals = decimals;
     this.isNative = isNative;
     this.address = address;
@@ -46,9 +48,9 @@ class OneTokenInfo {
     this.key = key || this.generateKey();
   }
 
-  // TODO _buildTokenMetaKey, _buildTokenPriceKey, _buildTokenKey in tokenController
+  // TODO _buildTokenMetaKey, _buildTokenPriceKey, _buildTokenKey in tokenManager
   generateKey() {
-    // TODO use tokenController.newTokenInfo() .generateTokenKey()
+    // TODO use tokenManager.newTokenInfo() .generateTokenKey()
     //    or pass wallet instance to constructor()
     //    because the key schema should be different in different chains
     return `${this.chainKey} => ${this.address}`;

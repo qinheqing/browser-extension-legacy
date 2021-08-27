@@ -105,6 +105,7 @@ function InstructionsInfoCard({
       />
     );
   }
+
   if (!parsed) {
     // some transaction can not be parsed, like DAPP contract interaction
     return (
@@ -134,6 +135,7 @@ function InstructionsInfoCard({
           IconComponent={AppIcons.ArrowDownIcon}
         />
       );
+
       title = (
         <span>
           接收 <AmountText value={amount} decimals={decimals} /> {currency}
@@ -148,6 +150,7 @@ function InstructionsInfoCard({
           IconComponent={AppIcons.ArrowUpIcon}
         />
       );
+
       title = (
         <span>
           发送 <AmountText value={amount} decimals={decimals} /> {currency}
@@ -201,14 +204,15 @@ function PendingTransactionCard({ txid, ...others }) {
     try {
       // start WSS WebSocket to confirmTransaction status
       const res =
-        await storeWallet.currentWallet.chainProvider.confirmTransaction({
+        await storeWallet.currentWallet.chainManager.confirmTransaction({
           txid,
         });
       // res = {"context":{"slot":85562176},"value":{"err":null}}
-      const res1 =
-        await storeWallet.currentWallet.chainProvider.getTransactions({
+      const res1 = await storeWallet.currentWallet.chainManager.getTransactions(
+        {
           ids: [txid],
-        });
+        },
+      );
       const confirmedTx = res1?.items?.[0];
       if (confirmedTx) {
         setTx(confirmedTx);
@@ -218,6 +222,7 @@ function PendingTransactionCard({ txid, ...others }) {
       // confirmTransaction timeout will throw exception
     }
   }
+
   useEffect(() => {
     confirmTransaction();
   }, []);

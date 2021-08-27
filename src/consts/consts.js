@@ -3,13 +3,15 @@ export const CONST_BTC = 'BTC';
 export const CONST_ETH = 'ETH';
 export const CONST_SOL = 'SOL';
 export const CONST_BNB = 'BNB';
+export const CONST_CFX = 'CFX';
 export const CONST_CHAIN_KEYS = {
   BTC: 'BTC',
+  ETH: 'ETH',
   BSC: 'BSC',
   BSC_TEST_NET: 'BSC_T',
-  ETH: 'ETH',
   SOL: 'SOL',
   SOL_TEST_NET: 'SOL_T',
+  CFX: 'CFX',
 };
 export const CONST_HARDWARE_MODELS = {
   OneKeyClassic: 'onekey',
@@ -25,7 +27,7 @@ export const CONST_TX_TYPES = {
 };
 export const CONSTS_ACCOUNT_TYPES = {
   SingleChain: 'SingleChain', // mnemonic、seed、private key、keyStore import single chain account
-  Observer: 'Observer', // Observer account
+  WatchOnly: 'WatchOnly', // WatchOnly account
   Hardware: 'Hardware', // Hardware HD account
   Wallet: 'Wallet', // Wallet HD account
 };

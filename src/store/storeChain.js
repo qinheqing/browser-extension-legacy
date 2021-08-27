@@ -10,7 +10,7 @@ import {
   CONST_BTC,
 } from '../consts/consts';
 import utilsApp from '../utils/utilsApp';
-import chainsConfig from '../config/chainsConfig';
+import * as chainsConfig from '../config/chains';
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../ui/app/helpers/constants/common';
 import BaseStore from './BaseStore';
 import storeStorage from './storeStorage';
@@ -19,6 +19,7 @@ import storeStorage from './storeStorage';
 function createBuiltInChains() {
   let chainsRaw = [
     chainsConfig.SOL,
+    chainsConfig.CFX,
     // chainsConfig.BTC,
     // chainsConfig.BSC,
   ];
@@ -76,7 +77,7 @@ class StoreChain extends BaseStore {
       baseChain: CONST_CHAIN_KEYS.ETH,
       key: `Ropsten@${utilsApp.uuid()}`,
       name: 'Ropsten Testnet',
-      internalChainId: 3,
+      tokenChainId: 3,
       rpc: [`https://ropsten.infura.io/v3/${infura}`],
       currency: CONST_ETH,
       browser: ['https://ropsten.etherscan.io/'],

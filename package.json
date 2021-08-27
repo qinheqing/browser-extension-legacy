@@ -1,6 +1,6 @@
 {
   "name": "onekey-crx",
-  "version": "2.0.6",
+  "version": "2.1.0",
   "private": true,
   "repository": {
     "type": "git",
@@ -180,6 +180,7 @@
     "human-standard-token-abi": "^2.0.0",
     "immer": "^8.0.1",
     "is-stream": "2.0.0",
+    "js-conflux-sdk": "^1.7.0",
     "json-rpc-engine": "5.3.0",
     "json-rpc-middleware-stream": "^2.1.1",
     "jsonschema": "^1.2.4",
@@ -348,8 +349,8 @@
     "rc": "^1.2.8",
     "react-devtools": "^4.10.1",
     "read-installed": "^4.0.3",
+    "redux-devtools-extension": "^2.13.9",
     "redux-mock-store": "^1.5.4",
-    "remote-redux-devtools": "^0.5.16",
     "resolve-url-loader": "^3.1.2",
     "sass": "^1.32.4",
     "sass-loader": "^10.1.1",

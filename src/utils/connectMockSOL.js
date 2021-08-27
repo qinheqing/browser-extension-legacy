@@ -12,10 +12,10 @@ import {
 } from '@solana/web3.js';
 import { CONST_TEST_MNEMONIC, CONST_TX_TYPES } from '../consts/consts';
 import {
-  HdKeyProviderEd25519,
-  HdKeyProviderBip32,
-} from '../wallets/HdKeyProvider';
-import helpersSOL from '../wallets/SOL/modules/helpersSOL';
+  HdKeyManagerEd25519,
+  HdKeyManagerBip39,
+} from '../wallets/HdKeyManager';
+import helpersSOL from '../wallets/providers/SOL/utils/helpersSOL';
 import utilsApp from './utilsApp';
 
 const LAYOUT = BufferLayout.union(BufferLayout.u8('instruction'));
@@ -35,6 +35,7 @@ LAYOUT.addVariant(
   BufferLayout.struct([BufferLayout.nu64('amount')]),
   'mintTo',
 );
+
 LAYOUT.addVariant(
   8,
   BufferLayout.struct([BufferLayout.nu64('amount')]),
@@ -223,7 +224,7 @@ async function getEthAccountFromMnemonicTest(hdPath = "m/44'/60'/0'/0/0") {
 }
 
 async function deriveByHDKey({ seed, path }) {
-  const hdkey = new HdKeyProviderBip32();
+  const hdkey = new HdKeyManagerBip39();
   const dpath = await hdkey.derivePath({
     seed: Buffer.from(seed, 'hex'),
     path,
@@ -244,7 +245,7 @@ async function deriveByHDKey({ seed, path }) {
 }
 
 async function driveByHDKeyED25519({ seed, path }) {
-  const hdkey = new HdKeyProviderEd25519();
+  const hdkey = new HdKeyManagerEd25519();
   const dpath = await hdkey.derivePath({
     seed: Buffer.from(seed, 'hex'),
     path,

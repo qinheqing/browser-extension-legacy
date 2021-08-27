@@ -38,14 +38,14 @@ import {
   setGlobalProvider,
 } from '@onekeyhq/providers';
 import log from '../../src/log/logger';
-import inpageSolana from '../../src/wallets/SOL/modules/dappProvider/inpage';
+import inpageSolana from '../../src/wallets/providers/SOL/dapp/inpage';
 import {
   STREAM_CONTENT_SCRIPT,
   STREAM_INPAGE,
   STREAM_PROVIDER,
 } from './constants/consts';
 import inpageConflict from './inpageConflict';
-// import inpageSolanaLegacy from '../../src/wallets/SOL/modules/dappProvider/inpageSolanaLegacy';
+// import inpageSolanaLegacy from '../../src/wallets/SOL/dapp/inpageSolanaLegacy';
 
 restoreContextAfterImports();
 

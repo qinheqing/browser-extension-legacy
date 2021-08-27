@@ -80,7 +80,7 @@ function TokenBalance({
       return () => null;
     }
     // start WSS WebSocket listening
-    const listenerId = _wallet.chainProvider.addAccountChangeListener(
+    const listenerId = _wallet.chainManager.addAccountChangeListener(
       address,
       (info) => {
         // TODO update check which is fresh data (getAccountInfo/addAccountChangeListener)
@@ -94,7 +94,7 @@ function TokenBalance({
     // console.log('TokenBalance > addAccountChangeListener', listenerId);
     return () => {
       // console.log('TokenBalance > removeAccountChangeListener', listenerId);
-      _wallet.chainProvider.removeAccountChangeListener(listenerId);
+      _wallet.chainManager.removeAccountChangeListener(listenerId);
     };
   }, [address]);
   // console.log('token balance render:', { address, balance, decimals });

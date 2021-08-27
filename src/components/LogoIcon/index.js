@@ -64,7 +64,7 @@ const ChainLogoIcon = observer(function ({
 }) {
   // eslint-disable-next-line no-param-reassign
   chainInfo = chainInfo || storeChain.currentChainInfo;
-  const imgSrc = chainInfo?.logo;
+  const imgSrc = chainInfo?.chainLogo;
   return (
     <LogoIcon
       size={size}

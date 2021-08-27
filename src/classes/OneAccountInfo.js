@@ -35,7 +35,7 @@ class OneAccountInfo {
 
   chainKey = '';
 
-  chainInfo = null; // chainProvider
+  chainInfo = null;
 
   type = CONSTS_ACCOUNT_TYPES.Hardware;
 
