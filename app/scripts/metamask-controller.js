@@ -1010,6 +1010,9 @@ export default class MetamaskController extends EventEmitter {
       case 'trezor':
         keyringName = OneKeyKeyring.type;
         break;
+      case 'ledger':
+        keyringName = LedgerBridgeKeyring.type;
+        break;
       default:
         throw new Error(
           'MetamaskController:getKeyringForDevice - Unknown device',
