@@ -14,6 +14,7 @@ import { Mutex } from 'await-semaphore';
 import ethUtil from 'ethereumjs-util';
 import log from 'loglevel';
 import OneKeyKeyring from '@onekeyhq/eth-onekey-keyring';
+import LedgerBridgeKeyring from '@metamask/eth-ledger-bridge-keyring';
 import EthQuery from 'eth-query';
 import nanoid from 'nanoid';
 import {
@@ -215,7 +216,11 @@ export default class MetamaskController extends EventEmitter {
       preferencesController: this.preferencesController,
     });
 
-    const additionalKeyrings = [OneKeyKeyring, AddressKeyring];
+    const additionalKeyrings = [
+      OneKeyKeyring,
+      AddressKeyring,
+      LedgerBridgeKeyring,
+    ];
     this.keyringController = new KeyringController({
       keyringTypes: additionalKeyrings,
       initState: initState.KeyringController,
