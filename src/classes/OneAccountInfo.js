@@ -16,7 +16,9 @@ class OneAccountInfo {
     decimals,
     currency,
     hardwareModel,
+    ...others
   }) {
+    Object.assign(this, others);
     this._raw = _raw;
     this.chainKey = chainKey;
     this.type = type; // accountType

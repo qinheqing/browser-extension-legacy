@@ -10,26 +10,14 @@ import {
   CONST_BTC,
 } from '../consts/consts';
 import utilsApp from '../utils/utilsApp';
-import * as chainsConfig from '../config/chains';
+import chains from '../config/chains';
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../ui/app/helpers/constants/common';
 import BaseStore from './BaseStore';
 import storeStorage from './storeStorage';
 
 // TODO use https://github.com/OneKeyHQ/remote-config
 function createBuiltInChains() {
-  let chainsRaw = [
-    chainsConfig.SOL,
-    chainsConfig.CFX,
-    // chainsConfig.BTC,
-    // chainsConfig.BSC,
-  ];
-  if (IS_ENV_IN_TEST_OR_DEBUG) {
-    chainsRaw = [
-      ...chainsRaw,
-      chainsConfig.SOL_TEST,
-      // chainsConfig.BSC_TEST,
-    ];
-  }
+  const chainsRaw = chains;
   return chainsRaw.reduce((prev, current) => {
     const info = new OneChainInfo(current);
     prev[info.key] = info;

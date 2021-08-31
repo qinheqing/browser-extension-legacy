@@ -1,4 +1,6 @@
 import utilsApp from '../utils/utilsApp';
+import OneAccountInfo from '../classes/OneAccountInfo';
+import optionsHelper from './optionsHelper';
 
 class ChainManagerBase {
   constructor(options) {
@@ -10,6 +12,7 @@ class ChainManagerBase {
       this._apiRpc ||
       this.createApiRpc({
         url: this.getFirstRpcUrl(),
+        chainId: optionsHelper.getChainId(this.options),
       });
     return this._apiRpc;
   }
@@ -28,6 +31,33 @@ class ChainManagerBase {
 
   // block browser api
   // browser = null;
+
+  extractBalanceInfo(rpcAccountInfo) {
+    // 1. native token
+    // 2. token
+    // return { balance, decimals, isNativeAccount }
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  /**
+   *
+   * @param rpcAccountInfo
+   * @return {OneAccountInfo}
+   */
+  normalizeAccountUpdatesInfo(rpcAccountInfo) {
+    const { balance, decimals, isNativeAccount, ...others } =
+      this.extractBalanceInfo(rpcAccountInfo);
+
+    return new OneAccountInfo({
+      _raw: rpcAccountInfo,
+      address: rpcAccountInfo.address,
+      balance,
+      decimals,
+      isToken: !isNativeAccount,
+      isNativeAccount,
+      ...others,
+    });
+  }
 
   // TODO change to addEventListener ？
   addAccountChangeListener(address, handler) {
