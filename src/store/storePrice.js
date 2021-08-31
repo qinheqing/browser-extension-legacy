@@ -225,9 +225,10 @@ class StorePrice extends BaseStore {
     // eslint-disable-next-line prefer-const
     let { contractAddress, tokenId } = token;
     tokenId = tokenId || token?.extensions?.coingeckoId;
-    if (!tokenId || !contractAddress) {
+    if (!tokenId) {
       return;
     }
+
     if (!this._isTokenPriceExpired(token)) {
       return;
     }

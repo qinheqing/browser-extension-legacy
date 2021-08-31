@@ -1,46 +1,23 @@
 import assert from 'assert';
+import { Conflux, format } from 'js-conflux-sdk';
 import ChainManagerBase from '../../../ChainManagerBase';
 import OneAccountInfo from '../../../../classes/OneAccountInfo';
+import optionsHelper from '../../../optionsHelper';
 
 class ChainManager extends ChainManagerBase {
-  createApiRpc({ url }) {
-    return null;
+  createApiRpc({ url, chainId }) {
+    const confluxRpc = new Conflux({
+      url,
+      logger: console,
+      networkId: chainId,
+      // timeout: 300 * 1000, // request timeout in ms, default 300*1000 ms === 5 minute
+    });
+    global.$$confluxRpc = confluxRpc;
+    return confluxRpc;
   }
 
   createApiExplorer({ url }) {
     return null;
-  }
-
-  isTokenAddress(tokenAccountInfo) {
-    // noop
-    return null;
-  }
-
-  /**
-   *
-   * @param tokenAccountInfo
-   * @return {OneAccountInfo}
-   */
-  normalizeAccountUpdatesInfo(tokenAccountInfo) {
-    const isToken = this.isTokenAddress(tokenAccountInfo);
-    const { balance } = tokenAccountInfo;
-    const { decimals } = tokenAccountInfo;
-    if (isToken) {
-      // * update token balance and decimals
-      // balance = 0;
-      // decimals = 0;
-    } else {
-      // * update native balance and decimals
-      // balance = 0;
-      // decimals = 0;
-    }
-    return new OneAccountInfo({
-      _raw: tokenAccountInfo,
-      address: tokenAccountInfo.address,
-      balance,
-      decimals,
-      isToken,
-    });
   }
 
   async sendTransaction({ rawTransaction }) {
@@ -48,18 +25,58 @@ class ChainManager extends ChainManagerBase {
   }
 
   addAccountChangeListener(address, handler) {
-    return this.apiRpc.addAccountChangeListener(address, (accountInfo) => {
-      handler(this.normalizeAccountUpdatesInfo({ ...accountInfo, address }));
-    });
+    // CFX do not support accountChange listener
+    return null;
   }
 
   removeAccountChangeListener(id) {
-    return this.apiRpc.removeAccountChangeListener(id);
+    // CFX do not support accountChange listener
+    return null;
+  }
+
+  extractBalanceInfo(rpcAccountInfo) {
+    const isNativeAccount = true;
+    let { accumulatedInterestReturn, balance, collateralForStorage, nonce } =
+      rpcAccountInfo;
+    accumulatedInterestReturn = accumulatedInterestReturn.toString();
+    balance = balance.toString();
+    collateralForStorage = collateralForStorage.toString();
+    nonce = nonce.toString();
+    let decimals = 0;
+    if (isNativeAccount) {
+      decimals = optionsHelper.getNativeTokenDecimals(this.options);
+    }
+
+    return {
+      balance,
+      decimals,
+      isNativeAccount,
+    };
   }
 
   async getAccountInfo({ address }) {
-    const res = await this.apiRpc.getAccountInfo(address);
-    const accountInfo = res.account;
+    // https://confluxnetwork.gitbook.io/js-conflux-sdk/api/conflux#Conflux.js/Conflux/getAccount
+    // const accountInfo1 = await this.apiRpc.getAccount(address, 'latest_state');
+
+    // https://github.com/Conflux-Chain/js-conflux-sdk/blob/master/src/Conflux.js#L351
+    const res = await this.apiRpc.provider.batch([
+      {
+        id: `${address}_${this.apiRpc.provider.requestId()}`,
+        method: 'cfx_getAccount',
+        params: [address, format.epochNumber.$or(undefined)('latest_state')],
+      },
+    ]);
+    const accountInfo = format.account(res[0]);
+
+    /*
+    accumulatedInterestReturn: o [sign: false]
+    address: "CFX:TYPE.USER:AAJHZGS3C467SM7H8TK0FS1KJM506TRKMUS1NXXV33"
+    admin: "CFX:TYPE.NULL:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA0SFBNJM2"
+    balance: o [sign: false]
+    codeHash: "0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470"
+    collateralForStorage: o [sign: false]
+    nonce: o [sign: false]
+     */
 
     return this.normalizeAccountUpdatesInfo({
       ...accountInfo,
@@ -78,12 +95,18 @@ class ChainManager extends ChainManagerBase {
       };
     }
 
-    const res = await this.apiRpc.getAccountTokens(ownerAddress);
     return {
       chainKey,
       ownerAddress,
-      tokens: res.tokens,
+      tokens: [],
     };
+
+    // const res = await this.apiRpc.getAccountTokens(ownerAddress);
+    // return {
+    //   chainKey,
+    //   ownerAddress,
+    //   tokens: res.tokens,
+    // };
   }
 
   async getAddAssociateTokenFee() {

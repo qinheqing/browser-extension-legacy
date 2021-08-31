@@ -12,6 +12,7 @@ export const CONST_CHAIN_KEYS = {
   SOL: 'SOL',
   SOL_TEST_NET: 'SOL_T',
   CFX: 'CFX',
+  CFX_TEST: 'CFX_T',
 };
 export const CONST_HARDWARE_MODELS = {
   OneKeyClassic: 'onekey',

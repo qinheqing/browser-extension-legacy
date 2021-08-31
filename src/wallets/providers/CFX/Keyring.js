@@ -5,11 +5,15 @@ import {
   KeyringToolsBase,
 } from '../../KeyringBase';
 import { CONSTS_ACCOUNT_TYPES } from '../../../consts/consts';
+import optionsHelper from '../../optionsHelper';
+import utilsApp from '../../../utils/utilsApp';
 import HdKeyManager from './managers/HdKeyManager';
 
 class KeyringTools extends KeyringToolsBase {
   privateKeyToAddress({ privateKey }) {
-    const account = new PrivateKeyAccount(privateKey);
+    const networkId = optionsHelper.getChainId(this.options);
+    const privateKeyHex = utilsApp.bufferToHex(privateKey);
+    const account = new PrivateKeyAccount(privateKeyHex, networkId);
     return account.address;
   }
 }

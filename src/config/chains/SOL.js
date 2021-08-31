@@ -1,6 +1,6 @@
 import { merge } from 'lodash';
 import { CONST_CHAIN_KEYS } from '../../consts/consts';
-import { normalizeChainInfo } from './configHelpers';
+import { normalizeChainInfo } from '../../wallets/helpers/configHelpers';
 
 const SOL = normalizeChainInfo({
   key: CONST_CHAIN_KEYS.SOL,
@@ -12,6 +12,7 @@ const SOL = normalizeChainInfo({
   isTestNet: false,
   tokenAddMode: 'soft', // soft, hard
   hdPathTemplate: `m/44'/501'/{{index}}'/0'`,
+  colorBg: '#8125f2',
 
   rpc: [
     'https://api.mainnet-beta.solana.com',
@@ -22,7 +23,7 @@ const SOL = normalizeChainInfo({
       home: 'https://explorer.solana.com',
       tx: 'https://explorer.solana.com/tx/{{tx}}',
       account: 'https://explorer.solana.com/address/{{account}}',
-      token: 'https://explorer.solana.com/address/{{account}}',
+      token: 'https://explorer.solana.com/address/{{token}}',
       block: 'https://explorer.solana.com/block/{{block}}',
     },
   ],

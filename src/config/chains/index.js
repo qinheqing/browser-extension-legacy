@@ -1,40 +1,12 @@
-import { CONST_BNB, CONST_BTC, CONST_CHAIN_KEYS } from '../../consts/consts';
-import { normalizeChainInfo } from './configHelpers';
+import { CFX, CFX_TEST } from '../../wallets/providers/CFX/config/chain';
+import { IS_ENV_IN_TEST_OR_DEBUG } from '../../../ui/app/helpers/constants/common';
+import { SOL, SOL_TEST } from './SOL';
+import { BTC, BSC, BSC_TEST } from './MISC';
 
-const BTC = normalizeChainInfo({
-  key: CONST_CHAIN_KEYS.BTC,
-  name: 'BTC',
-  baseChain: CONST_CHAIN_KEYS.BTC,
-  currency: CONST_BTC,
-  tokenChainId: null,
-  rpc: ['https://btc.com/'],
-  browser: ['https://btc.com/'],
-  isTestNet: false,
-});
-const BSC = normalizeChainInfo({
-  key: CONST_CHAIN_KEYS.BSC,
-  name: 'BSC',
-  baseChain: CONST_CHAIN_KEYS.ETH,
-  currency: CONST_BNB,
-  tokenChainId: 56,
-  rpc: [
-    'https://bsc-dataseed.binance.org/',
-    'https://bsc-dataseed1.defibit.io/',
-  ],
-  browser: ['https://bscscan.com/'],
-  isTestNet: false,
-});
-const BSC_TEST = normalizeChainInfo({
-  key: CONST_CHAIN_KEYS.BSC_TEST_NET,
-  name: 'BSC Testnet',
-  baseChain: CONST_CHAIN_KEYS.ETH,
-  currency: CONST_BNB,
-  tokenChainId: 97,
-  rpc: ['https://data-seed-prebsc-1-s1.binance.org:8545/'],
-  browser: ['https://testnet.bscscan.com/'],
-  isTestNet: true,
-});
+// eslint-disable-next-line import/no-mutable-exports
+let chainsEnabled = [SOL, CFX];
 
-export * from './SOL';
-export * from './CFX';
-export { BTC, BSC, BSC_TEST };
+if (IS_ENV_IN_TEST_OR_DEBUG) {
+  chainsEnabled = [...chainsEnabled, SOL_TEST, CFX_TEST];
+}
+export default chainsEnabled;

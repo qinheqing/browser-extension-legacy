@@ -59,6 +59,9 @@ function AccountCard({
         styles.AccountCard,
         'shadow hover:transform hover:scale-[1.01]',
       )}
+      style={{
+        background: chainInfo.colorBg ?? 'black',
+      }}
       {...others}
     >
       <header className={classnames(styles.AccountCard__header)}>

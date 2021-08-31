@@ -1,6 +1,5 @@
 .AccountCard {
   /* #dc1fff */
-  background: #8125f2;
   height: 180px;
   border-radius: 20px;
   color: white;
@@ -27,7 +26,7 @@
 
 .AccountCard__name {
   font-size: 16px;
-  
+
   @apply flex items-center;
 }
 
