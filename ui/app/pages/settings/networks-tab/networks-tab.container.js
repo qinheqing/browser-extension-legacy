@@ -13,6 +13,7 @@ import { NETWORKS_FORM_ROUTE } from '../../../helpers/constants/routes';
 import { ENVIRONMENT_TYPE_FULLSCREEN } from '../../../../../shared/constants/app';
 import { NETWORK_TYPE_RPC } from '../../../../../shared/constants/network';
 import { getEnvironmentType } from '../../../../../app/scripts/lib/util';
+import * as actions from '../../../store/actions';
 import NetworksTab from './networks-tab.component';
 import { defaultNetworksData } from './networks-tab.constants';
 
@@ -84,6 +85,9 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    setProviderType: (type) => {
+      dispatch(actions.setProviderType(type));
+    },
     setSelectedSettingsRpcUrl: (newRpcUrl) =>
       dispatch(setSelectedSettingsRpcUrl(newRpcUrl)),
     setRpcTarget: (newRpc, chainId, ticker, nickname, rpcPrefs) => {

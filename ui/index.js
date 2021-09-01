@@ -36,6 +36,7 @@ export default function launchMetamaskUi(opts, cb) {
       cb(err);
       return;
     }
+
     startApp(metamaskState, backgroundConnection, opts).then((store) => {
       setupDebuggingHelpers(store);
       cb(null, store);
@@ -183,6 +184,7 @@ function setupDebuggingHelpers(store) {
     state.browser = window.navigator.userAgent;
     return state;
   };
+
   window.getSentryState = function () {
     const fullState = store.getState();
     const debugState = maskObject(fullState, SENTRY_STATE);
@@ -194,7 +196,7 @@ function setupDebuggingHelpers(store) {
   };
 }
 
-window.logStateString = function (cb) {
+window.logStateObject = function (cb) {
   const state = window.getCleanAppState();
   global.platform.getPlatformInfo((err, platform) => {
     if (err) {
@@ -202,6 +204,16 @@ window.logStateString = function (cb) {
       return;
     }
     state.platform = platform;
+    cb(null, state);
+  });
+};
+
+window.logStateString = function (cb) {
+  window.logStateObject((err, state) => {
+    if (err) {
+      cb(err);
+      return;
+    }
     const stateString = JSON.stringify(state, null, 2);
     cb(null, stateString);
   });

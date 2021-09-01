@@ -29,6 +29,7 @@ export default class NetworksTab extends PureComponent {
     setRpcTarget: PropTypes.func.isRequired,
     setSelectedSettingsRpcUrl: PropTypes.func.isRequired,
     showConfirmDeleteNetworkModal: PropTypes.func.isRequired,
+    setProviderType: PropTypes.func.isRequired,
     providerUrl: PropTypes.string,
     providerType: PropTypes.string,
     networkDefaultedToProvider: PropTypes.bool,
@@ -196,6 +197,7 @@ export default class NetworksTab extends PureComponent {
       history,
       isFullScreen,
       shouldRenderNetworkForm,
+      setProviderType,
     } = this.props;
 
     return (
@@ -203,6 +205,7 @@ export default class NetworksTab extends PureComponent {
         {this.renderNetworksList()}
         {shouldRenderNetworkForm ? (
           <NetworkForm
+            setProviderType={setProviderType}
             rpcUrls={networksToRender.map((network) => network.rpcUrl)}
             setRpcTarget={setRpcTarget}
             editRpc={editRpc}
