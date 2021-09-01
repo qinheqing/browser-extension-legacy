@@ -32,6 +32,10 @@ class RestoreVaultPage extends Component {
     confirmPasswordError: null,
   };
 
+  componentDidMount() {
+    this.props.history.replace(DEFAULT_ROUTE);
+  }
+
   parseSeedPhrase = (seedPhrase) =>
     (seedPhrase || '').trim().toLowerCase().match(/\w+/gu)?.join(' ') || '';
 
