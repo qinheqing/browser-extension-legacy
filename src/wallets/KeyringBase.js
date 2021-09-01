@@ -29,6 +29,9 @@ class KeyringBase {
       )?.[0];
     const { mnemonic } = appHdAccount;
     const seed = await this.hdkeyProvider.mnemonicToSeed({ mnemonic });
+    if (!seed || !mnemonic) {
+      throw new Error('mnemonic seed can not be empty');
+    }
     return seed;
   }
 
