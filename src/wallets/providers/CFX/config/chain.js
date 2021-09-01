@@ -1,6 +1,10 @@
 import { merge } from 'lodash';
 import { normalizeChainInfo } from '../../../helpers/configHelpers';
-import { CONST_CFX, CONST_CHAIN_KEYS } from '../../../../consts/consts';
+import {
+  CONST_CFX,
+  CONST_CHAIN_KEYS,
+  CONST_ADD_TOKEN_MODE,
+} from '../../../../consts/consts';
 
 const CFX = normalizeChainInfo({
   key: CONST_CHAIN_KEYS.CFX,
@@ -10,7 +14,7 @@ const CFX = normalizeChainInfo({
   shortname: 'Conflux',
   chainLogo: 'images/chains/conflux.svg',
   isTestNet: false,
-  tokenAddMode: 'soft', // soft, hard
+  addTokenMode: CONST_ADD_TOKEN_MODE.LOCAL,
   hdPathTemplate: `m/44'/503'/0'/0/{{index}}`,
   colorBg: '#3a5a6a',
 
@@ -26,7 +30,7 @@ const CFX = normalizeChainInfo({
   ],
 
   // https://api.coingecko.com/api/v3/asset_platforms
-  platformId: 'conflux', // "id" in coingecko /api/v3/asset_platforms
+  platformId: '', // "id" in coingecko /api/v3/asset_platforms
   tokenChainId: '', // autoset = nativeToken.chainId
   currency: '', // autoset = nativeToken.symbol
   currencyLogo: '', // autoset = nativeToken.logoURI

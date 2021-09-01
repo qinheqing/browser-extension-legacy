@@ -148,20 +148,23 @@ function PageTokenAdd() {
         }
         // TODO token fee display
         content={
-          <div>
-            需要支付 {/* TODO to TokenAmountText*/}
-            <AmountText
-              value={fee}
-              decimals={storeAccount.currentAccount.decimals}
-            />{' '}
-            {storeAccount.currentAccount.currency} 添加代币
-          </div>
+          fee > 0 && (
+            <div>
+              需要支付 {/* TODO to TokenAmountText*/}
+              <AmountText
+                value={fee}
+                decimals={storeAccount.currentAccount.decimals}
+              />{' '}
+              {storeAccount.currentAccount.currency} 添加代币
+            </div>
+          )
         }
         confirmText="确认添加"
         onConfirm={async () => {
           return storeToken.addAssociateToken({
             contract: tokenToAdd.address,
             fee,
+            ...tokenToAdd,
           });
         }}
       />

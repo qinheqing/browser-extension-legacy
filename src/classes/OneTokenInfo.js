@@ -31,8 +31,8 @@ class OneTokenInfo {
     this.decimals = decimals;
     this.isNative = isNative;
     this.address = address;
-    this.depositAddress = depositAddress || (isNative && address);
-    this.ownerAddress = ownerAddress || (isNative && address);
+    this.depositAddress = depositAddress || (isNative && address) || '';
+    this.ownerAddress = ownerAddress || (isNative && address) || '';
     this.contractAddress = contractAddress;
     this.contractAddressShort = utilsApp.shortenAddress(contractAddress);
     this.symbolDisplay =

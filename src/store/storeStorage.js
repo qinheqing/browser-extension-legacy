@@ -36,6 +36,7 @@ class StoreStorage extends BaseStoreWithStorage {
       this.autosave('accountsGroupFilter'),
       this.autosave('allAccountsRaw'),
 
+      this.autosave('accountLocalTokensRaw'),
       this.autosave('tokenMetasRaw'),
       this.autosave('tokenBalancesRaw'),
       this.autosave('tokenPricesRaw'),
@@ -54,6 +55,7 @@ class StoreStorage extends BaseStoreWithStorage {
           to: dataMigration.CURRENT_DATA_VERSION,
         });
       }
+      // ensure Page Components mounting after storageReady
       this.storageReady = true;
     });
   }
@@ -99,6 +101,11 @@ class StoreStorage extends BaseStoreWithStorage {
   currentPendingTxid = [
     // txid, txid, txid
   ];
+
+  @observable
+  accountLocalTokensRaw = {
+    // accountKey: { tokenContractAddress: { address } }
+  };
 
   // TODO custom token added by user (ETH)
   @observable.ref

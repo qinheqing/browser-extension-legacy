@@ -1,7 +1,7 @@
 import { TokenListProvider, TokenInfo } from '@solana/spl-token-registry';
 import OneTokenInfo from '../../../../classes/OneTokenInfo';
 
-export const recommendsTokenKeys = {
+const recommendsTokenKeys = {
   10101010: {
     SRMuApVNdxXokk5GT7XD5cUUgXMBCoAz2LHeuAoKWRt: true,
   },

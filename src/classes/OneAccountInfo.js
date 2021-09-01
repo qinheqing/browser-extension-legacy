@@ -6,6 +6,7 @@ import { CONSTS_ACCOUNT_TYPES } from '../consts/consts';
 class OneAccountInfo {
   constructor({
     _raw,
+    key,
     chainKey,
     type,
     name,
@@ -30,7 +31,11 @@ class OneAccountInfo {
     this.decimals = decimals;
     this.currency = currency;
     this.hardwareModel = hardwareModel;
-    // TODO  uniqKey:  this.key = key || this.generateKey();
+    this.key = key || this.generateKey();
+  }
+
+  generateKey() {
+    return `${this.chainKey} => ${this.address}`;
   }
 
   _raw = {};
