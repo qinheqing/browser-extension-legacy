@@ -8,6 +8,7 @@ import {
   accountsWithSendEtherInfoSelector,
   conversionRateSelector,
   getDomainMetadata,
+  getNativeCurrency,
 } from '../../../selectors';
 import { getAccountByAddress } from '../../../helpers/utils/util';
 import { clearConfirmTransaction } from '../../../ducks/confirm-transaction/confirm-transaction.duck';
@@ -23,6 +24,7 @@ function mapStateToProps(state) {
     // not passed to component
     allAccounts: accountsWithSendEtherInfoSelector(state),
     domainMetadata: getDomainMetadata(state),
+    nativeCurrency: getNativeCurrency(state),
   };
 }
 
