@@ -144,7 +144,7 @@ export default class UnlockPage extends Component {
           </form>
           {this.renderSubmitButton()}
           {!hwOnlyMode && (
-            <div className="unlock-page__links">
+            <div className="unlock-page__links" style={{ display: 'none' }}>
               <button className="unlock-page__link" onClick={() => onRestore()}>
                 {t('restoreFromSeed')}
               </button>

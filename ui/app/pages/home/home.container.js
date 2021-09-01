@@ -77,9 +77,7 @@ const mapStateToProps = (state) => {
     forgottenPassword,
     suggestedTokens,
     unconfirmedTransactionsCount: unconfirmedTransactionsCountSelector(state),
-    shouldShowSeedPhraseReminder:
-      seedPhraseBackedUp === false &&
-      (parseInt(accountBalance, 16) > 0 || tokens.length > 0),
+    shouldShowSeedPhraseReminder: seedPhraseBackedUp === false,
     isPopup,
     isNotification,
     showRestorePrompt,
