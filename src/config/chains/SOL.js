@@ -1,5 +1,5 @@
 import { merge } from 'lodash';
-import { CONST_CHAIN_KEYS } from '../../consts/consts';
+import { CONST_CHAIN_KEYS, CONST_ADD_TOKEN_MODE } from '../../consts/consts';
 import { normalizeChainInfo } from '../../wallets/helpers/configHelpers';
 
 const SOL = normalizeChainInfo({
@@ -10,7 +10,7 @@ const SOL = normalizeChainInfo({
   shortname: 'Solana',
   chainLogo: 'images/chains/solana.svg',
   isTestNet: false,
-  tokenAddMode: 'soft', // soft, hard
+  addTokenMode: CONST_ADD_TOKEN_MODE.CHAIN,
   hdPathTemplate: `m/44'/501'/{{index}}'/0'`,
   colorBg: '#8125f2',
 

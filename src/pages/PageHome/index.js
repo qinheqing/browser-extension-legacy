@@ -111,6 +111,7 @@ function RefreshButton() {
           await storeToken.fetchCurrentAccountTokens({
             forceUpdateTokenMeta: true,
           });
+          storeAccount.refreshKey = new Date().getTime();
         } finally {
           setLoading(false);
         }
@@ -256,6 +257,7 @@ function PageHome() {
       {storeAccount.currentAccount && (
         <>
           <AccountCard
+            key={storeAccount.refreshKey}
             showMaskAssetBalanceEye
             maskAssetBalance={storeStorage.maskAssetBalance}
             account={storeAccount.currentAccount}
@@ -268,7 +270,7 @@ function PageHome() {
             <HomeTopActionsBar />
             <div>
               <HomeAssetsHeader />
-              <HomeAssetsList />
+              <HomeAssetsList key={storeAccount.refreshKey} />
             </div>
           </div>
         </>

@@ -57,9 +57,11 @@ class StoreToken extends BaseStore {
   @computed
   get currentTokens() {
     const { tokens } = storeStorage.currentTokensRaw;
+    const ownerAddress = storeAccount.currentAccountAddress;
     const tokenInfoList = tokens.map((tokenRaw) => {
       const tokenMeta = this.getTokenMeta({ token: tokenRaw });
-      const { decimals, name, symbol, logoURI, extensions } = tokenMeta || {};
+      const { decimals, name, symbol, logoURI, extensions, tokenId } =
+        tokenMeta || {};
 
       const tokenInfo = new OneTokenInfo(
         merge({}, tokenRaw, {
@@ -68,6 +70,8 @@ class StoreToken extends BaseStore {
           symbol,
           logoURI,
           extensions,
+          tokenId,
+          ownerAddress,
         }),
       );
 
@@ -157,10 +161,46 @@ class StoreToken extends BaseStore {
     if (!storeAccount.currentAccount) {
       return;
     }
+    const ownerAddress = storeAccount.currentAccount.address;
+    const ownerAccountKey = storeAccount.currentAccount.key;
     const tokensRes =
-      await storeWallet.currentWallet.chainManager.getAccountTokens();
+      await storeWallet.currentWallet.chainManager.getAccountTokens({
+        address: ownerAddress,
+      });
     console.log('fetchCurrentAccountTokens', tokensRes);
+    tokensRes.tokens = tokensRes.tokens || [];
+    const localTokens = Object.values(
+      storeStorage.accountLocalTokensRaw[ownerAccountKey] || {},
+    );
+    tokensRes.tokens = tokensRes.tokens.concat(localTokens);
     await this.setCurrentTokens({ ...tokensRes, forceUpdateTokenMeta });
+  }
+
+  /**
+   *
+   * @param account
+   * @param token
+   * address: "cfxtest:ace00yhwcv70r6jbf2e1nw6tkrk491w9v27pb95w9n"
+     chainId: 1
+     contract: "cfxtest:ace00yhwcv70r6jbf2e1nw6tkrk491w9v27pb95w9n"
+     decimals: 18
+     logoURI: "https://image.cd.mmzhuli.com/54fba1c21ee90f0c8c7670eecf987346?hjw=200&hjh=200"
+     name: "cUSDT"
+     symbol: "cUSDT"
+   */
+  addAccountLocalToken({ account, token }) {
+    // eslint-disable-next-line no-param-reassign
+    account = account || storeAccount.currentAccount;
+    const accountKey = account.key;
+    const { chainKey } = account;
+    const data = storeStorage.accountLocalTokensRaw[accountKey] || {};
+    data[token.address] = {
+      chainKey,
+      address: token.address,
+      contractAddress: token.address,
+    };
+
+    storeStorage.accountLocalTokensRaw[accountKey] = data;
   }
 
   _buildTokenMetaKey({ token }) {
@@ -217,7 +257,7 @@ class StoreToken extends BaseStore {
     const metas = {};
     tokens.forEach((token) => {
       const tokenMeta = this.allTokenListMeta.find(
-        (item) => item.address === token.contractAddress,
+        (item) => item.address === (token.contractAddress || token.address),
       );
       const symbol = this.correctTokenSymbol(tokenMeta);
       const key = this._buildTokenMetaKey({ token });
@@ -348,14 +388,25 @@ class StoreToken extends BaseStore {
     callback && callback();
   }
 
-  async addAssociateToken({ contract, fee }) {
-    if (fee && fee > this.currentNativeTokenBalance.balance) {
+  async addAssociateToken(tokenMeta) {
+    const wallet = storeWallet.currentWallet;
+    if (wallet.isLocalAddTokenMode) {
+      this.addAccountLocalToken({ token: tokenMeta });
+      storeHistory.goBack();
+      return '';
+    }
+
+    if (
+      tokenMeta.fee &&
+      tokenMeta.fee > this.currentNativeTokenBalance.balance
+    ) {
       utilsToast.toast.error('手续费不足');
       return '';
     }
+
     // TODO check token contract.address is valid mint address
-    const txid = await storeWallet.currentWallet.addAssociateToken({
-      contract,
+    const txid = await wallet.addAssociateToken({
+      contract: tokenMeta.contract,
     });
     if (txid) {
       storeTx.addPendingTx(txid);

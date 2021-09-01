@@ -203,6 +203,7 @@ class ChainManager extends ChainManagerBase {
         const _address = publicKey.toString();
         const depositAddress = ownerAddress;
 
+        // TODO replace to new OneTokenInfo().toJS()
         return {
           platformId: this.options.chainInfo.platformId,
           chainKey,

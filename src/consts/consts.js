@@ -14,6 +14,10 @@ export const CONST_CHAIN_KEYS = {
   CFX: 'CFX',
   CFX_TEST: 'CFX_T',
 };
+export const CONST_ADD_TOKEN_MODE = {
+  LOCAL: 'LOCAL',
+  CHAIN: 'CHAIN',
+};
 export const CONST_HARDWARE_MODELS = {
   OneKeyClassic: 'onekey',
   OneKeyMini: 'onekey_mini',

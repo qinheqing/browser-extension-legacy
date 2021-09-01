@@ -3,6 +3,10 @@ import { Conflux, format } from 'js-conflux-sdk';
 import ChainManagerBase from '../../../ChainManagerBase';
 import OneAccountInfo from '../../../../classes/OneAccountInfo';
 import optionsHelper from '../../../optionsHelper';
+import utilsApp from '../../../../utils/utilsApp';
+import utilsNumber from '../../../../utils/utilsNumber';
+
+const EpochTag = format.epochNumber.$or(undefined)('latest_state');
 
 class ChainManager extends ChainManagerBase {
   createApiRpc({ url, chainId }) {
@@ -38,10 +42,10 @@ class ChainManager extends ChainManagerBase {
     const isNativeAccount = true;
     let { accumulatedInterestReturn, balance, collateralForStorage, nonce } =
       rpcAccountInfo;
-    accumulatedInterestReturn = accumulatedInterestReturn.toString();
-    balance = balance.toString();
-    collateralForStorage = collateralForStorage.toString();
-    nonce = nonce.toString();
+    accumulatedInterestReturn = accumulatedInterestReturn?.toString();
+    balance = balance?.toString();
+    collateralForStorage = collateralForStorage?.toString();
+    nonce = nonce?.toString();
     let decimals = 0;
     if (isNativeAccount) {
       decimals = optionsHelper.getNativeTokenDecimals(this.options);
@@ -54,19 +58,50 @@ class ChainManager extends ChainManagerBase {
     };
   }
 
-  async getAccountInfo({ address }) {
+  async getAccountInfo({ address, isNative, symbol, ownerAddress }) {
     // https://confluxnetwork.gitbook.io/js-conflux-sdk/api/conflux#Conflux.js/Conflux/getAccount
     // const accountInfo1 = await this.apiRpc.getAccount(address, 'latest_state');
 
     // https://github.com/Conflux-Chain/js-conflux-sdk/blob/master/src/Conflux.js#L351
-    const res = await this.apiRpc.provider.batch([
-      {
-        id: `${address}_${this.apiRpc.provider.requestId()}`,
-        method: 'cfx_getAccount',
-        params: [address, format.epochNumber.$or(undefined)('latest_state')],
-      },
-    ]);
-    const accountInfo = format.account(res[0]);
+
+    const reqId = `${symbol}_${address}_${this.apiRpc.provider.requestId()}`;
+    let batchCallPayload = [];
+    if (isNative) {
+      batchCallPayload = [
+        {
+          id: reqId,
+          method: 'cfx_getAccount',
+          params: [address, EpochTag],
+        },
+      ];
+    } else {
+      const ownerAddressHex = format.hexAddress(ownerAddress);
+      batchCallPayload = [
+        {
+          id: reqId,
+          method: 'cfx_call',
+          params: [
+            {
+              to: address, // token address
+              data: `0x70a08231000000000000000000000000${ownerAddressHex.substr(
+                2,
+              )}`,
+            },
+            EpochTag,
+          ],
+        },
+      ];
+    }
+
+    const res = await this.apiRpc.provider.batch(batchCallPayload);
+    let accountInfo = {};
+    if (isNative) {
+      accountInfo = format.account(res[0]);
+    } else {
+      accountInfo = {
+        balance: utilsNumber.hexToIntString(res),
+      };
+    }
 
     /*
     accumulatedInterestReturn: o [sign: false]
@@ -85,6 +120,7 @@ class ChainManager extends ChainManagerBase {
   }
 
   async getAccountTokens({ address } = {}) {
+    // TODO get account tokens from explorer api
     const chainKey = this.options.chainInfo.key;
     const ownerAddress = address || this.options?.accountInfo?.address;
     if (!ownerAddress) {
@@ -110,8 +146,7 @@ class ChainManager extends ChainManagerBase {
   }
 
   async getAddAssociateTokenFee() {
-    const res = await this.apiRpc.getAddAssociateTokenFee();
-    return res?.fee;
+    return '0';
   }
 
   async getTransactionFee() {

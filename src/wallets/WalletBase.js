@@ -1,11 +1,16 @@
 import assert from 'assert';
 import { isNil, toLower } from 'lodash';
-import { CONST_HARDWARE_MODELS, CONSTS_ACCOUNT_TYPES } from '../consts/consts';
+import {
+  CONST_ADD_TOKEN_MODE,
+  CONST_HARDWARE_MODELS,
+  CONSTS_ACCOUNT_TYPES,
+} from '../consts/consts';
 import utilsApp from '../utils/utilsApp';
 import ChainManagerBase from './ChainManagerBase';
 import { HdKeyManagerBase } from './HdKeyManager';
 import uiBackgroundProxy from './bg/uiBackgroundProxy';
 import { KeyringBgProxy } from './KeyringBase';
+import optionsHelper from './optionsHelper';
 
 class WalletBase {
   constructor(options = {}) {
@@ -57,6 +62,18 @@ class WalletBase {
 
   get accountHdPath() {
     return this.accountInfo?.path;
+  }
+
+  get addTokenMode() {
+    return optionsHelper.getAddTokenMode(this.options);
+  }
+
+  get isLocalAddTokenMode() {
+    return this.addTokenMode === CONST_ADD_TOKEN_MODE.LOCAL;
+  }
+
+  get isChainAddTokenMode() {
+    return this.addTokenMode === CONST_ADD_TOKEN_MODE.CHAIN;
   }
 
   // utils ----------------------------------------------

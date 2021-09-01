@@ -60,6 +60,9 @@ class StoreAccount extends BaseStore {
     storeWallet.setCurrentWallet(wallet);
   }
 
+  @observable
+  refreshKey = 1;
+
   // TODO rename to currentAccountInfo
   @computed
   get currentAccount() {

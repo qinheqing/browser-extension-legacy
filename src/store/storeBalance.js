@@ -70,6 +70,7 @@ class StoreBalance extends BaseStore {
     if (this.fetchBalancePendingQueue[address]) {
       return storeStorage.tokenBalancesRaw[tokenKey];
     }
+    const { isNative, symbol, ownerAddress } = tokenInfo;
     this.fetchBalancePendingQueue[address] = true;
     const balanceInfo =
       // TODO cancel pending balance request if component destroy
@@ -77,7 +78,12 @@ class StoreBalance extends BaseStore {
         if (!this.fetchBalancePendingQueue[address]) {
           return storeStorage.tokenBalancesRaw[tokenKey];
         }
-        const result = await wallet.chainManager.getAccountInfo({ address });
+        const result = await wallet.chainManager.getAccountInfo({
+          address,
+          isNative,
+          symbol,
+          ownerAddress,
+        });
         await utilsApp.delay(150);
         this.deletePendingBalanceFetchTask(address);
         return result;

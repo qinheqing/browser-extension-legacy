@@ -91,6 +91,10 @@ async function coinGeckoFetch({ url, query, method = 'GET' }) {
   return await priceFetchSemaphore.runExclusive(() =>
     fetch(_url, {
       method,
+    }).catch((err) => {
+      // noop
+      err.IS_MUTE_NOTIFY = true;
+      throw err;
     }),
   );
 }
@@ -142,15 +146,17 @@ class StorePrice extends BaseStore {
             t.contractAddress === contractAddressOrTokenId ||
             t.tokenId === contractAddressOrTokenId,
         );
-        const priceKey = this._buildTokenPriceKey(tokenInfo);
-        pricesMapNew[priceKey] = {
-          ...priceInfo,
-          lastUpdate: new Date().getTime(),
-          tokenInfo: {
-            // name: tokenInfo?.name, // name is meaningful, as different platform has different name
-            symbol: tokenInfo?.symbol,
-          },
-        };
+        if (tokenInfo) {
+          const priceKey = this._buildTokenPriceKey(tokenInfo);
+          pricesMapNew[priceKey] = {
+            ...priceInfo,
+            lastUpdate: new Date().getTime(),
+            tokenInfo: {
+              // name: tokenInfo?.name, // name is meaningful, as different platform has different name
+              symbol: tokenInfo?.symbol,
+            },
+          };
+        }
       },
     );
 
@@ -172,6 +178,15 @@ class StorePrice extends BaseStore {
   async fetchNativeTokenPrice(nativeToken) {
     const { tokenId } = nativeToken;
 
+    if (!tokenId) {
+      return;
+    }
+
+    // cache 5 min
+    if (!this._isTokenPriceExpired(nativeToken)) {
+      return;
+    }
+
     const data = await coinGeckoGet('/api/v3/simple/price', {
       ids: [tokenId],
       // TODO check MM currency setting and coingecko supported_vs_currencies
@@ -185,6 +200,10 @@ class StorePrice extends BaseStore {
       }
     */
     const pricesMap = await data.json();
+    if (pricesMap.error) {
+      console.error(pricesMap.error);
+      return;
+    }
     this._updatePricesMap(pricesMap, nativeToken);
   }
 
@@ -193,7 +212,7 @@ class StorePrice extends BaseStore {
     const platformId = storeChain.currentChainInfo?.platformId;
     const contractAddresses = tokens.map((t) => t.contractAddress);
 
-    if (!contractAddresses.length) {
+    if (!contractAddresses.length || !platformId) {
       return;
     }
     // const platformId = 'binance-smart-chain';
@@ -217,6 +236,10 @@ class StorePrice extends BaseStore {
       }
      */
     const pricesMap = await data.json();
+    if (pricesMap.error) {
+      console.error(pricesMap.error);
+      return;
+    }
     this._updatePricesMap(pricesMap, tokens);
   }
 
@@ -229,6 +252,7 @@ class StorePrice extends BaseStore {
       return;
     }
 
+    // cache 5 min
     if (!this._isTokenPriceExpired(token)) {
       return;
     }
@@ -236,14 +260,20 @@ class StorePrice extends BaseStore {
     //    https://api.coingecko.com/api/v3/simple/price?ids=solana,akropolis&vs_currencies=cny%2Cusd
     const data = await coinGeckoGet(`/api/v3/coins/${tokenId}`);
     const tokenData = await data.json();
-    const priceInfo = tokenData?.market_data?.current_price || {};
-    const { cny, usd } = priceInfo;
-    this._updatePricesMap(
-      {
-        [tokenId]: { cny, usd },
-      },
-      token,
-    );
+    if (tokenData.error) {
+      console.error(tokenData.error);
+      return;
+    }
+    const priceInfo = tokenData?.market_data?.current_price;
+    if (priceInfo) {
+      const { cny, usd } = priceInfo;
+      this._updatePricesMap(
+        {
+          [tokenId]: { cny, usd },
+        },
+        token,
+      );
+    }
   }
 
   _isTokenPriceExpired(token) {
