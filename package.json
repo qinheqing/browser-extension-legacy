@@ -1,6 +1,6 @@
 {
   "name": "onekey-crx",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "private": true,
   "repository": {
     "type": "git",
@@ -154,7 +154,7 @@
     "eth-json-rpc-filters": "^4.2.1",
     "eth-json-rpc-infura": "^5.1.0",
     "eth-json-rpc-middleware": "^6.0.0",
-    "eth-keyring-controller": "6.1.0",
+    "@onekeyhq/eth-keyring-controller": "6.1.1",
     "eth-method-registry": "^2.0.0",
     "eth-query": "^2.1.2",
     "eth-rpc-errors": "^4.0.2",
