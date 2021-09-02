@@ -28,6 +28,7 @@ import { TRANSACTION_STATUSES } from '../../shared/constants/transaction';
 import backgroundProxy from '../../src/wallets/bg/backgroundProxy';
 import bgHelpers from '../../src/wallets/bg/bgHelpers';
 import utilsApp from '../../src/utils/utilsApp';
+import AwaitTimeout from '../../src/utils/AwaitTimeout';
 import AddressKeyring from './lib/eth-address-keyring';
 import ComposableObservableStore from './lib/ComposableObservableStore';
 import AccountTracker from './lib/account-tracker';
@@ -872,7 +873,7 @@ export default class MetamaskController extends EventEmitter {
     const releaseLock = await this.createVaultMutex.acquire();
     try {
       let accounts;
-      let lastBalance;
+      let lastBalance = '0x0';
 
       const { keyringController } = this;
 
@@ -899,10 +900,23 @@ export default class MetamaskController extends EventEmitter {
 
       const ethQuery = new EthQuery(this.provider);
       accounts = await keyringController.getAccounts();
-      lastBalance = await this.getBalance(
-        accounts[accounts.length - 1],
-        ethQuery,
-      );
+
+      const timer = new AwaitTimeout();
+      try {
+        const _balance = await Promise.race([
+          this.getBalance(accounts[accounts.length - 1], ethQuery),
+          timer.set(
+            5000,
+            'Create new vault: getBalance of first account failed',
+          ),
+        ]);
+        lastBalance = _balance;
+      } catch (ex) {
+        console.error(ex);
+        lastBalance = '0x0';
+      } finally {
+        timer.clear();
+      }
 
       const primaryKeyring =
         keyringController.getKeyringsByType('HD Key Tree')[0];
