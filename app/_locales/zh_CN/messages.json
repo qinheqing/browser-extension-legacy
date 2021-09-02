@@ -195,7 +195,7 @@
     "message": "请设置 OneKey 自动锁定前的空闲时间（单位：分钟）"
   },
   "avalanche": {
-    "message": "Avax 主网C链"
+    "message": "AVAX 主网C链"
   },
   "average": {
     "message": "快"
@@ -990,7 +990,7 @@
     "message": "将您与 Ethereum 和去中心化网络连接起来。"
   },
   "metamaskSwapsOfflineDescription": {
-    "message": "OneKey Swaps 正在进行维护。请稍后访问。"
+    "message": "OneKey Swap 正在进行维护。请稍后访问。"
   },
   "metamaskVersion": {
     "message": "OneKey 版本"
@@ -1342,6 +1342,24 @@
   },
   "resetAccountDescription": {
     "message": "重置账户将清除您的交易历史记录。这不会改变您账户中的余额，也不会要求您重新输入账户助记词。"
+  },
+  "resetWalletButton": {
+    "message": "移除钱包"
+  },
+  "resetWalletCancelButton": {
+    "message": "我再想想"
+  },
+  "resetWalletConfirm": {
+    "message": "确认要移除钱包吗？"
+  },
+  "resetWalletConfirmButton": {
+    "message": "移除钱包"
+  },
+  "resetWalletInputLabel": {
+    "message": "请输入 \"onekey\" 来确认移除您的钱包。"
+  },
+  "resetWalletWarningMessage": {
+    "message": "重置插件将完全删除当前钱包的所有数据，请确保您已备份助记词，否则重置之后将无法找回您的资产。 重置后，您可以导入或生成新的助记词钱包。"
   },
   "restore": {
     "message": "恢复"

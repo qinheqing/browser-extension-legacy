@@ -21,6 +21,7 @@ import {
   IMPORT_ACCOUNT_ROUTE,
   CONNECT_HARDWARE_ROUTE,
   DEFAULT_ROUTE,
+  RESTORE_VAULT_ROUTE,
 } from '../../../helpers/constants/routes';
 import TextField from '../../ui/text-field';
 import SearchIcon from '../../ui/search-icon';
@@ -330,8 +331,9 @@ export default class AccountMenu extends Component {
             <button
               className="account-menu__lock-button"
               onClick={() => {
-                if (global.confirm('确认重置插件吗？插件数据将重新初始化')) {
-                  clearBackgroundLocalStore();
+                history.push(RESTORE_VAULT_ROUTE);
+                if (getEnvironmentType() === ENVIRONMENT_TYPE_POPUP) {
+                  global.platform.openExtensionInBrowser(RESTORE_VAULT_ROUTE);
                 }
               }}
             >

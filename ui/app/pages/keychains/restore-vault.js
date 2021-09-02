@@ -1,13 +1,22 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import extension from 'extensionizer';
+import localforage from 'localforage';
 import {
   createNewVaultAndRestore,
   unMarkPasswordForgotten,
 } from '../../store/actions';
-import { DEFAULT_ROUTE } from '../../helpers/constants/routes';
+import {
+  DEFAULT_ROUTE,
+  INITIALIZE_BACKUP_SEED_PHRASE_ROUTE,
+  REVEAL_SEED_ROUTE,
+} from '../../helpers/constants/routes';
 import TextField from '../../components/ui/text-field';
 import Button from '../../components/ui/button';
+import { delayTimeout } from '../../helpers/utils/util';
+import utilsApp from '../../../../src/utils/utilsApp';
+import LoadingScreen from '../../components/ui/loading-screen';
 
 class RestoreVaultPage extends Component {
   static contextTypes = {
@@ -248,8 +257,189 @@ class RestoreVaultPage extends Component {
   }
 }
 
+class RestoreVaultByRemoveWalletPage extends Component {
+  static contextTypes = {
+    t: PropTypes.func,
+    trackEvent: PropTypes.func,
+  };
+
+  static propTypes = {
+    createNewVaultAndRestore: PropTypes.func.isRequired,
+    leaveImportSeedScreenState: PropTypes.func,
+    history: PropTypes.object,
+    isLoading: PropTypes.bool,
+    isUnlocked: PropTypes.bool,
+  };
+
+  state = {
+    isLocalLoading: false,
+    seedPhrase: '',
+    showSeedPhrase: false,
+    password: '',
+    confirmPassword: '',
+    seedPhraseError: null,
+    passwordError: null,
+    confirmPasswordError: null,
+  };
+
+  deleteAllCookies() {
+    const cookies = document.cookie.split(';');
+
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i];
+      const eqPos = cookie.indexOf('=');
+      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    }
+  }
+
+  onClick = async () => {
+    if (!global.confirm(this.context.t('resetWalletConfirm'))) {
+      return;
+    }
+    this.setState({ isLocalLoading: true });
+    console.log('remove all data');
+
+    try {
+      await this.deleteAllCookies();
+    } catch (ex) {
+      console.error(ex);
+    }
+
+    try {
+      await global.localStorage.clear();
+    } catch (ex) {
+      console.error(ex);
+    }
+
+    try {
+      await global.sessionStorage.clear();
+    } catch (ex) {
+      console.error(ex);
+    }
+
+    try {
+      await extension.storage.local.clear();
+    } catch (ex) {
+      console.error(ex);
+    }
+
+    try {
+      await extension.storage.sync.clear();
+    } catch (ex) {
+      console.error(ex);
+    }
+
+    try {
+      await localforage.clear();
+    } catch (ex) {
+      console.error(ex);
+    }
+
+    extension.runtime.getBackgroundPage((backgroundWindow) => {
+      backgroundWindow.location.reload();
+      utilsApp.delay(600).then(() => {
+        window.location.reload();
+      });
+    });
+  };
+
+  handleConfirmPasswordChange(confirmPassword) {
+    this.setState({ confirmPassword });
+  }
+
+  render() {
+    const {
+      isLocalLoading,
+      seedPhrase,
+      showSeedPhrase,
+      password,
+      confirmPassword,
+      seedPhraseError,
+      passwordError,
+      confirmPasswordError,
+    } = this.state;
+    const { t } = this.context;
+    const { isLoading, isUnlocked } = this.props;
+    const disabled = confirmPassword !== 'onekey' || isLoading;
+
+    return (
+      <div className="first-view-main-wrapper">
+        {(isLoading || isLocalLoading) && <LoadingScreen />}
+        <div className="first-view-main">
+          <div className="import-account">
+            <a
+              className="import-account__back-button"
+              onClick={(e) => {
+                e.preventDefault();
+                this.props.leaveImportSeedScreenState();
+                this.props.history.goBack();
+              }}
+            >
+              <span>&lt; </span>
+              <span>{t('back')}</span>
+            </a>
+
+            <div className="import-account__resetAccountWarning">
+              {t('resetWalletWarningMessage')}
+              {isUnlocked && (
+                <div>
+                  <a
+                    className="import-account__viewSeedLink"
+                    onClick={() => this.props.history.push(REVEAL_SEED_ROUTE)}
+                  >
+                    {t('revealSeedWords')}
+                  </a>
+                </div>
+              )}
+            </div>
+
+            <TextField
+              id="confirm-password"
+              label={t('resetWalletInputLabel')}
+              type="text"
+              className="first-time-flow__input"
+              value={this.state.confirmPassword}
+              onChange={(event) =>
+                this.handleConfirmPasswordChange(event.target.value)
+              }
+              error={confirmPasswordError}
+              autoComplete="off"
+              margin="normal"
+              largeLabel
+              placeholder="onekey"
+            />
+
+            <Button
+              type="danger-primary"
+              className="first-time-flow__button"
+              onClick={() => !disabled && this.onClick()}
+              disabled={disabled}
+            >
+              {t('resetWalletConfirmButton')}
+            </Button>
+            <Button
+              type="secondary"
+              className="first-time-flow__button"
+              onClick={() => {
+                this.props.leaveImportSeedScreenState();
+                this.props.history.replace(DEFAULT_ROUTE);
+              }}
+            >
+              {t('resetWalletCancelButton')}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
 export default connect(
-  ({ appState: { isLoading } }) => ({ isLoading }),
+  ({ appState: { isLoading }, metamask: { isUnlocked } }) => ({
+    isUnlocked,
+    isLoading,
+  }),
   (dispatch) => ({
     leaveImportSeedScreenState: () => {
       dispatch(unMarkPasswordForgotten());
@@ -257,4 +447,4 @@ export default connect(
     createNewVaultAndRestore: (pw, seed) =>
       dispatch(createNewVaultAndRestore(pw, seed)),
   }),
-)(RestoreVaultPage);
+)(RestoreVaultByRemoveWalletPage);

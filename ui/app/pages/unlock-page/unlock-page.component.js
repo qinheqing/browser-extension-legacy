@@ -144,15 +144,9 @@ export default class UnlockPage extends Component {
           </form>
           {this.renderSubmitButton()}
           {!hwOnlyMode && (
-            <div className="unlock-page__links" style={{ display: 'none' }}>
-              <button className="unlock-page__link" onClick={() => onRestore()}>
-                {t('restoreFromSeed')}
-              </button>
-              <button
-                className="unlock-page__link unlock-page__link--import"
-                onClick={() => onImport()}
-              >
-                {t('importUsingSeed')}
+            <div className="unlock-page__links">
+              <button className="unlock-page__link" onClick={() => onImport()}>
+                {t('resetWalletButton')}
               </button>
             </div>
           )}
