@@ -195,7 +195,7 @@
     "message": "Set the idle time in minutes before OneKey will become locked."
   },
   "avalanche": {
-    "message": "Avax Main C-Chain"
+    "message": "AVAX Main C-Chain"
   },
   "average": {
     "message": "Fast"
@@ -277,6 +277,15 @@
   },
   "chainIdDefinition": {
     "message": "The chain ID used to sign transactions for this network."
+  },
+  "changePassword": {
+    "message": "Change Password"
+  },
+  "changePasswordConfirm": {
+    "message": "Change"
+  },
+  "changePasswordSuccess": {
+    "message": "Password changed success"
   },
   "chromeRequiredForHardwareWallets": {
     "message": "You need to use OneKey on Google Chrome in order to connect to your Hardware Wallet."
@@ -990,7 +999,7 @@
     "message": "Connecting you to Ethereum and the Decentralized Web."
   },
   "metamaskSwapsOfflineDescription": {
-    "message": ""
+    "message": "OneKey Swap is under maintenance. Please visit later."
   },
   "metamaskVersion": {
     "message": "OneKey Version"
@@ -1172,6 +1181,9 @@
   "okex": {
     "message": "OEC Mainnet"
   },
+  "oldPassword": {
+    "message": "Old password  (min 8 chars)"
+  },
   "on": {
     "message": "On"
   },
@@ -1342,6 +1354,24 @@
   },
   "resetAccountDescription": {
     "message": "Resetting your account will clear your transaction history. This will not change the balances in your accounts or require you to re-enter your seed phrase."
+  },
+  "resetWalletButton": {
+    "message": "Remove Wallet"
+  },
+  "resetWalletCancelButton": {
+    "message": "Not Now"
+  },
+  "resetWalletConfirm": {
+    "message": "Do you want to remove the wallet?"
+  },
+  "resetWalletConfirmButton": {
+    "message": "Remove Wallet"
+  },
+  "resetWalletInputLabel": {
+    "message": "Enter \"onekey\" to remove your wallet."
+  },
+  "resetWalletWarningMessage": {
+    "message": "Please ensure that you have backed up your recovery phrase or you will not be able to retrieve your assets. You can import or generate a new recovery phrase after removing the wallet."
   },
   "restore": {
     "message": "Restore"
@@ -1608,7 +1638,7 @@
     "message": "Connect your hardware wallet directly to your computer."
   },
   "step2HardwareWallet": {
-    "message": "2. Select an Account"
+    "message": "2. Select an account"
   },
   "step2HardwareWalletMsg": {
     "message": "Select the account you want to view. You can only choose one at a time."
@@ -1854,7 +1884,7 @@
     "message": "View in Block Explorer"
   },
   "visitWebSite": {
-    "message": "Visit our web site"
+    "message": "Visit our website"
   },
   "walletConnectionGuide": {
     "message": "our hardware wallet connection guide"
@@ -1899,7 +1929,7 @@
     "message": "You need to allow camera access to use this feature."
   },
   "youSign": {
-    "message": "You are signing"
+    "message": "Signing"
   },
   "yourPrivateSeedPhrase": {
     "message": "Your private seed phrase"

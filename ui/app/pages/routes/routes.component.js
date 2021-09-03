@@ -15,6 +15,7 @@ import Initialized from '../../helpers/higher-order-components/initialized';
 import Lock from '../lock';
 import PermissionsConnect from '../permissions-connect';
 import RestoreVaultPage from '../keychains/restore-vault';
+import ChangePasswordPage from '../keychains/change-password';
 import RevealSeedConfirmation from '../keychains/reveal-seed';
 import AddTokenPage from '../add-token';
 import ConfirmAddTokenPage from '../confirm-add-token';
@@ -49,6 +50,7 @@ import {
   SETTINGS_ROUTE,
   UNLOCK_ROUTE,
   CONFIRMATION_V_NEXT_ROUTE,
+  CHANGE_PASSWORD_ROUTE,
 } from '../../helpers/constants/routes';
 import {
   ENVIRONMENT_TYPE_NOTIFICATION,
@@ -87,6 +89,11 @@ class AllRoutesComponents extends Component {
             <Initialized
               path={RESTORE_VAULT_ROUTE}
               component={RestoreVaultPage}
+              exact
+            />
+            <Initialized
+              path={CHANGE_PASSWORD_ROUTE}
+              component={ChangePasswordPage}
               exact
             />
             <Authenticated

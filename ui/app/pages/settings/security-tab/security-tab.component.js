@@ -1,7 +1,10 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import ToggleButton from '../../../components/ui/toggle-button';
-import { REVEAL_SEED_ROUTE } from '../../../helpers/constants/routes';
+import {
+  CHANGE_PASSWORD_ROUTE,
+  REVEAL_SEED_ROUTE,
+} from '../../../helpers/constants/routes';
 import Button from '../../../components/ui/button';
 
 export default class SecurityTab extends PureComponent {
@@ -50,6 +53,32 @@ export default class SecurityTab extends PureComponent {
               }}
             >
               {t('revealSeedWords')}
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  renderChangePassword() {
+    const { t } = this.context;
+    const { history, hwOnlyMode } = this.props;
+    return (
+      <div className="settings-page__content-row">
+        <div className="settings-page__content-item">
+          <span>{t('changePassword')}</span>
+        </div>
+        <div className="settings-page__content-item">
+          <div className="settings-page__content-item-col">
+            <Button
+              type="secondary"
+              large
+              onClick={(event) => {
+                event.preventDefault();
+                history.push(CHANGE_PASSWORD_ROUTE);
+              }}
+            >
+              {t('changePassword')}
             </Button>
           </div>
         </div>
@@ -119,6 +148,7 @@ export default class SecurityTab extends PureComponent {
       <div className="settings-page__body">
         {warning && <div className="settings-tab__error">{warning}</div>}
         {this.renderSeedWords()}
+        {this.renderChangePassword()}
         {this.renderIncomingTransactionsOptIn()}
         {/* {this.renderPhishingDetectionToggle()} */}
       </div>
