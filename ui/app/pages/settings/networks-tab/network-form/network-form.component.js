@@ -40,6 +40,7 @@ export default class NetworkForm extends PureComponent {
     blockExplorerUrl: PropTypes.string,
     rpcPrefs: PropTypes.object,
     rpcUrls: PropTypes.array,
+    setProviderType: PropTypes.func.isRequired,
     isFullScreen: PropTypes.bool,
   };
 
@@ -197,10 +198,19 @@ export default class NetworkForm extends PureComponent {
   };
 
   onDelete = () => {
-    const { showConfirmDeleteNetworkModal, rpcUrl, onClear } = this.props;
+    const {
+      showConfirmDeleteNetworkModal,
+      rpcUrl,
+      onClear,
+      isCurrentRpcTarget,
+      setProviderType,
+    } = this.props;
     showConfirmDeleteNetworkModal({
       target: rpcUrl,
       onConfirm: () => {
+        if (isCurrentRpcTarget) {
+          setProviderType('mainnet');
+        }
         this.resetForm();
         onClear();
       },
@@ -452,6 +462,16 @@ export default class NetworkForm extends PureComponent {
 
     return (
       <div className="networks-tab__network-form">
+        {networksTabIsInAddMode && (
+          <a
+            style={{ display: 'block', flex: '1' }}
+            href="https://chainlist.org/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            https://chainlist.org/
+          </a>
+        )}
         {viewOnly ? null : this.renderWarning()}
         {this.renderFormTextField({
           fieldKey: 'networkName',
@@ -496,7 +516,7 @@ export default class NetworkForm extends PureComponent {
         <div className="network-form__footer">
           {!viewOnly && (
             <>
-              {deletable && (
+              {!networksTabIsInAddMode && (
                 <Button type="danger" onClick={this.onDelete}>
                   {t('delete')}
                 </Button>
