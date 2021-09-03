@@ -1,7 +1,7 @@
 {
   "externally_connectable": {
-    "matches": ["https://metamask.io/*", "https://www.onekey.so/*"],
-    "ids": ["*"]
+    "matches": [],
+    "ids": []
   },
   "minimum_chrome_version": "63"
 }

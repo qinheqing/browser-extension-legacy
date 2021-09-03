@@ -67,12 +67,8 @@
     "storage",
     "unlimitedStorage",
     "clipboardWrite",
-    "http://localhost:8545/",
-    "https://*.infura.io/",
-    "*://*.onekey.so/",
     "activeTab",
     "webRequest",
-    "*://*.eth/",
     "notifications"
   ],
   "short_name": "__MSG_appName__",

@@ -85,7 +85,14 @@ if (inTest || process.env.METAMASK_DEBUG) {
   global.onekeyLocalStore_ENV_IN_TEST = process.env.IN_TEST;
   global.onekeyLocalStore.clear = async (callback) => {
     await localStore.set({ data: {}, meta: {} });
-    console.log(JSON.stringify(await localStore.get(), null, 4));
+    try {
+      await global.browser.storage.local.clear(); // firefox
+    } catch (ex) {}
+    try {
+      await global.chrome.storage.local.clear(); // chrome
+    } catch (ex) {}
+    const currentStore = await localStore.get();
+    console.log('currentStore=', JSON.stringify(currentStore, null, 2));
     console.log('Page will be reloaded in 3s...');
     setTimeout(() => {
       // eslint-disable-next-line node/callback-return
