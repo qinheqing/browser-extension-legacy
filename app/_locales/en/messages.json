@@ -278,6 +278,15 @@
   "chainIdDefinition": {
     "message": "The chain ID used to sign transactions for this network."
   },
+  "changePassword": {
+    "message": "Change Password"
+  },
+  "changePasswordConfirm": {
+    "message": "Change"
+  },
+  "changePasswordSuccess": {
+    "message": "Password changed success"
+  },
   "chromeRequiredForHardwareWallets": {
     "message": "You need to use OneKey on Google Chrome in order to connect to your Hardware Wallet."
   },
@@ -1171,6 +1180,9 @@
   },
   "okex": {
     "message": "OEC Mainnet"
+  },
+  "oldPassword": {
+    "message": "Old password  (min 8 chars)"
   },
   "on": {
     "message": "On"

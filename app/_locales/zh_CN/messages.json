@@ -278,6 +278,15 @@
   "chainIdDefinition": {
     "message": "chainId 定义"
   },
+  "changePassword": {
+    "message": "修改密码"
+  },
+  "changePasswordConfirm": {
+    "message": "确认修改"
+  },
+  "changePasswordSuccess": {
+    "message": "密码修改成功，请重新登录"
+  },
   "chromeRequiredForHardwareWallets": {
     "message": "您需要在谷歌浏览器（Google Chrome）上使用 OneKey 才能连接到您的硬件钱包。"
   },
@@ -1171,6 +1180,9 @@
   },
   "okex": {
     "message": "OEC 欧易交易链主网"
+  },
+  "oldPassword": {
+    "message": "原密码（至少 8 个字符）"
   },
   "on": {
     "message": "启用"

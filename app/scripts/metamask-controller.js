@@ -9,7 +9,7 @@ import createEngineStream from 'json-rpc-middleware-stream/engineStream';
 import createFilterMiddleware from 'eth-json-rpc-filters';
 import createSubscriptionManager from 'eth-json-rpc-filters/subscriptionManager';
 import providerAsMiddleware from 'eth-json-rpc-middleware/providerAsMiddleware';
-import KeyringController from 'eth-keyring-controller';
+import KeyringController from '@onekeyhq/eth-keyring-controller';
 import { Mutex } from 'await-semaphore';
 import ethUtil from 'ethereumjs-util';
 import log from 'loglevel';
@@ -708,6 +708,7 @@ export default class MetamaskController extends EventEmitter {
       setLocked: nodeify(this.setLocked, this),
       createNewVaultAndKeychain: nodeify(this.createNewVaultAndKeychain, this),
       createNewVaultAndRestore: nodeify(this.createNewVaultAndRestore, this),
+      changePassword: nodeify(this.changePassword, this),
       exportAccount: nodeify(
         keyringController.exportAccount,
         keyringController,
@@ -859,6 +860,19 @@ export default class MetamaskController extends EventEmitter {
         this.selectFirstIdentity();
       }
       return vault;
+    } finally {
+      releaseLock();
+    }
+  }
+
+  async changePassword(oldPassword, password) {
+    const releaseLock = await this.createVaultMutex.acquire();
+    try {
+      const result = await this.keyringController.changePassword(
+        oldPassword,
+        password,
+      );
+      return result === true;
     } finally {
       releaseLock();
     }
