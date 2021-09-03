@@ -34,6 +34,7 @@ export default function CurrencyDisplay({
       data-testid={dataTestId}
       style={style}
       title={(!hideTitle && title) || null}
+      data-hide-label={hideLabel}
     >
       {prefixComponent}
       <span className="currency-display-component__text">

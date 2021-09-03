@@ -539,7 +539,7 @@ export default class ConfirmTransactionBase extends Component {
         type={PRIMARY}
         showEthLogo
         ethLogoHeight="26"
-        hideLabel
+        hideLabel={false}
       />
     );
   }
@@ -553,7 +553,7 @@ export default class ConfirmTransactionBase extends Component {
           value={hexTransactionAmount}
           type={SECONDARY}
           showEthLogo
-          hideLabel
+          hideLabel={false}
         />
       )
     );
