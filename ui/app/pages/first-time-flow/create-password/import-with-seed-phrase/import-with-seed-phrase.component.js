@@ -24,14 +24,14 @@ export default class ImportWithSeedPhrase extends PureComponent {
   };
 
   state = {
-    seedPhrase: '',
+    seedPhrase: process.env.ENV_TEST_MNEMONIC || '',
     showSeedPhrase: false,
     password: process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED,
     confirmPassword: process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED,
     seedPhraseError: '',
     passwordError: '',
     confirmPasswordError: '',
-    termsChecked: false,
+    termsChecked: true,
   };
 
   parseSeedPhrase = (seedPhrase) =>
