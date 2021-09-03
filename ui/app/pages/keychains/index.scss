@@ -69,6 +69,21 @@
 }
 
 .import-account {
+  &__viewSeedLink {
+    color: #00b812;
+    cursor: pointer;
+  }
+
+  &__resetAccountWarning {
+    background-color: #fefae8;
+    border: 1px solid #ffd33d;
+    border-radius: 5px;
+    box-sizing: border-box;
+    padding: 12px;
+    margin: 12px 0;
+    max-width: 600px;
+  }
+
   &__title {
     @include H1;
 
