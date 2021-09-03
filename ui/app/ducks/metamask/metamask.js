@@ -39,7 +39,7 @@ export default function reduceMetamask(state = {}, action) {
     currentLocale: '',
     preferences: {
       autoLockTimeLimit: undefined,
-      showFiatInTestnets: false,
+      showFiatInTestnets: true,
       useNativeCurrencyAsPrimaryCurrency: true,
     },
     firstTimeFlowType: null,
