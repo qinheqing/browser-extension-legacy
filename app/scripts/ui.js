@@ -26,10 +26,23 @@ import { STREAM_CONTROLLER, STREAM_PROVIDER } from './constants/consts';
 
 start().catch(log.error);
 
+async function autoSaveBrowserTabsId({ platform }) {
+  const allTabs = await platform.getAllTabs();
+  if (allTabs.length <= 1) {
+    await platform.clearCurrentTabsList();
+  }
+  await platform.saveCurrentTabId();
+  window.addEventListener('beforeunload', () => {
+    platform.removeCurrentTabId();
+  });
+}
+
 async function start() {
   // create platform global
   global.platform = new ExtensionPlatform();
   global.$$extensionPlatform = global.platform;
+
+  autoSaveBrowserTabsId({ platform: global.platform });
 
   // identify window type (popup, notification)
   const windowType = getEnvironmentType();

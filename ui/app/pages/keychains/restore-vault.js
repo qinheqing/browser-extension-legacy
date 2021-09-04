@@ -293,11 +293,7 @@ class RestoreVaultByRemoveWalletPage extends Component {
     }
   }
 
-  onClick = async () => {
-    if (!global.confirm(this.context.t('resetWalletConfirm'))) {
-      return;
-    }
-    this.setState({ isLocalLoading: true });
+  async removeAllData() {
     console.log('remove all data');
 
     try {
@@ -335,10 +331,24 @@ class RestoreVaultByRemoveWalletPage extends Component {
     } catch (ex) {
       console.error(ex);
     }
+  }
+
+  onClick = async () => {
+    if (!global.confirm(this.context.t('resetWalletConfirm'))) {
+      return;
+    }
+    this.setState({ isLocalLoading: true });
+
+    await window.platform.closeAllSavedTabs();
+    await this.removeAllData();
 
     extension.runtime.getBackgroundPage((backgroundWindow) => {
-      backgroundWindow.location.reload();
-      utilsApp.delay(600).then(() => {
+      backgroundWindow.ONEKEY_DISABLE_AUTO_PERSIST_DATA = true;
+      this.removeAllData().then(async () => {
+        await window.platform.closeAllSavedTabs();
+        await this.removeAllData();
+        backgroundWindow.location.reload();
+        await utilsApp.delay(600);
         window.location.reload();
       });
     });

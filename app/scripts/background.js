@@ -53,10 +53,12 @@ const mboxReferences = {
   name: 1,
 };
 
+global.ONEKEY_DISABLE_AUTO_PERSIST_DATA = false;
 const { sentry } = global;
 const firstTimeState = { ...rawFirstTimeState };
 
 const platform = new ExtensionPlatform();
+platform.clearCurrentTabsList();
 global.$$extensionPlatform = platform;
 global.$$testThrowError = () => {
   setTimeout(() => {
@@ -323,6 +325,9 @@ function setupController(initState, initLangCode) {
   let dataPersistenceFailing = false;
 
   async function persistData(state) {
+    if (global.ONEKEY_DISABLE_AUTO_PERSIST_DATA) {
+      return;
+    }
     if (!state) {
       throw new Error('MetaMask - updated state is missing');
     }

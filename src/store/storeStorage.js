@@ -69,6 +69,7 @@ class StoreStorage extends BaseStore {
     value,
     { useLocalStorage = this.useLocalStorage } = {},
   ) {
+    // TODO move save storage to background, so that we can disable auto save globally
     if (useLocalStorage) {
       utilsStorage.setItem(key, value);
     }
@@ -111,6 +112,7 @@ class StoreStorage extends BaseStore {
     if (storeProp === 'allAccountsRaw') {
       // debugger;
     }
+
     if (!isNil(value)) {
       store[storeProp] = value;
     }
