@@ -7,6 +7,21 @@
   padding: 0 18px;
   color: black;
 
+
+  &__lang {
+    height: 60px;
+    position: fixed;
+    bottom: 0;
+
+    select.dropdown,
+    select.dropdown:focus,
+    select.dropdown:focus-visible {
+      background-color: transparent;
+      border: none;
+      outline: none;
+    }
+  }
+
   &__wrapper {
     display: flex;
     flex-direction: row;

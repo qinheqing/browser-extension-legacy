@@ -193,6 +193,16 @@
     padding-top: 5px;
   }
 
+  &__lang {
+    display: flex;
+    align-items: center;
+  }
+
+  &__langIcon {
+    color: #888;
+    margin-right: -4px;
+  }
+
   &__content-item-col {
     max-width: 300px;
     display: flex;

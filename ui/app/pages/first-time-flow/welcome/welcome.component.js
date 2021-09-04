@@ -8,6 +8,7 @@ import {
 } from '../../../helpers/constants/routes';
 import { CONST_FIRST_TIME_FLOW_TYPES } from '../../../helpers/constants/common';
 import { getNextRouteOfFirstTimeFlow } from '../../../selectors';
+import LanguageDropdown from '../../settings/settings-tab/language-dropdown';
 
 export default class Welcome extends PureComponent {
   static propTypes = {
@@ -56,6 +57,9 @@ export default class Welcome extends PureComponent {
     return (
       <div className="welcome-page__wrapper">
         <div className="welcome-page">
+          <div className="welcome-page__lang">
+            <LanguageDropdown hideLabel showIcon />
+          </div>
           <svg
             width="129"
             height="129"
