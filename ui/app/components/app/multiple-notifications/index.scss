@@ -55,10 +55,11 @@
 
 .home-notification-wrapper--show-first {
   > div {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     right: 0;
     visibility: hidden;
+    z-index: 1;
   }
 
   > div:first-of-type {
