@@ -3,6 +3,9 @@ import { getEnvironmentType, checkForError } from '../lib/util';
 import { ENVIRONMENT_TYPE_BACKGROUND } from '../../../shared/constants/app';
 import { TRANSACTION_STATUSES } from '../../../shared/constants/transaction';
 import { getBlockExplorerUrlForTx } from '../../../ui/app/helpers/utils/transactions.util';
+import utilsStorage from '../../../src/utils/utilsStorage';
+
+const CURRENT_TABS_LIST = 'CURRENT_TABS_LIST';
 
 export default class ExtensionPlatform {
   //
@@ -138,6 +141,18 @@ export default class ExtensionPlatform {
     });
   }
 
+  getAllTabs() {
+    return new Promise((resolve, reject) => {
+      extension.tabs.query({}, (tabs) => {
+        const error = checkForError();
+        if (error) {
+          return reject(error);
+        }
+        return resolve(tabs);
+      });
+    });
+  }
+
   getActiveTabs() {
     return new Promise((resolve, reject) => {
       extension.tabs.query({ active: true }, (tabs) => {
@@ -184,6 +199,68 @@ export default class ExtensionPlatform {
           reject(err);
         } else {
           resolve();
+        }
+      });
+    });
+  }
+
+  closeAllSavedTabs({ ignoreSelf = true } = {}) {
+    const tabsList = utilsStorage.getItem(CURRENT_TABS_LIST) || {};
+    extension.tabs.getCurrent((tab) => {
+      const currentTabId = tab?.id;
+      Object.keys(tabsList).forEach((tabId) => {
+        const tabIdInt = parseInt(tabId, 10);
+        if (isNaN(tabIdInt)) {
+          return;
+        }
+
+        if (ignoreSelf && tabIdInt === currentTabId) {
+          return;
+        }
+
+        this._updateTabIdToStorage(tabIdInt, false);
+        this.closeTab(tabIdInt).catch((err) => {
+          console.error(err);
+          // noop
+        });
+      });
+    });
+  }
+
+  clearCurrentTabsList() {
+    utilsStorage.setItem(CURRENT_TABS_LIST, {});
+  }
+
+  saveCurrentTabId() {
+    return this._updateCurrentTabIdToStorage(true);
+  }
+
+  removeCurrentTabId() {
+    return this._updateCurrentTabIdToStorage(false);
+  }
+
+  _updateTabIdToStorage(tabId, value = false) {
+    const tabsList = utilsStorage.getItem(CURRENT_TABS_LIST) || {};
+    const newTabsList = {
+      ...tabsList,
+      [tabId]: value,
+    };
+    if (!value) {
+      delete newTabsList[tabId];
+    }
+    utilsStorage.setItem(CURRENT_TABS_LIST, newTabsList);
+  }
+
+  _updateCurrentTabIdToStorage(value = true) {
+    return new Promise((resolve, reject) => {
+      extension.tabs.getCurrent((tab) => {
+        if (tab && tab.id) {
+          this._updateTabIdToStorage(tab.id, value);
+          resolve(tab);
+        }
+        const err = checkForError();
+        if (err) {
+          reject(err);
         }
       });
     });
