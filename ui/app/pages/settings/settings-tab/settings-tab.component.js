@@ -5,6 +5,7 @@ import Dropdown from '../../../components/ui/dropdown';
 import ToggleButton from '../../../components/ui/toggle-button';
 import locales from '../../../../../app/_locales/index.json';
 import { RESOLVE_CONFLICT_ONEKEY_NOT_REPLACING } from '../../../../../app/scripts/constants/consts';
+import LanguageDropdown from './language-dropdown';
 
 const sortedCurrencies = availableCurrencies.sort((a, b) => {
   return a.name.toLocaleLowerCase().localeCompare(b.name.toLocaleLowerCase());
@@ -73,38 +74,6 @@ export default class SettingsTab extends PureComponent {
               options={currencyOptions}
               selectedOption={currentCurrency}
               onChange={(newCurrency) => setCurrentCurrency(newCurrency)}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  renderCurrentLocale() {
-    const { t } = this.context;
-    const { updateCurrentLocale, currentLocale } = this.props;
-    const currentLocaleMeta = locales.find(
-      (locale) => locale.code === currentLocale,
-    );
-    const currentLocaleName = currentLocaleMeta ? currentLocaleMeta.name : '';
-
-    return (
-      <div className="settings-page__content-row">
-        <div className="settings-page__content-item">
-          <span className="settings-page__content-label">
-            {t('currentLanguage')}
-          </span>
-          <span className="settings-page__content-description">
-            {currentLocaleName}
-          </span>
-        </div>
-        <div className="settings-page__content-item">
-          <div className="settings-page__content-item-col">
-            <Dropdown
-              id="select-locale"
-              options={localeOptions}
-              selectedOption={currentLocale}
-              onChange={async (newLocale) => updateCurrentLocale(newLocale)}
             />
           </div>
         </div>
@@ -282,7 +251,7 @@ export default class SettingsTab extends PureComponent {
         {warning && <div className="settings-tab__error">{warning}</div>}
         {this.renderCurrentConversion()}
         {this.renderUsePrimaryCurrencyOptions()}
-        {this.renderCurrentLocale()}
+        <LanguageDropdown />
         {this.renderBlockieOptIn()}
         {this.renderAutoSwitchChainOptIn()}
         {this.renderHWOnlyOptIn()}

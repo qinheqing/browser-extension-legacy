@@ -331,6 +331,7 @@ export default class AccountMenu extends Component {
             <button
               className="account-menu__lock-button"
               onClick={() => {
+                toggleAccountMenu();
                 history.push(RESTORE_VAULT_ROUTE);
                 if (getEnvironmentType() === ENVIRONMENT_TYPE_POPUP) {
                   global.platform.openExtensionInBrowser(RESTORE_VAULT_ROUTE);
