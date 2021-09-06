@@ -46,7 +46,7 @@ const ConfirmDetailRow = (props) => {
             showEthLogo
             ethLogoHeight="18"
             style={{ color: primaryValueTextColor }}
-            hideLabel
+            hideLabel={false}
           />
         )}
         {secondaryText ? (
@@ -57,7 +57,7 @@ const ConfirmDetailRow = (props) => {
             type={SECONDARY}
             value={value}
             showEthLogo
-            hideLabel
+            hideLabel={false}
           />
         )}
       </div>

@@ -42,7 +42,7 @@
   }
 
   &__title-text {
-    @include H1;
+    @include H2;
 
     white-space: nowrap;
     overflow: hidden;

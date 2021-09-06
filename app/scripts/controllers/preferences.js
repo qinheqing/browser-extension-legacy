@@ -63,7 +63,7 @@ export default class PreferencesController {
       forgottenPassword: false,
       preferences: {
         autoLockTimeLimit: undefined,
-        showFiatInTestnets: false,
+        showFiatInTestnets: true,
         useNativeCurrencyAsPrimaryCurrency: true,
       },
       completedOnboarding: false,

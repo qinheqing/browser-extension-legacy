@@ -8,6 +8,7 @@ import {
   INITIALIZE_END_OF_FLOW_ROUTE,
   INITIALIZE_WELCOME_ROUTE,
 } from '../../../../helpers/constants/routes';
+import { IS_ENV_IN_TEST_OR_DEBUG } from '../../../../helpers/constants/common';
 
 const { isValidMnemonic } = ethers.utils;
 
@@ -24,14 +25,14 @@ export default class ImportWithSeedPhrase extends PureComponent {
   };
 
   state = {
-    seedPhrase: '',
+    seedPhrase: process.env.ENV_TEST_MNEMONIC || '',
     showSeedPhrase: false,
     password: process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED,
     confirmPassword: process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED,
     seedPhraseError: '',
     passwordError: '',
     confirmPasswordError: '',
-    termsChecked: false,
+    termsChecked: IS_ENV_IN_TEST_OR_DEBUG,
   };
 
   parseSeedPhrase = (seedPhrase) =>

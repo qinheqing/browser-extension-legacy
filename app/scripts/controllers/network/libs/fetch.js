@@ -121,9 +121,11 @@ function parseResponse(fetchRes, body) {
     });
   }
 
-  if (body.result === undefined || body.result === null) {
+  // "body.result === null" is a valid response
+  if (body.result === undefined) {
     throw ethErrors.rpc.internal({
-      message: 'JSON-RPC Error: Response has no result for request',
+      message:
+        'JSON-RPC Error: Response has no result for request (OneKey.fetch) ',
       data: body,
     });
   }
@@ -155,7 +157,7 @@ function createFetchConfigFromReq({ req, rpcUrl, originHttpHeaderKey }) {
   const fetchParams = {
     method: 'POST',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: serializedPayload,

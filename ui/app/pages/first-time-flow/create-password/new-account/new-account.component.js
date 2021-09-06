@@ -6,6 +6,7 @@ import {
   INITIALIZE_WELCOME_ROUTE,
 } from '../../../../helpers/constants/routes';
 import TextField from '../../../../components/ui/text-field';
+import { IS_ENV_IN_TEST_OR_DEBUG } from '../../../../helpers/constants/common';
 
 export default class NewAccount extends PureComponent {
   static contextTypes = {
@@ -23,7 +24,7 @@ export default class NewAccount extends PureComponent {
     confirmPassword: process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED,
     passwordError: '',
     confirmPasswordError: '',
-    termsChecked: true,
+    termsChecked: IS_ENV_IN_TEST_OR_DEBUG,
   };
 
   isValid() {

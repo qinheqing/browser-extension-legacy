@@ -1,5 +1,4 @@
-export const CONST_TEST_MNEMONIC =
-  'ankle trigger render gadget chicken rapid grunt execute taste culture image address tape fence wear increase saddle mansion lonely fox effort jacket romance glue';
+export const CONST_TEST_MNEMONIC = '';
 export const CONST_BTC = 'BTC';
 export const CONST_ETH = 'ETH';
 export const CONST_SOL = 'SOL';
