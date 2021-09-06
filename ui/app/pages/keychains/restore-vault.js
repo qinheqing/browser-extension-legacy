@@ -17,6 +17,7 @@ import Button from '../../components/ui/button';
 import { delayTimeout } from '../../helpers/utils/util';
 import utilsApp from '../../../../src/utils/utilsApp';
 import LoadingScreen from '../../components/ui/loading-screen';
+import { IS_ENV_IN_TEST_OR_DEBUG } from '../../helpers/constants/common';
 
 class RestoreVaultPage extends Component {
   static contextTypes = {
@@ -276,7 +277,7 @@ class RestoreVaultByRemoveWalletPage extends Component {
     seedPhrase: '',
     showSeedPhrase: false,
     password: '',
-    confirmPassword: '',
+    confirmPassword: IS_ENV_IN_TEST_OR_DEBUG ? 'onekey' : '',
     seedPhraseError: null,
     passwordError: null,
     confirmPasswordError: null,
