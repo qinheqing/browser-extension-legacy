@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ToggleButton from '../../../components/ui/toggle-button';
 import {
   CHANGE_PASSWORD_ROUTE,
+  RESTORE_VAULT_ROUTE,
   REVEAL_SEED_ROUTE,
 } from '../../../helpers/constants/routes';
 import Button from '../../../components/ui/button';
@@ -151,6 +152,15 @@ export default class SecurityTab extends PureComponent {
         {this.renderChangePassword()}
         {this.renderIncomingTransactionsOptIn()}
         {/* {this.renderPhishingDetectionToggle()} */}
+        <Button
+          type="danger-primary"
+          className="settings-page__remove-wallet-button"
+          onClick={() => {
+            this.props.history.push(RESTORE_VAULT_ROUTE);
+          }}
+        >
+          {this.context.t('resetWalletButton')}
+        </Button>
       </div>
     );
   }
