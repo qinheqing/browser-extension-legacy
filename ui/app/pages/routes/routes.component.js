@@ -4,6 +4,7 @@ import React, { Component, PureComponent } from 'react';
 import { matchPath, Route, Switch } from 'react-router-dom';
 import IdleTimer from 'react-idle-timer';
 
+import { isNumber } from 'lodash';
 import FirstTimeFlow from '../first-time-flow';
 import SendTransactionScreen from '../send';
 import ConfirmTransaction from '../confirm-transaction';
@@ -66,6 +67,7 @@ import {
   UniversalRoutesWrapper,
 } from '../../../../src/components/AppRootView';
 import utilsApp from '../../../../src/utils/utilsApp';
+import utilsWalletRemove from '../../../../src/utils/utilsWalletRemove';
 
 const AllRoutesComponentsProps = {
   autoLockTimeLimit: PropTypes.number,
@@ -200,6 +202,16 @@ export default class Routes extends Component {
   constructor(props) {
     super(props);
     global.onekeyHistory = props.history;
+  }
+
+  async componentDidMount() {
+    const { isWalletRemoved } = this.props;
+    if (
+      isWalletRemoved &&
+      isWalletRemoved === 'OneKey Wallet Removed Manually'
+    ) {
+      await utilsWalletRemove.removeWallet();
+    }
   }
 
   UNSAFE_componentWillMount() {

@@ -4,6 +4,7 @@ import { NETWORK_TYPE_RPC } from '../../../../shared/constants/network';
 
 export default function reduceMetamask(state = {}, action) {
   const metamaskState = {
+    isWalletRemoved: false, // false or message
     isInitialized: false,
     isUnlocked: false,
     isAccountMenuOpen: false,
@@ -51,6 +52,12 @@ export default function reduceMetamask(state = {}, action) {
   };
 
   switch (action.type) {
+    case actionConstants.MARK_WALLET_REMOVED:
+      return {
+        ...metamaskState,
+        isWalletRemoved: action.value,
+      };
+
     case actionConstants.UPDATE_METAMASK_STATE:
       return { ...metamaskState, ...action.value };
 

@@ -1272,6 +1272,14 @@ export const backgroundSetLocked = () => {
   });
 };
 
+export function actionMarkWalletRemoved(message) {
+  return async (dispatch) => {
+    dispatch({ type: actionConstants.MARK_WALLET_REMOVED, value: message });
+    await promisifiedBackground.markWalletRemoved(message);
+    await forceUpdateMetamaskState(dispatch);
+  };
+}
+
 export function lockMetamask() {
   log.debug(`background.setLocked`);
 
