@@ -284,3 +284,13 @@ export const CHAIN_ID_TO_NETWORK_ID_MAP = Object.values(
   chainIdToNetworkIdMap[chainId] = networkId;
   return chainIdToNetworkIdMap;
 }, {});
+
+export const CHAIN_ID_TO_CHAIN_INFO_MAP = Object.entries(
+  NETWORK_TYPE_TO_ID_MAP,
+).reduce((map, [chainType, chainInfo]) => {
+  map[chainInfo.chainId] = {
+    ...chainInfo,
+    chainType,
+  };
+  return map;
+}, {});
