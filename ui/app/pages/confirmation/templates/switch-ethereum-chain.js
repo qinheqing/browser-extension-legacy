@@ -65,7 +65,8 @@ function getValues(pendingApproval, t, actions) {
             colored: false,
             outline: true,
             targetNetwork: {
-              type: NETWORK_TYPE_RPC,
+              chainType:
+                pendingApproval.requestData.chainType || NETWORK_TYPE_RPC,
               nickname: pendingApproval.requestData.nickname,
             },
           },

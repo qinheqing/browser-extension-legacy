@@ -2046,13 +2046,17 @@ export default class MetamaskController extends EventEmitter {
           this.approvalController.addAndShowApprovalRequest.bind(
             this.approvalController,
           ),
-        updateRpcTarget: ({ rpcUrl, chainId, ticker, nickname }) => {
-          this.networkController.setRpcTarget(
-            rpcUrl,
-            chainId,
-            ticker,
-            nickname,
-          );
+        updateRpcTarget: ({ chainType, rpcUrl, chainId, ticker, nickname }) => {
+          if (chainType) {
+            this.networkController.setProviderType(chainType);
+          } else {
+            this.networkController.setRpcTarget(
+              rpcUrl,
+              chainId,
+              ticker,
+              nickname,
+            );
+          }
         },
         addCustomRpc: async ({
           chainId,

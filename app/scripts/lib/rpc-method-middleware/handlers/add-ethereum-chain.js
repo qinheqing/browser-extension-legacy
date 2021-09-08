@@ -1,4 +1,4 @@
-import { ethErrors } from 'eth-rpc-errors';
+import { ethErrors, errorCodes } from 'eth-rpc-errors';
 import validUrl from 'valid-url';
 import { omit } from 'lodash';
 import { MESSAGE_TYPE } from '../../../../../shared/constants/app';
@@ -7,7 +7,10 @@ import {
   isSafeChainId,
 } from '../../../../../shared/modules/network.utils';
 import { jsonRpcRequest } from '../../../../../shared/modules/rpc.utils';
-import { CHAIN_ID_TO_NETWORK_ID_MAP } from '../../../../../shared/constants/network';
+import {
+  CHAIN_ID_TO_NETWORK_ID_MAP,
+  CHAIN_ID_TO_CHAIN_INFO_MAP,
+} from '../../../../../shared/constants/network';
 
 const addEthereumChain = {
   methodNames: [MESSAGE_TYPE.ADD_ETHEREUM_CHAIN],
@@ -42,6 +45,7 @@ async function addEthereumChainHandler(
   const { origin } = req;
 
   const {
+    chainType,
     chainId,
     chainName = null,
     blockExplorerUrls = null,
@@ -113,29 +117,28 @@ async function addEthereumChainHandler(
     );
   }
 
-  if (CHAIN_ID_TO_NETWORK_ID_MAP[_chainId]) {
-    return end(
-      ethErrors.rpc.invalidParams({
-        message: `May not specify default OneKey chain.`,
-      }),
-    );
+  let existingNetwork = CHAIN_ID_TO_CHAIN_INFO_MAP[_chainId];
+  if (!existingNetwork) {
+    existingNetwork = findCustomRpcBy({ chainId: _chainId });
   }
 
-  const existingNetwork = findCustomRpcBy({ chainId: _chainId });
+  if (existingNetwork) {
+    // If the network already exists, the request is considered successful
+    res.result = null;
 
-  if (existingNetwork !== null) {
     const currentChainId = getCurrentChainId();
     if (currentChainId === _chainId) {
-      res.result = null;
       return end();
     }
 
+    // Ask the user to switch the network
     try {
       await updateRpcTarget(
         await requestUserApproval({
           origin,
           type: MESSAGE_TYPE.SWITCH_ETHEREUM_CHAIN,
           requestData: {
+            chainType: existingNetwork.chainType,
             rpcUrl: existingNetwork.rpcUrl,
             chainId: existingNetwork.chainId,
             nickname: existingNetwork.nickname,
@@ -145,9 +148,22 @@ async function addEthereumChainHandler(
       );
       res.result = null;
     } catch (error) {
-      return end(error);
+      // For the purposes of this method, it does not matter if the user
+      // declines to switch the selected network. However, other errors indicate
+      // that something is wrong.
+      if (error.code !== errorCodes.provider.userRejectedRequest) {
+        return end(error);
+      }
     }
     return end();
+  }
+
+  if (CHAIN_ID_TO_NETWORK_ID_MAP[_chainId]) {
+    return end(
+      ethErrors.rpc.invalidParams({
+        message: `[wallet_addEthereumChain] May not specify default OneKey chain.`,
+      }),
+    );
   }
 
   let endpointChainId;
@@ -244,6 +260,7 @@ async function addEthereumChainHandler(
         network_name: _chainName,
         // Including network to override the default network
         // property included in all events. For RPC type networks
+        // the MetaMetrics controller uses the rpcUrl for the network
         // property.
         network: firstValidRPCUrl,
         symbol: ticker,
@@ -252,11 +269,20 @@ async function addEthereumChainHandler(
       },
     });
 
+    // Once the network has been added, the requested is considered successful
+    res.result = null;
+  } catch (error) {
+    return end(error);
+  }
+
+  // Ask the user to switch the network
+  try {
     await updateRpcTarget(
       await requestUserApproval({
         origin,
         type: MESSAGE_TYPE.SWITCH_ETHEREUM_CHAIN,
         requestData: {
+          chainType,
           rpcUrl: firstValidRPCUrl,
           chainId: _chainId,
           nickname: _chainName,
@@ -264,10 +290,13 @@ async function addEthereumChainHandler(
         },
       }),
     );
-
-    res.result = null;
   } catch (error) {
-    return end(error);
+    // For the purposes of this method, it does not matter if the user
+    // declines to switch the selected network. However, other errors indicate
+    // that something is wrong.
+    if (error.code !== errorCodes.provider.userRejectedRequest) {
+      return end(error);
+    }
   }
   return end();
 }
