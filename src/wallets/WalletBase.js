@@ -97,26 +97,27 @@ class WalletBase {
     return this.keyring.buildAddressMeta({ index, hdPath, ...others });
   }
 
-  async getAddresses({ indexes = [0], ...others }) {
+  async getAddresses({ indexes = [0], hdPaths = [], ...others }) {
     // TODO refactor to keyringController.getAddresses
     //    - HdWalletKeyring.getAddresses
     //    - HardwareKeyring.getAddresses
     //    - SingleChainKeyring.getAddresses
     if (this.accountType === CONSTS_ACCOUNT_TYPES.Wallet) {
-      return this.getAddressesByHdWallet({ indexes, ...others });
+      return this.getAddressesByHdWallet({ indexes, hdPaths, ...others });
     }
+
     if (this.accountType === CONSTS_ACCOUNT_TYPES.Hardware) {
-      return this.getAddressesByHardware({ indexes, ...others });
+      return this.getAddressesByHardware({ indexes, hdPaths, ...others });
     }
     throw new Error(
       `getAddresses of accountType ${this.accountType} is not supported`,
     );
   }
 
-  async getAddressesByHdWallet({ indexes = [0], ...others }) {
+  async getAddressesByHdWallet({ indexes = [0], hdPaths = [], ...others }) {
     return this.keyringProxyCall({
       method: 'getAddressesByHdWallet',
-      params: { indexes, ...others },
+      params: { indexes, hdPaths, ...others },
     });
   }
 
@@ -142,6 +143,7 @@ class WalletBase {
         payload,
       },
     });
+
     if (success) {
       return payload.map((data, i) => {
         /*
@@ -170,6 +172,7 @@ class WalletBase {
     if (this.accountType === CONSTS_ACCOUNT_TYPES.Wallet) {
       return this.signTxByHdWallet({ tx: txStr, hdPath });
     }
+
     if (this.accountType === CONSTS_ACCOUNT_TYPES.Hardware) {
       return this.signTxByHardware({ tx: txStr, hdPath });
     }

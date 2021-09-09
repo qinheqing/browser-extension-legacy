@@ -254,10 +254,9 @@ class StoreAccount extends BaseStore {
     }
   }
 
-  // storeAccount.cleanMismatchAccounts();
+  // storeAccount.autofixMismatchAddresses();
   @action.bound
-  async cleanMismatchAccounts() {
-    const toRemoveAccountIndex = [];
+  async autofixMismatchAddresses() {
     for (let i = 0; i < storeStorage.allAccountsRaw.length; i++) {
       const account = storeStorage.allAccountsRaw[i];
       const chainInfo = storeChain.getChainInfoByKey(account.chainKey);
@@ -265,23 +264,18 @@ class StoreAccount extends BaseStore {
         chainInfo,
         accountInfo: new OneAccountInfo(account),
       });
-      if (
-        account.type === CONSTS_ACCOUNT_TYPES.Wallet &&
-        !isNil(account.hdPathIndex)
-      ) {
+      if (account.type === CONSTS_ACCOUNT_TYPES.Wallet) {
         // TODO use path query addresses, as index is not saved in storage
         //    wallet.getAccountAddress();  return real address, not storage cache
         const addresses = await wallet.getAddresses({
-          indexes: [account.hdPathIndex],
+          hdPaths: [account.path],
         });
         const addressReal = addresses?.[0]?.address;
         if (addressReal !== account.address) {
-          // tag account is invalid
-          toRemoveAccountIndex.push(i);
+          account.address = addressReal;
         }
       }
     }
-    console.log('toRemoveAccountIndex', toRemoveAccountIndex);
   }
 }
 

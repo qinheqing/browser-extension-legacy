@@ -44,10 +44,10 @@ class KeyringBase {
     return dpath.privateKey;
   }
 
-  async getAddressesByHdWallet({ indexes = [0], ...others }) {
-    const hdPathList = indexes.map((index) =>
-      this.hdkeyProvider.createHdPath({ index }),
-    );
+  async getAddressesByHdWallet({ indexes = [0], hdPaths = [], ...others }) {
+    const hdPathList = hdPaths.length
+      ? hdPaths
+      : indexes.map((index) => this.hdkeyProvider.createHdPath({ index }));
     const seed = await this._getHdRootSeed();
     const addresses = await Promise.all(
       hdPathList.map(async (path, i) => {
