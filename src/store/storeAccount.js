@@ -270,9 +270,13 @@ class StoreAccount extends BaseStore {
         const addresses = await wallet.getAddresses({
           hdPaths: [account.path],
         });
-        const addressReal = addresses?.[0]?.address;
+        const addressReal = addresses?.[0]?.address || '';
         if (addressReal !== account.address) {
-          account.address = addressReal;
+          console.error(
+            `mismatch address: [ ${addressReal} ] | [ ${account.address} ]`,
+          );
+          // rewrite correct address
+          account.address = addressReal || 'ErrorAddress';
         }
       }
     }
