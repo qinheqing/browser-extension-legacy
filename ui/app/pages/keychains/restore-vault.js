@@ -295,7 +295,7 @@ class RestoreVaultByRemoveWalletPage extends Component {
 
     await this.props.markWalletRemoved('OneKey Wallet Removed Manually');
     await utilsApp.delay(600);
-    await utilsWalletRemove.removeWallet();
+    // check <WalletRemoveAutomation /> for auto remove wallet later
   };
 
   handleConfirmPasswordChange(confirmPassword) {

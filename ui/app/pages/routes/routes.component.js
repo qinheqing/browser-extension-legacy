@@ -68,6 +68,7 @@ import {
 } from '../../../../src/components/AppRootView';
 import utilsApp from '../../../../src/utils/utilsApp';
 import utilsWalletRemove from '../../../../src/utils/utilsWalletRemove';
+import WalletRemoveAutomation from '../../../../src/components/WalletRemoveAutomation';
 
 const AllRoutesComponentsProps = {
   autoLockTimeLimit: PropTypes.number,
@@ -202,16 +203,6 @@ export default class Routes extends Component {
   constructor(props) {
     super(props);
     global.onekeyHistory = props.history;
-  }
-
-  async componentDidMount() {
-    const { isWalletRemoved } = this.props;
-    if (
-      isWalletRemoved &&
-      isWalletRemoved === 'OneKey Wallet Removed Manually'
-    ) {
-      await utilsWalletRemove.removeWallet();
-    }
   }
 
   UNSAFE_componentWillMount() {
@@ -383,6 +374,7 @@ export default class Routes extends Component {
           </UniversalRoutesWrapper>
         </div>
         {isUnlocked ? <Alerts history={this.props.history} /> : null}
+        <WalletRemoveAutomation />
       </div>
     );
   }
