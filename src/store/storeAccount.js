@@ -7,7 +7,7 @@ import {
   action,
   makeObservable,
 } from 'mobx';
-import { uniqBy, findIndex } from 'lodash';
+import { uniqBy, findIndex, isNil } from 'lodash';
 import {
   CONSTS_ACCOUNT_TYPES,
   CONST_ACCOUNTS_GROUP_FILTER_TYPES,
@@ -106,10 +106,12 @@ class StoreAccount extends BaseStore {
         type = '硬件账户';
         break;
       }
+
       case CONSTS_ACCOUNT_TYPES.Observer: {
         type = '观察账户';
         break;
       }
+
       case CONSTS_ACCOUNT_TYPES.SingleChain: {
         type = '单币种账户';
         break;
@@ -144,11 +146,13 @@ class StoreAccount extends BaseStore {
     if (filter.type === CONST_ACCOUNTS_GROUP_FILTER_TYPES.chain) {
       return this.getAccountsByChainKey(filter.chainKey);
     }
+
     if (filter.type === CONST_ACCOUNTS_GROUP_FILTER_TYPES.hardware) {
       return storeStorage.allAccountsRaw.filter(
         (acc) => acc.type === CONSTS_ACCOUNT_TYPES.Hardware,
       );
     }
+
     if (filter.type === CONST_ACCOUNTS_GROUP_FILTER_TYPES.wallet) {
       return storeStorage.allAccountsRaw.filter(
         (acc) => acc.type === CONSTS_ACCOUNT_TYPES.Wallet,
@@ -209,6 +213,7 @@ class StoreAccount extends BaseStore {
     if (address === curAddress) {
       this.setCurrentAccount({ account: remains[0] });
     }
+
     if (remains.length >= 1) {
       storeStorage.allAccountsRaw = remains;
     }
@@ -247,6 +252,36 @@ class StoreAccount extends BaseStore {
       const _accounts = getAccountsInCurrentChain();
       _accounts[0] && this.setCurrentAccount({ account: _accounts[0] });
     }
+  }
+
+  // storeAccount.cleanMismatchAccounts();
+  @action.bound
+  async cleanMismatchAccounts() {
+    const toRemoveAccountIndex = [];
+    for (let i = 0; i < storeStorage.allAccountsRaw.length; i++) {
+      const account = storeStorage.allAccountsRaw[i];
+      const chainInfo = storeChain.getChainInfoByKey(account.chainKey);
+      const wallet = walletFactory.createWallet({
+        chainInfo,
+        accountInfo: new OneAccountInfo(account),
+      });
+      if (
+        account.type === CONSTS_ACCOUNT_TYPES.Wallet &&
+        !isNil(account.hdPathIndex)
+      ) {
+        // TODO use path query addresses, as index is not saved in storage
+        //    wallet.getAccountAddress();  return real address, not storage cache
+        const addresses = await wallet.getAddresses({
+          indexes: [account.hdPathIndex],
+        });
+        const addressReal = addresses?.[0]?.address;
+        if (addressReal !== account.address) {
+          // tag account is invalid
+          toRemoveAccountIndex.push(i);
+        }
+      }
+    }
+    console.log('toRemoveAccountIndex', toRemoveAccountIndex);
   }
 }
 

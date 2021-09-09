@@ -12,9 +12,12 @@ class KeyringBase {
   buildAddressMeta({ index, hdPath }) {
     // AddressInfo?  AccountInfo?
     return {
+      // address
       chainKey: this.options?.chainInfo?.key, // read from chainInfo
-      type: this.options?.accountInfo?.type,
+      // name
       path: hdPath || this.hdkeyProvider.createHdPath({ index }),
+      type: this.options?.accountInfo?.type,
+      // TODO remove ----------------------------------------------
       hardwareModel: this.options?.accountInfo?.hardwareModel, // read from accountInfo
       baseChain: this.options?.chainInfo?.baseChain, // read from chainInfo.baseChain
       hdPathIndex: index,
