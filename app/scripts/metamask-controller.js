@@ -669,6 +669,10 @@ export default class MetamaskController extends EventEmitter {
         preferencesController.setHwOnlyMode,
         preferencesController,
       ),
+      markWalletRemoved: nodeify(
+        preferencesController.markWalletRemoved,
+        preferencesController,
+      ),
       addKnownMethodData: nodeify(
         preferencesController.addKnownMethodData,
         preferencesController,

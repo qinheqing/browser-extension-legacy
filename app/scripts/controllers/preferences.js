@@ -68,6 +68,7 @@ export default class PreferencesController {
       },
       completedOnboarding: false,
       hwOnlyMode: false,
+      isWalletRemoved: false, // false or message
       // ENS decentralized website resolution
       ipfsGateway: 'dweb.link',
       ...opts.initState,
@@ -656,6 +657,11 @@ export default class PreferencesController {
 
   setHwOnlyMode(status = true) {
     this.store.updateState({ hwOnlyMode: status });
+    return Promise.resolve(true);
+  }
+
+  markWalletRemoved(message) {
+    this.store.updateState({ isWalletRemoved: message });
     return Promise.resolve(true);
   }
 

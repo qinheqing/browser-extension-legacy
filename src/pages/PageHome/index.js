@@ -218,6 +218,12 @@ function PageHome() {
     storeToken.fetchCurrentAccountTokens();
   }, []);
 
+  useEffect(() => {
+    if (storeApp.legacyState.isUnlocked) {
+      storeAccount.autofixMismatchAddresses();
+    }
+  }, [storeApp.legacyState.isUnlocked]);
+
   const onAccountClick = useCallback(() => {
     storeHistory.push(ROUTE_ACCOUNT_DETAIL);
   }, []);

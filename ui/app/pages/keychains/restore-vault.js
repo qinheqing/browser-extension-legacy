@@ -6,6 +6,7 @@ import localforage from 'localforage';
 import {
   createNewVaultAndRestore,
   unMarkPasswordForgotten,
+  actionMarkWalletRemoved,
 } from '../../store/actions';
 import {
   DEFAULT_ROUTE,
@@ -18,6 +19,7 @@ import { delayTimeout } from '../../helpers/utils/util';
 import utilsApp from '../../../../src/utils/utilsApp';
 import LoadingScreen from '../../components/ui/loading-screen';
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../helpers/constants/common';
+import utilsWalletRemove from '../../../../src/utils/utilsWalletRemove';
 
 class RestoreVaultPage extends Component {
   static contextTypes = {
@@ -267,6 +269,7 @@ class RestoreVaultByRemoveWalletPage extends Component {
   static propTypes = {
     createNewVaultAndRestore: PropTypes.func.isRequired,
     leaveImportSeedScreenState: PropTypes.func,
+    markWalletRemoved: PropTypes.func,
     history: PropTypes.object,
     isLoading: PropTypes.bool,
     isUnlocked: PropTypes.bool,
@@ -283,76 +286,15 @@ class RestoreVaultByRemoveWalletPage extends Component {
     confirmPasswordError: null,
   };
 
-  deleteAllCookies() {
-    const cookies = document.cookie.split(';');
-
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i];
-      const eqPos = cookie.indexOf('=');
-      const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-      document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-    }
-  }
-
-  async removeAllData() {
-    console.log('remove all data');
-
-    try {
-      await this.deleteAllCookies();
-    } catch (ex) {
-      console.error(ex);
-    }
-
-    try {
-      await global.localStorage.clear();
-    } catch (ex) {
-      console.error(ex);
-    }
-
-    try {
-      await global.sessionStorage.clear();
-    } catch (ex) {
-      console.error(ex);
-    }
-
-    try {
-      await extension.storage.local.clear();
-    } catch (ex) {
-      console.error(ex);
-    }
-
-    try {
-      await extension.storage.sync.clear();
-    } catch (ex) {
-      console.error(ex);
-    }
-
-    try {
-      await localforage.clear();
-    } catch (ex) {
-      console.error(ex);
-    }
-  }
-
   onClick = async () => {
     if (!global.confirm(this.context.t('resetWalletConfirm'))) {
       return;
     }
     this.setState({ isLocalLoading: true });
 
-    await window.platform.closeAllSavedTabs();
-    await this.removeAllData();
-
-    extension.runtime.getBackgroundPage((backgroundWindow) => {
-      backgroundWindow.ONEKEY_DISABLE_AUTO_PERSIST_DATA = true;
-      this.removeAllData().then(async () => {
-        await window.platform.closeAllSavedTabs();
-        await this.removeAllData();
-        backgroundWindow.location.reload();
-        await utilsApp.delay(600);
-        window.location.reload();
-      });
-    });
+    await this.props.markWalletRemoved('OneKey Wallet Removed Manually');
+    await utilsApp.delay(600);
+    await utilsWalletRemove.removeWallet();
   };
 
   handleConfirmPasswordChange(confirmPassword) {
@@ -452,9 +394,8 @@ export default connect(
     isLoading,
   }),
   (dispatch) => ({
-    leaveImportSeedScreenState: () => {
-      dispatch(unMarkPasswordForgotten());
-    },
+    markWalletRemoved: (message) => dispatch(actionMarkWalletRemoved(message)),
+    leaveImportSeedScreenState: () => dispatch(unMarkPasswordForgotten()),
     createNewVaultAndRestore: (pw, seed) =>
       dispatch(createNewVaultAndRestore(pw, seed)),
   }),

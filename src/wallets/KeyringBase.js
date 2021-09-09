@@ -12,9 +12,12 @@ class KeyringBase {
   buildAddressMeta({ index, hdPath }) {
     // AddressInfo?  AccountInfo?
     return {
+      // address
       chainKey: this.options?.chainInfo?.key, // read from chainInfo
-      type: this.options?.accountInfo?.type,
+      // name
       path: hdPath || this.hdkeyProvider.createHdPath({ index }),
+      type: this.options?.accountInfo?.type,
+      // TODO remove ----------------------------------------------
       hardwareModel: this.options?.accountInfo?.hardwareModel, // read from accountInfo
       baseChain: this.options?.chainInfo?.baseChain, // read from chainInfo.baseChain
       hdPathIndex: index,
@@ -41,10 +44,10 @@ class KeyringBase {
     return dpath.privateKey;
   }
 
-  async getAddressesByHdWallet({ indexes = [0], ...others }) {
-    const hdPathList = indexes.map((index) =>
-      this.hdkeyProvider.createHdPath({ index }),
-    );
+  async getAddressesByHdWallet({ indexes = [0], hdPaths = [], ...others }) {
+    const hdPathList = hdPaths.length
+      ? hdPaths
+      : indexes.map((index) => this.hdkeyProvider.createHdPath({ index }));
     const seed = await this._getHdRootSeed();
     const addresses = await Promise.all(
       hdPathList.map(async (path, i) => {

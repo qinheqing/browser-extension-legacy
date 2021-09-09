@@ -115,6 +115,7 @@ function ImportAccountsList({ wallet, onLoadMore }) {
     const newAccounts = accountsSorted.map((addr) => {
       const { address, path, name, chainKey, type } = addr;
       accountNameIndex += 1;
+      // TODO init data from initFirstAccount() and buildAddressMeta()
       return {
         name: wallet.chainInfo.generateAccountName({
           index: accountNameIndex,

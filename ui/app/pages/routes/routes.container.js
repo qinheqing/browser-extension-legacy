@@ -30,6 +30,7 @@ function mapStateToProps(state) {
     textDirection: state.metamask.textDirection,
     isLoading,
     loadingMessage,
+    isWalletRemoved: state.metamask.isWalletRemoved,
     isUnlocked: state.metamask.isUnlocked,
     submittedPendingTransactions: submittedPendingTransactionsSelector(state),
     isNetworkLoading: isNetworkLoading(state),
