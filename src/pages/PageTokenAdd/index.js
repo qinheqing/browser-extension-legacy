@@ -87,6 +87,7 @@ function PageTokenAdd() {
     storeWallet.currentWallet.chainProvider
       .getAddAssociateTokenFee()
       .then(setFee);
+
     return () => {
       storeToken.tokenListFiltered = null;
     };
@@ -158,7 +159,10 @@ function PageTokenAdd() {
         }
         confirmText="确认添加"
         onConfirm={async () => {
-          return storeToken.addAssociateToken({ contract: tokenToAdd.address });
+          return storeToken.addAssociateToken({
+            contract: tokenToAdd.address,
+            fee,
+          });
         }}
       />
     </AppPageLayout>

@@ -61,6 +61,7 @@ class StoreBalance extends BaseStore {
   }
 
   async fetchBalanceInfo({ wallet, address, tokenInfo }) {
+    // address is tokenAddress for rpc fetch
     const tokenKey = tokenInfo.key;
     if (this.fetchBalancePendingQueue[address]) {
       return storeStorage.tokenBalancesRaw[tokenKey];
