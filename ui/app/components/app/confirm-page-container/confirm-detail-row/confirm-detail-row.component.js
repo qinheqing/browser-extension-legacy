@@ -33,14 +33,14 @@ const ConfirmDetailRow = (props) => {
         )}
         {primaryText ? (
           <div
-            className="confirm-detail-row__primary"
+            className="confirm-detail-row__primary  confirm-detail-row__primary-00001111000"
             style={{ color: primaryValueTextColor }}
           >
             {primaryText}
           </div>
         ) : (
           <UserPreferencedCurrencyDisplay
-            className="confirm-detail-row__primary"
+            className="confirm-detail-row__primary confirm-detail-row__primary-888855555"
             type={PRIMARY}
             value={value}
             showEthLogo

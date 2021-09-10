@@ -7,6 +7,8 @@ import {
   REVEAL_SEED_ROUTE,
 } from '../../../helpers/constants/routes';
 import Button from '../../../components/ui/button';
+import { getEnvironmentType } from '../../../../../app/scripts/lib/util';
+import { ENVIRONMENT_TYPE_POPUP } from '../../../../../shared/constants/app';
 
 export default class SecurityTab extends PureComponent {
   static contextTypes = {
@@ -157,6 +159,9 @@ export default class SecurityTab extends PureComponent {
           className="settings-page__remove-wallet-button"
           onClick={() => {
             this.props.history.push(RESTORE_VAULT_ROUTE);
+            if (getEnvironmentType() === ENVIRONMENT_TYPE_POPUP) {
+              global.platform.openExtensionInBrowser(RESTORE_VAULT_ROUTE);
+            }
           }}
         >
           {this.context.t('resetWalletButton')}

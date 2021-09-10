@@ -53,6 +53,7 @@ const metamaskrc = require('rc')('metamask', {
 const { version } = require('../../package.json');
 const { streamFlatMap } = require('../stream-flat-map');
 const baseManifest = require('../../app/manifest/_base.json');
+const gaCode = require('./googleAnalyticsCode');
 const buildUtils = require('./buildUtils');
 const externalLibs = require('./externalLibs');
 const {
@@ -897,7 +898,7 @@ function renderHtmlFile(htmlName, groupSet, commonSet, browserPlatforms) {
     .filter(Boolean)
     .map((label) => `./${label}.js?_t=${new Date().getTime()}.00000`);
 
-  const htmlOutput = Sqrl.render(htmlTemplate, { jsBundles });
+  const htmlOutput = Sqrl.render(htmlTemplate, { jsBundles, gaCode });
   browserPlatforms.forEach((platform) => {
     const dest = `./dist/${platform}/${htmlName}.html`;
     const dest2 = `./dist/${platform}/${htmlName}.bak.html`;

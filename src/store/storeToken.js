@@ -11,6 +11,7 @@ import { toLower, debounce, cloneDeep, merge, isNil } from 'lodash';
 import OneTokenInfo from '../classes/OneTokenInfo';
 import { ROUTE_TX_HISTORY } from '../routes/routeUrls';
 import utilsNumber from '../utils/utilsNumber';
+import utilsToast from '../utils/utilsToast';
 import BaseStore from './BaseStore';
 import storeAccount from './storeAccount';
 import storeChain from './storeChain';
@@ -209,6 +210,7 @@ class StoreToken extends BaseStore {
     if (!shouldReload) {
       return;
     }
+
     if (!this.allTokenListMeta.length) {
       await this.fetchAllTokenListMeta();
     }
@@ -227,6 +229,7 @@ class StoreToken extends BaseStore {
         isEditable: !tokenMeta,
       };
     });
+
     storeStorage.tokenMetasRaw = {
       ...storeStorage.tokenMetasRaw,
       ...metas,
@@ -281,18 +284,23 @@ class StoreToken extends BaseStore {
     if (address === searchText) {
       return 1000;
     }
+
     if (symbol === searchText) {
       return 100;
     }
+
     if (name === searchText) {
       return 90;
     }
+
     if (symbol.includes(searchText)) {
       return 80;
     }
+
     if (name.includes(searchText)) {
       return 50;
     }
+
     if (address.includes(searchText)) {
       return 10;
     }
@@ -324,6 +332,7 @@ class StoreToken extends BaseStore {
         ];
       }
     }
+
     tokens = tokens.sort((a, b) => {
       const w1 = this.getTokenSortWeight({
         token: a,
@@ -339,7 +348,11 @@ class StoreToken extends BaseStore {
     callback && callback();
   }
 
-  async addAssociateToken({ contract }) {
+  async addAssociateToken({ contract, fee }) {
+    if (fee && fee > this.currentNativeTokenBalance.balance) {
+      utilsToast.toast.error('手续费不足');
+      return '';
+    }
     // TODO check token contract.address is valid mint address
     const txid = await storeWallet.currentWallet.addAssociateToken({
       contract,

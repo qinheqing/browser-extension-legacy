@@ -273,6 +273,7 @@ class RestoreVaultByRemoveWalletPage extends Component {
     history: PropTypes.object,
     isLoading: PropTypes.bool,
     isUnlocked: PropTypes.bool,
+    hwOnlyMode: PropTypes.bool,
   };
 
   state = {
@@ -294,7 +295,7 @@ class RestoreVaultByRemoveWalletPage extends Component {
 
     await this.props.markWalletRemoved('OneKey Wallet Removed Manually');
     await utilsApp.delay(600);
-    await utilsWalletRemove.removeWallet();
+    // check <WalletRemoveAutomation /> for auto remove wallet later
   };
 
   handleConfirmPasswordChange(confirmPassword) {
@@ -313,7 +314,7 @@ class RestoreVaultByRemoveWalletPage extends Component {
       confirmPasswordError,
     } = this.state;
     const { t } = this.context;
-    const { isLoading, isUnlocked } = this.props;
+    const { isLoading, isUnlocked, hwOnlyMode } = this.props;
     const disabled = confirmPassword !== 'onekey' || isLoading;
 
     return (
@@ -335,7 +336,7 @@ class RestoreVaultByRemoveWalletPage extends Component {
 
             <div className="import-account__resetAccountWarning">
               {t('resetWalletWarningMessage')}
-              {isUnlocked && (
+              {isUnlocked && !hwOnlyMode && (
                 <div>
                   <a
                     className="import-account__viewSeedLink"
@@ -389,8 +390,9 @@ class RestoreVaultByRemoveWalletPage extends Component {
 }
 
 export default connect(
-  ({ appState: { isLoading }, metamask: { isUnlocked } }) => ({
+  ({ appState: { isLoading }, metamask: { isUnlocked, hwOnlyMode } }) => ({
     isUnlocked,
+    hwOnlyMode,
     isLoading,
   }),
   (dispatch) => ({

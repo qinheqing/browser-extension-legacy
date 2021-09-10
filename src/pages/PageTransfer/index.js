@@ -97,7 +97,14 @@ function PageTransfer() {
         />
         <OneFieldItem
           title="余额"
-          end={<TokenBalance showUnit tokenInfo={token} />}
+          end={
+            <TokenBalance
+              watchBalanceChange
+              showUnit
+              tokenInfo={token}
+              updateBalanceThrottle={0}
+            />
+          }
         />
       </OneField>
 

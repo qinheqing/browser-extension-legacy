@@ -29,11 +29,12 @@ function TokenBalance({
   const shouldUpdateRecord = useMemo(() => {
     if (
       cacheBalanceInfo?.lastUpdate &&
-      cacheBalanceInfo?.lastUpdate >
-        new Date().getTime() - updateBalanceThrottle
+      new Date().getTime() - cacheBalanceInfo?.lastUpdate <
+        updateBalanceThrottle
     ) {
       return false;
     }
+
     if (tokenInfo.chainKey !== _wallet.chainInfo.key) {
       return false;
     }
@@ -51,6 +52,7 @@ function TokenBalance({
     if (!shouldUpdateRecord) {
       return () => null;
     }
+
     const updateByRpc = async () => {
       // eslint-disable-next-line react/prop-types
       const info = await storeBalance.fetchBalanceInfo({

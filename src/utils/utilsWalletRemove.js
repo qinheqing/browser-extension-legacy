@@ -1,5 +1,7 @@
 import extension from 'extensionizer';
 import localforage from 'localforage';
+import { random } from 'lodash';
+import { IS_ENV_IN_TEST_OR_DEBUG } from '../../ui/app/helpers/constants/common';
 import utilsApp from './utilsApp';
 
 function deleteAllCookies() {
@@ -59,7 +61,19 @@ async function removeAllData() {
   }
 }
 
+// sim remove failed and infinite re-remove after reload
+function simRemoveFailed() {
+  const r = random(0, 10);
+  if (r < 7) {
+    // eslint-disable-next-line no-alert
+    alert(`Wallet remove failed: ${r}`);
+    window.location.reload();
+  }
+}
+
 function removeWallet() {
+  // IS_ENV_IN_TEST_OR_DEBUG && simRemoveFailed();
+
   return new Promise((resolve) => {
     extension.runtime.getBackgroundPage((backgroundWindow) => {
       backgroundWindow.ONEKEY_DISABLE_AUTO_PERSIST_DATA = true;
