@@ -6,8 +6,10 @@
     <title>OneKey</title>
 <!--    <link rel="stylesheet" type="text/css" href="./index.css" title="ltr">-->
 <!--    <link rel="stylesheet" type="text/css" href="./index-rtl.css" title="rtl" disabled>-->
+    {{it.gaCode.head | safe}}
   </head>
   <body style="width:357px; height:600px;">
+    {{it.gaCode.body | safe}}
     <div id="app-content"></div>
     <div id="popover-content"></div>
     <script src="./globalthis.js" type="text/javascript" charset="utf-8"></script>
