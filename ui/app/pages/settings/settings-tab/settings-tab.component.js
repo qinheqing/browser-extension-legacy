@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
+import logger from 'log/logger';
 import availableCurrencies from '../../../helpers/constants/available-conversions.json';
 import Dropdown from '../../../components/ui/dropdown';
 import ToggleButton from '../../../components/ui/toggle-button';
 import locales from '../../../../../app/_locales/index.json';
 import { RESOLVE_CONFLICT_ONEKEY_NOT_REPLACING } from '../../../../../app/scripts/constants/consts';
+import { IS_ENV_IN_TEST_OR_DEBUG } from '../../../helpers/constants/common';
 import LanguageDropdown from './language-dropdown';
 
 const sortedCurrencies = availableCurrencies.sort((a, b) => {
@@ -243,12 +245,39 @@ export default class SettingsTab extends PureComponent {
     );
   }
 
+  renderDebugSettings() {
+    if (!IS_ENV_IN_TEST_OR_DEBUG) {
+      return null;
+    }
+    return (
+      <div>
+        <button
+          onClick={() => {
+            const levels = ['trace', 'debug', 'info', 'warn', 'error'];
+            const level = logger.getLevel();
+            const newLevel = levels[level + 1] ?? 'trace';
+            logger.setLevel(newLevel);
+            console.log(
+              `logLevel saved in localStorage: loglevel=${localStorage.getItem(
+                'loglevel',
+              )}`,
+              levels,
+            );
+          }}
+        >
+          Change LogLevel &gt;
+        </button>
+      </div>
+    );
+  }
+
   render() {
     const { warning } = this.props;
 
     return (
       <div className="settings-page__body">
         {warning && <div className="settings-tab__error">{warning}</div>}
+        {this.renderDebugSettings()}
         {this.renderCurrentConversion()}
         {this.renderUsePrimaryCurrencyOptions()}
         <LanguageDropdown />
