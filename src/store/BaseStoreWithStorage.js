@@ -65,15 +65,16 @@ class BaseStoreWithStorage extends BaseStore {
 
   // TODO make autosave to decorator
   // TODO data migrate implement
-  async autosave(storeProp, { useLocalStorage } = {}) {
+  async autosave(storeProp, { useLocalStorage, defaultValue } = {}) {
     // eslint-disable-next-line consistent-this
     const store = this;
     const storageKey = utilsStorage.buildAutoSaveStorageKey(storeProp);
 
     // * init from localStorage
-    const value = await this.getStorageItemAsync(storageKey, {
+    let value = await this.getStorageItemAsync(storageKey, {
       useLocalStorage,
     });
+    value = value ?? defaultValue;
 
     // load storage data async delay simulate
     // await utilsApp.delay(5000);

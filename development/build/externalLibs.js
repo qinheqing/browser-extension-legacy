@@ -26,10 +26,11 @@ const ignoreDeps = [
   'eth-json-rpc-infura', // Cannot find module '/eth-json-rpc-infura/src/index.js'
   'eth-json-rpc-filters', // Cannot find module '/eth-json-rpc-filters/index.js'
   'end-of-stream', // Cannot find module 'end-of-stream'
-  'json-rpc-middleware-stream', // nanoid_1.nanoid is not a function
   'json-rpc-engine', // TypeError: JsonRpcEngine is not a constructor
-  '@onekeyhq/json-rpc-engine', //  (0 , _jsonRpcEngine.createAsyncMiddleware) is not a function
+  'json-rpc-middleware-stream', // nanoid_1.nanoid is not a function
+  'nanoid',
   '@onekeyhq/providers', // nanoid_1.nanoid is not a function
+  '@onekeyhq/json-rpc-engine', //  (0 , _jsonRpcEngine.createAsyncMiddleware) is not a function
   '@onekeyhq/post-message-stream',
 ];
 const commonDeps = ['lodash'];

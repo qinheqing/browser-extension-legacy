@@ -8,16 +8,13 @@ import {
   makeObservable,
   toJS,
 } from 'mobx';
-import { isNil } from 'lodash';
 import {
   CONST_ACCOUNTS_GROUP_FILTER_TYPES,
   CONST_CHAIN_KEYS,
   CONSTS_ACCOUNT_TYPES,
 } from '../consts/consts';
-import utilsStorage from '../utils/utilsStorage';
-import ExtensionStore from '../../app/scripts/lib/local-store';
-import BaseStore from './BaseStore';
 import BaseStoreWithStorage from './BaseStoreWithStorage';
+import dataMigration from './dataMigration';
 
 class StoreStorage extends BaseStoreWithStorage {
   constructor(props) {
@@ -29,6 +26,7 @@ class StoreStorage extends BaseStoreWithStorage {
       // homeType should be sync loaded, check utilsApp.isNewHome();
       this.autosave('homeType', { useLocalStorage: true }),
       this.autosave('maskAssetBalance'),
+      this.autosave('dataVersion'),
 
       this.autosave('currentAccountRaw'),
       this.autosave('currentChainKey'),
@@ -44,10 +42,26 @@ class StoreStorage extends BaseStoreWithStorage {
 
       this.autosave('chainsCustomRaw'),
       this.autosave('chainsSortKeys'),
-    ]).then(() => {
+    ]).then(async () => {
+      if (dataMigration.CURRENT_DATA_VERSION > this.dataVersion) {
+        console.log(
+          `need storage data migration: ${this.dataVersion} => ${dataMigration.CURRENT_DATA_VERSION}`,
+        );
+
+        await dataMigration.doMigration({
+          storage: this,
+          from: this.dataVersion,
+          to: dataMigration.CURRENT_DATA_VERSION,
+        });
+      }
       this.storageReady = true;
     });
   }
+
+  @observable
+  dataVersion = dataMigration.isUpdateFromOldVersion
+    ? 0
+    : dataMigration.CURRENT_DATA_VERSION;
 
   @observable
   storageReady = false; // DO NOT autosave this field
