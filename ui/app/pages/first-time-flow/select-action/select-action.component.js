@@ -4,6 +4,7 @@ import Button from '../../../components/ui/button';
 import MetaFoxLogo from '../../../components/ui/metafox-logo';
 import { CONST_FIRST_TIME_FLOW_TYPES } from '../../../helpers/constants/common';
 import { getNextRouteOfFirstTimeFlow } from '../../../selectors';
+import { DEFAULT_ROUTE } from '../../../helpers/constants/routes';
 
 export default class SelectAction extends PureComponent {
   static propTypes = {
@@ -42,7 +43,7 @@ export default class SelectAction extends PureComponent {
 
     return (
       <div className="select-action">
-        <MetaFoxLogo />
+        <MetaFoxLogo onClick={() => this.props.history.push(DEFAULT_ROUTE)} />
 
         <div className="select-action__wrapper">
           <div className="select-action__body">

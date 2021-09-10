@@ -1,4 +1,4 @@
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { compose } from 'redux';
 import { withRouter } from 'react-router-dom';
 import {
@@ -21,7 +21,12 @@ const mapStateToProps = (state, ownProps) => {
   const { id: paramsTransactionId } = params;
   const {
     confirmTransaction,
-    metamask: { currentCurrency, conversionRate, currentNetworkTxList },
+    metamask: {
+      nativeCurrency,
+      currentCurrency,
+      conversionRate,
+      currentNetworkTxList,
+    },
   } = state;
 
   const {
@@ -57,6 +62,7 @@ const mapStateToProps = (state, ownProps) => {
     tokenAmount,
     tokenSymbol,
     currentCurrency,
+    nativeCurrency,
     conversionRate,
     contractExchangeRate,
     fiatTransactionTotal,
