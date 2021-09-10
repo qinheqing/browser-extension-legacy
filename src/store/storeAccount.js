@@ -7,7 +7,7 @@ import {
   action,
   makeObservable,
 } from 'mobx';
-import { uniqBy, findIndex, isNil } from 'lodash';
+import { uniqBy, findIndex, isNil, cloneDeep } from 'lodash';
 import {
   CONSTS_ACCOUNT_TYPES,
   CONST_ACCOUNTS_GROUP_FILTER_TYPES,
@@ -215,7 +215,7 @@ class StoreAccount extends BaseStore {
     }
 
     if (remains.length >= 1) {
-      storeStorage.allAccountsRaw = remains;
+      storeStorage.allAccountsRaw = [...remains];
     }
   }
 
@@ -256,29 +256,42 @@ class StoreAccount extends BaseStore {
 
   // storeAccount.autofixMismatchAddresses();
   @action.bound
+  async _fixAccountAddress(account = {}) {
+    const accountNew = account;
+    if (!accountNew.chainKey) {
+      return null;
+    }
+    const chainInfo = storeChain.getChainInfoByKey(accountNew.chainKey);
+    const wallet = walletFactory.createWallet({
+      chainInfo,
+      accountInfo: new OneAccountInfo(accountNew),
+    });
+    if (accountNew.type === CONSTS_ACCOUNT_TYPES.Wallet) {
+      // TODO use path query addresses, as index is not saved in storage
+      //    wallet.getAccountAddress();  return real address, not storage cache
+      const addresses = await wallet.getAddresses({
+        hdPaths: [accountNew.path],
+      });
+      const addressReal = addresses?.[0]?.address || '';
+      if (addressReal !== accountNew.address) {
+        console.error(
+          `mismatch address: [ ${addressReal} ] | [ ${accountNew.address} ]`,
+        );
+        // rewrite correct address
+        accountNew.address = addressReal || 'ErrorAddress';
+        return accountNew;
+      }
+    }
+    return null;
+  }
+
+  @action.bound
   async autofixMismatchAddresses() {
+    await this._fixAccountAddress(storeStorage.currentAccountRaw);
+
     for (let i = 0; i < storeStorage.allAccountsRaw.length; i++) {
       const account = storeStorage.allAccountsRaw[i];
-      const chainInfo = storeChain.getChainInfoByKey(account.chainKey);
-      const wallet = walletFactory.createWallet({
-        chainInfo,
-        accountInfo: new OneAccountInfo(account),
-      });
-      if (account.type === CONSTS_ACCOUNT_TYPES.Wallet) {
-        // TODO use path query addresses, as index is not saved in storage
-        //    wallet.getAccountAddress();  return real address, not storage cache
-        const addresses = await wallet.getAddresses({
-          hdPaths: [account.path],
-        });
-        const addressReal = addresses?.[0]?.address || '';
-        if (addressReal !== account.address) {
-          console.error(
-            `mismatch address: [ ${addressReal} ] | [ ${account.address} ]`,
-          );
-          // rewrite correct address
-          account.address = addressReal || 'ErrorAddress';
-        }
-      }
+      await this._fixAccountAddress(account);
     }
   }
 }
