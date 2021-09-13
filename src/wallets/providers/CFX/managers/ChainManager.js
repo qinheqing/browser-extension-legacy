@@ -5,8 +5,7 @@ import OneAccountInfo from '../../../../classes/OneAccountInfo';
 import optionsHelper from '../../../optionsHelper';
 import utilsApp from '../../../../utils/utilsApp';
 import utilsNumber from '../../../../utils/utilsNumber';
-
-const EpochTag = format.epochNumber.$or(undefined)('latest_state');
+import { CFX_EPOCH_TAG } from '../consts/consts';
 
 class ChainManager extends ChainManagerBase {
   createApiRpc({ url, chainId }) {
@@ -65,14 +64,14 @@ class ChainManager extends ChainManagerBase {
 
     // https://github.com/Conflux-Chain/js-conflux-sdk/blob/master/src/Conflux.js#L351
 
-    const reqId = `${symbol}_${address}_${this.apiRpc.provider.requestId()}`;
+    const reqId = `getAccountInfo__${symbol}_${address}_${this.apiRpc.provider.requestId()}`;
     let batchCallPayload = [];
     if (isNative) {
       batchCallPayload = [
         {
           id: reqId,
           method: 'cfx_getAccount',
-          params: [address, EpochTag],
+          params: [address, CFX_EPOCH_TAG],
         },
       ];
     } else {
@@ -88,7 +87,7 @@ class ChainManager extends ChainManagerBase {
               // call balanceOf() of contract
               data: `0x70a08231000000000000000000000000${ownerAddressHex}`,
             },
-            EpochTag,
+            CFX_EPOCH_TAG,
           ],
         },
       ];
@@ -100,6 +99,7 @@ class ChainManager extends ChainManagerBase {
       accountInfo = format.account(res[0]);
     } else {
       accountInfo = {
+        ownerAddress,
         balance: utilsNumber.hexToIntString(res),
       };
     }

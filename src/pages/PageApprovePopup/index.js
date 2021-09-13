@@ -7,7 +7,11 @@ import { Message, PublicKey } from '@solana/web3.js';
 import { isString, isNumber, isDate } from 'lodash';
 import BN from 'bn.js';
 import AppPageLayout from '../../components/AppPageLayout';
-import { CONST_DAPP_MESSAGE_TYPES } from '../../consts/consts';
+import {
+  CONST_CHAIN_KEYS,
+  CONST_DAPP_MESSAGE_TYPES,
+  CONST_SOL,
+} from '../../consts/consts';
 import storeAccount from '../../store/storeAccount';
 import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
 import ReactJsonView from '../../components/ReactJsonView';
@@ -332,6 +336,7 @@ const ApproveTransaction = observer(function ({
     // DO NOT use txStrList, cause infinite render
     messageToSign,
   ]);
+
   useEffect(() => {
     storeTransfer.fetchTransactionFee();
   }, []);
@@ -491,6 +496,7 @@ function PageApprovePopup() {
     if (!request || request.method === APPROVE_METHODS.connect) {
       return { messages: [], messageDisplay: 'tx' };
     }
+
     switch (request.method) {
       case APPROVE_METHODS.signTransaction:
         return {
@@ -648,4 +654,11 @@ PageApprovePopup.propTypes = {
   // children: PropTypes.any,
 };
 
-export default observer(PageApprovePopup);
+function PageApprovePopupEnsureChain() {
+  if (storeAccount?.currentAccount?.baseChain !== CONST_CHAIN_KEYS.SOL) {
+    return <div className="text-center py-16">请先切换到 Solana 网络</div>;
+  }
+  return <PageApprovePopup />;
+}
+
+export default observer(PageApprovePopupEnsureChain);

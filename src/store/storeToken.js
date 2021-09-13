@@ -106,13 +106,14 @@ class StoreToken extends BaseStore {
 
   buildNativeToken({ account, chainInfo }) {
     const { address } = account;
-    const { tokenId, name, symbol } = chainInfo?.nativeToken || {};
+    const { tokenId, name, symbol, logoURI, decimals, precision } =
+      chainInfo?.nativeToken || {};
     return new OneTokenInfo({
       chainKey: chainInfo.key,
       name,
-      symbol: chainInfo.currency || symbol,
-      decimals: storeWallet.currentWallet.options.balanceDecimals,
-      logoURI: chainInfo?.currencyLogo,
+      symbol: symbol || chainInfo.currency,
+      decimals,
+      logoURI: logoURI || chainInfo?.currencyLogo,
       address,
       isNative: true,
       tokenId,
@@ -198,6 +199,11 @@ class StoreToken extends BaseStore {
       chainKey,
       address: token.address,
       contractAddress: token.address,
+      _memo: {
+        symbol: token.symbol,
+        name: token.name,
+        decimals: token.decimals,
+      },
     };
 
     storeStorage.accountLocalTokensRaw[accountKey] = data;

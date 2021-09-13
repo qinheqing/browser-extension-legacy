@@ -36,7 +36,7 @@ export default function createPermissionsMethodMiddleware({
       if (req.method === 'eth_chainId') {
         res.result = MOCK_CHAIN_ID_WHEN_NEW_APP.chainId;
         showBrowserNotification({
-          title: 'Chain network not matched',
+          title: `Chain network not matched: ${req.method}`,
           message: '',
         });
         return;
@@ -49,6 +49,10 @@ export default function createPermissionsMethodMiddleware({
         // pass getAccounts() to permissionsMethodMiddleware, can not be [], will cause UI ask to approve many times
         // res.result = [MOCK_ZERO_ADDRESS];
         res.result = [];
+        showBrowserNotification({
+          title: `Chain network not matched: ${req.method}`,
+          message: '',
+        });
         return;
       }
     }

@@ -12,6 +12,7 @@ function TokenInfoCard({ token, onClick, maskAssetBalance = false }) {
 
   return (
     <OneCellItem
+      data-contract-address={token.contractAddress || ''}
       className="px-4"
       onClick={onClick}
       start={<TokenLogoIcon tokenInfo={token} className="" />}
@@ -30,10 +31,7 @@ function TokenInfoCard({ token, onClick, maskAssetBalance = false }) {
       title={
         <div className="text-lg relative" onClick={() => console.log(token)}>
           {tokenName}
-          <small
-            data-contract-address={token.contractAddress}
-            className="absolute text-xs text-gray-300 left-0 top-full -mt-1 "
-          >
+          <small className="absolute text-xs text-gray-300 left-0 top-full -mt-1 ">
             {symbol ? name : token.contractAddressShort}
           </small>
         </div>

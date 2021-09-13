@@ -38,6 +38,7 @@ http://developer.confluxnetwork.org/introduction/en/conflux_refs
 
 ## testnet faucet airdrop
 http://developer.confluxnetwork.org/guides/en/how_to_use_cfx_faucet/#apply-for-testnet-cfx
+http://test-faucet.confluxnetwork.org:18088/dev/ask?address=0x14dfe62e73e6ed6fad59e64ffe419ca975e02c81
 
 ## token list
 https://moonswap.fi/api/route/opt/swap/dashboard/swap-token-list
