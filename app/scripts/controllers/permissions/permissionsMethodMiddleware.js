@@ -12,6 +12,10 @@ export const MOCK_CHAIN_ID_WHEN_NEW_APP = {
   networkVersion: '4008636142',
 };
 
+function showBrowserNotification({ title, message, url }) {
+  global.$$extensionPlatform?._showNotification(title, message, url);
+}
+
 /**
  * Create middleware for handling certain methods and preprocessing permissions requests.
  */
@@ -31,6 +35,10 @@ export default function createPermissionsMethodMiddleware({
     if (utilsApp.isNewHome()) {
       if (req.method === 'eth_chainId') {
         res.result = MOCK_CHAIN_ID_WHEN_NEW_APP.chainId;
+        showBrowserNotification({
+          title: 'Chain network not matched',
+          message: '',
+        });
         return;
       }
 

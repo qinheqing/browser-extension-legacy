@@ -60,6 +60,7 @@ const firstTimeState = { ...rawFirstTimeState };
 
 const platform = new ExtensionPlatform();
 platform.clearCurrentTabsList();
+// duplicate with [ global.METAMASK_NOTIFIER.platform ]
 global.$$extensionPlatform = platform;
 global.$$testThrowError = () => {
   setTimeout(() => {

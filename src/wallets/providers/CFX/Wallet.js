@@ -69,6 +69,7 @@ class Wallet extends WalletBase {
     // const transferIx = utilsApp.throwToBeImplemented(this);
     const rpc = this.chainManager.apiRpc;
 
+    // TODO batch rpc call
     const estimate = await rpc.estimateGasAndCollateral({
       to,
       value: amount,
