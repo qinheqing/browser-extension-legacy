@@ -5,8 +5,9 @@
 //    mobx @observable.deep conflict
 //      Content Security Policy: The page’s settings blocked the loading of a resource at eval (“script-src”).
 //
-try {
-  // https://github.com/endojs/endo/blob/master/packages/ses/lockdown-options.md
+
+// https://github.com/endojs/endo/blob/master/packages/ses/lockdown-options.md
+function runLockDown() {
   // eslint-disable-next-line no-undef,import/unambiguous
   lockdown({
     consoleTaming: 'unsafe',
@@ -15,6 +16,11 @@ try {
     dateTaming: 'unsafe',
     overrideTaming: 'severe',
   });
+}
+
+try {
+  // conflict with [js-conflux-sdk] Uncaught TypeError: Cannot add property BigInt, object is not extensible
+  runLockDown();
 } catch (error) {
   // If the `lockdown` call throws an exception, it interferes with the
   // contentscript injection on some versions of Firefox. The error is

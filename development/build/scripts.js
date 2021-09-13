@@ -889,11 +889,12 @@ function renderHtmlFile(htmlName, groupSet, commonSet, browserPlatforms) {
   const jsBundles = [
     // fixed modules ahead ----------------------------------------------
     ...configs.externalModulesHtmlInjectJs,
-    'lockdown-run', // secure ES module, which cause mobx, solanaWeb3 init fail.
     !IS_LEGACY_BUILD && 'runtime-cjs',
     // ----------------------------------------------
     ...commonSet.values(),
     ...groupSet.values(),
+    // ----------------------------------------------
+    'lockdown-run', // secure ES module, which cause mobx, solanaWeb3 confluxSdk init fail.
   ]
     .filter(Boolean)
     .map((label) => `./${label}.js?_t=${new Date().getTime()}.00000`);
