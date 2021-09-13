@@ -151,8 +151,9 @@ class StoreTransfer extends BaseStore {
       });
 
       if (token.isNative) {
+        const fee = utilsNumber.isValidNumber(this.fee) ? this.fee : '0';
         // TODO minus chain fee + createTokenFee
-        amount = utilsNumber.bigNum(amount).minus(this.fee).toFixed();
+        amount = utilsNumber.bigNum(amount).minus(fee).toFixed();
       }
 
       if (utilsNumber.bigNum(amount).lt(0)) {

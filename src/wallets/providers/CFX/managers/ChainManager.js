@@ -25,7 +25,8 @@ class ChainManager extends ChainManagerBase {
   }
 
   async sendTransaction({ rawTransaction }) {
-    return await this.apiRpc.sendTransaction(rawTransaction);
+    // https://confluxnetwork.gitbook.io/js-conflux-sdk/docs/how_to_send_tx#sendrawtransaction
+    return await this.apiRpc.sendRawTransaction(rawTransaction);
   }
 
   addAccountChangeListener(address, handler) {
@@ -75,17 +76,17 @@ class ChainManager extends ChainManagerBase {
         },
       ];
     } else {
-      const ownerAddressHex = format.hexAddress(ownerAddress);
+      let ownerAddressHex = format.hexAddress(ownerAddress);
+      ownerAddressHex = ownerAddressHex.substr(2);
       batchCallPayload = [
         {
           id: reqId,
           method: 'cfx_call',
           params: [
             {
-              to: address, // token address
-              data: `0x70a08231000000000000000000000000${ownerAddressHex.substr(
-                2,
-              )}`,
+              to: address, // token contract address
+              // call balanceOf() of contract
+              data: `0x70a08231000000000000000000000000${ownerAddressHex}`,
             },
             EpochTag,
           ],
@@ -149,9 +150,10 @@ class ChainManager extends ChainManagerBase {
     return '0';
   }
 
+  // TODO pass txObject, userInputs( gasPrice,gasLimit ) to estimate fee
   async getTransactionFee() {
-    const res = await this.apiRpc.getTransactionFee();
-    return res?.fee;
+    // const res = await this.apiRpc.getTransactionFee();
+    return NaN;
   }
 
   async getTxHistory({ address, limit = 15 }) {

@@ -73,6 +73,7 @@ class ChainManagerBase {
     return utilsApp.throwToBeImplemented(this);
   }
 
+  // return txid
   async sendTransaction() {
     return utilsApp.throwToBeImplemented(this);
   }

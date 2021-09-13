@@ -16,8 +16,10 @@ class Wallet extends WalletBase {
 
   tokenManager = new TokenManager(this.options);
 
+  // create tx from ix array
   async _createTxObject({ accountInfo, instructions = [] }) {
-    const tx = null;
+    // const tx = utilsApp.throwToBeImplemented(this);
+    const tx = instructions[0];
     return tx;
   }
 
@@ -64,7 +66,33 @@ class Wallet extends WalletBase {
   }
 
   async createTransferTxObject({ accountInfo, to, amount }) {
-    const transferIx = null;
+    // const transferIx = utilsApp.throwToBeImplemented(this);
+    const rpc = this.chainManager.apiRpc;
+
+    const estimate = await rpc.estimateGasAndCollateral({
+      to,
+      value: amount,
+    });
+    const { gasLimit, gasUsed, storageCollateralized } = estimate;
+    const status = await rpc.getStatus();
+    const nonce = await rpc.getNextNonce(accountInfo.address);
+    const gasPrice = await rpc.getGasPrice();
+    const epochHeight = await rpc.getEpochNumber();
+
+    const transferIx = {
+      from: accountInfo.address,
+      to, // receiver address
+      value: amount, // Drip.fromCFX(0.1), // 0.1 CFX = 100000000000000000 Drip
+      data: '0x', // or null
+
+      nonce, // sender next nonce
+      chainId: status.chainId, // endpoint status.chainId
+      epochHeight,
+
+      gas: gasUsed,
+      gasPrice,
+      storageLimit: storageCollateralized,
+    };
 
     return this._createTxObject({
       accountInfo,
@@ -72,11 +100,20 @@ class Wallet extends WalletBase {
     });
   }
 
+  // txObject -> txStr -> txStrSigned -> signedTx -> signedTxRaw -> send(raw)
   async signAndSendTxObject({ accountInfo, tx }) {
-    const txStr = '';
-    const signStr = await this.signTx(txStr);
-    const rawTxSigned = await this.serializeTxObject(tx);
-    const txid = await this.sendTx(rawTxSigned);
+    // const txStr = utilsApp.throwToBeImplemented(this);
+    const txStr = JSON.stringify(tx);
+
+    // https://github.com/Conflux-Chain/js-conflux-sdk/blob/master/src/Transaction.js#L111
+    // const txStr = tx.serialize(buffer); // serialize call signTx
+    const txStrSigned = await this.signTx(txStr);
+
+    // txStrSigned -> signedTx
+    // const rawTxSigned = await this.serializeTxObject(tx); // signedTx -> signedTxRaw
+
+    const signedTxRaw = txStrSigned;
+    const txid = await this.sendTx(signedTxRaw);
     return txid;
   }
 
