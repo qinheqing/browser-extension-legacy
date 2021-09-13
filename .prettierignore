@@ -5,6 +5,7 @@ test-*/**
 coverage/
 app/vendor/**
 app/vendor-js/**
+src/vendors/**
 .nyc_output/**
 .vscode/**
 test/e2e/send-eth-with-private-key-test/**

@@ -37,6 +37,7 @@ module.exports = {
     'development/chromereload.js',
     'app/vendor/**',
     'app/vendor-js/**',
+    'src/vendors/**',
     'test/e2e/send-eth-with-private-key-test/**',
     'nyc_output/**',
     '.vscode/**',
