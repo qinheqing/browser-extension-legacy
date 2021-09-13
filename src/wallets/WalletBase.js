@@ -140,6 +140,7 @@ class WalletBase {
     return utilsApp.throwToBeImplemented(this);
   }
 
+  // TODO pass txObject to estimate fee
   getTransactionFee() {
     return this.chainManager.getTransactionFee();
   }

@@ -1,4 +1,4 @@
-import { PrivateKeyAccount } from 'js-conflux-sdk';
+import { PrivateKeyAccount, Transaction } from 'js-conflux-sdk';
 import {
   KeyringHdBase,
   KeyringPickerBase,
@@ -15,6 +15,13 @@ class KeyringTools extends KeyringToolsBase {
     const privateKeyHex = utilsApp.bufferToHex(privateKey);
     const account = new PrivateKeyAccount(privateKeyHex, networkId);
     return account.address;
+  }
+
+  privateKeySign({ privateKey, tx }) {
+    const networkId = optionsHelper.getChainId(this.options);
+    const transaction = new Transaction(JSON.parse(tx));
+    transaction.sign(privateKey, networkId); // sender privateKey
+    return transaction.serialize();
   }
 }
 
