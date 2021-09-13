@@ -34,7 +34,7 @@ class StoreBalance extends BaseStore {
         decimals,
         ...others,
         lastUpdate: new Date().getTime(),
-        tokenInfo: {
+        _memo: {
           symbol,
           name,
         },

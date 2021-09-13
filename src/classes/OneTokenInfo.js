@@ -53,7 +53,7 @@ class OneTokenInfo {
     // TODO use tokenManager.newTokenInfo() .generateTokenKey()
     //    or pass wallet instance to constructor()
     //    because the key schema should be different in different chains
-    return `${this.chainKey} => ${this.address}`;
+    return `${this.chainKey} => ${this.ownerAddress} => ${this.address}`;
   }
 }
 

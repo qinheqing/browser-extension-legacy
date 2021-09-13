@@ -1,9 +1,11 @@
 import assert from 'assert';
+import { Conflux, Contract, format } from 'js-conflux-sdk';
 import WalletBase from '../../WalletBase';
 import utilsApp from '../../../utils/utilsApp';
 import ChainManager from './managers/ChainManager';
 import HdKeyManager from './managers/HdKeyManager';
 import TokenManager from './managers/TokenManager';
+import { CFX_EPOCH_TAG } from './consts/consts';
 
 class Wallet extends WalletBase {
   get optionsDefault() {
@@ -18,9 +20,31 @@ class Wallet extends WalletBase {
 
   // create tx from ix array
   async _createTxObject({ accountInfo, instructions = [] }) {
+    const rpc = this.chainManager.apiRpc;
     // const tx = utilsApp.throwToBeImplemented(this);
     const tx = instructions[0];
-    return tx;
+
+    // TODO batch rpc call
+    const status = await rpc.getStatus(CFX_EPOCH_TAG);
+    const nonce = await rpc.getNextNonce(accountInfo.address, CFX_EPOCH_TAG);
+    const epochHeight = await rpc.getEpochNumber(CFX_EPOCH_TAG);
+    const gasPrice = await rpc.getGasPrice(CFX_EPOCH_TAG);
+    const estimate = await rpc.estimateGasAndCollateral(tx, CFX_EPOCH_TAG);
+    const { gasLimit, gasUsed, storageCollateralized } = estimate;
+
+    // always create new Object, as tx may be a Contract Class Instance, NOT plain object
+    const txNew = {
+      ...tx,
+
+      nonce, // sender next nonce
+      chainId: status.chainId, // endpoint status.chainId
+      epochHeight,
+
+      gas: gasUsed,
+      gasPrice,
+      storageLimit: storageCollateralized,
+    };
+    return txNew;
   }
 
   async createAddTokenTxObject({ accountInfo, contract }) {
@@ -39,60 +63,36 @@ class Wallet extends WalletBase {
     decimals,
     contract,
   }) {
-    let createTokenIx = null;
-    const toAccountInfo = await this.chainManager.getAccountInfo({
-      address: to,
-    });
+    const fromAddress = accountInfo.address;
+    const fromAddressHex = format.hexAddress(fromAddress);
+    const toAddressHex = format.hexAddress(to);
+    const contractApi = this.chainManager.apiRpc.CRC20(contract);
 
-    if (!toAccountInfo.isToken) {
-      const { tokens } = await this.chainManager.getAccountTokens({
-        address: to,
-      });
-      const matchToken = tokens.find((t) => t.contractAddress === contract);
-      if (matchToken) {
-        // eslint-disable-next-line no-param-reassign
-        to = matchToken.address;
-      } else {
-        createTokenIx = 'ix';
-        // eslint-disable-next-line no-param-reassign
-        to = 'address';
-      }
-    }
-    const transferIx = 'ix';
-    return this._createTxObject({
+    const balance = await contractApi.balanceOf(fromAddressHex);
+    const name = await contractApi.name();
+    const symbol = await contractApi.symbol();
+    const decimals0 = await contractApi.decimals();
+    console.log(contractApi, { balance, name, symbol, decimals0 });
+
+    const transferIx = contractApi.transfer(to, amount);
+    transferIx.from = fromAddress;
+
+    const txObj = await this._createTxObject({
       accountInfo,
-      instructions: [createTokenIx, transferIx].filter(Boolean),
+      instructions: [transferIx],
     });
+    return txObj;
   }
 
   async createTransferTxObject({ accountInfo, to, amount }) {
     // const transferIx = utilsApp.throwToBeImplemented(this);
     const rpc = this.chainManager.apiRpc;
 
-    // TODO batch rpc call
-    const estimate = await rpc.estimateGasAndCollateral({
-      to,
-      value: amount,
-    });
-    const { gasLimit, gasUsed, storageCollateralized } = estimate;
-    const status = await rpc.getStatus();
-    const nonce = await rpc.getNextNonce(accountInfo.address);
-    const gasPrice = await rpc.getGasPrice();
-    const epochHeight = await rpc.getEpochNumber();
-
     const transferIx = {
       from: accountInfo.address,
       to, // receiver address
       value: amount, // Drip.fromCFX(0.1), // 0.1 CFX = 100000000000000000 Drip
-      data: '0x', // or null
-
-      nonce, // sender next nonce
-      chainId: status.chainId, // endpoint status.chainId
-      epochHeight,
-
-      gas: gasUsed,
-      gasPrice,
-      storageLimit: storageCollateralized,
+      data: undefined, // 0x or null
     };
 
     return this._createTxObject({

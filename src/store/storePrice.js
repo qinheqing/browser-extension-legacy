@@ -151,7 +151,7 @@ class StorePrice extends BaseStore {
           pricesMapNew[priceKey] = {
             ...priceInfo,
             lastUpdate: new Date().getTime(),
-            tokenInfo: {
+            _memo: {
               // name: tokenInfo?.name, // name is meaningful, as different platform has different name
               symbol: tokenInfo?.symbol,
             },

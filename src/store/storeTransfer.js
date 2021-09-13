@@ -54,7 +54,7 @@ class StoreTransfer extends BaseStore {
 
   @computed
   get fromDepositAddress() {
-    return this.fromToken?.depositAddress;
+    return this.fromToken?.depositAddress || this.fromToken?.ownerAddress;
   }
 
   previewPayload = {};
