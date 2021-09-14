@@ -10,7 +10,7 @@ function bgConnectionCheck(bg) {
       // sometimes when you refresh background.html page
       'Extension background connection lost, please restart your extension or browser.',
     );
-  }, 1000);
+  }, 5000);
   bg.pingPong().then((res) => {
     if (res === 'pong') {
       isConnected = true;

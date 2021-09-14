@@ -8,17 +8,15 @@ import {
   makeObservable,
   toJS,
 } from 'mobx';
-import { isNil } from 'lodash';
 import {
   CONST_ACCOUNTS_GROUP_FILTER_TYPES,
   CONST_CHAIN_KEYS,
   CONSTS_ACCOUNT_TYPES,
 } from '../consts/consts';
-import utilsStorage from '../utils/utilsStorage';
-import ExtensionStore from '../../app/scripts/lib/local-store';
-import BaseStore from './BaseStore';
+import BaseStoreWithStorage from './BaseStoreWithStorage';
+import dataMigration from './dataMigration';
 
-class StoreStorage extends BaseStore {
+class StoreStorage extends BaseStoreWithStorage {
   constructor(props) {
     super(props);
     // auto detect fields decorators, and make them reactive
@@ -28,6 +26,7 @@ class StoreStorage extends BaseStore {
       // homeType should be sync loaded, check utilsApp.isNewHome();
       this.autosave('homeType', { useLocalStorage: true }),
       this.autosave('maskAssetBalance'),
+      this.autosave('dataVersion'),
 
       this.autosave('currentAccountRaw'),
       this.autosave('currentChainKey'),
@@ -43,83 +42,26 @@ class StoreStorage extends BaseStore {
 
       this.autosave('chainsCustomRaw'),
       this.autosave('chainsSortKeys'),
-    ]).then(() => {
+    ]).then(async () => {
+      if (dataMigration.CURRENT_DATA_VERSION > this.dataVersion) {
+        console.log(
+          `need storage data migration: ${this.dataVersion} => ${dataMigration.CURRENT_DATA_VERSION}`,
+        );
+
+        await dataMigration.doMigration({
+          storage: this,
+          from: this.dataVersion,
+          to: dataMigration.CURRENT_DATA_VERSION,
+        });
+      }
       this.storageReady = true;
     });
   }
 
-  // true: localStorage
-  // false: extensionStorage
-  useLocalStorage = false;
-
-  extStorage = new ExtensionStore();
-
-  async getStorageItemAsync(
-    key,
-    { useLocalStorage = this.useLocalStorage } = {},
-  ) {
-    if (useLocalStorage) {
-      return utilsStorage.getItem(key);
-    }
-    return (await this.extStorage.get([key]))?.[key];
-  }
-
-  async setStorageItemAsync(
-    key,
-    value,
-    { useLocalStorage = this.useLocalStorage } = {},
-  ) {
-    // TODO move save storage to background, so that we can disable auto save globally
-    if (useLocalStorage) {
-      utilsStorage.setItem(key, value);
-    }
-    return this.extStorage.set({
-      [key]: value,
-    });
-  }
-
-  createAutoRunHook({ store, storeProp, storageKey, useLocalStorage }) {
-    autorun(() => {
-      const watchValue = store[storeProp];
-      // keep this outside untracked(), otherwise deep object will not trigger autorun
-      const plainValue = toJS(watchValue);
-
-      untracked(() => {
-        if (storeProp === 'allAccountsRaw') {
-          // debugger;
-        }
-        // TODO requestAnimationFrame + throttle optimize
-        this.setStorageItemAsync(storageKey, plainValue, { useLocalStorage });
-      });
-    });
-  }
-
-  // TODO make autosave to decorator
-  // TODO data migrate implement
-  async autosave(storeProp, { useLocalStorage } = {}) {
-    // eslint-disable-next-line consistent-this
-    const store = this;
-    const storageKey = utilsStorage.buildAutoSaveStorageKey(storeProp);
-
-    // * init from localStorage
-    const value = await this.getStorageItemAsync(storageKey, {
-      useLocalStorage,
-    });
-
-    // load storage data async delay simulate
-    // await utilsApp.delay(5000);
-
-    if (storeProp === 'allAccountsRaw') {
-      // debugger;
-    }
-
-    if (!isNil(value)) {
-      store[storeProp] = value;
-    }
-
-    // * watch value change, auto save to localStorage
-    this.createAutoRunHook({ store, storeProp, storageKey, useLocalStorage });
-  }
+  @observable
+  dataVersion = dataMigration.isUpdateFromOldVersion
+    ? 0
+    : dataMigration.CURRENT_DATA_VERSION;
 
   @observable
   storageReady = false; // DO NOT autosave this field
@@ -133,10 +75,10 @@ class StoreStorage extends BaseStore {
     // { chainKey, id, type, name, address, path }
   ];
 
-  @observable.ref
+  @observable
   currentAccountRaw = {
     chainKey: '',
-    id: '',
+    id: '', // id missing
     type: CONSTS_ACCOUNT_TYPES.Hardware,
     name: '',
     address: '',
