@@ -1,29 +1,25 @@
 import { shimWeb3, setGlobalProvider } from '@onekeyhq/providers';
 import logger from 'src/log/logger';
 import {
-  METHOD_PROVIDER_OVERWRITE_ENABLED,
-  METHOD_OTHER_PROVIDER_STATUS,
+  METHOD_GET_PROVIDER_OVERWRITE_ENABLED,
+  METHOD_SET_OTHER_PROVIDER_STATUS,
 } from './constants/consts';
 
 let switchProviderName = '';
 function switchProvider(name) {
   switchProviderName = name;
 }
+let otherProvider = null;
 
-function setGlobalsVars({ provider, overwrite = true }) {
-  const onekeyProvider = new Proxy(provider, {
-    deleteProperty: () => true,
-  });
-  let otherProvider = null;
+function hasOtherProviderInjected() {
+  return window.ethereum && !window.ethereum.isOneKey;
+}
 
-  window.onekey = onekeyProvider;
-  window.onekey.__mockOtherProviderInject = () => {
-    otherProvider && (window.ethereum = otherProvider);
-  };
-
-  if (window.ethereum) {
+function setGlobalsVars({ provider, overwrite = true, triggerEvent = true }) {
+  if (hasOtherProviderInjected()) {
+    otherProvider = window.ethereum;
     provider.request({
-      method: METHOD_OTHER_PROVIDER_STATUS,
+      method: METHOD_SET_OTHER_PROVIDER_STATUS,
       params: [
         {
           message: 'MetaMask provider inject first',
@@ -33,7 +29,6 @@ function setGlobalsVars({ provider, overwrite = true }) {
         },
       ],
     });
-    otherProvider = window.ethereum;
   }
 
   /*
@@ -47,11 +42,12 @@ function setGlobalsVars({ provider, overwrite = true }) {
   try {
     Object.defineProperty(window, 'ethereum', {
       get() {
-        let _provider = onekeyProvider;
+        let _provider = window.onekey;
+        // DAPP controlled provider > switchProviderName
         if (switchProviderName) {
           const name = (switchProviderName || '').toLowerCase();
           if (name === 'onekey') {
-            _provider = onekeyProvider;
+            _provider = window.onekey;
             _provider.isOneKey = true;
             _provider.isMetaMask = false;
           }
@@ -59,10 +55,13 @@ function setGlobalsVars({ provider, overwrite = true }) {
           if (name === 'metamask' && otherProvider) {
             _provider = otherProvider;
           }
-        } else if (otherProvider && !overwrite) {
+        }
+        // USER controlled provider > overwrite
+        else if (otherProvider && !overwrite) {
           _provider = otherProvider;
         }
 
+        _provider = _provider || otherProvider || window.onekey;
         if (!_provider.switchProvider) {
           _provider.switchProvider = switchProvider;
         }
@@ -71,7 +70,7 @@ function setGlobalsVars({ provider, overwrite = true }) {
       set(val) {
         otherProvider = val;
         provider.request({
-          method: METHOD_OTHER_PROVIDER_STATUS,
+          method: METHOD_SET_OTHER_PROVIDER_STATUS,
           params: [
             {
               message: 'MetaMask provider inject last',
@@ -84,6 +83,7 @@ function setGlobalsVars({ provider, overwrite = true }) {
       },
     });
   } catch (ex) {
+    console.error(ex);
     // setGlobalProvider(provider);
     window.ethereum = provider;
   }
@@ -91,7 +91,7 @@ function setGlobalsVars({ provider, overwrite = true }) {
   setTimeout(() => {
     if (!otherProvider) {
       provider.request({
-        method: METHOD_OTHER_PROVIDER_STATUS,
+        method: METHOD_SET_OTHER_PROVIDER_STATUS,
         params: [
           {
             message: 'MetaMask provider NOT inject',
@@ -106,13 +106,47 @@ function setGlobalsVars({ provider, overwrite = true }) {
 
   shimWeb3(window.ethereum, logger);
 
-  window.dispatchEvent(new Event('ethereum#initialized'));
-  window.dispatchEvent(new Event('onekey#initialized'));
+  if (triggerEvent) {
+    window.dispatchEvent(new Event('ethereum#initialized'));
+    window.dispatchEvent(new Event('onekey#initialized'));
+  }
+}
+
+function createProviderProxy({ provider }) {
+  return new Proxy(provider, {
+    deleteProperty: () => true,
+  });
+}
+
+function initOneKeyVariable({ provider }) {
+  window.onekey = createProviderProxy({ provider });
+  window.onekey.__mockOtherProviderInject = () => {
+    if (otherProvider) {
+      window.ethereum = otherProvider;
+      console.log('otherProvider set ', otherProvider);
+    } else {
+      console.log('no otherProvider found');
+    }
+  };
+}
+
+function initEthereumVariable({ provider }) {
+  window.ethereum = createProviderProxy({ provider });
+  shimWeb3(window.ethereum, logger);
 }
 
 function resolveConflict({ provider }) {
+  if (hasOtherProviderInjected()) {
+    otherProvider = window.ethereum;
+  }
+
+  // set window.ethereum always first
+  initEthereumVariable({ provider });
+
+  initOneKeyVariable({ provider });
+
   provider
-    .request({ method: METHOD_PROVIDER_OVERWRITE_ENABLED, params: [] })
+    .request({ method: METHOD_GET_PROVIDER_OVERWRITE_ENABLED, params: [] })
     .then((overwrite) => {
       setGlobalsVars({ provider, overwrite });
     });
