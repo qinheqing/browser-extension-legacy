@@ -21,6 +21,9 @@ const AccountsList = observer(function () {
   const history = useHistory();
   const accounts = storeAccount.accountsListOfAccountsGroup;
   const chainInfo = storeAccount.chainInfoOfAccountsGroup;
+  if (!chainInfo) {
+    return null;
+  }
   const wallet = chainInfo
     ? walletFactory.createWallet({
         chainInfo,

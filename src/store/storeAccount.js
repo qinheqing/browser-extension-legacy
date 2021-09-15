@@ -71,6 +71,9 @@ class StoreAccount extends BaseStore {
       return null;
     }
     const chainInfo = storeChain.getChainInfoByKey(chainKey);
+    if (!chainInfo) {
+      return null;
+    }
     return new OneAccountInfo({
       ...storeStorage.currentAccountRaw,
       currency: chainInfo.currency,
@@ -262,6 +265,9 @@ class StoreAccount extends BaseStore {
       return null;
     }
     const chainInfo = storeChain.getChainInfoByKey(accountNew.chainKey);
+    if (!chainInfo) {
+      return null;
+    }
     const wallet = walletFactory.createWallet({
       chainInfo,
       accountInfo: new OneAccountInfo(accountNew),
