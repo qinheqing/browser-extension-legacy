@@ -45,7 +45,8 @@
       "matches": [
         "*://connect.trezor.io/*/popup.html",
         "*://connect.onekey.so/*/popup.html",
-        "*://connect.onekey.so/popup.html"
+        "*://connect.onekey.so/popup.html",
+        "*://connect.test.onekey.so/popup.html"
       ],
       "js": ["vendor/trezor/content-script.js"]
     }
