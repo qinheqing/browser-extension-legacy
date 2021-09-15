@@ -10,21 +10,33 @@ function switchProvider(name) {
   switchProviderName = name;
 }
 let otherProvider = null;
+let otherProviderInjectStep = ''; // first, last
 
 function hasOtherProviderInjected() {
   return window.ethereum && !window.ethereum.isOneKey;
 }
 
-function setGlobalsVars({ provider, overwrite = true, triggerEvent = true }) {
+function saveOtherProvider() {
   if (hasOtherProviderInjected()) {
     otherProvider = window.ethereum;
+    return true;
+  }
+  return false;
+}
+
+function setGlobalsVars({ provider, overwrite = true, triggerEvent = true }) {
+  if (saveOtherProvider()) {
+    otherProviderInjectStep = 'last';
+  }
+
+  if (otherProvider) {
     provider.request({
       method: METHOD_SET_OTHER_PROVIDER_STATUS,
       params: [
         {
           message: 'MetaMask provider inject first',
           inject: true,
-          step: 'first',
+          step: otherProviderInjectStep,
           overwrite,
         },
       ],
@@ -57,11 +69,13 @@ function setGlobalsVars({ provider, overwrite = true, triggerEvent = true }) {
           }
         }
         // USER controlled provider > overwrite
-        else if (otherProvider && !overwrite) {
+        else if (!overwrite && otherProvider) {
           _provider = otherProvider;
         }
 
-        _provider = _provider || otherProvider || window.onekey;
+        _provider =
+          _provider || otherProvider || window.onekey || window.ethereum;
+
         if (!_provider.switchProvider) {
           _provider.switchProvider = switchProvider;
         }
@@ -136,8 +150,8 @@ function initEthereumVariable({ provider }) {
 }
 
 function resolveConflict({ provider }) {
-  if (hasOtherProviderInjected()) {
-    otherProvider = window.ethereum;
+  if (saveOtherProvider()) {
+    otherProviderInjectStep = 'first';
   }
 
   // set window.ethereum always first
