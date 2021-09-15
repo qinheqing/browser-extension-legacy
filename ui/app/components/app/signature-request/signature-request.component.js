@@ -27,22 +27,40 @@ export default class SignatureRequest extends PureComponent {
   };
 
   componentDidMount() {
+    this._addBeforeUnload();
+  }
+
+  componentWillUnmount = () => {
+    this._removeBeforeUnload();
+  };
+
+  _beforeUnload = (event) => {
     const { clearConfirmTransaction, cancel } = this.props;
     const { trackEvent } = this.context;
+
+    trackEvent({
+      eventOpts: {
+        category: 'Transactions',
+        action: 'Sign Request',
+        name: 'Cancel Sig Request Via Notification Close',
+      },
+    });
+    clearConfirmTransaction();
+    cancel(event);
+  };
+
+  _addBeforeUnload = () => {
+    this._removeBeforeUnload();
     if (getEnvironmentType() === ENVIRONMENT_TYPE_NOTIFICATION) {
-      window.addEventListener('beforeunload', (event) => {
-        trackEvent({
-          eventOpts: {
-            category: 'Transactions',
-            action: 'Sign Request',
-            name: 'Cancel Sig Request Via Notification Close',
-          },
-        });
-        clearConfirmTransaction();
-        cancel(event);
-      });
+      window.addEventListener('beforeunload', this._beforeUnload);
     }
-  }
+  };
+
+  _removeBeforeUnload = () => {
+    if (getEnvironmentType() === ENVIRONMENT_TYPE_NOTIFICATION) {
+      window.removeEventListener('beforeunload', this._beforeUnload);
+    }
+  };
 
   formatWallet(wallet) {
     return `${wallet.slice(0, 8)}...${wallet.slice(
@@ -67,7 +85,7 @@ export default class SignatureRequest extends PureComponent {
       <div className="signature-request page-container">
         <Header fromAccount={fromAccount} />
         <div className="signature-request-content">
-          <div className="signature-request-content__title">
+          <div className="signature-request-content__title SignatureRequest__eth_signTypedData_v4">
             {this.context.t('sigRequest')}
           </div>
           <div className="signature-request-content__identicon-container">

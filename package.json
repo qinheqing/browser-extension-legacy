@@ -110,7 +110,7 @@
     "@metamask/eth-ledger-bridge-keyring": "0.3.0",
     "@onekeyhq/contract-metadata": "^1.28.1",
     "@onekeyhq/eth-keyring-controller": "^6.1.1",
-    "@onekeyhq/eth-onekey-keyring": "^0.7.1",
+    "@onekeyhq/eth-onekey-keyring": "^0.8.0-beta3",
     "@onekeyhq/eth-token-tracker": "^3.1.0",
     "@onekeyhq/extension-controllers": "^5.1.1",
     "@onekeyhq/jazzicon": "^2.1.0",

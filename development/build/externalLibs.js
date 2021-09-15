@@ -63,7 +63,6 @@ const onekeyDeps = [
   // 'ethereumjs-wallet',
   // '@zxing/library',
   // '@formatjs/intl-relativetimeformat',
-  // '@onekeyhq/eth-onekey-keyring',
   // '@onekeyhq/jazzicon',
   // '@onekeyhq/obs-store',
 ];
