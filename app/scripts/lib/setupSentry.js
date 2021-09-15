@@ -2,6 +2,7 @@ import * as Sentry from '@sentry/browser';
 import { Dedupe, ExtraErrorData } from '@sentry/integrations';
 import { Integrations } from '@sentry/tracing';
 import * as uuid from 'uuid';
+import errorsIgnore from '../../../src/utils/errorsIgnore';
 import extractEthjsErrorMessage from './extractEthjsErrorMessage';
 
 /* eslint-disable prefer-destructuring */
@@ -104,6 +105,7 @@ export default function setupSentry({ release, getState }) {
       new Integrations.BrowserTracing(),
     ],
     release,
+    // https://docs.sentry.io/platforms/javascript/configuration/filtering/#using-beforesend
     beforeSend: (report) => rewriteReport(report),
     // Setup Apdex
     tracesSampleRate: METAMASK_DEBUG ? 1.0 : 0.2,
@@ -128,6 +130,10 @@ export default function setupSentry({ release, getState }) {
           report.extra = {};
         }
         report.extra.appState = appState;
+      }
+
+      if (errorsIgnore.ignoreSentry(report)) {
+        return null;
       }
     } catch (err) {
       console.warn(err);
