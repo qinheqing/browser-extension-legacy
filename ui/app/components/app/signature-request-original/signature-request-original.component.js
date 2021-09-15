@@ -78,7 +78,7 @@ export default class SignatureRequestOriginal extends Component {
       <div className="request-signature__header">
         <div className="request-signature__header-background" />
 
-        <div className="request-signature__header__text">
+        <div className="request-signature__header__text SignatureRequestOriginal__eth_sign">
           {this.context.t('sigRequest')}
         </div>
 
