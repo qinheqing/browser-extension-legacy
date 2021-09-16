@@ -99,9 +99,9 @@ function PageTransfer() {
           title="余额"
           end={
             <TokenBalance
-              watchBalanceChange
               showUnit
               tokenInfo={token}
+              watchBalanceChange
               updateBalanceThrottle={0}
             />
           }

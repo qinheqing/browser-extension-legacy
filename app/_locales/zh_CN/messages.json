@@ -341,6 +341,15 @@
   "connectWithMetaMask": {
     "message": "使用 OneKey 连接"
   },
+  "connect__ethereumSignMessageEIP712__error__EIP712_BLIND_SIGN_DISABLED": {
+    "message": "硬件盲签功能未开启"
+  },
+  "connect__ethereumSignMessageEIP712__error__EIP712_DOMAIN_NOT_SUPPORT": {
+    "message": "不支持 primaryType `EIP712Domain`"
+  },
+  "connect__ethereumSignMessageEIP712__error__EIP712_FIRMWARE_NOT_SUPPORT": {
+    "message": "请升级至最新固件版本"
+  },
   "connectedAccountsDescriptionPlural": {
     "message": "您有 {1} 个账户连接到了该网站。"
   },

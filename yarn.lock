@@ -2482,10 +2482,10 @@
     loglevel "^1.5.0"
     obs-store "^4.0.3"
 
-"@onekeyhq/eth-onekey-keyring@^0.8.0-alpha4":
-  version "0.8.0-alpha4"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-onekey-keyring/0.8.0-alpha4/20ce6cae20a520adff1016978f765ba28b45378d0dd8c69080e0aaf2caa2610c#ea64918b403377df93a1f08a0c6f31378ea35093"
-  integrity sha512-iGw+tt4saRFo/+IgrPooYR40l6AR/KmOl/kOE4BF0jSj2gc0o2MIgySAllRVKqDA3sOPStmMRs0vp1HbcEMilQ==
+"@onekeyhq/eth-onekey-keyring@^0.8.0-alpha8":
+  version "0.8.0-alpha8"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-onekey-keyring/0.8.0-alpha8/c32b0be283b0a8f99b7ba8b75c000e407c68d8a5eeaa89827ba21990812aabf0#e77010407b74fc52bd7191fe73fb5791bace110a"
+  integrity sha512-VSdTITjZ19EU4Y5d3vbiA/4Qe9/xAooOGusy3a1UsElJMSVwTIt0pwqW7H9x/97rEDW0X8FE2+LN+iRP+lY/tw==
   dependencies:
     "@onekeyhq/connect" "8.4.0-alpha4"
     eth-sig-util "^1.4.2"

@@ -1,5 +1,4 @@
 import ethUtil from 'ethereumjs-util';
-import TrezorKeyring from '@onekeyhq/eth-onekey-keyring';
 import WalletBase from '../WalletBase';
 import utilsApp from '../../utils/utilsApp';
 import { CONST_CHAIN_KEYS } from '../../consts/consts';

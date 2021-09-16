@@ -45,6 +45,7 @@ import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import errorsGlobalHandler from './errorsGlobalHandler';
 import backgroundSolana from '../../src/wallets/SOL/modules/dappProvider/background';
 import backgroundContainer from './backgroundContainer';
+import i18nBackground from './i18nBackground';
 /* eslint-enable import/first */
 
 const mboxReferences = {
@@ -80,6 +81,10 @@ const requestAccountTabIds = {};
 const inTest = process.env.IN_TEST === 'true';
 const localStore = inTest ? new ReadOnlyNetworkStore() : new LocalStore();
 let versionedData;
+
+global.getCurrentLocale = () => {
+  return i18nBackground.getCurrentLocale();
+};
 
 if (inTest || process.env.METAMASK_DEBUG) {
   // set global localStore for debug
@@ -185,6 +190,10 @@ initialize().catch(log.error);
 async function initialize() {
   const initState = await loadStateFromPersistence();
   const initLangCode = await getFirstPreferredLangCode();
+  await i18nBackground.init(
+    initState?.PreferencesController?.currentLocale || initLangCode,
+  );
+
   await setupController(initState, initLangCode);
   log.debug('OneKey initialization complete.');
 }

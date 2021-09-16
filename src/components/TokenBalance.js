@@ -14,10 +14,10 @@ function TokenBalance({
   tokenInfo, // { key, address, name },
   maskAssetBalance = false,
   showUnit = false,
-  watchBalanceChange = false,
   showPrice = false,
   priceEqualSign = '≈',
-  updateBalanceThrottle = 3 * 1000,
+  watchBalanceChange = false, // addAccountChangeListener by websocket
+  updateBalanceThrottle = 3 * 1000, // do not update balance in 3s
 }) {
   const { address, symbol, symbolDisplay } = tokenInfo;
   const cacheBalanceInfo = storeBalance.getTokenBalanceInfoInCache(tokenInfo);
