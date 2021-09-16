@@ -63,12 +63,23 @@ import seedPhraseVerifier from './lib/seed-phrase-verifier';
 import DetectChainController from './controllers/detect-chain';
 import { MOCK_CHAIN_ID_WHEN_NEW_APP } from './controllers/permissions/permissionsMethodMiddleware';
 import { STREAM_CONTROLLER, STREAM_PROVIDER } from './constants/consts';
+import i18nBackground from './i18nBackground';
 
 export const METAMASK_CONTROLLER_EVENTS = {
   // Fired after state changes that impact the extension badge (unapproved msg count)
   // The process of updating the badge happens in app/scripts/background.js.
   UPDATE_BADGE: 'updateBadge',
 };
+
+OneKeyKeyring.connect.init({
+  // debug: true,
+  // popup: true,
+  // connectSrc: 'https://connect1.test.onekey.so/', // NOT working
+  manifest: {
+    email: 'hi@onekey.so',
+    appUrl: 'https://www.onekey.so',
+  },
+});
 
 export default class MetamaskController extends EventEmitter {
   /**
@@ -2645,6 +2656,7 @@ export default class MetamaskController extends EventEmitter {
   setCurrentLocale(key, cb) {
     try {
       const direction = this.preferencesController.setCurrentLocale(key);
+      i18nBackground.setCurrentLocale(key, direction);
       cb(null, direction);
       return;
     } catch (err) {
