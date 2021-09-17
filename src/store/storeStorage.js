@@ -58,24 +58,24 @@ class StoreStorage extends BaseStoreWithStorage {
     });
   }
 
-  @observable
+  @observable.ref
   dataVersion = dataMigration.isUpdateFromOldVersion
     ? 0
     : dataMigration.CURRENT_DATA_VERSION;
 
-  @observable
+  @observable.ref
   storageReady = false; // DO NOT autosave this field
 
   // Why array but NOT object?
   //      because PageWalletSelect should group accounts by chain\hardware\wallet
   //      so array is more convenience
   // TODO auto clean data if chain has been deleted
-  @observable
+  @observable.ref
   allAccountsRaw = [
     // { chainKey, id, type, name, address, path }
   ];
 
-  @observable
+  @observable.ref
   currentAccountRaw = {
     chainKey: '',
     id: '', // id missing
@@ -85,35 +85,35 @@ class StoreStorage extends BaseStoreWithStorage {
     path: '',
   };
 
-  @observable
+  @observable.ref
   currentChainKey = null;
 
   // TODO add this to url query, because popup open new window will lost this params
-  @observable
+  @observable.ref
   accountsGroupFilter = {
     type: CONST_ACCOUNTS_GROUP_FILTER_TYPES.chain,
     chainKey: null,
   };
 
-  @observable
+  @observable.ref
   currentPendingTxid = [
     // txid, txid, txid
   ];
 
   // TODO custom token added by user (ETH)
-  @observable
+  @observable.ref
   currentTokensRaw = {
     chainKey: '',
     ownerAddress: '',
     tokens: [],
   };
 
-  @observable
+  @observable.ref
   tokenMetasRaw = {
     // chainKey-contract : {}
   };
 
-  @observable
+  @observable.ref
   tokenBalancesRaw = {
     // TODO move decimals to AccountInfo and TokenInfo
     // key: { balance, decimals, lastUpdate }
@@ -121,18 +121,18 @@ class StoreStorage extends BaseStoreWithStorage {
 
   // TODO showUserConfirmation show MM approve popup
   //      check homeType and return mock chainId=-1 address='1111'
-  @observable
+  @observable.ref
   homeType = 'OLD'; // NEW, OLD
 
-  @observable
+  @observable.ref
   maskAssetBalance = false;
 
-  @observable
+  @observable.ref
   chainsCustomRaw = {
     // chainKey: { ...OneChainInfo }
   };
 
-  @observable
+  @observable.ref
   chainsSortKeys = [
     CONST_CHAIN_KEYS.BSC,
     CONST_CHAIN_KEYS.BSC_TEST_NET,

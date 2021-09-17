@@ -51,7 +51,7 @@ class StoreToken extends BaseStore {
     });
   }
 
-  @observable
+  @observable.ref
   currentDetailToken = null;
 
   @computed

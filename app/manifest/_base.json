@@ -66,6 +66,10 @@
   "manifest_version": 2,
   "name": "__MSG_appName__",
   "permissions": [
+    "http://localhost:8545/",
+    "https://*.infura.io/",
+    "*://*.onekey.so/",
+    "*://*.eth/",
     "storage",
     "unlimitedStorage",
     "clipboardWrite",

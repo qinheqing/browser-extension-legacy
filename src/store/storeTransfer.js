@@ -28,13 +28,13 @@ class StoreTransfer extends BaseStore {
   @observable.ref
   fromToken = null;
 
-  @observable
+  @observable.ref
   toAddress = '';
 
-  @observable
+  @observable.ref
   amount = '';
 
-  @observable
+  @observable.ref
   fee = '';
 
   @computed
@@ -149,6 +149,7 @@ class StoreTransfer extends BaseStore {
         decimals,
         roundMode: 'floor',
       });
+
       if (token.isNative) {
         // TODO minus chain fee + createTokenFee
         amount = utilsNumber.bigNum(amount).minus(this.fee).toFixed();
@@ -157,6 +158,7 @@ class StoreTransfer extends BaseStore {
       if (utilsNumber.bigNum(amount).lt(0)) {
         amount = '0';
       }
+
       if (!utilsNumber.isValidNumber(amount)) {
         amount = '0';
       }

@@ -1,4 +1,10 @@
 // Freezes all intrinsics
+// Firefox:
+//    if run lockdown in promise
+//      Uncaught Error: A case reducer on a non-draftable value must not return undefined
+//    mobx @observable.deep conflict
+//      Content Security Policy: The page’s settings blocked the loading of a resource at eval (“script-src”).
+//
 try {
   // https://github.com/endojs/endo/blob/master/packages/ses/lockdown-options.md
   // eslint-disable-next-line no-undef,import/unambiguous

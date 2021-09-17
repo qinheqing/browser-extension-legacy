@@ -224,7 +224,7 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   setCurrentAccount({ account }) {
-    storeStorage.currentAccountRaw = account;
+    storeStorage.currentAccountRaw = { ...account };
   }
 
   @action.bound
@@ -293,11 +293,24 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   async autofixMismatchAddresses() {
-    await this._fixAccountAddress(storeStorage.currentAccountRaw);
+    let updated = false;
+
+    if (await this._fixAccountAddress(storeStorage.currentAccountRaw)) {
+      updated = true;
+    }
 
     for (let i = 0; i < storeStorage.allAccountsRaw.length; i++) {
       const account = storeStorage.allAccountsRaw[i];
-      await this._fixAccountAddress(account);
+      if (await this._fixAccountAddress(account)) {
+        updated = true;
+      }
+    }
+
+    if (updated) {
+      storeStorage.currentAccountRaw = {
+        ...storeStorage.currentAccountRaw,
+      };
+      storeStorage.allAccountsRaw = [...storeStorage.allAccountsRaw];
     }
   }
 }

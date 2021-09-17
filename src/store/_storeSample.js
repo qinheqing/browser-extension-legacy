@@ -16,7 +16,7 @@ class StoreSample extends BaseStore {
     makeObservable(this);
   }
 
-  @observable
+  @observable.ref
   hello = 'world';
 
   @computed
