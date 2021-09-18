@@ -2446,10 +2446,10 @@
     puka "^1.0.1"
     read-package-json-fast "^1.1.3"
 
-"@onekeyhq/connect@8.4.0-alpha4":
-  version "8.4.0-alpha4"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/connect/8.4.0-alpha4/dce565ab53da40d2dc60f1505e201694c74f23b88c18b1bc47e6c7943f3bc18f#2ec0b79b42cf2be9f546792006e740e24bb76403"
-  integrity sha512-qDnoxli0irkk1U8ZP97zb9TWWOn3iHmDAOpp76UMelKp/rKOVznaTpGrPYUwk6YNF36b1lwq1OtCS7roGP97TA==
+"@onekeyhq/connect@8.4.0":
+  version "8.4.0"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/connect/8.4.0/98b5b8601d855a9e854179d0ed2c9a71a1e14f452423a82172baafcb0050eb64#f6ad96da8dae0b23bf4294937c2bec02ce29074f"
+  integrity sha512-OPqC9HLU1bfV8w+DlnzzW4TmCFiWls9UBb2HgainknXMubRi+19xSHdO0Esi/0hYIcvwtQ25EZnbYaMe8qBOMg==
   dependencies:
     "@babel/runtime" "^7.12.5"
     "@sentry/browser" "^6.4.0"
@@ -2482,12 +2482,12 @@
     loglevel "^1.5.0"
     obs-store "^4.0.3"
 
-"@onekeyhq/eth-onekey-keyring@^0.8.0-alpha8":
-  version "0.8.0-alpha8"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-onekey-keyring/0.8.0-alpha8/c32b0be283b0a8f99b7ba8b75c000e407c68d8a5eeaa89827ba21990812aabf0#e77010407b74fc52bd7191fe73fb5791bace110a"
-  integrity sha512-VSdTITjZ19EU4Y5d3vbiA/4Qe9/xAooOGusy3a1UsElJMSVwTIt0pwqW7H9x/97rEDW0X8FE2+LN+iRP+lY/tw==
+"@onekeyhq/eth-onekey-keyring@^0.8.0":
+  version "0.8.0"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/eth-onekey-keyring/0.8.0/60aa13adf96d2752b0d5b9f0b47423aff6d194eecdd7c9870cc0a693f0a05905#1c1d83d978cca268943d0a9c3d4c0b5b785ee644"
+  integrity sha512-BeP1ltLsLfLE3Yz5REe+5dZTGCXP8yOiKjSj/gEfR3cCCZv//PwRwatK+y7aUTgXVa7zVhzg2zMR2Y4ghSGj7A==
   dependencies:
-    "@onekeyhq/connect" "8.4.0-alpha4"
+    "@onekeyhq/connect" "8.4.0"
     eth-sig-util "^1.4.2"
     ethereumjs-tx "^1.3.4"
     ethereumjs-util "^7.0.9"
