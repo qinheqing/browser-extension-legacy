@@ -750,7 +750,7 @@
     "message": "燃料限制至少要 {1}"
   },
   "gasPrice": {
-    "message": "燃料价格（GWEI）"
+    "message": "燃料价格 GWEI"
   },
   "gasPriceExtremelyLow": {
     "message": "燃料价格极低"
