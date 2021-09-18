@@ -1,9 +1,16 @@
 import { isString } from 'lodash';
+import i18nBackground from './i18nBackground';
 
 global.$$errorNotificationAvailableCount = 5;
 
-function showExtensionNotification(error) {
-  const msg = isString(error) ? error : error?.message;
+async function showExtensionNotification(error) {
+  let msg = isString(error) ? error : error?.message;
+  const errorCodeI18n = error.errorCodeI18n || '';
+  if (errorCodeI18n) {
+    // should use t0(key) return empty if key has no translation
+    msg = i18nBackground.t0(errorCodeI18n) || msg;
+    console.error('errorCodeI18n: ', errorCodeI18n);
+  }
   let notificationId;
   if (global.$$errorNotificationAvailableCount <= 0) {
     // if availableCount is 0, use fixed notificationId,
@@ -11,6 +18,7 @@ function showExtensionNotification(error) {
     notificationId = `onekey-background-error-notification`;
     // return;
   }
+
   if (msg && global?.$$extensionPlatform?._showNotification) {
     global.$$errorNotificationAvailableCount -= 1;
 

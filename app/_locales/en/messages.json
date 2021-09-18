@@ -341,6 +341,15 @@
   "connectWithMetaMask": {
     "message": "Connect With OneKey"
   },
+  "connect__ethereumSignMessageEIP712__error__EIP712_BLIND_SIGN_DISABLED": {
+    "message": "Sign Failed, Please turn on ETH Advanced Signing in device Security setting."
+  },
+  "connect__ethereumSignMessageEIP712__error__EIP712_DOMAIN_NOT_SUPPORT": {
+    "message": "primaryType `EIP712Domain` is not support"
+  },
+  "connect__ethereumSignMessageEIP712__error__EIP712_FIRMWARE_NOT_SUPPORT": {
+    "message": "Please upgrade firmware "
+  },
   "connectedAccountsDescriptionPlural": {
     "message": "You have {1} accounts connected to this site."
   },

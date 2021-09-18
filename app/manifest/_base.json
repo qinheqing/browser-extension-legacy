@@ -45,7 +45,8 @@
       "matches": [
         "*://connect.trezor.io/*/popup.html",
         "*://connect.onekey.so/*/popup.html",
-        "*://connect.onekey.so/popup.html"
+        "*://connect.onekey.so/popup.html",
+        "*://connect.test.onekey.so/popup.html"
       ],
       "js": ["vendor/trezor/content-script.js"]
     }
@@ -65,6 +66,10 @@
   "manifest_version": 2,
   "name": "__MSG_appName__",
   "permissions": [
+    "http://localhost:8545/",
+    "https://*.infura.io/",
+    "*://*.onekey.so/",
+    "*://*.eth/",
     "storage",
     "unlimitedStorage",
     "clipboardWrite",

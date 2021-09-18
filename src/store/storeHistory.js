@@ -24,7 +24,7 @@ class StoreHistory extends BaseStore {
     makeObservable(this);
   }
 
-  @observable
+  @observable.ref
   testField = '';
 
   // Route history

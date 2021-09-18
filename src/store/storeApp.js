@@ -65,7 +65,7 @@ class StoreApp extends BaseStore {
     storeHistory.push(UNLOCK_ROUTE);
   }
 
-  @observable
+  @observable.ref
   legacyState = {
     isUnlocked: false,
     selectedAddress: '',

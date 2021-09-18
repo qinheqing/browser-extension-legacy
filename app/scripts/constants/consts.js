@@ -6,6 +6,6 @@ export const STREAM_CONTROLLER = 'onekey-controller';
 export const RESOLVE_CONFLICT_ONEKEY_NOT_REPLACING =
   'RESOLVE_CONFLICT_ONEKEY_NOT_REPLACING';
 
-export const METHOD_PROVIDER_OVERWRITE_ENABLED =
+export const METHOD_GET_PROVIDER_OVERWRITE_ENABLED =
   'onekey_providerOverwriteEnabled';
-export const METHOD_OTHER_PROVIDER_STATUS = 'onekey_otherProviderStatus';
+export const METHOD_SET_OTHER_PROVIDER_STATUS = 'onekey_otherProviderStatus';

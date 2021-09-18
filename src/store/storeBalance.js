@@ -43,7 +43,11 @@ class StoreBalance extends BaseStore {
         value: newInfo.balance,
         decimals: newInfo.decimals,
       });
-      storeStorage.tokenBalancesRaw[key] = newInfo;
+
+      storeStorage.tokenBalancesRaw = {
+        ...storeStorage.tokenBalancesRaw,
+        [key]: newInfo,
+      };
     }
   }
 
