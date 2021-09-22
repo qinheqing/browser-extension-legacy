@@ -79,6 +79,22 @@ function PageTokenAdd() {
       scrollContainer.current.dispatchEvent(new Event('scroll'));
   }, []);
 
+  const wallet = storeWallet.currentWallet;
+  const handleAddTokenClick = useCallback(
+    async (_token) => {
+      const meta = await wallet.chainManager.fetchTokenMeta({
+        address: _token.address,
+      });
+      console.log('handleAddTokenClick', meta);
+      setTokenToAdd({
+        ..._token,
+        ...meta,
+      });
+      setAddDialogOpen(true);
+    },
+    [wallet.chainManager, wallet],
+  );
+
   useEffect(() => {
     scrollContainer.current = document.querySelector(
       '.OneKey-AppPageLayoutBody',
@@ -125,10 +141,7 @@ function PageTokenAdd() {
                 <TokenAddItem
                   key={token.address}
                   token={token}
-                  onAddClick={(_token) => {
-                    setTokenToAdd(_token);
-                    setAddDialogOpen(true);
-                  }}
+                  onAddClick={handleAddTokenClick}
                 />
               </LazyLoad>
             ))}
@@ -161,11 +174,12 @@ function PageTokenAdd() {
         }
         confirmText="确认添加"
         onConfirm={async () => {
-          return storeToken.addAssociateToken({
-            contract: tokenToAdd.address,
+          return storeToken.addAssociateToken(
+            {
+              ...tokenToAdd,
+            },
             fee,
-            ...tokenToAdd,
-          });
+          );
         }}
       />
     </AppPageLayout>

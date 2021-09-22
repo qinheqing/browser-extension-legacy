@@ -94,6 +94,10 @@ class StoreToken extends BaseStore {
         decimals: decimals1,
       });
 
+      if (fiat0 === fiat1) {
+        return balance0 > balance1 ? -1 : 1;
+      }
+
       return fiat0 > fiat1 ? -1 : 1;
     });
     return [this.currentNativeToken, ...tokenSorted];
@@ -192,21 +196,30 @@ class StoreToken extends BaseStore {
   addAccountLocalToken({ account, token }) {
     // eslint-disable-next-line no-param-reassign
     account = account || storeAccount.currentAccount;
-    const accountKey = account.key;
-    const { chainKey } = account;
+    const { chainKey, key: accountKey } = account;
+    const { address, symbol, name, decimals } = token;
     const data = storeStorage.accountLocalTokensRaw[accountKey] || {};
-    data[token.address] = {
+    const tokenInfo = {
       chainKey,
-      address: token.address,
-      contractAddress: token.address,
+      address,
+      contractAddress: address,
       _memo: {
-        symbol: token.symbol,
-        name: token.name,
-        decimals: token.decimals,
+        symbol,
+        name,
+        decimals,
       },
     };
+    data[address] = tokenInfo;
 
-    storeStorage.accountLocalTokensRaw[accountKey] = data;
+    this.updateSingleTokenMeta({
+      tokenMeta: token,
+      token: tokenInfo,
+    });
+
+    storeStorage.accountLocalTokensRaw = {
+      ...storeStorage.accountLocalTokensRaw,
+      [accountKey]: data,
+    };
   }
 
   _buildTokenMetaKey({ token }) {
@@ -249,6 +262,39 @@ class StoreToken extends BaseStore {
     return symbol;
   }
 
+  _buildTokenMetaCache({ tokenMeta, token }) {
+    const symbol = this.correctTokenSymbol(tokenMeta);
+    const key = this._buildTokenMetaKey({ token });
+    const meta = {
+      ...tokenMeta,
+      lastUpdate: new Date().getTime(),
+      symbol,
+      isEditable: !tokenMeta,
+    };
+    return {
+      key,
+      meta,
+    };
+  }
+
+  @action.bound
+  updateSingleTokenMeta({ tokenMeta, token }) {
+    const { key, meta } = this._buildTokenMetaCache({
+      token,
+      tokenMeta,
+    });
+    const metas = {};
+    metas[key] = {
+      ...storeStorage.tokenMetasRaw[key],
+      ...meta,
+    };
+
+    storeStorage.tokenMetasRaw = {
+      ...storeStorage.tokenMetasRaw,
+      ...metas,
+    };
+  }
+
   @action.bound
   async updateTokensMeta({ tokens = [], forceUpdateTokenMeta = false }) {
     const shouldReload =
@@ -265,15 +311,12 @@ class StoreToken extends BaseStore {
       const tokenMeta = this.allTokenListMeta.find(
         (item) => item.address === (token.contractAddress || token.address),
       );
-      const symbol = this.correctTokenSymbol(tokenMeta);
-      const key = this._buildTokenMetaKey({ token });
+      const { meta, key } = this._buildTokenMetaCache({
+        token,
+        tokenMeta,
+      });
       // give default empty object, so that shouldReloadTokenMetas() can work correctly.
-      metas[key] = {
-        ...tokenMeta,
-        lastUpdate: new Date().getTime(),
-        symbol,
-        isEditable: !tokenMeta,
-      };
+      metas[key] = meta;
     });
 
     storeStorage.tokenMetasRaw = {
@@ -372,8 +415,8 @@ class StoreToken extends BaseStore {
         tokens = [
           {
             address: text,
-            symbol: '',
-            name: '',
+            symbol: undefined,
+            name: undefined,
           },
         ];
       }
@@ -394,7 +437,7 @@ class StoreToken extends BaseStore {
     callback && callback();
   }
 
-  async addAssociateToken(tokenMeta) {
+  async addAssociateToken(tokenMeta, fee) {
     const wallet = storeWallet.currentWallet;
     if (wallet.isLocalAddTokenMode) {
       this.addAccountLocalToken({ token: tokenMeta });
@@ -402,17 +445,14 @@ class StoreToken extends BaseStore {
       return '';
     }
 
-    if (
-      tokenMeta.fee &&
-      tokenMeta.fee > this.currentNativeTokenBalance.balance
-    ) {
+    if (fee && fee > this.currentNativeTokenBalance.balance) {
       utilsToast.toast.error('手续费不足');
       return '';
     }
 
     // TODO check token contract.address is valid mint address
     const txid = await wallet.addAssociateToken({
-      contract: tokenMeta.contract,
+      contract: tokenMeta.address,
     });
     if (txid) {
       storeTx.addPendingTx(txid);

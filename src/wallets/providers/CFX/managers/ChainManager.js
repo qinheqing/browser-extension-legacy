@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { Conflux, format } from 'js-conflux-sdk';
+import { Conflux, format, Contract } from 'js-conflux-sdk';
 import ChainManagerBase from '../../../ChainManagerBase';
 import OneAccountInfo from '../../../../classes/OneAccountInfo';
 import optionsHelper from '../../../optionsHelper';
@@ -174,6 +174,21 @@ class ChainManager extends ChainManagerBase {
   async confirmTransaction({ txid }) {
     const res = await this.apiRpc.confirmTransaction(txid);
     return res.transaction;
+  }
+
+  async fetchTokenMeta({ address }) {
+    const contractApi = this.apiRpc.CRC20(address);
+    // const balance = await contractApi.balanceOf(fromAddressHex);
+    const name = await contractApi.name();
+    const symbol = await contractApi.symbol();
+    const decimals = await contractApi.decimals();
+    const tokenMeta = {
+      name,
+      symbol,
+      decimals: decimals.toString(),
+    };
+    console.log(tokenMeta);
+    return tokenMeta;
   }
 }
 

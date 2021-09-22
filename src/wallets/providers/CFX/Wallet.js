@@ -68,12 +68,6 @@ class Wallet extends WalletBase {
     const toAddressHex = format.hexAddress(to);
     const contractApi = this.chainManager.apiRpc.CRC20(contract);
 
-    const balance = await contractApi.balanceOf(fromAddressHex);
-    const name = await contractApi.name();
-    const symbol = await contractApi.symbol();
-    const decimals0 = await contractApi.decimals();
-    console.log(contractApi, { balance, name, symbol, decimals0 });
-
     const transferIx = contractApi.transfer(to, amount);
     transferIx.from = fromAddress;
 
