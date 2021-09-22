@@ -117,6 +117,11 @@ class ChainManagerBase {
   getFirstRpcUrl() {
     return this.options?.chainInfo?.rpc?.[0];
   }
+
+  // get tokenMeta by RPC, fallback to tokenList.json in future
+  async fetchTokenMeta() {
+    return utilsApp.throwToBeImplemented(this);
+  }
 }
 
 export default ChainManagerBase;

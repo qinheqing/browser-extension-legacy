@@ -34,8 +34,12 @@ class ChainManager extends ChainManagerBase {
   }
 
   async getRecentBlockHash() {
+    // ERROR: BlockhashNotFound
+    //    Transaction simulation failed: Blockhash not found
+    // const commitment = helpersSOL.COMMITMENT_TYPES.finalized;
+    const commitment = this.defaultCommitment;
     const { feeCalculator, blockhash } =
-      await this.solWeb3Connection.getRecentBlockhash(this.defaultCommitment);
+      await this.solWeb3Connection.getRecentBlockhash(commitment);
     return {
       feeCalculator,
       blockhash,
@@ -299,6 +303,10 @@ class ChainManager extends ChainManagerBase {
       commitment,
     );
     return res;
+  }
+
+  async fetchTokenMeta() {
+    return {};
   }
 }
 
