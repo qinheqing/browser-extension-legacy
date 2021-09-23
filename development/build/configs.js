@@ -88,22 +88,22 @@ const externalModulesCopyFiles = [
 ];
 
 const externalModulesHtmlInjectJs = [
-  'vendor/external-js/mobx',
-  'vendor/external-js/solana-web3',
+  'vendor/external-js/mobx', // mobx
+  'vendor/external-js/solana-web3', // @solana/web3.js
   IS_LEGACY_BUILD && 'external-libs',
 ].filter(Boolean);
 
 const externalModulesGlobalShim = {
   //  import mobx from 'mobx';
   //        const mobx = window.mobx;
-  'mobx': 'mobx',
+  mobx: 'mobx',
   //  import solanaWeb3 from '@solana/web3.js';
   //        const solanaWeb3 = window.solanaWeb3;
   '@solana/web3.js': 'solanaWeb3',
 };
 
 // THIS IS NOT WORKING
-//    please update:   package.json #browser field
+//    please update:   package.json > browser field
 const externalModulesBrowserField = {
   // mobx-react-lite should be out of node_modules folder,
   //    so that the deps "mobx" can be resolved as global var.

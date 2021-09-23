@@ -132,6 +132,7 @@
     "abortcontroller-polyfill": "^1.4.0",
     "async-mutex": "^0.3.1",
     "await-semaphore": "^0.1.1",
+    "axios": "^0.21.4",
     "base32-encode": "^1.2.0",
     "base64-js": "^1.5.1",
     "bignumber.js": "^4.1.0",
