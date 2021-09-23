@@ -902,11 +902,9 @@ function renderHtmlFile(htmlName, groupSet, commonSet, browserPlatforms) {
   const htmlOutput = Sqrl.render(htmlTemplate, { jsBundles, gaCode });
   browserPlatforms.forEach((platform) => {
     const dest = `./dist/${platform}/${htmlName}.html`;
-    const dest2 = `./dist/${platform}/${htmlName}.bak.html`;
     // console.log('htmlOutput', htmlOutput);
     // we dont have a way of creating async events atm
     writeFileSync(dest, htmlOutput);
-    writeFileSync(dest2, htmlOutput);
   });
 }
 
