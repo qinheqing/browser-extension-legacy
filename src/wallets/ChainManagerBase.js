@@ -21,7 +21,7 @@ class ChainManagerBase {
     this._apiExplorer =
       this._apiExplorer ||
       this.createApiExplorer({
-        url: this.getFirstRpcUrl(),
+        url: this.getFirstExplorerUrl(),
       });
     return this._apiExplorer;
   }
@@ -36,6 +36,10 @@ class ChainManagerBase {
     // 1. native token
     // 2. token
     // return { balance, decimals, isNativeAccount }
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  async getTransactions({ ids = [] }) {
     return utilsApp.throwToBeImplemented(this);
   }
 
@@ -118,8 +122,20 @@ class ChainManagerBase {
     return this.options?.chainInfo?.rpc?.[0];
   }
 
+  getFirstExplorerUrl() {
+    return this.options?.chainInfo?.browser?.[0]?.api || '';
+  }
+
   // get tokenMeta by RPC, fallback to tokenList.json in future
   async fetchTokenMeta() {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  async confirmTransaction() {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  async confirmTransactionCancel() {
     return utilsApp.throwToBeImplemented(this);
   }
 }

@@ -1,5 +1,6 @@
 import assert from 'assert';
 import { Conflux, format, Contract } from 'js-conflux-sdk';
+import axios, { AxiosInstance } from 'axios';
 import ChainManagerBase from '../../../ChainManagerBase';
 import OneAccountInfo from '../../../../classes/OneAccountInfo';
 import optionsHelper from '../../../optionsHelper';
@@ -20,7 +21,16 @@ class ChainManager extends ChainManagerBase {
   }
 
   createApiExplorer({ url }) {
-    return null;
+    const requests = axios.create({
+      baseURL: url, // http://testnet.unibuild.art
+      // timeout: 30 * 1000,
+      headers: {
+        'X-Custom-Header': 'foobar',
+        'Content-Encoding': 'gzip',
+        'Content-Type': 'application/json',
+      },
+    });
+    return requests;
   }
 
   async sendTransaction({ rawTransaction }) {
@@ -156,14 +166,22 @@ class ChainManager extends ChainManagerBase {
     return NaN;
   }
 
-  async getTxHistory({ address, limit = 15 }) {
-    const res = await this.apiRpc.getTxHistory({
-      address,
-      start: 0,
-      limit,
+  async getTxHistory({ address, limit = 20 }) {
+    // https://api.confluxscan.net/doc
+    const res = await this.apiExplorer.get('/account/transactions', {
+      params: {
+        account: address,
+        skip: 0,
+        limit,
+      },
     });
+    const resData = res.data;
+    let items = [];
+    if (resData.code === 0 && resData?.data?.list) {
+      items = resData?.data?.list;
+    }
     return {
-      items: res.items,
+      items,
     };
   }
 
@@ -171,9 +189,98 @@ class ChainManager extends ChainManagerBase {
     console.log('getEpochInfo');
   }
 
+  confirmCheckMap = {};
+
   async confirmTransaction({ txid }) {
-    const res = await this.apiRpc.confirmTransaction(txid);
-    return res.transaction;
+    const res = await this.confirmedTransaction(txid);
+    return res;
+  }
+
+  confirmTransactionCancel({ txid }) {
+    delete this.confirmCheckMap[txid];
+    return true;
+  }
+
+  async confirmedTransaction(
+    transactionHash,
+    { delta = 1000, timeout = 30 * 60 * 1000, threshold = 1e-8 } = {},
+  ) {
+    this.confirmCheckMap[transactionHash] = true;
+    const startTime = Date.now();
+
+    for (
+      let lastTime = startTime;
+      lastTime < startTime + timeout;
+      lastTime = Date.now()
+    ) {
+      if (!this.confirmCheckMap[transactionHash]) {
+        throw new Error('confirmTransaction cancelled');
+      }
+      const receipt = await this.executedTransaction(transactionHash, {
+        delta,
+        timeout,
+      });
+      // must get receipt every time, cause blockHash might change
+      const risk = await this.apiRpc.getConfirmationRiskByHash(
+        receipt.blockHash,
+      );
+      if (risk <= threshold) {
+        return receipt;
+      }
+
+      await utilsApp.delay(lastTime + delta - Date.now());
+    }
+
+    throw new Error(
+      `wait transaction "${transactionHash}" confirmed timeout after ${
+        Date.now() - startTime
+      } ms`,
+    );
+  }
+
+  async executedTransaction(
+    transactionHash,
+    { delta = 1000, timeout = 5 * 60 * 1000 } = {},
+  ) {
+    const startTime = Date.now();
+
+    for (
+      let lastTime = startTime;
+      lastTime < startTime + timeout;
+      lastTime = Date.now()
+    ) {
+      const receipt = await this.apiRpc.getTransactionReceipt(transactionHash);
+      if (receipt) {
+        if (receipt.outcomeStatus !== 0) {
+          throw new Error(
+            `transaction "${transactionHash}" executed failed, outcomeStatus ${receipt.outcomeStatus}`,
+          );
+        }
+        return receipt;
+      }
+
+      await utilsApp.delay(lastTime + delta - Date.now());
+    }
+
+    throw new Error(
+      `wait transaction "${transactionHash}" executed timeout after ${
+        Date.now() - startTime
+      } ms`,
+    );
+  }
+
+  // https://confluxnetwork.gitbook.io/js-conflux-sdk/docs/how_to_send_tx#transactions-stage
+  async getTransactions({ ids = [] }) {
+    if (ids.length > 1) {
+      throw new Error('multiple transactions fetch NOT supported');
+    }
+    // TODO batch rpc call getTransactionByHash,
+    //    and getBlockByHash to fill timestamp field
+    const res = await this.apiRpc.getTransactionByHash(ids[0]);
+    console.log('getTransactionByHash', res);
+    return {
+      items: [res],
+    };
   }
 
   async fetchTokenMeta({ address }) {

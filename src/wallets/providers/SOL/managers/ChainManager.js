@@ -248,7 +248,7 @@ class ChainManager extends ChainManagerBase {
     return res?.feeCalculator?.lamportsPerSignature;
   }
 
-  async getTxHistory({ address, limit = 15 }) {
+  async getTxHistory({ address, limit = 20 }) {
     const pubKey = new PublicKey(address);
     const commitment = helpersSOL.COMMITMENT_TYPES.confirmed;
 
@@ -303,6 +303,11 @@ class ChainManager extends ChainManagerBase {
       commitment,
     );
     return res;
+  }
+
+  async confirmTransactionCancel() {
+    // noop
+    return true;
   }
 
   async fetchTokenMeta() {

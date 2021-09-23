@@ -34,6 +34,7 @@ class StoreStorage extends BaseStoreWithStorage {
       this.autosave('currentPendingTxid'),
 
       this.autosave('accountsGroupFilter'),
+      this.autosave('allPendingTxRaw'),
       this.autosave('allAccountsRaw'),
 
       this.autosave('accountLocalTokensRaw'),
@@ -102,7 +103,10 @@ class StoreStorage extends BaseStoreWithStorage {
     // txid, txid, txid
   ];
 
-  @observable
+  @observable.ref
+  allPendingTxRaw = {};
+
+  @observable.ref
   accountLocalTokensRaw = {
     // accountKey: { tokenContractAddress: { address } }
   };

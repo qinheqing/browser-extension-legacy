@@ -96,7 +96,7 @@ class ChainManager extends ChainManagerBase {
     return res?.fee;
   }
 
-  async getTxHistory({ address, limit = 15 }) {
+  async getTxHistory({ address, limit = 20 }) {
     const res = await this.apiRpc.getTxHistory({
       address,
       start: 0,

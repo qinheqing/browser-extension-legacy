@@ -36,6 +36,7 @@ class StoreAccount extends BaseStore {
         if (currentAccount?.chainKey) {
           storeChain.setCurrentChainKey(currentAccount?.chainKey);
         }
+        console.log('clear pending tx on mount');
         storeTx.clearPendingTx();
       });
     });
@@ -263,7 +264,7 @@ class StoreAccount extends BaseStore {
   // storeAccount.autofixMismatchAddresses();
   @action.bound
   async _fixAccountAddress(account = {}) {
-    const accountNew = account;
+    const accountNew = { ...account };
     if (!accountNew.chainKey) {
       return null;
     }

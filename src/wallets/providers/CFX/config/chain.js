@@ -26,6 +26,7 @@ const CFX = normalizeChainInfo({
       account: 'https://confluxscan.io/address/{{account}}',
       token: 'https://confluxscan.io/address/{{token}}',
       block: 'https://confluxscan.io/block/{{block}}',
+      api: 'https://api.confluxscan.net',
     },
   ],
 
@@ -70,6 +71,7 @@ const CFX_TEST = normalizeChainInfo(
         account: 'https://testnet.confluxscan.io/address/{{account}}',
         token: 'https://testnet.confluxscan.io/address/{{token}}',
         block: 'https://testnet.confluxscan.io/block/{{block}}',
+        api: 'https://api-testnet.confluxscan.net',
       },
     ],
   }),
