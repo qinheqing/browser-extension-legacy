@@ -32,6 +32,7 @@ function createManifestTasks({ browserPlatforms }) {
           platformModifications,
         );
 
+        const resultTestVersion = cloneDeep(result);
         if (
           process.env.GITHUB_TAG &&
           // tag should like: v1.0.3-beta.1
@@ -39,12 +40,17 @@ function createManifestTasks({ browserPlatforms }) {
         ) {
           // add GITHUB_TAG in description
           // convenience to identify different version for multiple extension testing
-          result.description = `${result.description} (${process.env.GITHUB_TAG})`;
+          resultTestVersion.description = `${resultTestVersion.description} (${process.env.GITHUB_TAG})`;
         }
 
         const dir = path.join('.', 'dist', platform);
         await fs.mkdir(dir, { recursive: true });
         await writeJson(result, path.join(dir, 'manifest.json'));
+        await writeJson(result, path.join(dir, 'manifest.prd.json'));
+        await writeJson(
+          resultTestVersion,
+          path.join(dir, 'manifest.test.json'),
+        );
       }),
     );
   };
