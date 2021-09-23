@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import TimeAgo from 'react-timeago';
 import timeAgoZhStrings from 'react-timeago/lib/language-strings/zh-CN';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+import { isNil } from 'lodash';
 import AppPageLayout from '../../components/AppPageLayout';
 import OneButton from '../../components/OneButton';
 import storeWallet from '../../store/storeWallet';
@@ -60,8 +61,14 @@ function getTxInfo(tx) {
 }
 
 function getTxError(tx) {
+  if (tx?.meta?.err) {
+    return tx?.meta?.err;
+  }
   const successCode = 0;
-  return tx?.meta?.err ?? (tx.status !== successCode && 'Error');
+  if (!isNil(tx.status) && tx.status !== successCode) {
+    return 'Error';
+  }
+  return null;
 }
 
 function filterPendingTxConfirmed(confirmedTxList) {

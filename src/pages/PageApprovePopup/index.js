@@ -33,6 +33,8 @@ import OneCellItem from '../../components/OneCellItem';
 import OneArrow from '../../components/OneArrow';
 import { ChainLogoIcon } from '../../components/LogoIcon';
 import CopyHandle from '../../components/CopyHandle';
+import storeChain from '../../store/storeChain';
+import storeApp from '../../store/storeApp';
 
 const APPROVE_METHODS = {
   connect: 'connect',
@@ -178,8 +180,8 @@ function decodeSignMessage({ data, display }) {
 
 const ApproveSign = observer(function ({ query, origin, onReject, onApprove }) {
   const account = storeAccount.currentAccount;
-  const signText = decodeSignMessage(query.request.params);
-  const signMessage = bs58.encode(query.request.params.data);
+  const signTextDisplay = decodeSignMessage(query.request.params);
+  const signMessageEncode = bs58.encode(query.request.params.data);
   // TODO hex data sign warning
   //    Be especially cautious when signing arbitrary data, you must trust the requester.
   return (
@@ -197,7 +199,7 @@ const ApproveSign = observer(function ({ query, origin, onReject, onApprove }) {
             block
             type="primary"
             onClick={() =>
-              onApprove({ autoApprove: false, message: signMessage })
+              onApprove({ autoApprove: false, message: signMessageEncode })
             }
           >
             {/* 签名授权 */}
@@ -214,7 +216,7 @@ const ApproveSign = observer(function ({ query, origin, onReject, onApprove }) {
         />
       </div>
       <div className="p-4 u-break-words text-center border rounded m-4 bg-gray-50">
-        {signText}
+        {signTextDisplay}
       </div>
     </ApprovePageLayout>
   );
@@ -528,8 +530,10 @@ function PageApprovePopup() {
 
   const onApprove = async ({
     autoApprove = false,
+    // - plain text message bs58 encoded;
+    // - tx data message serialized
     message,
-    isBatch = false,
+    isBatch = false, // signAllTransactions
   } = {}) => {
     // const txMessage = messages[0];
     const txMessageList = [].concat(message);
@@ -576,6 +580,7 @@ function PageApprovePopup() {
     popRequest();
   };
 
+  // signTransaction(txDataMessage)
   if (
     request.method === APPROVE_METHODS.signTransaction ||
     request.method === APPROVE_METHODS.signAllTransactions
@@ -592,12 +597,14 @@ function PageApprovePopup() {
     );
   }
 
+  // signMessage(plainTextMessage)
   if (request.method === APPROVE_METHODS.sign) {
     return (
       <ApproveSign query={query} onApprove={onApprove} onReject={onReject} />
     );
   }
 
+  // connection(url)
   if (request.method === APPROVE_METHODS.connect) {
     // Approve the parent page to connect to this wallet.
     const onConnect = ({ autoApprove = false } = {}) => {
@@ -655,8 +662,15 @@ PageApprovePopup.propTypes = {
 };
 
 function PageApprovePopupEnsureChain() {
-  if (storeAccount?.currentAccount?.baseChain !== CONST_CHAIN_KEYS.SOL) {
-    return <div className="text-center py-16">请先切换到 Solana 网络</div>;
+  const chainInfo = storeChain?.currentChainInfo;
+
+  if (chainInfo?.baseChain !== CONST_CHAIN_KEYS.SOL || !utilsApp.isNewHome()) {
+    return (
+      <div className="flex flex-col items-center p-4">
+        <div className="text-center py-16">请先切换到 Solana 网络</div>
+        <OneButton onClick={() => window.close()}>关闭弹窗</OneButton>
+      </div>
+    );
   }
   return <PageApprovePopup />;
 }

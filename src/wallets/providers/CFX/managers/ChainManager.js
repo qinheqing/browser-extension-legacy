@@ -192,7 +192,7 @@ class ChainManager extends ChainManagerBase {
   confirmCheckMap = {};
 
   async confirmTransaction({ txid }) {
-    const res = await this.confirmedTransaction(txid);
+    const res = await this.confirmedTransaction(txid, { threshold: 0.95 });
     return res;
   }
 
@@ -224,6 +224,9 @@ class ChainManager extends ChainManagerBase {
       const risk = await this.apiRpc.getConfirmationRiskByHash(
         receipt.blockHash,
       );
+      console.log('getConfirmationRiskByHash', risk);
+      // block reverted risk is between 0-1, closing 0 is more safe
+      //    0.9 -> 0.001
       if (risk <= threshold) {
         return receipt;
       }
