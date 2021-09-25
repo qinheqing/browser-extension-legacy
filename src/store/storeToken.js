@@ -58,25 +58,34 @@ class StoreToken extends BaseStore {
   get currentTokens() {
     const { tokens } = storeStorage.currentTokensRaw;
     const ownerAddress = storeAccount.currentAccountAddress;
-    const tokenInfoList = tokens.map((tokenRaw) => {
-      const tokenMeta = this.getTokenMeta({ token: tokenRaw });
-      const { decimals, name, symbol, logoURI, extensions, tokenId } =
-        tokenMeta || {};
+    const tokenInfoList = tokens
+      .map((tokenRaw) => {
+        const tokenMeta = this.getTokenMeta({ token: tokenRaw });
+        const { decimals, name, symbol, logoURI, extensions, tokenId } =
+          tokenMeta || {};
 
-      const tokenInfo = new OneTokenInfo(
-        merge({}, tokenRaw, {
-          decimals,
-          name,
-          symbol,
-          logoURI,
-          extensions,
-          tokenId,
-          ownerAddress,
-        }),
-      );
+        const tokenInfo = new OneTokenInfo(
+          merge({}, tokenRaw, {
+            decimals,
+            name,
+            symbol,
+            logoURI,
+            extensions,
+            tokenId,
+            ownerAddress,
+          }),
+        );
 
-      return tokenInfo;
-    });
+        if (isNil(decimals)) {
+          console.error(
+            `token decimals not found: ${JSON.stringify(tokenRaw)}`,
+          );
+          return null;
+        }
+
+        return tokenInfo;
+      })
+      .filter(Boolean);
     const tokenSorted = tokenInfoList.slice().sort((a, b) => {
       const balance0 = storeBalance.getTokenBalanceInfoInCache(a).balance;
       const price0 = storePrice.getTokenPrice({ token: a });
@@ -127,7 +136,7 @@ class StoreToken extends BaseStore {
   @computed
   get currentNativeToken() {
     return this.buildNativeToken({
-      account: storeAccount.currentAccount,
+      account: storeAccount.currentAccountInfo,
       chainInfo: storeChain.currentChainInfo,
     });
   }
@@ -145,8 +154,8 @@ class StoreToken extends BaseStore {
     forceUpdateTokenMeta = false,
   }) {
     if (
-      chainKey === storeAccount.currentAccount.chainKey &&
-      ownerAddress === storeAccount.currentAccount.address
+      chainKey === storeAccount.currentAccountInfo.chainKey &&
+      ownerAddress === storeAccount.currentAccountInfo.address
     ) {
       // TODO update token balance to storeBalance
       storeStorage.currentTokensRaw = {
@@ -163,11 +172,11 @@ class StoreToken extends BaseStore {
   }
 
   async fetchCurrentAccountTokens({ forceUpdateTokenMeta = false } = {}) {
-    if (!storeAccount.currentAccount) {
+    if (!storeAccount.currentAccountInfo) {
       return;
     }
-    const ownerAddress = storeAccount.currentAccount.address;
-    const ownerAccountKey = storeAccount.currentAccount.key;
+    const ownerAddress = storeAccount.currentAccountInfo.address;
+    const ownerAccountKey = storeAccount.currentAccountInfo.key;
     const tokensRes =
       await storeWallet.currentWallet.chainManager.getAccountTokens({
         address: ownerAddress,
@@ -195,7 +204,7 @@ class StoreToken extends BaseStore {
    */
   addAccountLocalToken({ account, token }) {
     // eslint-disable-next-line no-param-reassign
-    account = account || storeAccount.currentAccount;
+    account = account || storeAccount.currentAccountInfo;
     const { chainKey, key: accountKey } = account;
     const { address, symbol, name, decimals } = token;
     const data = storeStorage.accountLocalTokensRaw[accountKey] || {};
@@ -411,7 +420,7 @@ class StoreToken extends BaseStore {
       );
     });
     if (!tokens.length) {
-      if (storeWallet.currentWallet.isValidAddress({ address: text })) {
+      if (storeWallet.currentWallet.isValidAddress(text)) {
         tokens = [
           {
             address: text,
@@ -473,9 +482,18 @@ class StoreToken extends BaseStore {
 
     // * get decimals from tokenBalanceInfo
     if (isNil(decimals)) {
-      // TODO fetch decimals by rpc fallback if cache is null
       const balanceInfo = storeBalance.getTokenBalanceInfoInCache(token);
       decimals = balanceInfo.decimals;
+    }
+
+    // TODO fetch decimals by rpc fallback if cache is null
+    if (isNil(decimals)) {
+      decimals = 18;
+      console.error(
+        `Can not get token decimals: ${token.name ?? ''} ${
+          token?.symbol ?? ''
+        }`,
+      );
     }
     return decimals;
   }

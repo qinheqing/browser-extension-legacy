@@ -3,8 +3,9 @@ import HdKey from 'hdkey';
 import utilsApp from '../utils/utilsApp';
 
 class HdKeyManagerBase {
-  constructor(options) {
+  constructor(options, wallet) {
     this.options = options;
+    this.wallet = wallet;
   }
 
   get hdPathTemplate() {

@@ -49,7 +49,7 @@ function PageAccountDetail() {
           <EditableLabel
             className="pt-2"
             maxLength={36}
-            defaultValue={storeAccount.currentAccount.name}
+            defaultValue={storeAccount.currentAccountInfo.name}
             onSubmit={storeAccount.changeAccountName}
           />
         </div>
@@ -65,7 +65,7 @@ function PageAccountDetail() {
             </li>
             <li className="px-4 py-4 sm:px-6 flex justify-between items-center">
               <div>路径</div>
-              <div>{storeAccount.currentAccount.path}</div>
+              <div>{storeAccount.currentAccountInfo.path}</div>
             </li>
             <li className="px-4 py-4 sm:px-6 flex justify-between items-center">
               <div>类型</div>

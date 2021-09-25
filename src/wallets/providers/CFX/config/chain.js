@@ -43,6 +43,7 @@ const CFX = normalizeChainInfo({
     tokenId: 'conflux-token', // "id" in coingecko /api/v3/coins/list
     name: 'Conflux', // "name" in coingecko /api/v3/coins/list
     symbol: CONST_CFX,
+    unitName: 'drip',
     decimals: 18,
     precision: 8, // UI display precision
     // mainnet: 1029, testnet: 1 ;    used for search tokens from token-list.json

@@ -25,6 +25,7 @@ import {
   OneFieldItem,
 } from '../../components/OneField';
 import { TokenLogoIcon } from '../../components/LogoIcon';
+import storeChain from '../../store/storeChain';
 
 function PageTransfer() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -37,8 +38,12 @@ function PageTransfer() {
   useEffect(() => {
     storeTransfer.clearData();
     if (storeWallet.currentWallet) {
-      storeTransfer.fetchTransactionFee();
+      // noop
     }
+  }, []);
+
+  useEffect(() => {
+    return storeTransfer.autoRunFetchFeeInfo();
   }, []);
 
   if (useDataRequiredOrRedirect(storeTransfer.fromToken)) {
@@ -119,6 +124,35 @@ function PageTransfer() {
             </span>
           }
         />
+        {storeTransfer.feeInfo.gasPrice && (
+          <>
+            <div className="-my-3">
+              <OneFieldItem
+                title="燃料价格"
+                end={
+                  <span>
+                    {storeTransfer.feeInfo.gasPrice}
+                    <span className="ml-1">
+                      {storeChain.currentNativeTokenUnitName}
+                    </span>
+                  </span>
+                }
+              />
+            </div>
+
+            <div className="-my-3">
+              <OneFieldItem
+                title="燃料上限"
+                end={
+                  <span>
+                    {storeTransfer.feeInfo.gasUsed}
+                    {/* <span className="ml-1" />*/}
+                  </span>
+                }
+              />
+            </div>
+          </>
+        )}
       </OneField>
 
       <div className="px-4">

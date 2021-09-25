@@ -116,9 +116,10 @@ class Wallet extends WalletBase {
   }
 
   async _createTxObject({ accountInfo, instructions = [] }) {
+    const { blockhash } = await this.chainManager.getRecentBlockHashInfo();
     const tx = new Transaction({
       feePayer: new PublicKey(accountInfo.address),
-      recentBlockhash: (await this.chainManager.getRecentBlockHash()).blockhash,
+      recentBlockhash: blockhash,
       instructions,
     });
     return tx;
@@ -146,7 +147,9 @@ class Wallet extends WalletBase {
     );
   }
 
-  isValidAddress({ address }) {
+  isValidAddress(address = '') {
+    // eslint-disable-next-line no-param-reassign
+    address = address.address || address;
     try {
       const pubKey = new PublicKey(address);
       return true;
@@ -167,6 +170,10 @@ class Wallet extends WalletBase {
       },
       txBuffer,
     );
+  }
+
+  async addFeeInfoToTx({ tx, feeInfo }) {
+    return tx;
   }
 }
 

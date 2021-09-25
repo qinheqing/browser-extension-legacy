@@ -45,9 +45,9 @@ function AccountCard({
   const chainInfo = storeChain.getChainInfoByKey(account.chainKey);
   // the account is current selected account
   const isActive =
-    storeAccount.currentAccount &&
-    storeAccount.currentAccount.chainKey === account.chainKey &&
-    storeAccount.currentAccount.address === account.address;
+    storeAccount.currentAccountInfo &&
+    storeAccount.currentAccountInfo.chainKey === account.chainKey &&
+    storeAccount.currentAccountInfo.address === account.address;
   const tokenInfo = storeToken.buildNativeToken({
     account,
     chainInfo,

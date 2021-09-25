@@ -91,8 +91,8 @@ class ChainManager extends ChainManagerBase {
     return res?.fee;
   }
 
-  async getTransactionFee() {
-    const res = await this.apiRpc.getTransactionFee();
+  async fetchTransactionFeeInfo(tx) {
+    const res = await this.apiRpc.fetchTransactionFeeInfo(tx);
     return res?.fee;
   }
 

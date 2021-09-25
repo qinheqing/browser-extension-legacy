@@ -89,7 +89,9 @@ class Wallet extends WalletBase {
     // return requestAirdrop(address);
   }
 
-  isValidAddress({ address }) {
+  isValidAddress(address = '') {
+    // eslint-disable-next-line no-param-reassign
+    address = address.address || address;
     try {
       // TODO
       return true;

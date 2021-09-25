@@ -3,8 +3,9 @@ import OneAccountInfo from '../classes/OneAccountInfo';
 import optionsHelper from './optionsHelper';
 
 class ChainManagerBase {
-  constructor(options) {
+  constructor(options, wallet) {
     this.options = options;
+    this.wallet = wallet;
   }
 
   get apiRpc() {
@@ -88,7 +89,7 @@ class ChainManagerBase {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  getTransactionFee() {
+  fetchTransactionFeeInfo(tx) {
     return utilsApp.throwToBeImplemented(this);
   }
 

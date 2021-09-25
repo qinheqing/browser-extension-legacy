@@ -32,9 +32,9 @@ class StoreAccount extends BaseStore {
     autorun(() => {
       const { currentAccountRaw } = storeStorage;
       untracked(() => {
-        const { currentAccount } = this;
-        if (currentAccount?.chainKey) {
-          storeChain.setCurrentChainKey(currentAccount?.chainKey);
+        const { currentAccountInfo } = this;
+        if (currentAccountInfo?.chainKey) {
+          storeChain.setCurrentChainKey(currentAccountInfo?.chainKey);
         }
         console.log('clear pending tx on mount');
         storeTx.clearPendingTx();
@@ -56,7 +56,7 @@ class StoreAccount extends BaseStore {
     // TODO debounce
     const wallet = walletFactory.createWallet({
       chainInfo: storeChain.currentChainInfo,
-      accountInfo: this.currentAccount,
+      accountInfo: this.currentAccountInfo,
     });
     storeWallet.setCurrentWallet(wallet);
   }
@@ -66,7 +66,7 @@ class StoreAccount extends BaseStore {
 
   // TODO rename to currentAccountInfo
   @computed
-  get currentAccount() {
+  get currentAccountInfo() {
     if (!storeStorage.currentAccountRaw) {
       return null;
     }
@@ -87,12 +87,12 @@ class StoreAccount extends BaseStore {
 
   @computed
   get currentAccountAddress() {
-    return this.currentAccount?.address;
+    return this.currentAccountInfo?.address;
   }
 
   @computed
   get currentAccountChainKey() {
-    return this.currentAccount?.chainKey;
+    return this.currentAccountInfo?.chainKey;
   }
 
   @computed
@@ -108,7 +108,7 @@ class StoreAccount extends BaseStore {
   @computed
   get currentAccountTypeText() {
     let type;
-    switch (this.currentAccount.type) {
+    switch (this.currentAccountInfo.type) {
       case CONSTS_ACCOUNT_TYPES.Hardware: {
         type = '硬件账户';
         break;
@@ -187,15 +187,15 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   changeAccountName(newName) {
-    this.currentAccount.name = newName;
+    this.currentAccountInfo.name = newName;
     storeStorage.currentAccountRaw = {
       ...storeStorage.currentAccountRaw,
       name: newName,
     };
     const index = findIndex(storeStorage.allAccountsRaw, (e) => {
       return (
-        e.address === this.currentAccount.address &&
-        e.chainKey === this.currentAccount.chainKey
+        e.address === this.currentAccountInfo.address &&
+        e.chainKey === this.currentAccountInfo.chainKey
       );
     });
 
@@ -255,7 +255,7 @@ class StoreAccount extends BaseStore {
       this.addAccounts(addresses);
     }
 
-    if (!this.currentAccount) {
+    if (!this.currentAccountInfo) {
       const _accounts = getAccountsInCurrentChain();
       _accounts[0] && this.setCurrentAccount({ account: _accounts[0] });
     }

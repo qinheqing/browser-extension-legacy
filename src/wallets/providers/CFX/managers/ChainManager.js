@@ -161,9 +161,30 @@ class ChainManager extends ChainManagerBase {
   }
 
   // TODO pass txObject, userInputs( gasPrice,gasLimit ) to estimate fee
-  async getTransactionFee() {
-    // const res = await this.apiRpc.getTransactionFee();
-    return NaN;
+  async fetchTransactionFeeInfo(tx) {
+    // TODO calculate default fee here
+    if (
+      !tx ||
+      !this.wallet.isValidAddress(tx.to) ||
+      !this.wallet.isValidAddress(tx.from)
+    ) {
+      return { fee: NaN };
+    }
+
+    const rpc = this.apiRpc;
+    // const res = await this.apiRpc.fetchTransactionFeeInfo(tx);
+    const gasPrice = await rpc.getGasPrice(CFX_EPOCH_TAG);
+    const estimate = await rpc.estimateGasAndCollateral(tx, CFX_EPOCH_TAG);
+    const { gasLimit, gasUsed, storageCollateralized } = estimate;
+    const gasPriceStr = gasPrice.toString();
+    const gasUsedStr = gasUsed.toString();
+    return {
+      fee: utilsNumber.bigNum(gasPriceStr).times(gasUsedStr).toFixed(),
+      gasPrice: gasPriceStr,
+      gasUsed: gasUsedStr,
+      gasLimit: gasLimit.toString(),
+      storageLimit: storageCollateralized,
+    };
   }
 
   async getTxHistory({ address, limit = 20 }) {
@@ -192,7 +213,7 @@ class ChainManager extends ChainManagerBase {
   confirmCheckMap = {};
 
   async confirmTransaction({ txid }) {
-    const res = await this.confirmedTransaction(txid, { threshold: 0.95 });
+    const res = await this._confirmedTransaction(txid, { threshold: 0.95 });
     return res;
   }
 
@@ -201,7 +222,7 @@ class ChainManager extends ChainManagerBase {
     return true;
   }
 
-  async confirmedTransaction(
+  async _confirmedTransaction(
     transactionHash,
     { delta = 1000, timeout = 30 * 60 * 1000, threshold = 1e-8 } = {},
   ) {
@@ -216,7 +237,7 @@ class ChainManager extends ChainManagerBase {
       if (!this.confirmCheckMap[transactionHash]) {
         throw new Error('confirmTransaction cancelled');
       }
-      const receipt = await this.executedTransaction(transactionHash, {
+      const receipt = await this._executedTransaction(transactionHash, {
         delta,
         timeout,
       });
@@ -241,7 +262,7 @@ class ChainManager extends ChainManagerBase {
     );
   }
 
-  async executedTransaction(
+  async _executedTransaction(
     transactionHash,
     { delta = 1000, timeout = 5 * 60 * 1000 } = {},
   ) {

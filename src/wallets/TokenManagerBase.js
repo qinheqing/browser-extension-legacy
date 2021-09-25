@@ -3,8 +3,9 @@ import utilsApp from '../utils/utilsApp';
 import optionsHelper from './optionsHelper';
 
 export class TokenManagerBase {
-  constructor(options) {
+  constructor(options, wallet) {
     this.options = options;
+    this.wallet = wallet;
     this.tokenChainId = optionsHelper.getChainId(this.options);
   }
 

@@ -340,7 +340,7 @@ function PageTransactionHistory() {
             <PendingTransactionCard
               key={txid}
               txid={txid}
-              account={storeAccount.currentAccount}
+              account={storeAccount.currentAccountInfo}
               onClick={() => {
                 storeHistory.openBlockBrowserLink({ tx: txid });
               }}
@@ -353,7 +353,7 @@ function PageTransactionHistory() {
               <TransactionInfoCard
                 key={txid}
                 tx={tx}
-                account={storeAccount.currentAccount}
+                account={storeAccount.currentAccountInfo}
                 onClick={() => {
                   storeHistory.openBlockBrowserLink({ tx: txid });
                 }}

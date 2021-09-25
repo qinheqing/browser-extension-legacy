@@ -6,6 +6,7 @@ import {
   CONSTS_ACCOUNT_TYPES,
 } from '../consts/consts';
 import utilsApp from '../utils/utilsApp';
+import utilsNumber from '../utils/utilsNumber';
 import ChainManagerBase from './ChainManagerBase';
 import { HdKeyManagerBase } from './HdKeyManager';
 import uiBackgroundProxy from './bg/uiBackgroundProxy';
@@ -47,12 +48,13 @@ class WalletBase {
 
   hardwareModel = CONST_HARDWARE_MODELS.Unknown;
 
-  chainManager = new ChainManagerBase(this.options);
+  chainManager = new ChainManagerBase(this.options, this);
 
-  hdkeyManager = new HdKeyManagerBase(this.options);
+  hdkeyManager = new HdKeyManagerBase(this.options, this);
 
   get keyringProxy() {
-    this._keyringProxy = this._keyringProxy || new KeyringBgProxy(this.options);
+    this._keyringProxy =
+      this._keyringProxy || new KeyringBgProxy(this.options, this);
     return this._keyringProxy;
   }
 
@@ -140,9 +142,8 @@ class WalletBase {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  // TODO pass txObject to estimate fee
-  getTransactionFee() {
-    return this.chainManager.getTransactionFee();
+  fetchTransactionFeeInfo(tx) {
+    return this.chainManager.fetchTransactionFeeInfo(tx);
   }
 
   async getTxHistory({ ...others }) {
@@ -151,8 +152,8 @@ class WalletBase {
 
   // transfer ----------------------------------------------
 
-  async transfer({
-    account,
+  async createGeneralTransferTxObject({
+    accountInfo,
     from,
     to,
     amount,
@@ -160,23 +161,29 @@ class WalletBase {
     contract,
     isToken = false,
   }) {
-    // TODO accountName: feePayer, signer, creator
-    const accountInfo = account || this.accountInfo;
+    // eslint-disable-next-line no-param-reassign
+    accountInfo = accountInfo || this.accountInfo;
 
     assert(accountInfo, 'transfer tx need account to sign');
 
     // const { decimals, mint } = balanceInfo;
     const _decimals = isNil(decimals) ? this.options.balanceDecimals : decimals;
-    // decimals convert
-    // TODO bignumber
-    const _amount = Math.round(parseFloat(amount) * 10 ** _decimals);
+    // decimals convert unit
+    let _amountUnit = utilsNumber.parseUnits(amount, decimals);
+    _amountUnit = utilsNumber.toNormalNumber({
+      value: _amountUnit,
+      roundMode: 'floor',
+      nanText: null,
+    });
+    _amountUnit = _amountUnit ?? undefined;
+
     const _from = from || accountInfo.address;
 
     console.log('transfer', {
       accountInfo,
       _from,
       to,
-      _amount,
+      _amount: _amountUnit,
       _decimals,
       contract,
       isToken,
@@ -184,24 +191,39 @@ class WalletBase {
 
     let tx = null;
     if (isToken) {
-      // transfer token
+      // transfer erc20 token
       tx = await this.createTransferTokenTxObject({
         accountInfo,
-        from: _from,
         to,
-        amount: _amount,
-        decimals: _decimals,
+        amount: _amountUnit,
         contract,
+        from: _from,
+        decimals: _decimals,
       });
     } else {
       // transfer native token
       tx = await this.createTransferTxObject({
         accountInfo,
         to,
-        amount: _amount,
+        amount: _amountUnit,
       });
     }
-    const txid = await this.signAndSendTxObject({ accountInfo, tx });
+    return tx;
+  }
+
+  async addFeeInfoToTx({ tx, feeInfo }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  async transfer({ tx, feeInfo, accountInfo }) {
+    const txWithFeeInfo = await this.addFeeInfoToTx({
+      tx,
+      feeInfo,
+    });
+    const txid = await this.signAndSendTxObject({
+      accountInfo,
+      tx: txWithFeeInfo,
+    });
     return txid;
   }
 
@@ -232,10 +254,14 @@ class WalletBase {
     return utilsApp.throwToBeImplemented(this);
   }
 
+  // TODO move isValidAddress to new class Utils
+  //    isValidAddress() is public, do something like parameter convert, result convert and catch
+  //    then call private method _isValidAddress() which needs to be implemented by subClass
+
   // getLatestNonce
   // get fee from gasNow
   // signMultipleTx
-  isValidAddress({ address }) {
+  isValidAddress(address = '') {
     return utilsApp.throwToBeImplemented(this);
   }
 

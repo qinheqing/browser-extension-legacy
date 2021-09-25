@@ -33,16 +33,23 @@ class ChainManager extends ChainManagerBase {
     return this.options.defaultCommitment;
   }
 
-  async getRecentBlockHash() {
+  async getRecentBlockHashInfo() {
     // ERROR: BlockhashNotFound
     //    Transaction simulation failed: Blockhash not found
     // const commitment = helpersSOL.COMMITMENT_TYPES.finalized;
     const commitment = this.defaultCommitment;
-    const { feeCalculator, blockhash } =
+    const { blockhash, feeCalculator } =
       await this.solWeb3Connection.getRecentBlockhash(commitment);
+
+    /*
+    {
+      blockhash: "Gnb3mvVnLb4ajBFH94URwMgdPTRkQChxqyoybrJPg64j"
+      feeCalculator: { lamportsPerSignature: 5000 }
+    }
+     */
     return {
-      feeCalculator,
       blockhash,
+      feeCalculator,
     };
   }
 
@@ -242,10 +249,13 @@ class ChainManager extends ChainManagerBase {
     return fee;
   }
 
-  async getTransactionFee() {
+  async fetchTransactionFeeInfo(tx) {
     // { blockhash,feeCalculator }
-    const res = await this.solWeb3Connection.getRecentBlockhash();
-    return res?.feeCalculator?.lamportsPerSignature;
+    const res = await this.getRecentBlockHashInfo();
+    const fee = res?.feeCalculator?.lamportsPerSignature ?? NaN;
+    return {
+      fee,
+    };
   }
 
   async getTxHistory({ address, limit = 20 }) {

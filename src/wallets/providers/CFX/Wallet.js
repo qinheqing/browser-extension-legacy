@@ -2,6 +2,7 @@ import assert from 'assert';
 import { Conflux, Contract, format } from 'js-conflux-sdk';
 import WalletBase from '../../WalletBase';
 import utilsApp from '../../../utils/utilsApp';
+import optionsHelper from '../../optionsHelper';
 import ChainManager from './managers/ChainManager';
 import HdKeyManager from './managers/HdKeyManager';
 import TokenManager from './managers/TokenManager';
@@ -12,11 +13,11 @@ class Wallet extends WalletBase {
     return {};
   }
 
-  chainManager = new ChainManager(this.options);
+  chainManager = new ChainManager(this.options, this);
 
-  hdkeyManager = new HdKeyManager(this.options);
+  hdkeyManager = new HdKeyManager(this.options, this);
 
-  tokenManager = new TokenManager(this.options);
+  tokenManager = new TokenManager(this.options, this);
 
   // create tx from ix array
   async _createTxObject({ accountInfo, instructions = [] }) {
@@ -28,21 +29,14 @@ class Wallet extends WalletBase {
     const status = await rpc.getStatus(CFX_EPOCH_TAG);
     const nonce = await rpc.getNextNonce(accountInfo.address, CFX_EPOCH_TAG);
     const epochHeight = await rpc.getEpochNumber(CFX_EPOCH_TAG);
-    const gasPrice = await rpc.getGasPrice(CFX_EPOCH_TAG);
-    const estimate = await rpc.estimateGasAndCollateral(tx, CFX_EPOCH_TAG);
-    const { gasLimit, gasUsed, storageCollateralized } = estimate;
 
-    // always create new Object, as tx may be a Contract Class Instance, NOT plain object
     const txNew = {
+      // always create new Object, as tx may be a Contract Class Instance, NOT plain object
       ...tx,
+      chainId: status.chainId, // endpoint status.chainId
 
       nonce, // sender next nonce
-      chainId: status.chainId, // endpoint status.chainId
       epochHeight,
-
-      gas: gasUsed,
-      gasPrice,
-      storageLimit: storageCollateralized,
     };
     return txNew;
   }
@@ -57,17 +51,18 @@ class Wallet extends WalletBase {
 
   async createTransferTokenTxObject({
     accountInfo,
-    from,
     to,
     amount,
-    decimals,
     contract,
+    from,
+    decimals,
   }) {
     const fromAddress = accountInfo.address;
     const fromAddressHex = format.hexAddress(fromAddress);
     const toAddressHex = format.hexAddress(to);
     const contractApi = this.chainManager.apiRpc.CRC20(contract);
 
+    // create erc20 tx object by conflux.js SDK
     const transferIx = contractApi.transfer(to, amount);
     transferIx.from = fromAddress;
 
@@ -121,18 +116,33 @@ class Wallet extends WalletBase {
     // return requestAirdrop(address);
   }
 
-  isValidAddress({ address }) {
+  isValidAddress(address = '') {
+    // eslint-disable-next-line no-param-reassign
+    address = address.address || address;
     try {
       // TODO
+      const networkId = optionsHelper.getChainId(this.options);
+      const addr1 = format.hexAddress(address);
+      const addr2 = format.address(address, networkId);
       return true;
       // eslint-disable-next-line no-unreachable
-    } catch (ex) {
+    } catch (err) {
       return false;
     }
   }
 
   decodeTransactionData({ address, data }) {
     // noop
+  }
+
+  async addFeeInfoToTx({ tx, feeInfo }) {
+    const { gasUsed, gasPrice, storageLimit } = feeInfo;
+    return {
+      ...tx,
+      gasPrice,
+      gas: gasUsed, // gasLimit
+      storageLimit,
+    };
   }
 }
 

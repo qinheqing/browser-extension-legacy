@@ -166,9 +166,9 @@ function PageTokenAdd() {
               需要支付 {/* TODO to TokenAmountText*/}
               <AmountText
                 value={fee}
-                decimals={storeAccount.currentAccount.decimals}
+                decimals={storeAccount.currentAccountInfo.decimals}
               />{' '}
-              {storeAccount.currentAccount.currency} 添加代币
+              {storeAccount.currentAccountInfo.currency} 添加代币
             </div>
           )
         }

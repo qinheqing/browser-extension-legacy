@@ -249,18 +249,18 @@ function PageHome() {
       }
       title="钱包"
     >
-      {!storeAccount.currentAccount && (
+      {!storeAccount.currentAccountInfo && (
         <div className="h-full u-flex-center px-4">
           点击右上角按钮选择或创建账户
         </div>
       )}
-      {storeAccount.currentAccount && (
+      {storeAccount.currentAccountInfo && (
         <>
           <AccountCard
             key={storeAccount.refreshKey}
             showMaskAssetBalanceEye
             maskAssetBalance={storeStorage.maskAssetBalance}
-            account={storeAccount.currentAccount}
+            account={storeAccount.currentAccountInfo}
             showBalance
             watchBalanceChange
             showActiveBadge={false}

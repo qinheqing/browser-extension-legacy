@@ -9,8 +9,9 @@ import { HdKeyManagerBase } from './HdKeyManager';
 import { UiBackgroundProxy } from './bg/uiBackgroundProxy';
 
 class KeyringToolsBase {
-  constructor(options) {
+  constructor(options, wallet) {
     this.options = options;
+    this.wallet = wallet;
   }
 
   privateKeyToAddress({ privateKey }) {

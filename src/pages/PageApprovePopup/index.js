@@ -44,7 +44,7 @@ const APPROVE_METHODS = {
 };
 
 function ApproveDappSiteInfo({ query, title, showAccountInfo = false }) {
-  const account = storeAccount.currentAccount;
+  const account = storeAccount.currentAccountInfo;
   if (useDataRequiredOrRedirect(account)) {
     return null;
   }
@@ -124,7 +124,7 @@ const CurrentBalanceView = observer(function () {
 });
 
 const ApproveConnection = observer(function ({ onConnect, query }) {
-  const account = storeAccount.currentAccount;
+  const account = storeAccount.currentAccountInfo;
   return (
     <ApprovePageLayout
       query={query}
@@ -179,7 +179,7 @@ function decodeSignMessage({ data, display }) {
 }
 
 const ApproveSign = observer(function ({ query, origin, onReject, onApprove }) {
-  const account = storeAccount.currentAccount;
+  const account = storeAccount.currentAccountInfo;
   const signTextDisplay = decodeSignMessage(query.request.params);
   const signMessageEncode = bs58.encode(query.request.params.data);
   // TODO hex data sign warning
@@ -340,9 +340,9 @@ const ApproveTransaction = observer(function ({
   ]);
 
   useEffect(() => {
-    storeTransfer.fetchTransactionFee();
+    storeTransfer.fetchFeeInfoDebounce();
   }, []);
-  const account = storeAccount.currentAccount;
+  const account = storeAccount.currentAccountInfo;
   if (!account) {
     return <div>Current wallet account not found</div>;
   }

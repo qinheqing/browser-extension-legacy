@@ -118,6 +118,11 @@ class StoreChain extends BaseStore {
   get currentBaseChain() {
     return this.currentChainInfo?.baseChain;
   }
+
+  @computed
+  get currentNativeTokenUnitName() {
+    return this.currentChainInfo?.nativeToken?.unitName;
+  }
 }
 
 global._storeChain = new StoreChain();

@@ -43,17 +43,30 @@ function isValidNumber(value) {
   return !bigNum(value).isNaN();
 }
 
-function toNormalNumber({ value, decimals, precision, roundMode = 'round' }) {
+function parseUnits(value, decimals) {
+  return bigNum(10).pow(decimals).times(value).toFixed();
+}
+
+function toNormalNumber({
+  value,
+  decimals = 0,
+  precision,
+  roundMode = 'round',
+  nanText = '-',
+}) {
   const num = bigNum(value).div(bigNum(10).pow(decimals));
-  const result = num.toFixed(precision, toBnRoundMode(roundMode));
-  if (result === 'NaN') {
-    return '-';
+  if (num.isNaN()) {
+    return nanText;
+  }
+  const numStr = num.toFixed(precision, toBnRoundMode(roundMode));
+  if (numStr === 'NaN') {
+    return nanText;
   }
 
   if (num.equals(0)) {
     return '0';
   }
-  return result;
+  return numStr;
 }
 
 function hexToIntString(hex) {
@@ -64,6 +77,7 @@ const utilsNumber = {
   bigNum,
   isValidNumber,
   toNormalNumber,
+  parseUnits,
   toBnRoundMode,
   hexToIntString,
 };
