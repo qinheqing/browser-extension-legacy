@@ -17,7 +17,6 @@ class DappMessageSOL {
     // need determine messageType here:
     //    https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L37
     this.__messageType__ = 'ONEKEY_EXT';
-    throw new Error('use DappMessageSOL instead');
   }
 
   // Message from Ext -> Dapp

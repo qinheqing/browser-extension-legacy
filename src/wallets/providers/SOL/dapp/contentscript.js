@@ -1,5 +1,5 @@
 import { CONST_DAPP_MESSAGE_TYPES } from '../../../../consts/consts';
-import OneDappMessage from '../../../../classes/OneDappMessage';
+import DappMessageSOL from './DappMessageSOL';
 
 function init() {
   window.addEventListener(
@@ -12,7 +12,7 @@ function init() {
 
       // TODO only chrome
       window.chrome.runtime.sendMessage(
-        OneDappMessage.extensionRuntimeMessage({
+        DappMessageSOL.extensionRuntimeMessage({
           channel: CONST_DAPP_MESSAGE_TYPES.CHANNEL_CONTENT_TO_BG,
           data: event.detail,
         }),

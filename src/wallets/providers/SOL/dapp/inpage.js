@@ -31,6 +31,14 @@ wallet.postMessage(); // low level method
 solana.listeners('disconnect')
 
 // check sign, signTransaction, signAllTransactions at sollet PopupPage.js
+//    sollet: https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L199
+this.sendRequest('connect', ...)
+this.sendRequest('disconnect', ...)
+this.sendRequest('sign', ...)
+this.sendRequest('signTransaction', ...)
+this.sendRequest('signAllTransactions', ...)
+this.emit('disconnect');
+this.emit('connect');
 
  */
 

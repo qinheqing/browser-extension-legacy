@@ -1,5 +1,6 @@
 import { CONST_DAPP_MESSAGE_TYPES } from '../../../../consts/consts';
-import OneDappMessage from '../../../../classes/OneDappMessage';
+import DappMessageSOL from './DappMessageSOL';
+import { CONST_DAPP_METHODS_SOL } from './consts';
 
 const responseHandlers = new Map();
 let unlockedMnemonic = '';
@@ -37,7 +38,7 @@ function handleConnect(message, sender, sendResponse) {
     } else {
       // Send message to content -> inpage -> dapp(sol-wallet-adapter)
       sendResponse(
-        OneDappMessage.connectedMessage({
+        DappMessageSOL.connectedMessage({
           id: message.data.id,
           params: {
             publicKey: connectedWallet.publicKey,
@@ -59,7 +60,7 @@ function handleDisconnect(message, sender, sendResponse) {
       },
       () =>
         sendResponse(
-          OneDappMessage.disconnectedMessage({
+          DappMessageSOL.disconnectedMessage({
             id: message.data.id,
           }),
         ),
@@ -78,9 +79,9 @@ function init() {
       };
 
       if (message.channel === CONST_DAPP_MESSAGE_TYPES.CHANNEL_CONTENT_TO_BG) {
-        if (message.data.method === 'connect') {
+        if (message.data.method === CONST_DAPP_METHODS_SOL.connect) {
           handleConnect(message, sender, sendResponse);
-        } else if (message.data.method === 'disconnect') {
+        } else if (message.data.method === CONST_DAPP_METHODS_SOL.disconnect) {
           handleDisconnect(message, sender, sendResponse);
         } else {
           launchPopup(message, sender, sendResponse);

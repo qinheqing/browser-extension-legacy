@@ -15,7 +15,7 @@ import {
 import storeAccount from '../../store/storeAccount';
 import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
 import ReactJsonView from '../../components/ReactJsonView';
-import OneDappMessage from '../../classes/OneDappMessage';
+import DappMessageSOL from '../../wallets/providers/SOL/dapp/DappMessageSOL';
 import storeWallet from '../../store/storeWallet';
 import TokenBalance from '../../components/TokenBalance';
 import storeToken from '../../store/storeToken';
@@ -35,13 +35,7 @@ import { ChainLogoIcon } from '../../components/LogoIcon';
 import CopyHandle from '../../components/CopyHandle';
 import storeChain from '../../store/storeChain';
 import storeApp from '../../store/storeApp';
-
-const APPROVE_METHODS = {
-  connect: 'connect',
-  sign: 'sign',
-  signTransaction: 'signTransaction',
-  signAllTransactions: 'signAllTransactions',
-};
+import { CONST_DAPP_METHODS_SOL } from '../../wallets/providers/SOL/dapp/consts';
 
 function ApproveDappSiteInfo({ query, title, showAccountInfo = false }) {
   const account = storeAccount.currentAccountInfo;
@@ -421,7 +415,7 @@ const ApproveTransaction = observer(function ({
 // message from popup -> bg -> content -> inpage -> dapp
 function sendMessageToBg(message) {
   global.chrome.runtime.sendMessage(
-    OneDappMessage.extensionRuntimeMessage({
+    DappMessageSOL.extensionRuntimeMessage({
       channel: CONST_DAPP_MESSAGE_TYPES.CHANNEL_POPUP_TO_BG,
       data: message,
     }),
@@ -444,7 +438,7 @@ function PageApprovePopup() {
     const requestObj = JSON.parse(request);
 
     // if method===sign, convert object data to Uint8Array
-    if (requestObj.method === APPROVE_METHODS.sign) {
+    if (requestObj.method === CONST_DAPP_METHODS_SOL.sign) {
       const dataObj = requestObj.params.data;
       // Deserialize `data` into a Uint8Array
       if (!dataObj) {
@@ -471,12 +465,12 @@ function PageApprovePopup() {
       // check event origin, source, target for safety
       if (e.origin === query.origin && e.source === window.opener) {
         if (
-          e.data.method !== APPROVE_METHODS.signTransaction &&
-          e.data.method !== APPROVE_METHODS.signAllTransactions &&
-          e.data.method !== APPROVE_METHODS.sign
+          e.data.method !== CONST_DAPP_METHODS_SOL.signTransaction &&
+          e.data.method !== CONST_DAPP_METHODS_SOL.signAllTransactions &&
+          e.data.method !== CONST_DAPP_METHODS_SOL.sign
         ) {
           sendMessageToBg(
-            OneDappMessage.errorMessage({
+            DappMessageSOL.errorMessage({
               id: e.data.id,
               error: `Unsupported approve method > ${e.data.method}`,
             }),
@@ -495,22 +489,22 @@ function PageApprovePopup() {
   const popRequest = () => setRequestsQueue((requests) => requests.slice(1));
 
   const { messages, messageDisplay } = useMemo(() => {
-    if (!request || request.method === APPROVE_METHODS.connect) {
+    if (!request || request.method === CONST_DAPP_METHODS_SOL.connect) {
       return { messages: [], messageDisplay: 'tx' };
     }
 
     switch (request.method) {
-      case APPROVE_METHODS.signTransaction:
+      case CONST_DAPP_METHODS_SOL.signTransaction:
         return {
           messages: [request.params.message],
           messageDisplay: 'tx',
         };
-      case APPROVE_METHODS.signAllTransactions:
+      case CONST_DAPP_METHODS_SOL.signAllTransactions:
         return {
           messages: request.params.messages.map((m) => m),
           messageDisplay: 'tx',
         };
-      case APPROVE_METHODS.sign:
+      case CONST_DAPP_METHODS_SOL.sign:
         if (!(request.params.data instanceof Uint8Array)) {
           throw new Error('Data must be an instance of Uint8Array');
         }
@@ -557,7 +551,7 @@ function PageApprovePopup() {
     }
 
     sendMessageToBg(
-      OneDappMessage.signedMessage({
+      DappMessageSOL.signedMessage({
         id: request.id,
         result: {
           ...payload,
@@ -571,7 +565,7 @@ function PageApprovePopup() {
 
   const onReject = () => {
     sendMessageToBg(
-      OneDappMessage.errorMessage({
+      DappMessageSOL.errorMessage({
         id: request.id,
         error: 'Transaction cancelled',
       }),
@@ -582,10 +576,11 @@ function PageApprovePopup() {
 
   // signTransaction(txDataMessage)
   if (
-    request.method === APPROVE_METHODS.signTransaction ||
-    request.method === APPROVE_METHODS.signAllTransactions
+    request.method === CONST_DAPP_METHODS_SOL.signTransaction ||
+    request.method === CONST_DAPP_METHODS_SOL.signAllTransactions
   ) {
-    const isBatch = request.method === APPROVE_METHODS.signAllTransactions;
+    const isBatch =
+      request.method === CONST_DAPP_METHODS_SOL.signAllTransactions;
     // debugger;
     return (
       <ApproveTransaction
@@ -598,14 +593,14 @@ function PageApprovePopup() {
   }
 
   // signMessage(plainTextMessage)
-  if (request.method === APPROVE_METHODS.sign) {
+  if (request.method === CONST_DAPP_METHODS_SOL.sign) {
     return (
       <ApproveSign query={query} onApprove={onApprove} onReject={onReject} />
     );
   }
 
   // connection(url)
-  if (request.method === APPROVE_METHODS.connect) {
+  if (request.method === CONST_DAPP_METHODS_SOL.connect) {
     // Approve the parent page to connect to this wallet.
     const onConnect = ({ autoApprove = false } = {}) => {
       // * setConnectedAccount(wallet.publicKey);
@@ -628,7 +623,7 @@ function PageApprovePopup() {
       // * send publicKey to inpage provider
       const publicKeySendToDapp = storeAccount.currentAccountAddress;
       sendMessageToBg(
-        OneDappMessage.connectedMessage({
+        DappMessageSOL.connectedMessage({
           id: request.id,
           params: {
             publicKey: publicKeySendToDapp,
