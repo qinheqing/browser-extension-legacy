@@ -62,7 +62,11 @@ import accountImporter from './account-import-strategies';
 import seedPhraseVerifier from './lib/seed-phrase-verifier';
 import DetectChainController from './controllers/detect-chain';
 import { MOCK_CHAIN_ID_WHEN_NEW_APP } from './controllers/permissions/permissionsMethodMiddleware';
-import { STREAM_CONTROLLER, STREAM_PROVIDER } from './constants/consts';
+import {
+  STREAM_CONTROLLER,
+  STREAM_PROVIDER,
+  STREAM_PROVIDER_CFX,
+} from './constants/consts';
 import i18nBackground from './i18nBackground';
 
 export const METAMASK_CONTROLLER_EVENTS = {
@@ -1854,6 +1858,7 @@ export default class MetamaskController extends EventEmitter {
 
     // messages between inpage and background
     this.setupProviderConnection(mux.createStream(STREAM_PROVIDER), sender);
+    this.setupProviderConnection(mux.createStream(STREAM_PROVIDER_CFX), sender);
 
     // TODO:LegacyProvider: Delete
     // legacy streams
@@ -1889,6 +1894,12 @@ export default class MetamaskController extends EventEmitter {
     this.setupControllerConnection(mux.createStream(STREAM_CONTROLLER));
     this.setupProviderConnection(
       mux.createStream(STREAM_PROVIDER),
+      sender,
+      true,
+    );
+
+    this.setupProviderConnection(
+      mux.createStream(STREAM_PROVIDER_CFX),
       sender,
       true,
     );
@@ -1964,6 +1975,7 @@ export default class MetamaskController extends EventEmitter {
     }
 
     const engine = this.setupProviderEngine({
+      streamName: outStream._name,
       origin,
       location: sender.url,
       extensionId,
@@ -2000,6 +2012,7 @@ export default class MetamaskController extends EventEmitter {
    * @param {boolean} [options.isInternal] - True if called for a connection to an internal process
    * */
   setupProviderEngine({
+    streamName,
     origin,
     location,
     extensionId,
@@ -2023,13 +2036,13 @@ export default class MetamaskController extends EventEmitter {
     );
 
     // append origin to each request
-    engine.push(createOriginMiddleware({ origin }));
+    engine.push(createOriginMiddleware({ origin, location, streamName }));
     // append tabId to each request if it exists
     if (tabId) {
       engine.push(createTabIdMiddleware({ tabId }));
     }
     // logging
-    engine.push(createLoggerMiddleware({ origin }));
+    engine.push(createLoggerMiddleware({ origin, location }));
     engine.push(
       createOnboardingMiddleware({
         location,

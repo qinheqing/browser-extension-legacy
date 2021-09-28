@@ -1,3 +1,4 @@
+import { STREAM_PROVIDER_CFX } from '../../constants/consts';
 import handlers from './handlers';
 
 const handlerMap = handlers.reduce((map, handler) => {
@@ -26,6 +27,15 @@ const handlerMap = handlers.reduce((map, handler) => {
  */
 export default function createMethodMiddleware(opts) {
   return function methodMiddleware(req, res, next, end) {
+    if (req?.streamName === STREAM_PROVIDER_CFX) {
+      console.log('DAPP_RPC createMethodMiddleware', {
+        method: req.method,
+        req,
+        services: opts,
+      });
+      return next();
+    }
+
     if (handlerMap.has(req.method)) {
       return handlerMap.get(req.method)(req, res, next, end, opts);
     }

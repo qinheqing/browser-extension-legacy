@@ -22,7 +22,11 @@ import {
 import ExtensionPlatform from './platforms/extension';
 import { setupMultiplex } from './lib/stream-utils';
 import { getEnvironmentType } from './lib/util';
-import { STREAM_CONTROLLER, STREAM_PROVIDER } from './constants/consts';
+import {
+  STREAM_CONTROLLER,
+  STREAM_PROVIDER,
+  STREAM_PROVIDER_CFX,
+} from './constants/consts';
 
 start().catch(log.error);
 
@@ -132,6 +136,7 @@ function connectToAccountManager(connectionStream, cb) {
   const mx = setupMultiplex(connectionStream);
   setupControllerConnection(mx.createStream(STREAM_CONTROLLER), cb);
   setupWeb3Connection(mx.createStream(STREAM_PROVIDER));
+  setupWeb3Connection(mx.createStream(STREAM_PROVIDER_CFX));
 }
 
 /**

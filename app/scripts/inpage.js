@@ -39,10 +39,12 @@ import {
 } from '@onekeyhq/providers';
 import log from '../../src/log/logger';
 import inpageSolana from '../../src/wallets/providers/SOL/dapp/inpage';
+import inpageConflux from '../../src/wallets/providers/CFX/dapp/inpage';
 import {
   STREAM_CONTENT_SCRIPT,
   STREAM_INPAGE,
   STREAM_PROVIDER,
+  STREAM_PROVIDER_CFX,
 } from './constants/consts';
 import inpageConflict from './inpageConflict';
 // import inpageSolanaLegacy from '../../src/wallets/SOL/dapp/inpageSolanaLegacy';
@@ -59,6 +61,7 @@ const metamaskStream = new WindowPostMessageStream({
   target: STREAM_CONTENT_SCRIPT,
 });
 
+// ETH provider ----------------------------------------------
 const provider = initializeProvider({
   connectionStream: metamaskStream,
   jsonRpcStreamName: STREAM_PROVIDER,
@@ -66,8 +69,18 @@ const provider = initializeProvider({
   shouldShimWeb3: false, // manually set window.ethereum by setGlobalProvider()
   shouldSetOnWindow: false, // manually shimWeb3 by shimWeb3()
 });
-
 inpageConflict.resolveConflict({ provider });
 
+// SOL provider ----------------------------------------------
 inpageSolana.init();
 // inpageSolanaLegacy.init();
+
+// CFX provider ----------------------------------------------
+const providerConflux = initializeProvider({
+  connectionStream: metamaskStream,
+  jsonRpcStreamName: STREAM_PROVIDER_CFX,
+  logger: log,
+  shouldShimWeb3: false, // manually set window.ethereum by setGlobalProvider()
+  shouldSetOnWindow: false, // manually shimWeb3 by shimWeb3()
+});
+inpageConflux.init({ provider: providerConflux });

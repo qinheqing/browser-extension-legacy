@@ -17,10 +17,17 @@ export default function createLoggerMiddleware(opts) {
         //    this log will send to sentry, display error object directly
         log.error('Error in RPC response >>> \n', res.error);
       }
+
       if (req.isMetamaskInternal) {
         return;
       }
-      log.info(`RPC (${opts.origin}):`, req, '->', res);
+
+      log.info(
+        `DAPP_RPC (${opts.origin}): ${opts.location}`,
+        req,
+        '\r\n -> ',
+        res,
+      );
       cb();
     });
   };

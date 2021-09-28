@@ -9,6 +9,7 @@ import {
   STREAM_CONTENT_SCRIPT,
   STREAM_INPAGE,
   STREAM_PROVIDER,
+  STREAM_PROVIDER_CFX,
 } from './constants/consts';
 // import { obj as createThoughStream } from 'through2';
 
@@ -87,6 +88,7 @@ async function setupStreams() {
 
   // forward communication across inpage-background for these channels only
   forwardTrafficBetweenMuxes(STREAM_PROVIDER, pageMux, extensionMux);
+  forwardTrafficBetweenMuxes(STREAM_PROVIDER_CFX, pageMux, extensionMux);
 
   // connect "phishing" channel to warning system
   const phishingStream = extensionMux.createStream('phishing');
@@ -117,18 +119,13 @@ function logStreamDisconnectWarning(remoteLabel, error) {
   );
 }
 
-/**
- * This function must ONLY be called in pump destruction/close callbacks.
- * Notifies the inpage context that streams have failed, via window.postMessage.
- * Relies on obj-multiplex and post-message-stream implementation details.
- */
-function notifyInpageOfStreamFailure() {
+function _notifyInpageOfStreamFailureForProvider(name) {
   window.postMessage(
     {
       target: STREAM_INPAGE, // the post-message-stream "target"
       data: {
         // this object gets passed to obj-multiplex
-        name: STREAM_PROVIDER, // the obj-multiplex channel name
+        name, // the obj-multiplex channel name
         data: {
           jsonrpc: '2.0',
           method: 'METAMASK_STREAM_FAILURE',
@@ -137,6 +134,16 @@ function notifyInpageOfStreamFailure() {
     },
     window.location.origin,
   );
+}
+
+/**
+ * This function must ONLY be called in pump destruction/close callbacks.
+ * Notifies the inpage context that streams have failed, via window.postMessage.
+ * Relies on obj-multiplex and post-message-stream implementation details.
+ */
+function notifyInpageOfStreamFailure() {
+  _notifyInpageOfStreamFailureForProvider(STREAM_PROVIDER);
+  _notifyInpageOfStreamFailureForProvider(STREAM_PROVIDER_CFX);
 }
 
 /**

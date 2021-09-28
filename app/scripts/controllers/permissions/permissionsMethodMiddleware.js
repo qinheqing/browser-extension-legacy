@@ -1,7 +1,9 @@
 import { createAsyncMiddleware } from '@onekeyhq/json-rpc-engine';
 import { ethErrors } from 'eth-rpc-errors';
+import handlersCFX from 'wallets/providers/CFX/dapp/handlers';
 import bgHelpers from '../../../../src/wallets/bg/bgHelpers';
 import utilsApp from '../../../../src/utils/utilsApp';
+import { STREAM_PROVIDER_CFX } from '../../constants/consts';
 
 export const MOCK_ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -26,6 +28,7 @@ export default function createPermissionsMethodMiddleware({
   hasPermission,
   notifyAccountsChanged,
   requestAccountsPermission,
+  ...others
 }) {
   let isProcessingRequestAccounts = false;
 
@@ -55,6 +58,31 @@ export default function createPermissionsMethodMiddleware({
       }
     }
 
+    if (req && req?.streamName === STREAM_PROVIDER_CFX) {
+      const services = {
+        addDomainMetadata,
+        getAccounts,
+        getUnlockPromise,
+        hasPermission,
+        notifyAccountsChanged,
+        requestAccountsPermission,
+        ...others,
+      };
+      console.log('DAPP_RPC createPermissionsMethodMiddleware', {
+        method: req.method,
+        req,
+        services,
+      });
+
+      await handlersCFX.handleDappMethods({
+        req,
+        res,
+        next,
+        services,
+      });
+      return;
+    }
+
     switch (req.method) {
       // Intercepting eth_accounts requests for backwards compatibility:
       // The getAccounts call below wraps the rpc-cap middleware, and returns
@@ -72,6 +100,7 @@ export default function createPermissionsMethodMiddleware({
           return;
         }
 
+        // check if domain is approved
         if (hasPermission('eth_accounts')) {
           isProcessingRequestAccounts = true;
           await getUnlockPromise();

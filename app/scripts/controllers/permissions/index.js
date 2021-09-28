@@ -115,6 +115,7 @@ export class PermissionsController {
     );
 
     engine.push(
+      // @onekeyhq/rcp-cap
       this.permissions.providerMiddlewareFunction.bind(this.permissions, {
         origin,
       }),
@@ -719,6 +720,7 @@ export class PermissionsController {
             metadata: { id, origin },
           } = req;
 
+          console.log('>>>> requestUserApproval <<<<<');
           return this.approvals.addAndShowApprovalRequest({
             id,
             origin,

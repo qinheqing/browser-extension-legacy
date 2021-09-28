@@ -6,10 +6,13 @@
 export default function createOriginMiddleware(opts) {
   return function originMiddleware(
     /** @type {any} */ req,
-    /** @type {any} */ _,
+    /** @type {any} */ res,
     /** @type {Function} */ next,
   ) {
     req.origin = opts.origin;
+    req.location = opts.location;
+    req.streamName = opts.streamName;
+    res.streamName = opts.streamName;
     next();
   };
 }
