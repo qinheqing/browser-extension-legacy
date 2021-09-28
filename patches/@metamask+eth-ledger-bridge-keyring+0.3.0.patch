@@ -1,0 +1,13 @@
+diff --git a/node_modules/@metamask/eth-ledger-bridge-keyring/index.js b/node_modules/@metamask/eth-ledger-bridge-keyring/index.js
+index 3a285d7..6b97e3c 100644
+--- a/node_modules/@metamask/eth-ledger-bridge-keyring/index.js
++++ b/node_modules/@metamask/eth-ledger-bridge-keyring/index.js
+@@ -30,7 +30,7 @@ class LedgerBridgeKeyring extends EventEmitter {
+     this.network = 'mainnet'
+     this.implementFullBIP44 = false
+     this.deserialize(opts)
+-    this._setupIframe()
++    // this._setupIframe()
+   }
+ 
+   serialize () {
