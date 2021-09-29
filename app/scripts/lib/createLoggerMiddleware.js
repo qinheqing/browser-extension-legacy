@@ -11,6 +11,8 @@ export default function createLoggerMiddleware(opts) {
     /** @type {any} */ res,
     /** @type {Function} */ next,
   ) {
+    log.info(`DAPP_RPC start (${opts.origin}): ${opts.location}`, req);
+
     next((/** @type {Function} */ cb) => {
       if (res.error) {
         // https://sentry.io/organizations/onekey_hq/issues/2296866142
@@ -23,7 +25,7 @@ export default function createLoggerMiddleware(opts) {
       }
 
       log.info(
-        `DAPP_RPC (${opts.origin}): ${opts.location}`,
+        `DAPP_RPC end (${opts.origin}): ${opts.location}`,
         req,
         '\r\n -> ',
         res,

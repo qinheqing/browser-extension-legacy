@@ -3,6 +3,7 @@ import {
   mergeMiddleware,
 } from '@onekeyhq/json-rpc-engine';
 import createBlockRefRewriteMiddleware from 'eth-json-rpc-middleware/block-ref-rewrite';
+import createBlockRefMiddleware from 'eth-json-rpc-middleware/block-ref';
 import createBlockCacheMiddleware from 'eth-json-rpc-middleware/block-cache';
 import createInflightMiddleware from 'eth-json-rpc-middleware/inflight-cache';
 import createBlockTrackerInspectorMiddleware from 'eth-json-rpc-middleware/block-tracker-inspector';

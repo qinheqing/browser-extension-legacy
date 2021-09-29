@@ -1,3 +1,4 @@
+import log from 'loglevel';
 import { STREAM_PROVIDER_CFX } from '../../constants/consts';
 import handlers from './handlers';
 
@@ -28,11 +29,11 @@ const handlerMap = handlers.reduce((map, handler) => {
 export default function createMethodMiddleware(opts) {
   return function methodMiddleware(req, res, next, end) {
     if (req?.streamName === STREAM_PROVIDER_CFX) {
-      console.log('DAPP_RPC createMethodMiddleware', {
-        method: req.method,
-        req,
-        services: opts,
-      });
+      // log.info('DAPP_RPC_MIDDLEWARE', req.id, {
+      //   method: req.method,
+      //   req,
+      //   services: opts,
+      // });
       return next();
     }
 

@@ -1,6 +1,7 @@
 import { createAsyncMiddleware } from '@onekeyhq/json-rpc-engine';
 import { ethErrors } from 'eth-rpc-errors';
 import handlersCFX from 'wallets/providers/CFX/dapp/handlers';
+import log from 'loglevel';
 import bgHelpers from '../../../../src/wallets/bg/bgHelpers';
 import utilsApp from '../../../../src/utils/utilsApp';
 import { STREAM_PROVIDER_CFX } from '../../constants/consts';
@@ -68,11 +69,11 @@ export default function createPermissionsMethodMiddleware({
         requestAccountsPermission,
         ...others,
       };
-      console.log('DAPP_RPC createPermissionsMethodMiddleware', {
-        method: req.method,
-        req,
-        services,
-      });
+      // log.info('DAPP_RPC_MIDDLEWARE', req.id, {
+      //   method: req.method,
+      //   req,
+      //   services,
+      // });
 
       await handlersCFX.handleDappMethods({
         req,

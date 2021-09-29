@@ -17,6 +17,11 @@ async function handleDappMethods({ req, res, next, services }) {
     method = method.replace(/^eth_/giu, 'cfx_');
   }
 
+  /* TODO network changed events change these fields will cause dapp error, provider init set value error
+    conflux.chainId='0x2a'
+    conflux.networkVersion='42'
+    conflux.selectedAddress='cfxtest:aakwe36c88x8y84h53fkfk8br52m67mpkp63et1ztm'
+  */
   res.cfx_isMocked = true; // TODO remove
 
   // wallet method ----------------------------------------------
@@ -60,7 +65,7 @@ async function handleDappMethods({ req, res, next, services }) {
   */
   if (method === 'cfx_requestAccounts') {
     res.result = [];
-    await requestAccountsPermission(); // wallet_requestPermissions
+    // await requestAccountsPermission(); // wallet_requestPermissions
     res.result = [mockAddress];
     return;
   }
@@ -71,9 +76,10 @@ async function handleDappMethods({ req, res, next, services }) {
   }
 
   // chain method ----------------------------------------------
+  // - eth_blockNumber
   // - eth_epochNumber
   // - eth_call
-  // -
+  // - net_version
 
   console.log('RPC handleDappMethods', req);
 }
