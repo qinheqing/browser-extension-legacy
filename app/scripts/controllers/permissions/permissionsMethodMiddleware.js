@@ -16,7 +16,7 @@ export const MOCK_CHAIN_ID_WHEN_NEW_APP = {
 };
 
 function showBrowserNotification({ title, message, url }) {
-  global.$$extensionPlatform?._showNotification(title, message, url);
+  global.$ok_extensionPlatform?._showNotification(title, message, url);
 }
 
 /**

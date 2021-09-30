@@ -327,7 +327,7 @@ const ApproveTransaction = observer(function ({
     Promise.all(txStrList.map(async (txStr) => decodeTxAsync(txStr))).then(
       (txs) => setTxListDecoded(txs),
     );
-    global.$$decodeTxAsync = decodeTxAsync;
+    global.$ok_decodeTxAsync = decodeTxAsync;
   }, [
     // DO NOT use txStrList, cause infinite render
     messageToSign,
@@ -481,7 +481,7 @@ function PageApprovePopup() {
       }
     }
     window.addEventListener('message', messageHandler);
-    global.$$getApproveQuery = () => console.log(query);
+    global.$ok_getApproveQuery = () => console.log(query);
     return () => window.removeEventListener('message', messageHandler);
   }, [query.origin, sendMessageToBg]);
 

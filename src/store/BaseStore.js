@@ -8,7 +8,7 @@ configure({
   // https://mobx.js.org/configuration.html#enforceactions
   enforceActions: 'never',
 });
-global.__mobxToJS = toJS;
+global.$ok_mobxToJS = toJS;
 
 class BaseStore {
   constructor(props) {

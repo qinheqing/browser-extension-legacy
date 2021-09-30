@@ -44,7 +44,7 @@ async function autoSaveBrowserTabsId({ platform }) {
 async function start() {
   // create platform global
   global.platform = new ExtensionPlatform();
-  global.$$extensionPlatform = global.platform;
+  global.$ok_extensionPlatform = global.platform;
 
   autoSaveBrowserTabsId({ platform: global.platform });
 

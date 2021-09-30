@@ -61,8 +61,8 @@ const firstTimeState = { ...rawFirstTimeState };
 const platform = new ExtensionPlatform();
 platform.clearCurrentTabsList();
 // duplicate with [ global.METAMASK_NOTIFIER.platform ]
-global.$$extensionPlatform = platform;
-global.$$testThrowError = () => {
+global.$ok_extensionPlatform = platform;
+global.$ok_testThrowError = () => {
   setTimeout(() => {
     throw new Error(`Error test: ${new Date().getTime()}`);
   }, 1000);
@@ -298,7 +298,7 @@ function setupController(initState, initLangCode) {
   backgroundContainer.setRootController(controller);
 
   if (inTest || process.env.METAMASK_DEBUG) {
-    global.$$metamaskController = controller;
+    global.$ok_metamaskController = controller;
   }
 
   setupEnsIpfsResolver({
@@ -589,4 +589,6 @@ extension.runtime.onInstalled.addListener(({ reason }) => {
   }
 });
 
+global.$ok_openPopup = openPopup;
+global.$ok_triggerUi = triggerUi;
 backgroundSolana.init();

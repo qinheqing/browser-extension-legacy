@@ -26,7 +26,7 @@ function createWallet(options) {
       break;
     case CONST_CHAIN_KEYS.SOL:
       wallet = new WalletSOL(options);
-      global.$$walletSOL = wallet;
+      global.$ok_solWallet = wallet;
       break;
     case CONST_CHAIN_KEYS.CFX:
       wallet = new WalletCFX(options);

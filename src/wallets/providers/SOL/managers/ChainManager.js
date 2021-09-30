@@ -17,7 +17,7 @@ class ChainManager extends ChainManagerBase {
     this.solWeb3Connection = this.apiRpc;
 
     // TODO remove
-    global.$$chainSOL = this;
+    global.$ok_solChain = this;
   }
 
   createApiRpc({ url }) {

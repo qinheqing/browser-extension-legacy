@@ -64,7 +64,7 @@ function getBnTable() {
   }
   return _bnTable;
 }
-global.$$getBnTable = getBnTable;
+global.$ok_getBnTable = getBnTable;
 
 export function isDefaultMetaMaskChain(chainId) {
   if (

@@ -53,6 +53,6 @@ class UiBackgroundProxy {
 }
 
 const uiBackgroundProxy = new UiBackgroundProxy();
-global.$$uiBackgroundProxy = uiBackgroundProxy;
+global.$ok_uiBackgroundProxy = uiBackgroundProxy;
 export default uiBackgroundProxy;
 export { UiBackgroundProxy };

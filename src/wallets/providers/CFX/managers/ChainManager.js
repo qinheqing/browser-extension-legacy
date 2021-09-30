@@ -16,7 +16,7 @@ class ChainManager extends ChainManagerBase {
       networkId: chainId,
       // timeout: 300 * 1000, // request timeout in ms, default 300*1000 ms === 5 minute
     });
-    global.$$confluxRpc = confluxRpc;
+    global.$ok_confluxRpc = confluxRpc;
     return confluxRpc;
   }
 

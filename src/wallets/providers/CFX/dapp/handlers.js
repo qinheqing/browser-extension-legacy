@@ -29,7 +29,9 @@ async function handleDappMethods({ req, res, next, services }) {
   // - onekey_setOtherProviderStatus
   // - metamask_getProviderState
   // - metamask_sendDomainMetadata
-  // - wallet_switchEthereumChain
+  // - wallet_addEthereumChain
+  // - wallet_switchEthereumChain ( ETH not implements )
+  // - wallet_watchAsset, metamask_watchAsset // add token
   // - eth_requestAccounts
   // - eth_accounts
   // - eth_chainId

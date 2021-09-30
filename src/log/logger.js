@@ -1,6 +1,6 @@
 import logger from 'loglevel';
 
-global.$$logger = logger;
+global.$ok_logger = logger;
 
 // [setDefaultLevel] and [setLevel] will save [loglevel] to localStorage.
 logger.setDefaultLevel('warn');
