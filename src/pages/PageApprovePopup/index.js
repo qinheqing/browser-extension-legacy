@@ -6,6 +6,7 @@ import bs58 from 'bs58';
 import { Message, PublicKey } from '@solana/web3.js';
 import { isString, isNumber, isDate } from 'lodash';
 import BN from 'bn.js';
+import { useParams } from 'react-router-dom';
 import AppPageLayout from '../../components/AppPageLayout';
 import {
   CONST_CHAIN_KEYS,
@@ -658,12 +659,14 @@ PageApprovePopup.propTypes = {
 
 function PageApprovePopupEnsureChain() {
   const chainInfo = storeChain?.currentChainInfo;
+  const { chain } = useParams();
 
   if (chainInfo?.baseChain !== CONST_CHAIN_KEYS.SOL || !utilsApp.isNewHome()) {
     return (
       <div className="flex flex-col items-center p-4">
         <div className="text-center py-16">请先切换到 Solana 网络</div>
         <OneButton onClick={() => window.close()}>关闭弹窗</OneButton>
+        <div className="text-sm text-gray-500 mt-4">required: {chain}</div>
       </div>
     );
   }

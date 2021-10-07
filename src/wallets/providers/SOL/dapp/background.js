@@ -15,7 +15,7 @@ function launchPopup(message, sender, sendResponse) {
   window.chrome.windows.getLastFocused((focusedWindow) => {
     // open new chrome window
     window.chrome.windows.create({
-      url: `notification.html#app/approve-popup/?${searchParams.toString()}`,
+      url: `notification.html#app/approve-popup/sol/?${searchParams.toString()}`,
       type: 'popup',
       width: 360,
       height: 600,

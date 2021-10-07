@@ -80,6 +80,7 @@
     "unlimitedStorage",
     "clipboardWrite",
     "activeTab",
+    "tabs",
     "webRequest",
     "notifications"
   ],

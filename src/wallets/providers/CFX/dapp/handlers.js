@@ -12,6 +12,7 @@ async function handleDappMethods({ req, res, next, services }) {
     requestAccountsPermission,
   } = services;
   let method = req?.method || '';
+  const origin = req?.origin || '';
 
   if (typeof method === 'string' && method.startsWith('eth_')) {
     method = method.replace(/^eth_/giu, 'cfx_');

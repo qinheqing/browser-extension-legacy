@@ -538,7 +538,7 @@ function setupController(initState, initLangCode) {
 /**
  * Opens the browser popup for user confirmation
  */
-async function triggerUi() {
+async function triggerUi(url = '') {
   const tabs = await platform.getActiveTabs();
   const currentlyActiveMetamaskTab = Boolean(
     tabs.find((tab) => openMetamaskTabsIDs[tab.id]),
@@ -556,7 +556,7 @@ async function triggerUi() {
   ) {
     uiIsTriggering = true;
     try {
-      await notificationManager.showPopup();
+      await notificationManager.showPopup(url);
     } finally {
       uiIsTriggering = false;
     }
@@ -567,16 +567,41 @@ async function triggerUi() {
  * Opens the browser popup for user confirmation of watchAsset
  * then it waits until user interact with the UI
  */
-async function openPopup() {
-  await triggerUi();
-  await new Promise((resolve) => {
-    const interval = setInterval(() => {
-      if (!notificationIsOpen) {
-        clearInterval(interval);
-        resolve();
-      }
-    }, 1000);
-  });
+async function openPopup(url = '', { waitClose = true } = {}) {
+  await triggerUi(url);
+  // wait for popup window closed by any action with the UI
+  //      like confirm approve, cancel approve, close window
+  if (waitClose) {
+    await new Promise((resolve) => {
+      const interval = setInterval(() => {
+        if (!notificationIsOpen) {
+          clearInterval(interval);
+          resolve();
+          log.info('openPopup wait close done: ' + url);
+        }
+      }, 1000);
+    });
+  } else {
+    log.info('openPopup: ' + url);
+  }
+}
+
+async function openApprovalPopup(
+  { baseChain = '', data = {} } = {},
+  { waitClose = true, ...others } = {},
+) {
+  const searchParams = new URLSearchParams();
+  // searchParams.set('origin', sender.origin);
+  // searchParams.set('networkId', message.data.params.network);
+  // searchParams.set('chainId', message.data.params.chainId);
+  searchParams.set('data', JSON.stringify(data));
+  return openPopup(
+    `/app/approve-popup/${baseChain.toLowerCase()}?${searchParams.toString()}`,
+    {
+      waitClose,
+      ...others,
+    },
+  );
 }
 
 // On first install, open a new tab with MetaMask
@@ -589,6 +614,8 @@ extension.runtime.onInstalled.addListener(({ reason }) => {
   }
 });
 
+// $ok_openPopup('/app/approve-popup/')
 global.$ok_openPopup = openPopup;
+global.$ok_openApprovalPopup = openApprovalPopup;
 global.$ok_triggerUi = triggerUi;
 backgroundSolana.init();
