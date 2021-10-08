@@ -182,6 +182,7 @@ function setupDebuggingHelpers(store) {
     const state = clone(store.getState());
     state.version = global.platform.getVersion();
     state.browser = window.navigator.userAgent;
+    delete state.localeMessages;
     return state;
   };
 
