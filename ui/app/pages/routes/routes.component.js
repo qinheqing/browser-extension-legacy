@@ -230,6 +230,14 @@ export default class Routes extends Component {
     );
   }
 
+  onNotHomePage() {
+    const { location } = this.props;
+    return !matchPath(location.pathname, {
+      path: DEFAULT_ROUTE,
+      exact: true,
+    });
+  }
+
   onConfirmPage() {
     const { location } = this.props;
     return Boolean(
@@ -261,6 +269,10 @@ export default class Routes extends Component {
     }
 
     if (windowType === ENVIRONMENT_TYPE_POPUP && this.onConfirmPage()) {
+      return true;
+    }
+
+    if (windowType === ENVIRONMENT_TYPE_POPUP && this.onNotHomePage()) {
       return true;
     }
 
