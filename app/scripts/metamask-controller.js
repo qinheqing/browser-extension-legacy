@@ -4,7 +4,7 @@ import Dnode from 'dnode';
 import { ObservableStore } from '@onekeyhq/obs-store';
 import { storeAsStream } from '@onekeyhq/obs-store/dist/asStream';
 import { JsonRpcEngine } from '@onekeyhq/json-rpc-engine';
-import { debounce } from 'lodash';
+import { debounce, isPlainObject } from 'lodash';
 import createEngineStream from 'json-rpc-middleware-stream/engineStream';
 import createFilterMiddleware from 'eth-json-rpc-filters';
 import createSubscriptionManager from 'eth-json-rpc-filters/subscriptionManager';
@@ -2021,6 +2021,8 @@ export default class MetamaskController extends EventEmitter {
   }) {
     // setup json rpc engine stack
     const engine = new JsonRpcEngine();
+    // set streamName to engine
+    engine.streamName = streamName;
     const { provider, blockTracker } = this;
 
     // create filter polyfill middleware
@@ -2032,7 +2034,7 @@ export default class MetamaskController extends EventEmitter {
       blockTracker,
     });
     subscriptionManager.events.on('notification', (message) =>
-      engine.emit('notification', message),
+      this.engineEmitNotificationOnlyEth(engine, message),
     );
 
     // append origin to each request
@@ -2206,9 +2208,23 @@ export default class MetamaskController extends EventEmitter {
     if (connections) {
       Object.values(connections).forEach((conn) => {
         if (conn.engine) {
-          conn.engine.emit('notification', payload);
+          this.engineEmitNotificationOnlyEth(conn.engine, payload);
         }
       });
+    }
+  }
+
+  engineEmitNotificationOnlyEth(engine, payload) {
+    if (isPlainObject(payload)) {
+      const payloadNew = {
+        streamName: engine.streamName || '',
+        ...payload,
+      };
+      if (!engine.streamName || engine.streamName === STREAM_PROVIDER) {
+        engine.emit('notification', payloadNew);
+      }
+    } else {
+      engine.emit('notification', payload);
     }
   }
 
@@ -2244,7 +2260,7 @@ export default class MetamaskController extends EventEmitter {
               params: MOCK_CHAIN_ID_WHEN_NEW_APP,
             };
           }
-          conn.engine.emit('notification', _payload);
+          this.engineEmitNotificationOnlyEth(conn.engine, _payload);
         }
       });
     });

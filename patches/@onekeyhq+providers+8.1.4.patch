@@ -1,0 +1,44 @@
+diff --git a/node_modules/@onekeyhq/providers/dist/BaseProvider.d.ts b/node_modules/@onekeyhq/providers/dist/BaseProvider.d.ts
+index 57c0f1d..7f55fcc 100644
+--- a/node_modules/@onekeyhq/providers/dist/BaseProvider.d.ts
++++ b/node_modules/@onekeyhq/providers/dist/BaseProvider.d.ts
+@@ -52,6 +52,7 @@ export default class BaseProvider extends SafeEventEmitter {
+      * See [chainId.network]{@link https://chainid.network} for more information.
+      */
+     chainId: string | null;
++    streamName: string | null;
+     /**
+      * The user's currently selected Ethereum address.
+      * If null, MetaMask is either locked or the user has not permitted any
+diff --git a/node_modules/@onekeyhq/providers/dist/BaseProvider.js b/node_modules/@onekeyhq/providers/dist/BaseProvider.js
+index a3cb270..1411b51 100644
+--- a/node_modules/@onekeyhq/providers/dist/BaseProvider.js
++++ b/node_modules/@onekeyhq/providers/dist/BaseProvider.js
+@@ -31,10 +31,14 @@ class BaseProvider extends safe_event_emitter_1.default {
+         this._log = logger;
+         this.setMaxListeners(maxEventListeners);
+         // private state
+-        this._state = Object.assign({}, BaseProvider._defaultState);
++        const _state = Object.assign({
++          jsonRpcStreamName,
++        }, BaseProvider._defaultState);
++        this._state = _state
+         // public state
+         this.selectedAddress = null;
+         this.chainId = null;
++        this.streamName = jsonRpcStreamName;
+         // bind functions (to prevent consumers from making unbound calls)
+         this._handleAccountsChanged = this._handleAccountsChanged.bind(this);
+         this._handleConnect = this._handleConnect.bind(this);
+@@ -64,7 +68,10 @@ class BaseProvider extends safe_event_emitter_1.default {
+         this._initializeState();
+         // handle JSON-RPC notifications
+         this._jsonRpcConnection.events.on('notification', (payload) => {
+-            const { method, params } = payload;
++            const { method, params,streamName } = payload;
++            if(streamName && this.streamName && streamName!==this.streamName ) {
++              return;
++            }
+             if (method === 'metamask_accountsChanged') {
+                 this._handleAccountsChanged(params);
+             }
