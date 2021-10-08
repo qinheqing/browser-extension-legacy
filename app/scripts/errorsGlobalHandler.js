@@ -2,10 +2,12 @@ import { isString } from 'lodash';
 import i18nBackground from './i18nBackground';
 
 global.$$errorNotificationAvailableCount = 5;
+let lastErrorMsg = '';
 
 async function showExtensionNotification(error) {
   let msg = isString(error) ? error : error?.message;
   const errorCodeI18n = error.errorCodeI18n || '';
+  const errorUrl = error.errorUrl || '';
   if (errorCodeI18n) {
     // should use t0(key) return empty if key has no translation
     msg = i18nBackground.t0(errorCodeI18n) || msg;
@@ -19,9 +21,19 @@ async function showExtensionNotification(error) {
     // return;
   }
 
-  if (msg && global?.$$extensionPlatform?._showNotification) {
-    global.$$errorNotificationAvailableCount -= 1;
+  if (errorUrl) {
+    notificationId = errorUrl;
+  }
 
+  if (msg && global?.$$extensionPlatform?._showNotification) {
+    if (lastErrorMsg === msg) {
+      global.$$errorNotificationAvailableCount -= 1;
+    } else {
+      global.$$errorNotificationAvailableCount = 5;
+    }
+    lastErrorMsg = msg;
+
+    global.$$extensionPlatform._subscribeToNotificationClicked();
     global.$$extensionPlatform._showNotification(
       `OneKey Error`,
       msg,
