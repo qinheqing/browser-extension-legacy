@@ -17,7 +17,7 @@ $sub-mid-size-breakpoint-range: "screen and (min-width: #{$break-large}) and (ma
 // Main container
 .main-container {
   z-index: $main-container-z-index;
-  border-radius: 20px;
+  // border-radius: 20px;
   overflow: hidden;
 }
 
@@ -34,11 +34,11 @@ $sub-mid-size-breakpoint-range: "screen and (min-width: #{$break-large}) and (ma
   background: #f2f3f4;
 }
 
-@media screen and (max-width: 575px) {
-  .main-container-wrapper {
-    padding: 10px;
-  }
-}
+// @media screen and (max-width: 575px) {
+//   .main-container-wrapper {
+//      padding: 10px;
+//   }
+// }
 
 // main-container media queries
 
