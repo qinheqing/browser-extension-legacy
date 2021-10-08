@@ -10,7 +10,7 @@ import {
 } from '../../../helpers/constants/routes';
 import ColorIndicator from '../../../components/ui/color-indicator';
 import { COLORS, SIZES } from '../../../helpers/constants/design-system';
-import NetworkForm from './network-form';
+import NetworkForm, { NetworkIcon } from './network-form';
 
 export default class NetworksTab extends PureComponent {
   static contextTypes = {
@@ -71,6 +71,7 @@ export default class NetworksTab extends PureComponent {
   }
 
   renderNetworkListItem(network, selectRpcUrl) {
+    console.log('network', network);
     const {
       setSelectedSettingsRpcUrl,
       setNetworksTabAddMode,
@@ -111,11 +112,12 @@ export default class NetworksTab extends PureComponent {
           }
         }}
       >
-        <ColorIndicator
+        {/* <ColorIndicator
           color={labelKey}
           type={ColorIndicator.TYPES.FILLED}
           size={SIZES.LG}
-        />
+        /> */}
+        <NetworkIcon chain={network.labelKey} />
         <div
           className={classnames('networks-tab__networks-list-name', {
             'networks-tab__networks-list-name--selected':
