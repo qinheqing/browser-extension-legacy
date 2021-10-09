@@ -2,6 +2,7 @@ import { shimWeb3, BaseProvider } from '@onekeyhq/providers';
 import { JsonRpcEngine } from '@onekeyhq/json-rpc-engine';
 import logger from '../../../../log/logger';
 import { STREAM_PROVIDER_CFX } from '../../../../../app/scripts/constants/consts';
+import { CONST_CHAIN_KEYS } from '../../../../consts/consts';
 
 function createProviderProxy({ provider }) {
   return new Proxy(provider, {
@@ -12,6 +13,7 @@ function createProviderProxy({ provider }) {
 function initConfluxVariable({ provider }) {
   window.conflux = createProviderProxy({ provider });
   window.conflux.isConfluxPortal = true;
+  window.conflux.baseChain = CONST_CHAIN_KEYS.CFX;
 
   window.conflux._rpcRequestOld = window.conflux._rpcRequest;
   window.conflux._rpcRequest = function (payload, ...others) {

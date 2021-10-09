@@ -53,7 +53,7 @@ const mboxReferences = {
   observer,
   name: 1,
 };
-
+global.$ok_extensionizer = extension;
 global.ONEKEY_DISABLE_AUTO_PERSIST_DATA = false;
 const { sentry } = global;
 const firstTimeState = { ...rawFirstTimeState };
@@ -587,14 +587,15 @@ async function openPopup(url = '', { waitClose = true } = {}) {
 }
 
 async function openApprovalPopup(
-  { baseChain = '', data = {} } = {},
+  { baseChain = '', request = {}, key } = {},
   { waitClose = true, ...others } = {},
 ) {
   const searchParams = new URLSearchParams();
   // searchParams.set('origin', sender.origin);
   // searchParams.set('networkId', message.data.params.network);
   // searchParams.set('chainId', message.data.params.chainId);
-  searchParams.set('data', JSON.stringify(data));
+  searchParams.set('request', JSON.stringify(request));
+  searchParams.set('key', key);
   return openPopup(
     `/app/approve-popup/${baseChain.toLowerCase()}?${searchParams.toString()}`,
     {

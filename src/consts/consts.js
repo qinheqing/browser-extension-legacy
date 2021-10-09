@@ -55,6 +55,7 @@ export const BACKGROUND_PROXY_MODULE_NAMES = {
   hardware: 'hardware',
   keyring: 'keyring',
   misc: 'misc',
+  approve: 'approve',
 };
 
 export const CONST_DURATIONS = {

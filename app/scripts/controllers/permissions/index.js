@@ -102,6 +102,7 @@ export class PermissionsController {
     engine.push(
       createPermissionsMethodMiddleware({
         addDomainMetadata: this.addDomainMetadata.bind(this),
+        isUnlocked: this._isUnlocked.bind(this),
         getAccounts: this.getAccounts.bind(this, origin),
         getUnlockPromise: () => this._getUnlockPromise(true),
         hasPermission: this.hasPermission.bind(this, origin),

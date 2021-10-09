@@ -1,16 +1,29 @@
 // on accountsChanged: notifyAccountsChanged
 
+import utilsApp from '../../../../utils/utilsApp';
+import {
+  BACKGROUND_PROXY_MODULE_NAMES,
+  CONST_CHAIN_KEYS,
+} from '../../../../consts/consts';
+import backgroundProxy from '../../../bg/backgroundProxy';
+import bgGetRootController from '../../../bg/bgGetRootController';
+import bgDappApproval from '../../../dapp/bgDappApproval';
+
 const mockAddress = 'cfxtest:aakwe36c88x8y84h53fkfk8br52m67mpkp63et1ztm';
 
 async function handleDappMethods({ req, res, next, services }) {
   const {
     addDomainMetadata,
+    isUnlocked,
     getAccounts,
     getUnlockPromise,
     hasPermission,
     notifyAccountsChanged,
     requestAccountsPermission,
   } = services;
+  if (req) {
+    req.baseChain = req.baseChain || CONST_CHAIN_KEYS.CFX;
+  }
   let method = req?.method || '';
   const origin = req?.origin || '';
 
@@ -41,10 +54,11 @@ async function handleDappMethods({ req, res, next, services }) {
   if (method === 'metamask_getProviderState') {
     // won't execute here, please check get-provider-state.js
     res.result = {
-      accounts: [mockAddress],
+      isUnlocked: isUnlocked(),
+      accounts: [mockAddress], // return [] if locked
       chainId: '0x1',
-      isUnlocked: true,
       networkVersion: '1',
+      chainKey: 'CFX',
     };
     return;
   }
@@ -67,13 +81,19 @@ async function handleDappMethods({ req, res, next, services }) {
      }
   */
   if (method === 'cfx_requestAccounts') {
+    // return [] if locked
+    // emit accountsChanged event
     res.result = [];
-    // await requestAccountsPermission(); // wallet_requestPermissions
-    res.result = [mockAddress];
+    const accounts = await bgDappApproval.openApprovalPopup(req);
+    // TODO save to storage
+    // await requestAccountsPermission(); // -> wallet_requestPermissions
+    res.result = accounts;
     return;
   }
 
   if (method === 'cfx_accounts') {
+    // return [] if locked
+    // emit accountsChanged event
     res.result = [mockAddress];
     return;
   }
@@ -85,6 +105,8 @@ async function handleDappMethods({ req, res, next, services }) {
   // - net_version
 
   console.log('RPC handleDappMethods', req);
+
+  // blacklist methods reject ----------------------------------------------
 }
 
 export default {
