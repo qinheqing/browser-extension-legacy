@@ -58,7 +58,7 @@ export default class PageContainer extends PureComponent {
             isActive:
               numberOfTabs > 1 && tabIndex === this.state.activeTabIndex,
             key: tabIndex,
-            className: 'page-container__tab',
+            className: 'page-container-v2__tab',
           })
         );
       },
@@ -107,7 +107,7 @@ export default class PageContainer extends PureComponent {
     } = this.props;
 
     return (
-      <div className="page-container">
+      <div className="page-container-v2">
         <PageContainerHeader
           title={title}
           subtitle={subtitle}
@@ -119,8 +119,10 @@ export default class PageContainer extends PureComponent {
           tabs={this.renderTabs()}
           headerCloseText={headerCloseText}
         />
-        <div className="page-container__bottom">
-          <div className="page-container__content">{this.renderContent()}</div>
+        <div className="page-container-v2__bottom">
+          <div className="page-container-v2__content">
+            {this.renderContent()}
+          </div>
           {!hideFooter && (
             <PageContainerFooter
               onCancel={onCancel}

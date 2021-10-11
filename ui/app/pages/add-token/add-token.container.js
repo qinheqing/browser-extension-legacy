@@ -1,6 +1,10 @@
 import { connect } from 'react-redux';
 
-import { setPendingTokens, clearPendingTokens } from '../../store/actions';
+import {
+  setPendingTokens,
+  clearPendingTokens,
+  addTokens,
+} from '../../store/actions';
 import { getMostRecentOverviewPage } from '../../ducks/history/history';
 import AddToken from './add-token.component';
 
@@ -18,6 +22,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    addTokens: (tokens) => dispatch(addTokens(tokens)),
     setPendingTokens: (tokens) => dispatch(setPendingTokens(tokens)),
     clearPendingTokens: () => dispatch(clearPendingTokens()),
   };
