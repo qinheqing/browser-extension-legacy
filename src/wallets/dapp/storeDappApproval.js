@@ -12,6 +12,7 @@ import BaseStoreWithStorage from '../../store/BaseStoreWithStorage';
 import backgroundProxy from '../bg/backgroundProxy';
 import utilsStorage from '../../utils/utilsStorage';
 import utilsNumber from '../../utils/utilsNumber';
+import walletFactory from '../walletFactory';
 
 class StoreDappApproval extends BaseStoreWithStorage {
   // TODO ensure this store run in background
@@ -26,6 +27,16 @@ class StoreDappApproval extends BaseStoreWithStorage {
   connections = {
     // [origin]: [ { address, baseChain, chainKey, origin } ]
   };
+
+  async createWallet() {
+    const chainInfo = await this.getCurrentChainInfo();
+    const accountInfo = await this.getCurrentAccountRaw();
+    const wallet = walletFactory.createWallet({
+      chainInfo,
+      accountInfo,
+    });
+    return wallet;
+  }
 
   async getUiStorageItem(key) {
     const storageKey = utilsStorage.buildAutoSaveStorageKey(

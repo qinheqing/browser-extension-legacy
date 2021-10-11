@@ -5,6 +5,7 @@ import ReactJsonView from '../../components/ReactJsonView';
 import uiBackgroundProxy from '../../wallets/bg/uiBackgroundProxy';
 import { BACKGROUND_PROXY_MODULE_NAMES } from '../../consts/consts';
 import uiDappApproval from '../../wallets/dapp/uiDappApproval';
+import storeWallet from '../../store/storeWallet';
 import ApprovePageLayout from './ApprovePageLayout';
 import ApproveConnection from './ApproveConnection';
 
@@ -29,6 +30,22 @@ function PageApprovePopupCFX({ query }) {
           window.close();
         }}
       />
+    );
+  }
+
+  if (method === 'cfx_sendTransaction') {
+    return (
+      <div>
+        <button
+          onClick={() => {
+            storeWallet.currentWallet.signAndSendTxObject({
+              tx: query.request.params[0],
+            });
+          }}
+        >
+          send
+        </button>
+      </div>
     );
   }
 

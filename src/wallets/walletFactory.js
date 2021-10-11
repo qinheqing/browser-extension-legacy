@@ -12,12 +12,13 @@ import WalletCFX from './providers/CFX/Wallet';
 // TODO cache expire feature
 const walletsCacheMap = {};
 
-function createWallet(options) {
+function createWallet(options = {}) {
+  const { chainInfo, accountInfo } = options;
   assert(
-    options?.chainInfo,
+    chainInfo,
     'Wallet init needs options.chainInfo that includes baseChain',
   );
-  const baseChain = options?.chainInfo?.baseChain;
+  const baseChain = chainInfo?.baseChain;
   let wallet = null;
   switch (baseChain) {
     case CONST_CHAIN_KEYS.BTC:

@@ -153,6 +153,7 @@ async function handleDappMethods({ req, res, next, services }) {
   // - net_version
 
   console.log('RPC handleDappMethods', req);
+  const wallet = await storeDappApproval.createWallet();
 
   // blacklist methods reject ----------------------------------------------
   throw ethErrors.provider.unsupportedMethod({
