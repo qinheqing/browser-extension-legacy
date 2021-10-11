@@ -21,22 +21,12 @@ class Wallet extends WalletBase {
 
   // create tx from ix array
   async _createTxObject({ accountInfo, instructions = [] }) {
-    const rpc = this.chainManager.apiRpc;
     // const tx = utilsApp.throwToBeImplemented(this);
     const tx = instructions[0];
-
-    // TODO batch rpc call
-    const status = await rpc.getStatus(CFX_EPOCH_TAG);
-    const nonce = await rpc.getNextNonce(accountInfo.address, CFX_EPOCH_TAG);
-    const epochHeight = await rpc.getEpochNumber(CFX_EPOCH_TAG);
 
     const txNew = {
       // always create new Object, as tx may be a Contract Class Instance, NOT plain object
       ...tx,
-      chainId: status.chainId, // endpoint status.chainId
-
-      nonce, // sender next nonce
-      epochHeight,
     };
     return txNew;
   }
@@ -92,6 +82,18 @@ class Wallet extends WalletBase {
 
   // txObject -> txStr -> txStrSigned -> signedTx -> signedTxRaw -> send(raw)
   async signAndSendTxObject({ accountInfo, tx }) {
+    // eslint-disable-next-line no-param-reassign
+    accountInfo = accountInfo || this.accountInfo;
+    if (!tx.gasPrice) {
+      // eslint-disable-next-line no-param-reassign
+      tx = await this.addFeeInfoToTx({ tx });
+    }
+
+    if (!tx.nonce) {
+      // eslint-disable-next-line no-param-reassign
+      tx = await this.addBlockInfoToTx({ tx, accountInfo });
+    }
+
     // const txStr = utilsApp.throwToBeImplemented(this);
     const txStr = JSON.stringify(tx);
 
@@ -136,12 +138,31 @@ class Wallet extends WalletBase {
   }
 
   async addFeeInfoToTx({ tx, feeInfo }) {
+    if (!feeInfo) {
+      // eslint-disable-next-line no-param-reassign
+      feeInfo = await this.fetchTransactionFeeInfo(tx);
+    }
     const { gasUsed, gasPrice, storageLimit } = feeInfo;
     return {
       ...tx,
       gasPrice,
       gas: gasUsed, // gasLimit
       storageLimit,
+    };
+  }
+
+  async addBlockInfoToTx({ tx, accountInfo }) {
+    const rpc = this.chainManager.apiRpc;
+
+    // TODO batch rpc call
+    const status = await rpc.getStatus(CFX_EPOCH_TAG);
+    const nonce = await rpc.getNextNonce(accountInfo.address, CFX_EPOCH_TAG);
+    const epochHeight = await rpc.getEpochNumber(CFX_EPOCH_TAG);
+    return {
+      ...tx,
+      chainId: status.chainId, // endpoint status.chainId
+      nonce, // sender next nonce
+      epochHeight,
     };
   }
 }

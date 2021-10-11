@@ -1,6 +1,8 @@
 // on accountsChanged: notifyAccountsChanged
 
 import { ethErrors } from 'eth-rpc-errors';
+import { Conflux, Contract, format } from 'js-conflux-sdk';
+import { isPlainObject, isString, isArray } from 'lodash';
 import utilsApp from '../../../../utils/utilsApp';
 import {
   BACKGROUND_PROXY_MODULE_NAMES,
@@ -9,8 +11,50 @@ import {
 import backgroundProxy from '../../../bg/backgroundProxy';
 import bgGetRootController from '../../../bg/bgGetRootController';
 import storeDappApproval from '../../../dapp/storeDappApproval';
+import utils from '../utils/utils';
 
 const mockAddress = 'cfxtest:aakwe36c88x8y84h53fkfk8br52m67mpkp63et1ztm';
+
+// RPC server error:
+//  "invalid argument 0: failed to create address from base32 string 0x8a5c9db7f480083373274e3d2bf41ff628a9f1e0: base32 string 0x8a5c9db7f480083373274e3d2bf41ff628a9f1e0 is invalid format"
+function convertAddress(p, chainId) {
+  // 0x8a5c9db7f480083373274e3d2bf41ff628a9f1e0
+  //  ->
+  // cfx:aamr93vsstxs457rnhxe99wbxwy1n2bpuefunhrvh2
+  try {
+    const f = format;
+    const networkIdInt = parseInt(chainId, 16);
+    if (utils.isHexAddressLike(p.from)) {
+      p.from = f.address(p.from, networkIdInt);
+    }
+
+    if (utils.isHexAddressLike(p.to)) {
+      p.to = f.address(p.to, networkIdInt);
+    }
+    return p;
+  } catch (error) {
+    return p;
+  }
+}
+
+function convertParamsAddress(params, chainId) {
+  if (isPlainObject(params)) {
+    return convertAddress(params, chainId);
+  }
+
+  if (isArray(params)) {
+    let paramsArr = params;
+    paramsArr = params.map((p) => convertAddress(p, chainId));
+    // remove last parameter = "latest"
+    if (paramsArr[paramsArr.length - 1] === 'latest') {
+      // RPC ERROR:
+      //    invalid argument 1: hex string without 0x prefix
+      paramsArr = paramsArr.slice(0, paramsArr.length - 1);
+    }
+    return paramsArr;
+  }
+  return params;
+}
 
 async function handleDappMethods({ req, res, next, services }) {
   const {
@@ -153,9 +197,16 @@ async function handleDappMethods({ req, res, next, services }) {
   // - net_version
 
   console.log('RPC handleDappMethods', req);
+  req.params = convertParamsAddress(req.params, req.chainId);
+
   const wallet = await storeDappApproval.createWallet();
+  const rpc = wallet.chainManager.apiRpc.provider;
+  const rpcRes = await rpc.call(req.method, ...[].concat(req.params || []));
+  res.result = rpcRes;
+  return;
 
   // blacklist methods reject ----------------------------------------------
+  // eslint-disable-next-line no-unreachable
   throw ethErrors.provider.unsupportedMethod({
     data: {
       method,

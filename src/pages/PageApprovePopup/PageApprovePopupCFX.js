@@ -38,7 +38,10 @@ function PageApprovePopupCFX({ query }) {
       <div>
         <button
           onClick={() => {
-            storeWallet.currentWallet.signAndSendTxObject({
+            const wallet = storeWallet.currentWallet;
+            // wallet.fetchTransactionFeeInfo
+            // wallet.addFeeInfoToTx
+            wallet.signAndSendTxObject({
               tx: query.request.params[0],
             });
           }}

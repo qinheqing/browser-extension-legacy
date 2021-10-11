@@ -19,8 +19,8 @@ class WalletBase {
       // TODO chainInfo, accountInfo
       hardwareModel = CONST_HARDWARE_MODELS.Unknown,
       hdPath,
-      accountInfo,
       chainInfo,
+      accountInfo,
       ...others
     } = options;
     // TODO merge to options, remove
