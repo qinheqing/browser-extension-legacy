@@ -11,14 +11,21 @@ configure({
 global.$ok_mobxToJS = toJS;
 
 class BaseStore {
-  constructor(props) {
+  constructor(props = {}) {
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
 
-    assert(
-      utilsApp.isUiEnvironment(),
-      'Mobx Store is not allowed in extension background runtime',
-    );
+    if (props?.shouldRunInBackground) {
+      if (utilsApp.isUiEnvironment()) {
+        throw new Error(
+          `[${this.constructor.name}] Mobx Store is not allowed in extension <ui> runtime`,
+        );
+      }
+    } else if (utilsApp.isBackgroundEnvironment()) {
+      throw new Error(
+        `[${this.constructor.name}] Mobx Store is not allowed in extension <background> runtime`,
+      );
+    }
   }
 
   toJS() {

@@ -13,12 +13,14 @@ import {
   CONST_CHAIN_KEYS,
   CONSTS_ACCOUNT_TYPES,
 } from '../consts/consts';
+import utilsStorage from '../utils/utilsStorage';
 import BaseStoreWithStorage from './BaseStoreWithStorage';
 import dataMigration from './dataMigration';
 
 class StoreStorage extends BaseStoreWithStorage {
   constructor(props) {
     super(props);
+    this.storageNamespace = utilsStorage.STORAGE_NS_UI;
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
 
@@ -80,6 +82,7 @@ class StoreStorage extends BaseStoreWithStorage {
 
   @observable.ref
   currentAccountRaw = {
+    baseChain: '',
     chainKey: '',
     id: '', // id missing
     type: CONSTS_ACCOUNT_TYPES.Hardware,

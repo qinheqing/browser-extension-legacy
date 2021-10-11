@@ -228,7 +228,10 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   setCurrentAccount({ account }) {
-    storeStorage.currentAccountRaw = { ...account };
+    storeStorage.currentAccountRaw = {
+      ...account,
+      baseChain: account?.baseChain ?? storeChain.currentBaseChain,
+    };
   }
 
   @action.bound
@@ -315,6 +318,20 @@ class StoreAccount extends BaseStore {
         ...storeStorage.currentAccountRaw,
       };
       storeStorage.allAccountsRaw = [...storeStorage.allAccountsRaw];
+    }
+  }
+
+  @action.bound
+  async autofixCurrentAccountInfo() {
+    if (storeStorage.currentAccountRaw) {
+      // add baseChain attr
+      const { baseChain } = storeStorage.currentAccountRaw;
+      if (!baseChain && storeChain.currentBaseChain) {
+        storeStorage.currentAccountRaw = {
+          ...storeStorage.currentAccountRaw,
+          baseChain: storeChain.currentBaseChain,
+        };
+      }
     }
   }
 }

@@ -7,7 +7,7 @@ import {
 } from '../../../../consts/consts';
 import backgroundProxy from '../../../bg/backgroundProxy';
 import bgGetRootController from '../../../bg/bgGetRootController';
-import bgDappApproval from '../../../dapp/bgDappApproval';
+import storeDappApproval from '../../../dapp/storeDappApproval';
 
 const mockAddress = 'cfxtest:aakwe36c88x8y84h53fkfk8br52m67mpkp63et1ztm';
 
@@ -26,6 +26,8 @@ async function handleDappMethods({ req, res, next, services }) {
   }
   let method = req?.method || '';
   const origin = req?.origin || '';
+  const baseChain = req?.baseChain || '';
+  const chainKey = req?.chainKey || '';
 
   if (typeof method === 'string' && method.startsWith('eth_')) {
     method = method.replace(/^eth_/giu, 'cfx_');
@@ -58,7 +60,7 @@ async function handleDappMethods({ req, res, next, services }) {
       accounts: [mockAddress], // return [] if locked
       chainId: '0x1',
       networkVersion: '1',
-      chainKey: 'CFX',
+      chainKey,
     };
     return;
   }
@@ -80,21 +82,31 @@ async function handleDappMethods({ req, res, next, services }) {
        tabId: 56
      }
   */
+  // conflux.request({method:'cfx_requestAccounts'}).then(console.log)
   if (method === 'cfx_requestAccounts') {
     // return [] if locked
     // emit accountsChanged event
-    res.result = [];
-    const accounts = await bgDappApproval.openApprovalPopup(req);
-    // TODO save to storage
     // await requestAccountsPermission(); // -> wallet_requestPermissions
+    const accounts = await storeDappApproval.requestAccounts({
+      request: req,
+      baseChain,
+      chainKey,
+      origin,
+    });
     res.result = accounts;
     return;
   }
 
+  // conflux.request({method:'cfx_accounts'}).then(console.log)
   if (method === 'cfx_accounts') {
     // return [] if locked
     // emit accountsChanged event
-    res.result = [mockAddress];
+    const accounts = await storeDappApproval.getAccounts({
+      baseChain,
+      chainKey,
+      origin,
+    });
+    res.result = accounts;
     return;
   }
 

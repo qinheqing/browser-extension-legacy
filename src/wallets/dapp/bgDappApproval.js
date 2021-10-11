@@ -1,6 +1,14 @@
 import { CONST_CHAIN_KEYS } from '../../consts/consts';
 import backgroundProxy from '../bg/backgroundProxy';
 
+async function saveAccounts({ baseChain, chainKey, origin, accounts }) {
+  console.log('saveAccounts', { baseChain, chainKey, origin, accounts });
+}
+
+async function getAccounts({ baseChain, chainKey, origin }) {
+  return [];
+}
+
 async function openApprovalPopup(request) {
   return new Promise((resolve, reject) => {
     const { origin, baseChain } = request;
@@ -23,4 +31,6 @@ async function openApprovalPopup(request) {
 
 export default {
   openApprovalPopup,
+  saveAccounts,
+  getAccounts,
 };

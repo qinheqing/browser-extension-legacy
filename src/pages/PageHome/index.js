@@ -210,6 +210,7 @@ const HomeAssetsList = observer(function () {
 function PageHome() {
   const history = useHistory();
   const [copied, handleCopy] = useCopyToClipboard();
+  const { isUnlocked } = storeApp.legacyState;
 
   useEffect(() => {
     storeAccount.initFirstAccount();
@@ -220,10 +221,13 @@ function PageHome() {
   }, []);
 
   useEffect(() => {
-    if (storeApp.legacyState.isUnlocked) {
-      storeAccount.autofixMismatchAddresses();
-    }
-  }, [storeApp.legacyState.isUnlocked]);
+    (async () => {
+      if (isUnlocked) {
+        await storeAccount.autofixMismatchAddresses();
+        await storeAccount.autofixCurrentAccountInfo();
+      }
+    })();
+  }, [isUnlocked]);
 
   const onAccountClick = useCallback(() => {
     storeHistory.push(ROUTE_ACCOUNT_DETAIL);
