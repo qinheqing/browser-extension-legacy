@@ -300,24 +300,27 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   async autofixMismatchAddresses() {
-    let updated = false;
-
-    if (await this._fixAccountAddress(storeStorage.currentAccountRaw)) {
-      updated = true;
+    const currentAccountRawFixed = await this._fixAccountAddress(
+      storeStorage.currentAccountRaw,
+    );
+    if (currentAccountRawFixed) {
+      storeStorage.currentAccountRaw = currentAccountRawFixed;
     }
 
+    // ----------------------------------------------
+    let updated = false;
+    const allAccountsRawFixed = [];
     for (let i = 0; i < storeStorage.allAccountsRaw.length; i++) {
       const account = storeStorage.allAccountsRaw[i];
-      if (await this._fixAccountAddress(account)) {
+      const accountFixed = await this._fixAccountAddress(account);
+      if (accountFixed) {
         updated = true;
       }
+      allAccountsRawFixed.push(accountFixed || account);
     }
 
     if (updated) {
-      storeStorage.currentAccountRaw = {
-        ...storeStorage.currentAccountRaw,
-      };
-      storeStorage.allAccountsRaw = [...storeStorage.allAccountsRaw];
+      storeStorage.allAccountsRaw = allAccountsRawFixed;
     }
   }
 
@@ -325,8 +328,13 @@ class StoreAccount extends BaseStore {
   async autofixCurrentAccountInfo() {
     if (storeStorage.currentAccountRaw) {
       // add baseChain attr
-      const { baseChain } = storeStorage.currentAccountRaw;
-      if (!baseChain && storeChain.currentBaseChain) {
+      const { baseChain, chainKey } = storeStorage.currentAccountRaw;
+      if (
+        !baseChain &&
+        chainKey &&
+        storeChain.currentBaseChain &&
+        storeChain.currentChainKey === chainKey
+      ) {
         storeStorage.currentAccountRaw = {
           ...storeStorage.currentAccountRaw,
           baseChain: storeChain.currentBaseChain,

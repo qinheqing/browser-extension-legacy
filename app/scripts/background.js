@@ -296,6 +296,7 @@ function setupController(initState, initLangCode) {
   });
 
   backgroundContainer.setRootController(controller);
+  global.$ok_isUnlockedCheck = controller.isUnlocked.bind(controller);
 
   if (inTest || process.env.METAMASK_DEBUG) {
     global.$ok_metamaskController = controller;

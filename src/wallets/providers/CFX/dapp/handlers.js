@@ -28,7 +28,6 @@ async function handleDappMethods({ req, res, next, services }) {
   const origin = req?.origin || '';
   const baseChain = req?.baseChain || '';
   const chainKey = req?.chainKey || '';
-  const isUnlocked = isUnlockedCheck();
 
   if (typeof method === 'string' && method.startsWith('eth_')) {
     method = method.replace(/^eth_/giu, 'cfx_');
@@ -59,14 +58,14 @@ async function handleDappMethods({ req, res, next, services }) {
   if (method === 'metamask_getProviderState') {
     // won't execute here, please check get-provider-state.js
     const accounts = await storeDappApproval.getAccounts({
-      isUnlocked,
       baseChain,
       chainKey,
       origin,
     });
     const chainMeta = await storeDappApproval.getChainMeta();
     res.result = {
-      isUnlocked,
+      // always call function to get latest unlock status
+      isUnlocked: global.$ok_isUnlockedCheck(),
       ...chainMeta,
       accounts, // return [] if locked
     };
@@ -96,7 +95,6 @@ async function handleDappMethods({ req, res, next, services }) {
     // emit accountsChanged event
     // await requestAccountsPermission(); // -> wallet_requestPermissions
     const accounts = await storeDappApproval.requestAccounts({
-      isUnlocked,
       request: req,
       baseChain,
       chainKey,
@@ -111,7 +109,6 @@ async function handleDappMethods({ req, res, next, services }) {
     // return [] if locked
     // emit accountsChanged event
     const accounts = await storeDappApproval.getAccounts({
-      isUnlocked,
       baseChain,
       chainKey,
       origin,
@@ -126,7 +123,11 @@ async function handleDappMethods({ req, res, next, services }) {
     return;
   }
 
+  // transaction and sign ----------------------------------------------
+  // TODO unlock check
+
   // chain rpc method ----------------------------------------------
+  // TODO unlock check
   // - eth_blockNumber
   // - eth_epochNumber
   // - eth_call

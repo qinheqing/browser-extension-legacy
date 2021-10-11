@@ -124,9 +124,8 @@ class StoreDappApproval extends BaseStoreWithStorage {
     };
   }
 
-  async requestAccounts({ isUnlocked, request, baseChain, chainKey, origin }) {
+  async requestAccounts({ request, baseChain, chainKey, origin }) {
     let accounts = await this.getAccounts({
-      isUnlocked,
       baseChain,
       chainKey,
       origin,
@@ -145,12 +144,8 @@ class StoreDappApproval extends BaseStoreWithStorage {
     return accounts;
   }
 
-  async getAccounts({ isUnlocked, baseChain, chainKey, origin }) {
-    if (isNil(isUnlocked)) {
-      console.error(
-        `${this.constructor.name}.getAccounts parameter:isUnlocked should not be undefined`,
-      );
-    }
+  async getAccounts({ baseChain, chainKey, origin }) {
+    const isUnlocked = global.$ok_isUnlockedCheck();
 
     if (!isUnlocked) {
       return [];
