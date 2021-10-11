@@ -26,7 +26,8 @@ export default function AddTokenButton() {
           addTokenEvent();
         }}
       >
-        {t('addToken')}
+        {/* {t('addToken')} */}
+        Manage Token
       </Button>
     </div>
   );

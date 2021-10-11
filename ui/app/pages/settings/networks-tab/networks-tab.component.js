@@ -71,7 +71,6 @@ export default class NetworksTab extends PureComponent {
   }
 
   renderNetworkListItem(network, selectRpcUrl) {
-    console.log('network', network);
     const {
       setSelectedSettingsRpcUrl,
       setNetworksTabAddMode,

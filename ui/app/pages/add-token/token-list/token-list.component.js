@@ -4,6 +4,9 @@ import classnames from 'classnames';
 import { checkExistingAddresses } from '../../../helpers/utils/util';
 import TokenListPlaceholder from './token-list-placeholder';
 
+const shortAddress = (address) =>
+  `${address.slice(0, 6)}...${address.slice(-4)}`;
+
 export default class TokenList extends Component {
   static contextTypes = {
     t: PropTypes.func,
@@ -47,19 +50,31 @@ export default class TokenList extends Component {
                       'token-list__token--selected': selectedTokens[address],
                       'token-list__token--disabled': tokenAlreadyAdded,
                     })}
-                    onClick={onClick}
+                    onClick={() => onToggleToken(results[i])}
                     onKeyPress={(event) => event.key === 'Enter' && onClick()}
                     key={i}
                     tabIndex="0"
                   >
+                    <div className="token-list__token-info">
+                      <div
+                        className="token-list__token-icon"
+                        style={{
+                          backgroundImage: logoURI && `url(${logoURI})`,
+                        }}
+                      />
+                      <div className="token-list__token-data">
+                        <span className="token-list__token-name">{`${name} (${symbol})`}</span>
+                        <span className="token-list__token-address">
+                          {`${shortAddress(address)}`}
+                        </span>
+                      </div>
+                    </div>
                     <div
-                      className="token-list__token-icon"
-                      style={{
-                        backgroundImage: logoURI && `url(${logoURI})`,
-                      }}
-                    />
-                    <div className="token-list__token-data">
-                      <span className="token-list__token-name">{`${name} (${symbol})`}</span>
+                      className={classnames('token-list__token-button', {
+                        'token-list__token-button--added': tokenAlreadyAdded,
+                      })}
+                    >
+                      {tokenAlreadyAdded ? 'Added' : 'Add'}
                     </div>
                   </div>
                 )
