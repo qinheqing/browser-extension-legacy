@@ -1,4 +1,5 @@
 @import 'token-list/index';
+@import 'token-item-details/index';
 
 @media screen and (min-width: 576px) {
   .add-token  {
@@ -30,6 +31,14 @@
       -webkit-appearance: none;
       display: none;
     }
+
+    &-submit {
+      margin-top: 16px
+    }
+  }
+
+  &__token-search {
+    background-color: white;
   }
 
   &__search-token {
