@@ -27,7 +27,7 @@ function initConfluxVariable({ provider }) {
       typeof payload.method === 'string' &&
       payload.method.startsWith('eth_')
     ) {
-      newPayload.methodOrigin = newPayload.method;
+      newPayload.methodLegacy = newPayload.method;
       newPayload.method = newPayload.method.replace(/^eth_/giu, 'cfx_');
     }
     return this._rpcRequestOld(newPayload ?? payload, ...others);

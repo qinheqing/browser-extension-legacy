@@ -9,11 +9,18 @@ import optionsHelper from '../../optionsHelper';
 import utilsApp from '../../../utils/utilsApp';
 import HdKeyManager from './managers/HdKeyManager';
 
+global.$ok_confluxPrivateKeyAccount = PrivateKeyAccount;
+
 class KeyringTools extends KeyringToolsBase {
-  privateKeyToAddress({ privateKey }) {
+  privateKeyToAccount({ privateKey }) {
     const networkId = optionsHelper.getChainId(this.options);
     const privateKeyHex = utilsApp.bufferToHex(privateKey);
     const account = new PrivateKeyAccount(privateKeyHex, networkId);
+    return account;
+  }
+
+  privateKeyToAddress({ privateKey }) {
+    const account = this.privateKeyToAccount({ privateKey });
     return account.address;
   }
 
@@ -22,6 +29,13 @@ class KeyringTools extends KeyringToolsBase {
     const transaction = new Transaction(JSON.parse(tx));
     transaction.sign(privateKey, networkId); // sender privateKey
     return transaction.serialize();
+  }
+
+  privateKeyToString({ privateKey }) {
+    const account = this.privateKeyToAccount({
+      privateKey,
+    });
+    return account.privateKey;
   }
 }
 
@@ -34,28 +48,6 @@ class KeyringHd extends KeyringHdBase {
   get keyringTools() {
     this._keyringTools = this._keyringTools || new KeyringTools(this.options);
     return this._keyringTools;
-  }
-
-  _getAccountFromPrivateKey({ privateKey }) {
-    // return account;
-  }
-
-  async getAccountPrivateKey({ seed, path }) {
-    const hdPrivateKey = await this._getHdPrivateKey({ seed, path });
-    const account = this._getAccountFromPrivateKey({
-      privateKey: hdPrivateKey,
-    });
-    // return privateKey;
-  }
-
-  privateKeyToAddress({ privateKey }) {
-    const account = this._getAccountFromPrivateKey({ privateKey });
-    // return address;
-  }
-
-  privateKeySign({ privateKey, tx }) {
-    const account = this._getAccountFromPrivateKey({ privateKey });
-    // return sign;
   }
 }
 

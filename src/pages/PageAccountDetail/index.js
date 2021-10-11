@@ -100,7 +100,7 @@ function PageAccountDetail() {
           </ul>
         </div>
         {storeStorage.allAccountsRaw.length > 1 ? (
-          <div className="mt-10 px-3">
+          <div className="my-10 px-3">
             <button
               onClick={() => setDialogVisible(true)}
               type="button"

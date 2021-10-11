@@ -93,7 +93,7 @@ class StoreTransfer extends BaseStore {
       to: toAddress,
       contract: token.contractAddress,
       from: token.address,
-      // TODO change isToken,isNative to isNativeToken
+      // TODO change isToken, isNative to isNativeToken
       isToken: !token.isNative,
       tokenInfo: token,
     };

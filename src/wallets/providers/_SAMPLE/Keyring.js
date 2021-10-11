@@ -7,28 +7,6 @@ class KeyringHd extends KeyringHdBase {
     this._hdkeyManager = this._hdkeyManager || new HdKeyManager(this.options);
     return this._hdkeyManager;
   }
-
-  _getAccountFromPrivateKey({ privateKey }) {
-    // return account;
-  }
-
-  async getAccountPrivateKey({ seed, path }) {
-    const hdPrivateKey = await this._getHdPrivateKey({ seed, path });
-    const account = this._getAccountFromPrivateKey({
-      privateKey: hdPrivateKey,
-    });
-    // return privateKey;
-  }
-
-  privateKeyToAddress({ privateKey }) {
-    const account = this._getAccountFromPrivateKey({ privateKey });
-    // return address;
-  }
-
-  privateKeySign({ privateKey, tx }) {
-    const account = this._getAccountFromPrivateKey({ privateKey });
-    // return sign;
-  }
 }
 
 class KeyringPicker extends KeyringPickerBase {

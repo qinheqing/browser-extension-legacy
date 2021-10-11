@@ -14,11 +14,23 @@ class KeyringToolsBase {
     this.wallet = wallet;
   }
 
+  // hdPrivateKey -> chain sdk account
+  privateKeyToAccount({ privateKey }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  // hdPrivateKey -> address
   privateKeyToAddress({ privateKey }) {
     return utilsApp.throwToBeImplemented(this);
   }
 
+  // hdPrivateKey sign
   privateKeySign({ privateKey, tx }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  // hdPrivateKey -> chain sdk account privateKey
+  privateKeyToString({ privateKey }) {
     return utilsApp.throwToBeImplemented(this);
   }
 }
@@ -98,6 +110,11 @@ class KeyringHdBase extends KeyringBase {
     const _seed = seed || (await this._getHdRootSeed());
     const dpath = await this.hdkeyManager.derivePath({ seed: _seed, path });
     return dpath.privateKey;
+  }
+
+  async getAccountPrivateKey({ seed, path }) {
+    const privateKey = await this._getHdPrivateKey({ seed, path });
+    return this.keyringTools.privateKeyToString({ privateKey });
   }
 
   async getAddresses({ indexes = [0], hdPaths = [], ...others }) {

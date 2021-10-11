@@ -110,7 +110,7 @@ class StoreDappApproval extends BaseStoreWithStorage {
 
   async getChainMeta() {
     const chainInfo = await this.getCurrentChainInfo();
-    const { tokenChainId, key: chainKey } = chainInfo;
+    const { tokenChainId, key: chainKey, baseChain } = chainInfo;
     // chainId: '0x1',
     // networkVersion: '1',
     // TODO NewHome not match, mock chainId and networkVersion
@@ -121,6 +121,7 @@ class StoreDappApproval extends BaseStoreWithStorage {
       chainId,
       networkVersion,
       chainKey,
+      baseChain,
     };
   }
 

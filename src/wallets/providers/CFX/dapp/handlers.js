@@ -1,5 +1,6 @@
 // on accountsChanged: notifyAccountsChanged
 
+import { ethErrors } from 'eth-rpc-errors';
 import utilsApp from '../../../../utils/utilsApp';
 import {
   BACKGROUND_PROXY_MODULE_NAMES,
@@ -32,6 +33,18 @@ async function handleDappMethods({ req, res, next, services }) {
   if (typeof method === 'string' && method.startsWith('eth_')) {
     method = method.replace(/^eth_/giu, 'cfx_');
   }
+
+  /*
+  TODO
+  - can invoke locked
+  - can invoke at other chain
+    - same baseChain (ETH,BSC,HECO)
+    - different baseChain (EVM,SOL,CFX)
+  - event emit
+    - chainId
+    - accounts
+    - mock at other chain
+   */
 
   /* TODO network changed events change these fields will cause dapp error, provider init set value error
     conflux.chainId='0x2a'
@@ -125,6 +138,12 @@ async function handleDappMethods({ req, res, next, services }) {
 
   // transaction and sign ----------------------------------------------
   // TODO unlock check
+  // - cfx_sendTransaction
+  if (method === 'cfx_sendTransaction') {
+    await storeDappApproval.openApprovalPopup(req);
+    res.result = '0x8837777777';
+    return;
+  }
 
   // chain rpc method ----------------------------------------------
   // TODO unlock check
@@ -136,6 +155,11 @@ async function handleDappMethods({ req, res, next, services }) {
   console.log('RPC handleDappMethods', req);
 
   // blacklist methods reject ----------------------------------------------
+  throw ethErrors.provider.unsupportedMethod({
+    data: {
+      method,
+    },
+  });
 }
 
 export default {
