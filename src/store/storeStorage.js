@@ -32,6 +32,7 @@ class StoreStorage extends BaseStoreWithStorage {
 
       this.autosave('currentAccountRaw'),
       this.autosave('currentChainKey'),
+      this.autosave('currentChainInfo'),
       this.autosave('currentTokensRaw'),
       this.autosave('currentPendingTxid'),
 
@@ -93,6 +94,9 @@ class StoreStorage extends BaseStoreWithStorage {
 
   @observable.ref
   currentChainKey = null;
+
+  @observable.ref
+  currentChainInfo = {};
 
   // TODO add this to url query, because popup open new window will lost this params
   @observable.ref

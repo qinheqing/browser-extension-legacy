@@ -14,7 +14,7 @@ const mockAddress = 'cfxtest:aakwe36c88x8y84h53fkfk8br52m67mpkp63et1ztm';
 async function handleDappMethods({ req, res, next, services }) {
   const {
     addDomainMetadata,
-    isUnlocked,
+    isUnlocked: isUnlockedCheck,
     getAccounts,
     getUnlockPromise,
     hasPermission,
@@ -28,6 +28,7 @@ async function handleDappMethods({ req, res, next, services }) {
   const origin = req?.origin || '';
   const baseChain = req?.baseChain || '';
   const chainKey = req?.chainKey || '';
+  const isUnlocked = isUnlockedCheck();
 
   if (typeof method === 'string' && method.startsWith('eth_')) {
     method = method.replace(/^eth_/giu, 'cfx_');
@@ -45,9 +46,11 @@ async function handleDappMethods({ req, res, next, services }) {
   // - onekey_setOtherProviderStatus
   // - metamask_getProviderState
   // - metamask_sendDomainMetadata
-  // - wallet_addEthereumChain
+  // - wallet_addEthereumChain // add custom chain by dapp
   // - wallet_switchEthereumChain ( ETH not implements )
-  // - wallet_watchAsset, metamask_watchAsset // add token
+  //    - metamask_switchEthereumChain
+  // - wallet_watchAsset // add custom token by dapp
+  //    - metamask_watchAsset
   // - eth_requestAccounts
   // - eth_accounts
   // - eth_chainId
@@ -55,39 +58,45 @@ async function handleDappMethods({ req, res, next, services }) {
 
   if (method === 'metamask_getProviderState') {
     // won't execute here, please check get-provider-state.js
-    res.result = {
-      isUnlocked: isUnlocked(),
-      accounts: [mockAddress], // return [] if locked
-      chainId: '0x1',
-      networkVersion: '1',
+    const accounts = await storeDappApproval.getAccounts({
+      isUnlocked,
+      baseChain,
       chainKey,
+      origin,
+    });
+    const chainMeta = await storeDappApproval.getChainMeta();
+    res.result = {
+      isUnlocked,
+      ...chainMeta,
+      accounts, // return [] if locked
     };
     return;
   }
 
   if (method === 'metamask_sendDomainMetadata') {
     if (typeof req.params?.name === 'string') {
-      addDomainMetadata(req.origin, req.params);
+      /*
+      {
+        icon: "https://335wo.csb.app/favicon.ico"
+        name: "React App"
+      }
+       */
+      const domainMeta = req.params;
+      // "https://335wo.csb.app"
+      const reqOrigin = req.origin;
+      addDomainMetadata(reqOrigin, domainMeta);
     }
     res.result = true;
     return;
   }
 
-  /*
-     {
-       id: 1901492225
-       jsonrpc: "2.0"
-       method: "cfx_requestAccounts"
-       origin: "https://moonswap.fi"
-       tabId: 56
-     }
-  */
   // conflux.request({method:'cfx_requestAccounts'}).then(console.log)
   if (method === 'cfx_requestAccounts') {
     // return [] if locked
     // emit accountsChanged event
     // await requestAccountsPermission(); // -> wallet_requestPermissions
     const accounts = await storeDappApproval.requestAccounts({
+      isUnlocked,
       request: req,
       baseChain,
       chainKey,
@@ -102,6 +111,7 @@ async function handleDappMethods({ req, res, next, services }) {
     // return [] if locked
     // emit accountsChanged event
     const accounts = await storeDappApproval.getAccounts({
+      isUnlocked,
       baseChain,
       chainKey,
       origin,
@@ -110,7 +120,13 @@ async function handleDappMethods({ req, res, next, services }) {
     return;
   }
 
-  // chain method ----------------------------------------------
+  if (method === 'cfx_chainId') {
+    const chainMeta = await storeDappApproval.getChainMeta();
+    res.result = chainMeta.chainId;
+    return;
+  }
+
+  // chain rpc method ----------------------------------------------
   // - eth_blockNumber
   // - eth_epochNumber
   // - eth_call

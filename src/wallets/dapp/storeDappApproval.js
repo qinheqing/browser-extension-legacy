@@ -7,10 +7,11 @@ import {
   action,
   makeObservable,
 } from 'mobx';
-import { uniqBy } from 'lodash';
+import { uniqBy, isNil } from 'lodash';
 import BaseStoreWithStorage from '../../store/BaseStoreWithStorage';
 import backgroundProxy from '../bg/backgroundProxy';
 import utilsStorage from '../../utils/utilsStorage';
+import utilsNumber from '../../utils/utilsNumber';
 
 class StoreDappApproval extends BaseStoreWithStorage {
   // TODO ensure this store run in background
@@ -39,6 +40,53 @@ class StoreDappApproval extends BaseStoreWithStorage {
     return this.getUiStorageItem('currentAccountRaw');
   }
 
+  /*
+    {
+	"accountNamePrefix": "",
+	"addTokenMode": "CHAIN",
+	"baseChain": "SOL",
+	"browser": [
+		{
+			"account": "https://explorer.solana.com/address/{{account}}",
+			"block": "https://explorer.solana.com/block/{{block}}",
+			"home": "https://explorer.solana.com",
+			"token": "https://explorer.solana.com/address/{{token}}",
+			"tx": "https://explorer.solana.com/tx/{{tx}}"
+		}
+	],
+	"chainLogo": "images/chains/solana.svg",
+	"colorBg": "#8125f2",
+	"currency": "SOL",
+	"currencyLogo": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+	"description": "",
+	"fullName": "",
+	"hdPathTemplate": "m/44'/501'/{{index}}'/0'",
+	"isCustom": false,
+	"isTestNet": false,
+	"key": "SOL",
+	"name": "Solana",
+	"nativeToken": {
+		"address": "",
+		"chainId": 101,
+		"decimals": 9,
+		"logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png",
+		"name": "Solana",
+		"precision": 8,
+		"symbol": "SOL",
+		"tokenId": "solana"
+	},
+	"platformId": "solana",
+	"rpc": [
+		"https://api.mainnet-beta.solana.com"
+	],
+	"shortname": "Solana",
+	"tokenChainId": 101
+  }
+   */
+  async getCurrentChainInfo() {
+    return this.getUiStorageItem('currentChainInfo');
+  }
+
   @action.bound
   async saveAccounts({ baseChain, chainKey, origin, accounts }) {
     const currentAccounts = this.connections[origin] || [];
@@ -60,8 +108,29 @@ class StoreDappApproval extends BaseStoreWithStorage {
     };
   }
 
-  async requestAccounts({ request, baseChain, chainKey, origin }) {
-    let accounts = await this.getAccounts({ baseChain, chainKey, origin });
+  async getChainMeta() {
+    const chainInfo = await this.getCurrentChainInfo();
+    const { tokenChainId, key: chainKey } = chainInfo;
+    // chainId: '0x1',
+    // networkVersion: '1',
+    // TODO NewHome not match, mock chainId and networkVersion
+    //    MOCK_CHAIN_ID_WHEN_NEW_APP
+    const chainId = utilsNumber.intToHex(tokenChainId);
+    const networkVersion = `${tokenChainId}`;
+    return {
+      chainId,
+      networkVersion,
+      chainKey,
+    };
+  }
+
+  async requestAccounts({ isUnlocked, request, baseChain, chainKey, origin }) {
+    let accounts = await this.getAccounts({
+      isUnlocked,
+      baseChain,
+      chainKey,
+      origin,
+    });
     if (accounts?.length) {
       return accounts;
     }
@@ -76,11 +145,22 @@ class StoreDappApproval extends BaseStoreWithStorage {
     return accounts;
   }
 
-  async getAccounts({ baseChain, chainKey, origin }) {
+  async getAccounts({ isUnlocked, baseChain, chainKey, origin }) {
+    if (isNil(isUnlocked)) {
+      console.error(
+        `${this.constructor.name}.getAccounts parameter:isUnlocked should not be undefined`,
+      );
+    }
+
+    if (!isUnlocked) {
+      return [];
+    }
     const currentAccount = await this.getCurrentAccountRaw();
     if (!currentAccount) {
       return [];
     }
+    // TODO baseChain not match
+    // TODO NewHome not match ( current is EVM chain )
     const allAccounts = this.connections[origin] || [];
     return allAccounts
       .filter((acc) => {

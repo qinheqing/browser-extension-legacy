@@ -1,6 +1,6 @@
 /* eslint import/no-cycle: "error" */
 import { observable, computed, makeObservable, action } from 'mobx';
-import { toPlainObject, sortBy } from 'lodash';
+import { toPlainObject, sortBy, cloneDeep } from 'lodash';
 import OneChainInfo from '../classes/OneChainInfo';
 import {
   CONST_ETH,
@@ -89,7 +89,9 @@ class StoreChain extends BaseStore {
   @action.bound
   setCurrentChainKey(key) {
     if (key) {
+      const chainInfo = this.chains[key] || {};
       storeStorage.currentChainKey = key;
+      storeStorage.currentChainInfo = cloneDeep(chainInfo);
     }
   }
 

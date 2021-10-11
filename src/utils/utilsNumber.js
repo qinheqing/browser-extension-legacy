@@ -73,6 +73,11 @@ function hexToIntString(hex) {
   return bigNum(parseInt(hex, 16)).toFixed();
 }
 
+function intToHex(num, { prefix = '0x' } = {}) {
+  const hex = parseFloat(num).toString(16);
+  return `${prefix}${hex}`;
+}
+
 const utilsNumber = {
   bigNum,
   isValidNumber,
@@ -80,6 +85,7 @@ const utilsNumber = {
   parseUnits,
   toBnRoundMode,
   hexToIntString,
+  intToHex,
 };
 
 global._utilsNumber = utilsNumber;
