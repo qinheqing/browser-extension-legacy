@@ -7,7 +7,7 @@ import utilsNumber from '../utils/utilsNumber';
 export default function AmountText({
   value,
   decimals = 0,
-  precision = Infinity, // TODO read from chainInfo config
+  precision = 8, // TODO read from chainInfo config
   roundMode = 'round', // floor,ceil,round
 }) {
   const num = utilsNumber.toNormalNumber({

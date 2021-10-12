@@ -18,8 +18,10 @@ class DappApprovalMethods {
     return key;
   }
 
-  removeApproval({ key }) {
-    delete this.approvalMaps[key];
+  removeApproval(key) {
+    if (key) {
+      delete this.approvalMaps[key];
+    }
   }
 
   resolve({ key, data }) {
