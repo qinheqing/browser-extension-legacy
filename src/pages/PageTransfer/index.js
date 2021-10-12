@@ -26,6 +26,7 @@ import {
 } from '../../components/OneField';
 import { TokenLogoIcon } from '../../components/LogoIcon';
 import storeChain from '../../store/storeChain';
+import FeeInfoPanel from '../../components/FeeInfoPanel';
 
 function PageTransfer() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -113,48 +114,9 @@ function PageTransfer() {
         />
       </OneField>
 
-      <OneField>
-        <OneFieldItem
-          titleWrapped
-          title="交易费"
-          end={
-            <span>
-              {storeTransfer.fee}
-              <span className="ml-1">{storeTransfer.feeSymbol}</span>
-            </span>
-          }
-        />
-        {storeTransfer.feeInfo.gasPrice && (
-          <>
-            <div className="-my-3">
-              <OneFieldItem
-                title="燃料价格"
-                end={
-                  <span>
-                    {storeTransfer.feeInfo.gasPrice}
-                    <span className="ml-1">
-                      {storeChain.currentNativeTokenUnitName}
-                    </span>
-                  </span>
-                }
-              />
-            </div>
+      <FeeInfoPanel feeInfo={storeTransfer.feeInfo} />
 
-            <div className="-my-3">
-              <OneFieldItem
-                title="燃料上限"
-                end={
-                  <span>
-                    {storeTransfer.feeInfo.gasUsed}
-                    {/* <span className="ml-1" />*/}
-                  </span>
-                }
-              />
-            </div>
-          </>
-        )}
-      </OneField>
-
+      <div className="mt-4" />
       <div className="px-4">
         <OneButton
           disabled={!storeTransfer.toAddress || !storeTransfer.amount}

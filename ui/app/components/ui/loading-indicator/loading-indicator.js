@@ -1,14 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import cn from 'classnames';
 
 export default function LoadingIndicator({
   alt,
   title,
   isLoading,
   children = null,
+  size = 'md',
 }) {
   return isLoading ? (
-    <span className="loading-indicator">
+    <span
+      className={cn('loading-indicator', {
+        [`size-${size}`]: true,
+      })}
+    >
       <img
         className="loading-indicator__spinner"
         alt={alt}

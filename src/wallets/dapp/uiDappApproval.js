@@ -30,7 +30,12 @@ async function approveConnection(query, address) {
   return resolve(query, [].concat(address).filter(Boolean));
 }
 
+async function approveTransaction(query, txid) {
+  return resolve(query, txid);
+}
+
 export default {
+  approveTransaction,
   approveConnection,
   resolve,
   reject,

@@ -36,9 +36,17 @@ function isHexAddressLike(address) {
   return isString(address) && address.startsWith('0x') && address.length === 42;
 }
 
+function toBigUint(num) {
+  // [1024, sign: false]
+  return format.bigUInt(num);
+  // format.big()
+}
+
 export default {
+  format,
   formatToAddress,
   formatToHexAddress,
   formatToChecksumAddress,
   isHexAddressLike,
+  toBigUint,
 };

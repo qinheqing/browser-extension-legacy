@@ -472,6 +472,9 @@ class StoreToken extends BaseStore {
   }
 
   getTokenDecimals(token) {
+    if (!token) {
+      return NaN;
+    }
     let { decimals } = token;
 
     // * get decimals from tokenMeta (tokenList)

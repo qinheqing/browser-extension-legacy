@@ -266,6 +266,7 @@ class WalletBase {
   }
 
   // decode tx data message from dapp
+  //    return { instructions: [txDecoded, txDecoded] }
   decodeTransactionData({ address, data }) {
     return utilsApp.throwToBeImplemented(this);
   }

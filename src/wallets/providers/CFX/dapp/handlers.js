@@ -2,6 +2,7 @@
 
 import { ethErrors } from 'eth-rpc-errors';
 import { Conflux, Contract, format } from 'js-conflux-sdk';
+import * as jsConfluxSdk from 'js-conflux-sdk';
 import { isPlainObject, isString, isArray } from 'lodash';
 import utilsApp from '../../../../utils/utilsApp';
 import {
@@ -14,6 +15,8 @@ import storeDappApproval from '../../../dapp/storeDappApproval';
 import utils from '../utils/utils';
 
 const mockAddress = 'cfxtest:aakwe36c88x8y84h53fkfk8br52m67mpkp63et1ztm';
+global.$ok_jsConfluxSdk = jsConfluxSdk;
+global.$ok_confluxUtils = utils;
 
 // RPC server error:
 //  "invalid argument 0: failed to create address from base32 string 0x8a5c9db7f480083373274e3d2bf41ff628a9f1e0: base32 string 0x8a5c9db7f480083373274e3d2bf41ff628a9f1e0 is invalid format"
@@ -37,6 +40,9 @@ function convertAddress(p, chainId) {
   }
 }
 
+// https://github.com/Conflux-Chain/conflux-portal/blob/develop/app/scripts/controllers/network/createBase32AddressMiddleware.js
+// https://github.com/Conflux-Chain/conflux-portal/blob/develop/app/scripts/controllers/network/createCfxMiddleware.js
+// createBlockRefRewriteMiddleware:   add block number to last params
 function convertParamsAddress(params, chainId) {
   if (isPlainObject(params)) {
     return convertAddress(params, chainId);
@@ -45,11 +51,19 @@ function convertParamsAddress(params, chainId) {
   if (isArray(params)) {
     let paramsArr = params;
     paramsArr = params.map((p) => convertAddress(p, chainId));
-    // remove last parameter = "latest"
-    if (paramsArr[paramsArr.length - 1] === 'latest') {
+    // rename last parameter = "latest" | "latest_mined"
+    const lastParam = paramsArr[paramsArr.length - 1];
+    if (
       // RPC ERROR:
       //    invalid argument 1: hex string without 0x prefix
-      paramsArr = paramsArr.slice(0, paramsArr.length - 1);
+      lastParam === 'latest' ||
+      // RPC ERROR:
+      //    Error processing request: Latest mined epoch is not executed
+      lastParam === 'latest_mined'
+    ) {
+      // OK: latest_state
+      paramsArr[paramsArr.length - 1] = 'latest_state';
+      // paramsArr = paramsArr.slice(0, paramsArr.length - 1); // remove last param
     }
     return paramsArr;
   }
@@ -184,8 +198,8 @@ async function handleDappMethods({ req, res, next, services }) {
   // TODO unlock check
   // - cfx_sendTransaction
   if (method === 'cfx_sendTransaction') {
-    await storeDappApproval.openApprovalPopup(req);
-    res.result = '0x8837777777';
+    const txid = await storeDappApproval.openApprovalPopup(req);
+    res.result = txid;
     return;
   }
 

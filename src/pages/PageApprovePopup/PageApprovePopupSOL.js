@@ -247,7 +247,7 @@ const ApproveTransaction = observer(function ({
   ]);
 
   useEffect(() => {
-    storeTransfer.fetchFeeInfoDebounce();
+    storeTransfer.fetchFeeInfo();
   }, []);
   const account = storeAccount.currentAccountInfo;
   if (!account) {

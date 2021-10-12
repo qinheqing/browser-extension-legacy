@@ -4,7 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import classnames from 'classnames';
 import { Portal } from '@headlessui/react';
 import { observer } from 'mobx-react-lite';
-import PreloadScreen from '../PreloadScreen';
+import PreloadScreen from '../PreloadingScreen';
 import storeStorage from '../../store/storeStorage';
 import styles from './index.css';
 

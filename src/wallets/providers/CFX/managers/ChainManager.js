@@ -178,12 +178,15 @@ class ChainManager extends ChainManagerBase {
     const { gasLimit, gasUsed, storageCollateralized } = estimate;
     const gasPriceStr = gasPrice.toString();
     const gasUsedStr = gasUsed.toString();
+    const storageLimitStr = storageCollateralized.toString();
     return {
       fee: utilsNumber.bigNum(gasPriceStr).times(gasUsedStr).toFixed(),
-      gasPrice: gasPriceStr,
-      gasUsed: gasUsedStr,
       gasLimit: gasLimit.toString(),
-      storageLimit: storageCollateralized,
+      storageCollateralized,
+      // read by addFeeInfoToTx()
+      gasUsed: gasUsedStr,
+      gasPrice: gasPriceStr,
+      storageLimit: storageLimitStr,
     };
   }
 

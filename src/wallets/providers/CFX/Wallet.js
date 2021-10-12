@@ -84,6 +84,8 @@ class Wallet extends WalletBase {
   async signAndSendTxObject({ accountInfo, tx }) {
     // eslint-disable-next-line no-param-reassign
     accountInfo = accountInfo || this.accountInfo;
+
+    // TODO check Conflux._signTransaction how to prepare tx info
     if (!tx.gasPrice) {
       // eslint-disable-next-line no-param-reassign
       tx = await this.addFeeInfoToTx({ tx });
@@ -135,6 +137,10 @@ class Wallet extends WalletBase {
 
   decodeTransactionData({ address, data }) {
     // noop
+    console.log({ address, data });
+    return {
+      instructions: [data],
+    };
   }
 
   async addFeeInfoToTx({ tx, feeInfo }) {
@@ -161,7 +167,7 @@ class Wallet extends WalletBase {
     return {
       ...tx,
       chainId: status.chainId, // endpoint status.chainId
-      nonce, // sender next nonce
+      nonce: nonce.toString ? nonce.toString() : nonce, // sender next nonce
       epochHeight,
     };
   }

@@ -9,7 +9,7 @@ import styles from './index.css';
 
 // MM old component: LoadingScreen
 
-function PreloadScreen({ children, autoHideTimeout = 400 }) {
+function PreloadingScreen({ children, autoHideTimeout = 400 }) {
   const [loading, setLoading] = useState(true);
   const [hide, setHide] = useState(false);
   useEffect(() => {
@@ -26,6 +26,7 @@ function PreloadScreen({ children, autoHideTimeout = 400 }) {
       opacity: 0,
     };
   }
+
   if (hide) {
     return null;
   }
@@ -60,8 +61,8 @@ function PreloadScreen({ children, autoHideTimeout = 400 }) {
   );
 }
 
-PreloadScreen.propTypes = {
+PreloadingScreen.propTypes = {
   children: PropTypes.any,
 };
 
-export default observer(PreloadScreen);
+export default observer(PreloadingScreen);

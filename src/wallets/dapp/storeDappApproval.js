@@ -146,7 +146,7 @@ class StoreDappApproval extends BaseStoreWithStorage {
       return accounts;
     }
     accounts = await this.openApprovalPopup(request);
-    // TODO check baseChain and chainKey is matched
+    // TODO check baseChain and chainKey is matched with current chain
     await this.saveAccounts({
       baseChain,
       chainKey,

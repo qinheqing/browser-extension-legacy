@@ -8,6 +8,7 @@ import uiDappApproval from '../../wallets/dapp/uiDappApproval';
 import storeWallet from '../../store/storeWallet';
 import ApprovePageLayout from './ApprovePageLayout';
 import ApproveConnection from './ApproveConnection';
+import { ApproveTransactionCFX } from './ApproveTransaction';
 
 function PageApprovePopupCFX({ query }) {
   /*
@@ -34,22 +35,7 @@ function PageApprovePopupCFX({ query }) {
   }
 
   if (method === 'cfx_sendTransaction') {
-    return (
-      <div>
-        <button
-          onClick={() => {
-            const wallet = storeWallet.currentWallet;
-            // wallet.fetchTransactionFeeInfo
-            // wallet.addFeeInfoToTx
-            wallet.signAndSendTxObject({
-              tx: query.request.params[0],
-            });
-          }}
-        >
-          send
-        </button>
-      </div>
-    );
+    return <ApproveTransactionCFX query={query} />;
   }
 
   return (
