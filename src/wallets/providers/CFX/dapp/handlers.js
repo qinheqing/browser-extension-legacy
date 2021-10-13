@@ -172,7 +172,10 @@ async function handleDappMethods({ req, res, next, services }) {
       origin,
     });
     res.result = accounts;
-    storeDappApproval.onAccountsChanged({ address: '' });
+    storeDappApproval.onAccountsChanged({
+      address: '',
+      _memo: 'CFX/dapp/handlers cfx_requestAccounts',
+    });
     return;
   }
 
@@ -186,7 +189,10 @@ async function handleDappMethods({ req, res, next, services }) {
       origin,
     });
     res.result = accounts;
-    storeDappApproval.onAccountsChanged({ address: '' });
+    storeDappApproval.onAccountsChanged({
+      address: '',
+      _memo: 'CFX/dapp/handlers  cfx_accounts',
+    });
     return;
   }
 

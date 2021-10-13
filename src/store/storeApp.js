@@ -14,6 +14,7 @@ import {
   getStore,
 } from '../../ui/app/store/actions';
 import { UNLOCK_ROUTE } from '../../ui/app/helpers/constants/routes';
+import utilsApp from '../utils/utilsApp';
 import BaseStore from './BaseStore';
 import storeStorage from './storeStorage';
 import storeHistory from './storeHistory';
@@ -28,7 +29,7 @@ class StoreApp extends BaseStore {
       const { homeType } = storeStorage;
       untracked(() => {
         uiGetBgControllerAsync().then((bg) => {
-          if (homeType === 'NEW') {
+          if (utilsApp.isNewHome()) {
             bg.disconnectAllDomainAccounts();
           } else {
             bg.emitAccountChangedToConnectedDomain(

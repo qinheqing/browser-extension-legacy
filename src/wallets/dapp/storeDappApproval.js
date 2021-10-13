@@ -190,6 +190,10 @@ class StoreDappApproval extends BaseStoreWithStorage {
     if (!isUnlocked) {
       return [];
     }
+
+    if (utilsApp.isOldHome()) {
+      return [];
+    }
     const currentAccount = await this.getCurrentAccountRaw();
     if (!currentAccount) {
       return [];
@@ -253,19 +257,20 @@ class StoreDappApproval extends BaseStoreWithStorage {
         method: NOTIFICATION_NAMES.unlockStateChanged,
         params: {
           isUnlocked,
-          accounts,
+          accounts, // accounts is required, otherwise the provider will treat it as []
         },
       };
     };
     this.notifyAllConnections(getPayload);
   }
 
-  onAccountsChanged({ address } = {}) {
+  onAccountsChanged({ address, _memo } = {}) {
     const getPayload = async (origin, { baseChain }) => {
       const accounts = await this.getAccounts({ baseChain, origin });
       return {
         method: NOTIFICATION_NAMES.accountsChanged,
         params: accounts,
+        _memo,
       };
     };
     this.notifyAllConnections(getPayload);

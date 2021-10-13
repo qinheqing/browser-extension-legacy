@@ -174,6 +174,10 @@ function isNewHome() {
   return utilsStorage.getAutoSaveLocalStorageItem('homeType') === 'NEW';
 }
 
+function isOldHome() {
+  return !isNewHome();
+}
+
 function objectToUint8Array(dataObj = {}) {
   const data = new Uint8Array(Object.keys(dataObj).length);
   for (const [index, value] of Object.entries(dataObj)) {
@@ -198,6 +202,7 @@ export default {
   isBackgroundEnvironment,
   isUiEnvironment,
   isNewHome,
+  isOldHome,
   waitForDataLoaded,
   delay,
   changeCase,

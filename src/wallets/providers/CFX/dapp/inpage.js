@@ -1,4 +1,8 @@
-import { shimWeb3, BaseProvider } from '@onekeyhq/providers';
+import {
+  shimWeb3,
+  BaseProvider,
+  setGlobalProvider as setGlobalProviderOld,
+} from '@onekeyhq/providers';
 import { JsonRpcEngine } from '@onekeyhq/json-rpc-engine';
 import logger from '../../../../log/logger';
 import { STREAM_PROVIDER_CFX } from '../../../../../app/scripts/constants/consts';
@@ -10,7 +14,7 @@ function createProviderProxy({ provider }) {
   });
 }
 
-function initConfluxVariable({ provider }) {
+function setGlobalProvider({ provider }) {
   window.conflux = createProviderProxy({ provider });
   window.conflux.isConfluxPortal = true;
   window.conflux.baseChain = CONST_CHAIN_KEYS.CFX;
@@ -34,11 +38,15 @@ function initConfluxVariable({ provider }) {
   };
 
   shimWeb3(window.conflux, logger);
+
+  // TODO dispatchEvent after all providers ready
+  window.dispatchEvent(new Event('ethereum#initialized'));
+  window.dispatchEvent(new Event('conflux#initialized'));
 }
 
 function init({ provider }) {
   if (provider) {
-    initConfluxVariable({ provider });
+    setGlobalProvider({ provider });
   } else {
     console.error('Conflux provider is NOT exists');
   }

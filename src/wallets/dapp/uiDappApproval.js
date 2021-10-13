@@ -1,3 +1,4 @@
+import { debounce } from 'lodash';
 import { BACKGROUND_PROXY_MODULE_NAMES } from '../../consts/consts';
 import uiBackgroundProxy from '../bg/uiBackgroundProxy';
 
@@ -42,17 +43,17 @@ async function approveTransaction(query, txid) {
 // DappApprovalMethods.js
 // storeDappApproval.js
 // storeDappNotify.js
-async function onUnlockedChanged(payload) {
+const onUnlockedChanged = debounce(async function (payload) {
   return _bgProxyCall('onUnlockedChanged', payload);
-}
+}, 300);
 
-async function onAccountsChanged(payload) {
+const onAccountsChanged = debounce(async function (payload) {
   return _bgProxyCall('onAccountsChanged', payload);
-}
+}, 300);
 
-async function onChainChanged(payload) {
+const onChainChanged = debounce(async function (payload) {
   return _bgProxyCall('onChainChanged', payload);
-}
+}, 300);
 
 export default {
   approveTransaction,

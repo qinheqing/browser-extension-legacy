@@ -32,6 +32,7 @@ class StoreDappNotify extends BaseStore {
       ],
     });
 
+    // onChainChanged
     autorun(() => {
       const chainKey = storeChain.currentChainKey;
       const baseChain = storeChain.currentBaseChain;
@@ -42,14 +43,22 @@ class StoreDappNotify extends BaseStore {
       });
     });
 
+    // onAccountsChanged
     autorun(() => {
+      const chainKey = storeChain.currentChainKey;
+      const { isUnlocked } = storeApp;
+      const { homeType } = storeApp;
       const address = storeAccount.currentAccountAddress;
       untracked(() => {
         // noop
-        uiDappApproval.onAccountsChanged({ address });
+        uiDappApproval.onAccountsChanged({
+          address,
+          _memo: 'StoreDappNotify.onAccountsChanged',
+        });
       });
     });
 
+    // onUnlockedChanged
     autorun(() => {
       const { isUnlocked } = storeApp;
       untracked(() => {
