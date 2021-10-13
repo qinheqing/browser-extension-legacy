@@ -291,6 +291,7 @@ function withCopyHandle(text, { shorten = true } = {}) {
 
 const TxInstructionCardCFX = observer(function ({ data }) {
   const { decimals, currency } = storeAccount.currentAccountInfo;
+  // TODO try catch
   const amount = utilsNumber.hexToIntString(data.value);
   const amountView = (
     <span>
@@ -303,11 +304,13 @@ const TxInstructionCardCFX = observer(function ({ data }) {
     ['数据', withCopyHandle(data.data)],
     ['金额', amountView],
   ];
+  // TODO safe render
   return <TxInstructionCardBase entries={entries} />;
 });
 
 const ApproveTransactionCFX = observer(function ({ query, isBatch = false }) {
   const wallet = storeWallet.currentWallet;
+  // TODO multiple transaction params
   const tx = query.request.params[0];
   const onApprove = useCallback(async () => {
     // wallet.fetchTransactionFeeInfo

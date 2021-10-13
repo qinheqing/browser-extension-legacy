@@ -24,7 +24,7 @@ import { setupMultiplex } from './lib/stream-utils';
 import { getEnvironmentType } from './lib/util';
 import {
   STREAM_CONTROLLER,
-  STREAM_PROVIDER,
+  STREAM_PROVIDER_ETH,
   STREAM_PROVIDER_CFX,
 } from './constants/consts';
 
@@ -135,7 +135,7 @@ function initializeUi(activeTab, container, connectionStream, cb) {
 function connectToAccountManager(connectionStream, cb) {
   const mx = setupMultiplex(connectionStream);
   setupControllerConnection(mx.createStream(STREAM_CONTROLLER), cb);
-  setupWeb3Connection(mx.createStream(STREAM_PROVIDER));
+  setupWeb3Connection(mx.createStream(STREAM_PROVIDER_ETH));
   setupWeb3Connection(mx.createStream(STREAM_PROVIDER_CFX));
 }
 

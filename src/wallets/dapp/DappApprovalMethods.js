@@ -37,6 +37,18 @@ class DappApprovalMethods {
     }
     this.removeApproval(key);
   }
+
+  onUnlockedChanged(payload) {
+    global._storeDappApproval.onUnlockedChanged(payload);
+  }
+
+  onAccountsChanged(payload) {
+    global._storeDappApproval.onAccountsChanged(payload);
+  }
+
+  onChainChanged() {
+    global._storeDappApproval.onChainChanged();
+  }
 }
 
 export default DappApprovalMethods;

@@ -43,7 +43,7 @@ import inpageConflux from '../../src/wallets/providers/CFX/dapp/inpage';
 import {
   STREAM_CONTENT_SCRIPT,
   STREAM_INPAGE,
-  STREAM_PROVIDER,
+  STREAM_PROVIDER_ETH,
   STREAM_PROVIDER_CFX,
 } from './constants/consts';
 import inpageConflict from './inpageConflict';
@@ -64,7 +64,7 @@ const metamaskStream = new WindowPostMessageStream({
 // ETH provider ----------------------------------------------
 const provider = initializeProvider({
   connectionStream: metamaskStream,
-  jsonRpcStreamName: STREAM_PROVIDER,
+  jsonRpcStreamName: STREAM_PROVIDER_ETH,
   logger: log,
   shouldShimWeb3: false, // manually set window.ethereum by setGlobalProvider()
   shouldSetOnWindow: false, // manually shimWeb3 by shimWeb3()

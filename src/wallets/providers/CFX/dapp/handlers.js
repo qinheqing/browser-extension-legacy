@@ -96,7 +96,7 @@ async function handleDappMethods({ req, res, next, services }) {
   TODO
   - can invoke locked
   - can invoke at other chain
-    - same baseChain (ETH,BSC,HECO)
+    - same baseChain, different chainId (ETH,BSC,HECO)
     - different baseChain (EVM,SOL,CFX)
   - event emit
     - chainId
@@ -133,7 +133,7 @@ async function handleDappMethods({ req, res, next, services }) {
       chainKey,
       origin,
     });
-    const chainMeta = await storeDappApproval.getChainMeta();
+    const chainMeta = await storeDappApproval.getChainMeta({ baseChain });
     res.result = {
       // always call function to get latest unlock status
       isUnlocked: global.$ok_isUnlockedCheck(),
@@ -172,6 +172,7 @@ async function handleDappMethods({ req, res, next, services }) {
       origin,
     });
     res.result = accounts;
+    storeDappApproval.onAccountsChanged({ address: '' });
     return;
   }
 
@@ -185,17 +186,19 @@ async function handleDappMethods({ req, res, next, services }) {
       origin,
     });
     res.result = accounts;
+    storeDappApproval.onAccountsChanged({ address: '' });
     return;
   }
 
   if (method === 'cfx_chainId') {
-    const chainMeta = await storeDappApproval.getChainMeta();
+    const chainMeta = await storeDappApproval.getChainMeta({ baseChain });
     res.result = chainMeta.chainId;
+    storeDappApproval.onChainChanged();
     return;
   }
 
   // transaction and sign ----------------------------------------------
-  // TODO unlock check
+  // TODO unlock check, account matched check (provider.selectedAccount)
   // - cfx_sendTransaction
   if (method === 'cfx_sendTransaction') {
     const txid = await storeDappApproval.openApprovalPopup(req);
@@ -213,6 +216,7 @@ async function handleDappMethods({ req, res, next, services }) {
   console.log('RPC handleDappMethods', req);
   req.params = convertParamsAddress(req.params, req.chainId);
 
+  // TODO cache wallet if chain not changed
   const wallet = await storeDappApproval.createWallet();
   const rpc = wallet.chainManager.apiRpc.provider;
   const rpcRes = await rpc.call(req.method, ...[].concat(req.params || []));

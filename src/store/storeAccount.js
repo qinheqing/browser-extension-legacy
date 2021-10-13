@@ -228,9 +228,14 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   setCurrentAccount({ account }) {
+    if (!account.chainKey) {
+      return;
+    }
+    storeChain.setCurrentChainKey(account.chainKey);
+    const baseChain = storeChain.currentBaseChain;
     storeStorage.currentAccountRaw = {
       ...account,
-      baseChain: account?.baseChain ?? storeChain.currentBaseChain,
+      baseChain: account?.baseChain ?? baseChain,
     };
   }
 
@@ -292,6 +297,7 @@ class StoreAccount extends BaseStore {
         );
         // rewrite correct address
         accountNew.address = addressReal || 'ErrorAddress';
+        accountNew.baseChain = accountNew.baseChain || chainInfo.baseChain;
         return accountNew;
       }
     }
@@ -326,21 +332,7 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   async autofixCurrentAccountInfo() {
-    if (storeStorage.currentAccountRaw) {
-      // add baseChain attr
-      const { baseChain, chainKey } = storeStorage.currentAccountRaw;
-      if (
-        !baseChain &&
-        chainKey &&
-        storeChain.currentBaseChain &&
-        storeChain.currentChainKey === chainKey
-      ) {
-        storeStorage.currentAccountRaw = {
-          ...storeStorage.currentAccountRaw,
-          baseChain: storeChain.currentBaseChain,
-        };
-      }
-    }
+    // noop
   }
 }
 

@@ -13,6 +13,14 @@ import backgroundProxy from '../bg/backgroundProxy';
 import utilsStorage from '../../utils/utilsStorage';
 import utilsNumber from '../../utils/utilsNumber';
 import walletFactory from '../walletFactory';
+import { NOTIFICATION_NAMES } from '../../../app/scripts/controllers/permissions/enums';
+import {
+  STREAM_PROVIDER_CFX,
+  STREAM_PROVIDER_ETH,
+} from '../../../app/scripts/constants/consts';
+import bgGetRootController from '../bg/bgGetRootController';
+import { allBuiltInChains } from '../../config/chains/allBuiltInChains';
+import utilsApp from '../../utils/utilsApp';
 
 class StoreDappApproval extends BaseStoreWithStorage {
   // TODO ensure this store run in background
@@ -21,6 +29,11 @@ class StoreDappApproval extends BaseStoreWithStorage {
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
     this.autosave('connections');
+  }
+
+  async emitChainChangedOnLoaded() {
+    await utilsApp.delay(1000);
+    this.onChainChanged();
   }
 
   @observable.ref
@@ -98,8 +111,16 @@ class StoreDappApproval extends BaseStoreWithStorage {
     return this.getUiStorageItem('currentChainInfo');
   }
 
+  getChainInfoFromBaseChain({ baseChain }) {
+    return allBuiltInChains.find(
+      (item) => item.baseChain === baseChain && !item.isTestNet,
+    );
+  }
+
   @action.bound
   async saveAccounts({ baseChain, chainKey, origin, accounts }) {
+    // eslint-disable-next-line no-param-reassign
+    chainKey = ''; // chainKey not support in events, so disable it
     const currentAccounts = this.connections[origin] || [];
     const appendAccounts = accounts.map((address) => {
       return {
@@ -119,9 +140,13 @@ class StoreDappApproval extends BaseStoreWithStorage {
     };
   }
 
-  async getChainMeta() {
-    const chainInfo = await this.getCurrentChainInfo();
-    const { tokenChainId, key: chainKey, baseChain } = chainInfo;
+  async getChainMeta({ baseChain }) {
+    let chainInfo = await this.getCurrentChainInfo();
+    // ext should return same baseChain.chainId, otherwise some dapp will cause errors
+    if (baseChain !== chainInfo.baseChain) {
+      chainInfo = this.getChainInfoFromBaseChain({ baseChain });
+    }
+    const { tokenChainId, key: chainKey } = chainInfo;
     // chainId: '0x1',
     // networkVersion: '1',
     // TODO NewHome not match, mock chainId and networkVersion
@@ -158,6 +183,8 @@ class StoreDappApproval extends BaseStoreWithStorage {
   }
 
   async getAccounts({ baseChain, chainKey, origin }) {
+    // eslint-disable-next-line no-param-reassign
+    chainKey = ''; // chainKey not support in events, so disable it
     const isUnlocked = global.$ok_isUnlockedCheck();
 
     if (!isUnlocked) {
@@ -173,7 +200,7 @@ class StoreDappApproval extends BaseStoreWithStorage {
     return allAccounts
       .filter((acc) => {
         let found = acc.baseChain === baseChain;
-        if (acc.chainKey && chainKey) {
+        if (chainKey && acc.chainKey) {
           found = found && chainKey === acc.chainKey;
         }
         return found;
@@ -208,6 +235,52 @@ class StoreDappApproval extends BaseStoreWithStorage {
         key,
       });
     });
+  }
+
+  notifyAllConnections(getPayload) {
+    // noop
+    const bg = bgGetRootController({ unlockRequired: false });
+    bg.notifyAllConnections(getPayload, STREAM_PROVIDER_CFX);
+  }
+
+  onUnlockedChanged({ isUnlocked } = {}) {
+    const getPayload = async (origin, { baseChain }) => {
+      let accounts = [];
+      if (isUnlocked) {
+        accounts = await this.getAccounts({ baseChain, origin });
+      }
+      return {
+        method: NOTIFICATION_NAMES.unlockStateChanged,
+        params: {
+          isUnlocked,
+          accounts,
+        },
+      };
+    };
+    this.notifyAllConnections(getPayload);
+  }
+
+  onAccountsChanged({ address } = {}) {
+    const getPayload = async (origin, { baseChain }) => {
+      const accounts = await this.getAccounts({ baseChain, origin });
+      return {
+        method: NOTIFICATION_NAMES.accountsChanged,
+        params: accounts,
+      };
+    };
+    this.notifyAllConnections(getPayload);
+  }
+
+  onChainChanged() {
+    const getPayload = async (origin, { baseChain }) => {
+      // { chainId,  networkVersion,  chainKey,  baseChain }
+      const chainMeta = await this.getChainMeta({ baseChain, origin });
+      return {
+        method: NOTIFICATION_NAMES.chainChanged,
+        params: chainMeta,
+      };
+    };
+    this.notifyAllConnections(getPayload);
   }
 }
 

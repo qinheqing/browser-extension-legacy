@@ -12,18 +12,9 @@ import {
 import utilsApp from '../utils/utilsApp';
 import chains from '../config/chains';
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../ui/app/helpers/constants/common';
+import { allBuiltInChainsMap } from '../config/chains/allBuiltInChains';
 import BaseStore from './BaseStore';
 import storeStorage from './storeStorage';
-
-// TODO use https://github.com/OneKeyHQ/remote-config
-function createBuiltInChains() {
-  const chainsRaw = chains;
-  return chainsRaw.reduce((prev, current) => {
-    const info = new OneChainInfo(current);
-    prev[info.key] = info;
-    return prev;
-  }, {});
-}
 
 class StoreChain extends BaseStore {
   constructor(props) {
@@ -34,7 +25,7 @@ class StoreChain extends BaseStore {
   }
 
   get chainsBuiltIn() {
-    return createBuiltInChains();
+    return allBuiltInChainsMap;
   }
 
   @computed

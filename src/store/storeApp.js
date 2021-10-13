@@ -66,12 +66,23 @@ class StoreApp extends BaseStore {
   }
 
   @observable.ref
+  metamaskStateReady = false;
+
+  @observable.ref
   legacyState = {
     isUnlocked: false,
     selectedAddress: '',
     hwOnlyMode: false,
     currentCurrency: 'usd',
   };
+
+  @computed
+  get isUnlocked() {
+    if (!this.metamaskStateReady) {
+      return undefined;
+    }
+    return this.legacyState.isUnlocked;
+  }
 }
 
 global._storeApp = new StoreApp();

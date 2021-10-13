@@ -29,6 +29,7 @@ import backgroundProxy from '../../src/wallets/bg/backgroundProxy';
 import bgHelpers from '../../src/wallets/bg/bgHelpers';
 import utilsApp from '../../src/utils/utilsApp';
 import AwaitTimeout from '../../src/utils/AwaitTimeout';
+import { CONST_CHAIN_KEYS } from '../../src/consts/consts';
 import AddressKeyring from './lib/eth-address-keyring';
 import ComposableObservableStore from './lib/ComposableObservableStore';
 import AccountTracker from './lib/account-tracker';
@@ -64,7 +65,7 @@ import DetectChainController from './controllers/detect-chain';
 import { MOCK_CHAIN_ID_WHEN_NEW_APP } from './controllers/permissions/permissionsMethodMiddleware';
 import {
   STREAM_CONTROLLER,
-  STREAM_PROVIDER,
+  STREAM_PROVIDER_ETH,
   STREAM_PROVIDER_CFX,
 } from './constants/consts';
 import i18nBackground from './i18nBackground';
@@ -1857,8 +1858,19 @@ export default class MetamaskController extends EventEmitter {
     const mux = setupMultiplex(connectionStream);
 
     // messages between inpage and background
-    this.setupProviderConnection(mux.createStream(STREAM_PROVIDER), sender);
-    this.setupProviderConnection(mux.createStream(STREAM_PROVIDER_CFX), sender);
+    this.setupProviderConnection(
+      mux.createStream(STREAM_PROVIDER_ETH),
+      sender,
+      false,
+      { baseChain: CONST_CHAIN_KEYS.ETH },
+    );
+
+    this.setupProviderConnection(
+      mux.createStream(STREAM_PROVIDER_CFX),
+      sender,
+      false,
+      { baseChain: CONST_CHAIN_KEYS.CFX },
+    );
 
     // TODO:LegacyProvider: Delete
     // legacy streams
@@ -1893,15 +1905,17 @@ export default class MetamaskController extends EventEmitter {
     // connect features
     this.setupControllerConnection(mux.createStream(STREAM_CONTROLLER));
     this.setupProviderConnection(
-      mux.createStream(STREAM_PROVIDER),
+      mux.createStream(STREAM_PROVIDER_ETH),
       sender,
       true,
+      { baseChain: CONST_CHAIN_KEYS.ETH },
     );
 
     this.setupProviderConnection(
       mux.createStream(STREAM_PROVIDER_CFX),
       sender,
       true,
+      { baseChain: CONST_CHAIN_KEYS.CFX },
     );
   }
 
@@ -1963,7 +1977,7 @@ export default class MetamaskController extends EventEmitter {
    * @param {MessageSender} sender - The sender of the messages on this stream
    * @param {boolean} isInternal - True if this is a connection with an internal process
    */
-  setupProviderConnection(outStream, sender, isInternal) {
+  setupProviderConnection(outStream, sender, isInternal, { baseChain } = {}) {
     const origin = isInternal ? 'metamask' : new URL(sender.url).origin;
     let extensionId;
     if (sender.id !== this.extension.runtime.id) {
@@ -1976,6 +1990,7 @@ export default class MetamaskController extends EventEmitter {
 
     const engine = this.setupProviderEngine({
       streamName: outStream._name,
+      baseChain,
       origin,
       location: sender.url,
       extensionId,
@@ -2000,6 +2015,10 @@ export default class MetamaskController extends EventEmitter {
         log.error(err);
       }
     });
+
+    if (baseChain !== CONST_CHAIN_KEYS.ETH) {
+      window._storeDappApproval.emitChainChangedOnLoaded();
+    }
   }
 
   /**
@@ -2013,6 +2032,7 @@ export default class MetamaskController extends EventEmitter {
    * */
   setupProviderEngine({
     streamName,
+    baseChain,
     origin,
     location,
     extensionId,
@@ -2023,6 +2043,7 @@ export default class MetamaskController extends EventEmitter {
     const engine = new JsonRpcEngine();
     // set streamName to engine
     engine.streamName = streamName;
+    engine.baseChain = baseChain;
     const { provider, blockTracker } = this;
 
     // create filter polyfill middleware
@@ -2034,7 +2055,7 @@ export default class MetamaskController extends EventEmitter {
       blockTracker,
     });
     subscriptionManager.events.on('notification', (message) =>
-      this.engineEmitNotificationOnlyEth(engine, message),
+      this.engineEmitNotification(engine, message),
     );
 
     // append origin to each request
@@ -2208,23 +2229,23 @@ export default class MetamaskController extends EventEmitter {
     if (connections) {
       Object.values(connections).forEach((conn) => {
         if (conn.engine) {
-          this.engineEmitNotificationOnlyEth(conn.engine, payload);
+          this.engineEmitNotification(conn.engine, payload);
         }
       });
     }
   }
 
-  engineEmitNotificationOnlyEth(engine, payload) {
+  engineEmitNotification(engine, payload, streamName = STREAM_PROVIDER_ETH) {
+    let payloadNew = payload;
     if (isPlainObject(payload)) {
-      const payloadNew = {
+      payloadNew = {
         streamName: engine.streamName || '',
         ...payload,
       };
-      if (!engine.streamName || engine.streamName === STREAM_PROVIDER) {
-        engine.emit('notification', payloadNew);
-      }
-    } else {
-      engine.emit('notification', payload);
+    }
+
+    if (!engine.streamName || engine.streamName === streamName) {
+      engine.emit('notification', payloadNew);
     }
   }
 
@@ -2240,18 +2261,21 @@ export default class MetamaskController extends EventEmitter {
    * are sent.
    *
    * @param {any} payload - The event payload, or payload getter function.
+   *  origin => { method: NOTIFICATION_NAMES.chainChanged, params }
+   *  { method: NOTIFICATION_NAMES.chainChanged, params }
+   * @param streamName
    */
-  notifyAllConnections(payload) {
-    const getPayload =
-      typeof payload === 'function'
-        ? (origin) => payload(origin)
-        : () => payload;
+  notifyAllConnections(payload, streamName = STREAM_PROVIDER_ETH) {
+    const getPayload = typeof payload === 'function' ? payload : () => payload;
 
-    Object.values(this.connections).forEach((origin) => {
-      Object.values(origin).forEach((conn) => {
-        if (conn.engine) {
-          let _payload = getPayload(origin);
+    Object.entries(this.connections).forEach(([origin, target]) => {
+      Object.values(target).forEach(async (conn) => {
+        if (conn.engine && conn.engine.streamName === streamName) {
+          let _payload = await getPayload(origin, {
+            baseChain: conn.engine.baseChain,
+          });
           if (
+            streamName === STREAM_PROVIDER_ETH &&
             utilsApp.isNewHome() &&
             _payload.method === NOTIFICATION_NAMES.chainChanged
           ) {
@@ -2260,7 +2284,7 @@ export default class MetamaskController extends EventEmitter {
               params: MOCK_CHAIN_ID_WHEN_NEW_APP,
             };
           }
-          this.engineEmitNotificationOnlyEth(conn.engine, _payload);
+          this.engineEmitNotification(conn.engine, _payload, streamName);
         }
       });
     });
