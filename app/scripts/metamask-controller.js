@@ -2280,8 +2280,9 @@ export default class MetamaskController extends EventEmitter {
             _payload.method === NOTIFICATION_NAMES.chainChanged
           ) {
             _payload = {
-              method: NOTIFICATION_NAMES.chainChanged,
+              ..._payload,
               params: MOCK_CHAIN_ID_WHEN_NEW_APP,
+              _memo2: 'notifyAllConnections newHome rewrite',
             };
           }
           this.engineEmitNotification(conn.engine, _payload, streamName);
@@ -2295,11 +2296,13 @@ export default class MetamaskController extends EventEmitter {
       this.notifyAllConnections({
         method: NOTIFICATION_NAMES.chainChanged,
         params: MOCK_CHAIN_ID_WHEN_NEW_APP,
+        _memo: 'notifyChainIdChanged newHome',
       });
     } else {
       this.notifyAllConnections({
         method: NOTIFICATION_NAMES.chainChanged,
         params: this.getProviderNetworkState(this.getState()),
+        _memo: 'notifyChainIdChanged oldHome',
       });
     }
   }
@@ -2368,6 +2371,7 @@ export default class MetamaskController extends EventEmitter {
     this.notifyAllConnections({
       method: NOTIFICATION_NAMES.chainChanged,
       params: this.getProviderNetworkState(newState),
+      _memo: '_onStateUpdate',
     });
   }
 

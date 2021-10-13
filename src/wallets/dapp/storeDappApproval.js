@@ -283,6 +283,7 @@ class StoreDappApproval extends BaseStoreWithStorage {
       return {
         method: NOTIFICATION_NAMES.chainChanged,
         params: chainMeta,
+        _memo: 'StoreDappApproval.onChainChanged',
       };
     };
     this.notifyAllConnections(getPayload);
