@@ -38,6 +38,11 @@
 }
 
 .eth-overview {
+  &__balance-text {
+    font-weight: 500;
+    color: #A0A0B0;
+    font-size: 12px;
+  }
   &__balance {
     display: flex;
     flex-direction: column;
