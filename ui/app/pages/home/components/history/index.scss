@@ -1,0 +1,40 @@
+.home-history {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    &__header {
+        height: 60px;
+        width: 100%;
+        padding: 0 16px;
+        background-color: white;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #e7e7e7;
+    }
+    &__title {
+        font-weight: 700px;
+        font-size: 18px;
+        color: #12121E;
+    }
+    &__address {
+        font-size: 12px;
+        font-weight: 500;
+        color: #A0A0A0;
+    }
+    &__content {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        width: 100%;
+        bottom: 0;
+    }
+    &__link {
+        width: 16px;
+        height: 16px;
+    }
+}

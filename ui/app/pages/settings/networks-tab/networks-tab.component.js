@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { NETWORK_TYPE_RPC } from '../../../../../shared/constants/network';
 import Button from '../../../components/ui/button';
+import { NetworkIcon } from '../../../components/ui/network-icon';
 import LockIcon from '../../../components/ui/lock-icon';
 import {
   NETWORKS_ROUTE,
@@ -10,7 +11,7 @@ import {
 } from '../../../helpers/constants/routes';
 import ColorIndicator from '../../../components/ui/color-indicator';
 import { COLORS, SIZES } from '../../../helpers/constants/design-system';
-import NetworkForm, { NetworkIcon } from './network-form';
+import NetworkForm from './network-form';
 
 export default class NetworksTab extends PureComponent {
   static contextTypes = {
@@ -111,12 +112,7 @@ export default class NetworksTab extends PureComponent {
           }
         }}
       >
-        {/* <ColorIndicator
-          color={labelKey}
-          type={ColorIndicator.TYPES.FILLED}
-          size={SIZES.LG}
-        /> */}
-        <NetworkIcon chain={network.labelKey} />
+        <NetworkIcon networkType={network.labelKey} />
         <div
           className={classnames('networks-tab__networks-list-name', {
             'networks-tab__networks-list-name--selected':

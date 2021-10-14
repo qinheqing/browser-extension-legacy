@@ -73,28 +73,14 @@ export default class AppHeader extends PureComponent {
     return (
       isUnlocked && (
         <div
-          className={classnames('account-menu__icon', {
-            'account-menu__icon--disabled': disabled,
-          })}
+          className="account-menu__icon"
           onClick={() => {
             if (!disabled) {
-              !isAccountMenuOpen &&
-                this.context.trackEvent({
-                  eventOpts: {
-                    category: 'Navigation',
-                    action: 'Home',
-                    name: 'Opened Main Menu',
-                  },
-                });
               toggleAccountMenu();
             }
           }}
         >
-          <Identicon address={selectedAddress} diameter={20} addBorder />
-          <span className="account-menu__address">
-            {accounts && accounts.length > 0 ? selectedAddress.slice(-4) : ''}
-          </span>
-          <span className="app-header__network-down-arrow app-header__account-down-arrow" />
+          <Identicon address={selectedAddress} diameter={24} />
         </div>
       )
     );
@@ -117,15 +103,6 @@ export default class AppHeader extends PureComponent {
         })}
       >
         <div className="app-header__contents">
-          <MetaFoxLogo
-            unsetIconHeight
-            onClick={async () => {
-              if (onClick) {
-                await onClick();
-              }
-              history.push(DEFAULT_ROUTE);
-            }}
-          />
           <div className="app-header__account-menu-container">
             {!hideNetworkIndicator && (
               <div className="app-header__network-component-wrapper">

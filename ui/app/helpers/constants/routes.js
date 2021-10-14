@@ -57,6 +57,8 @@ const SIGNATURE_REQUEST_PATH = '/signature-request';
 const DECRYPT_MESSAGE_REQUEST_PATH = '/decrypt-message-request';
 const ENCRYPTION_PUBLIC_KEY_REQUEST_PATH = '/encryption-public-key-request';
 const CONFIRMATION_V_NEXT_ROUTE = '/confirmation';
+const TRANSACTIONS_ROUTE = '/transactions';
+const OVERVIEW_ROUTE = '/overviews';
 
 export {
   DEFAULT_ROUTE,
@@ -113,4 +115,6 @@ export {
   CONNECT_CONFIRM_PERMISSIONS_ROUTE,
   CONNECTED_ROUTE,
   CONNECTED_ACCOUNTS_ROUTE,
+  TRANSACTIONS_ROUTE,
+  OVERVIEW_ROUTE,
 };

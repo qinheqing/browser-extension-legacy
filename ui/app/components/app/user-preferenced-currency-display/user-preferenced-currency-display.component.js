@@ -22,7 +22,13 @@ export default function UserPreferencedCurrencyDisplay({
   const prefixComponent = useMemo(() => {
     return (
       currency === ETH &&
-      showEthLogo && <img src="/images/eth.svg" height={ethLogoHeight} alt="" />
+      showEthLogo && (
+        <img
+          src="/images/eth.svg"
+          style={{ height: `${ethLogoHeight}px` }}
+          alt=""
+        />
+      )
     );
   }, [currency, showEthLogo, ethLogoHeight]);
 
