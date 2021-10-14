@@ -62,14 +62,14 @@ const metamaskStream = new WindowPostMessageStream({
 });
 
 // ETH provider ----------------------------------------------
-const provider = initializeProvider({
+const providerEth = initializeProvider({
   connectionStream: metamaskStream,
   jsonRpcStreamName: STREAM_PROVIDER_ETH,
   logger: log,
   shouldShimWeb3: false, // manually set window.ethereum by setGlobalProvider()
   shouldSetOnWindow: false, // manually shimWeb3 by shimWeb3()
 });
-inpageConflict.resolveConflict({ provider });
+inpageConflict.resolveConflict({ provider: providerEth });
 
 // SOL provider ----------------------------------------------
 inpageSolana.init();

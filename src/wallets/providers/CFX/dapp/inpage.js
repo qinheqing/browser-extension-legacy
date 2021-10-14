@@ -19,6 +19,13 @@ function setGlobalProvider({ provider }) {
   window.conflux.isConfluxPortal = true;
   window.conflux.baseChain = CONST_CHAIN_KEYS.CFX;
 
+  // confluxscan.io use off() instead of removeListener(), so we should create it.
+  window.conflux.off = (...args) => {
+    console.warn(`OneKey: 'conflux.off()' is deprecated and may be removed in the future. Please use the 'conflux.removeListener()' instead.
+`);
+    window.conflux.removeListener(...args);
+  };
+
   window.conflux._rpcRequestOld = window.conflux._rpcRequest;
   window.conflux._rpcRequest = function (payload, ...others) {
     const newPayload = {
