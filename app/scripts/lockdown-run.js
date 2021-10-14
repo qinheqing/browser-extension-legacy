@@ -7,6 +7,8 @@
 //    - mobx-react-lite use [app/vendor/mobx-react-lite.js]
 //    - @solana/web3.js use [vendor/external-js/solana-web3.js]
 //    - js-conflux-sdk use [js-conflux-sdk.umd.min.js]
+//        js-conflux-sdk can not working new Conflux.CRC20()
+//        (0 , l.default) is not a function
 //        source code import not working:
 //            Uncaught TypeError: Cannot add property BigInt, object is not extensible
 //
@@ -24,7 +26,10 @@ function runLockDown() {
 }
 
 try {
-  runLockDown();
+  // https://github.com/MetaMask/metamask-extension/pull/9729
+  // TODO disable runLockDown()
+  //    js-conflux-sdk can not working new Conflux.CRC20()
+  // runLockDown();
 } catch (error) {
   // If the `lockdown` call throws an exception, it interferes with the
   // contentscript injection on some versions of Firefox. The error is
