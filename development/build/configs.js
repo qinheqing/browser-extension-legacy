@@ -99,7 +99,7 @@ const externalSourcemapsCopyFiles = [
 const externalModulesHtmlInjectJs = [
   'vendor/external-js/mobx.js', // mobx
   'vendor/external-js/solana-web3.js', // @solana/web3.js
-  'vendor/js-conflux-sdk/1.7.0/js-conflux-sdk.umd.min.js',
+  'vendor/js-conflux-sdk/1.7.0/js-conflux-sdk.umd.min.js', // js-conflux-sdk
   IS_LEGACY_BUILD && 'external-libs',
 ].filter(Boolean);
 
@@ -115,8 +115,8 @@ const externalModulesGlobalShim = {
   'js-conflux-sdk': 'Conflux',
 };
 
-// THIS IS NOT WORKING
-//    please update:   package.json > browser field
+// TODO: THIS IS NOT WORKING
+//    please update at:   package.json > browser field
 const externalModulesBrowserField = {
   // mobx-react-lite should be out of node_modules folder,
   //    so that the deps "mobx" can be resolved as global var.
