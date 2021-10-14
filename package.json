@@ -7,8 +7,7 @@
     "url": ""
   },
   "browser": {
-    "mobx-react-lite": "./app/vendor/mobx-react-lite.js",
-    "js-conflux-sdk-000": "./src/vendors/js-conflux-sdk/index.js"
+    "mobx-react-lite": "./app/vendor/mobx-react-lite.js"
   },
   "scripts": {
     "prepare": "husky install",

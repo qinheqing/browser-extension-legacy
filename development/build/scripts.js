@@ -894,10 +894,16 @@ function renderHtmlFile(htmlName, groupSet, commonSet, browserPlatforms) {
     ...commonSet.values(),
     ...groupSet.values(),
     // ----------------------------------------------
-    'lockdown-run', // secure ES module, which cause mobx, solanaWeb3 confluxSdk init fail.
+    'lockdown-run.js', // secure ES module, which cause mobx, solanaWeb3 confluxSdk init fail.
   ]
     .filter(Boolean)
-    .map((label) => `./${label}.js?_t=${new Date().getTime()}.00000`);
+    .map(
+      (label) =>
+        `./${label.replace(
+          /\.js$/giu,
+          '',
+        )}.js?_t=${new Date().getTime()}.00000`,
+    );
 
   const htmlOutput = Sqrl.render(htmlTemplate, { jsBundles, gaCode });
   browserPlatforms.forEach((platform) => {
