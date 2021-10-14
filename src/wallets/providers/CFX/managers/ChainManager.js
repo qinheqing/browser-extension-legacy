@@ -7,6 +7,8 @@ import optionsHelper from '../../../optionsHelper';
 import utilsApp from '../../../../utils/utilsApp';
 import utilsNumber from '../../../../utils/utilsNumber';
 import { CFX_EPOCH_TAG } from '../consts/consts';
+import { CONST_ERC20_METHODS_HEX } from '../../../../consts/consts';
+import utils from '../utils/utils';
 
 class ChainManager extends ChainManagerBase {
   createApiRpc({ url, chainId }) {
@@ -22,7 +24,7 @@ class ChainManager extends ChainManagerBase {
 
   createApiExplorer({ url }) {
     const requests = axios.create({
-      baseURL: url, // http://testnet.unibuild.art
+      baseURL: url,
       // timeout: 30 * 1000,
       headers: {
         'X-Custom-Header': 'foobar',
@@ -68,6 +70,36 @@ class ChainManager extends ChainManagerBase {
     };
   }
 
+  _createErc20Request({ to, data }) {
+    return {
+      method: 'cfx_call',
+      params: [
+        {
+          to, // token contract address
+          data,
+        },
+        CFX_EPOCH_TAG,
+      ],
+    };
+  }
+
+  _createErc20TokenMetaRequest(address) {
+    return [
+      this._createErc20Request({
+        to: address,
+        data: `${CONST_ERC20_METHODS_HEX.name}`,
+      }),
+      this._createErc20Request({
+        to: address,
+        data: `${CONST_ERC20_METHODS_HEX.symbol}`,
+      }),
+      this._createErc20Request({
+        to: address,
+        data: `${CONST_ERC20_METHODS_HEX.decimals}`,
+      }),
+    ];
+  }
+
   async getAccountInfo({ address, isNative, symbol, ownerAddress }) {
     // https://confluxnetwork.gitbook.io/js-conflux-sdk/api/conflux#Conflux.js/Conflux/getAccount
     // const accountInfo1 = await this.apiRpc.getAccount(address, 'latest_state');
@@ -95,7 +127,7 @@ class ChainManager extends ChainManagerBase {
             {
               to: address, // token contract address
               // call balanceOf() of contract
-              data: `0x70a08231000000000000000000000000${ownerAddressHex}`,
+              data: `${CONST_ERC20_METHODS_HEX.balanceOf}000000000000000000000000${ownerAddressHex}`,
             },
             CFX_EPOCH_TAG,
           ],
@@ -103,6 +135,7 @@ class ChainManager extends ChainManagerBase {
       ];
     }
 
+    // TODO res can be Error object, should check this
     const res = await this.apiRpc.provider.batch(batchCallPayload);
     let accountInfo = {};
     if (isNative) {
@@ -311,17 +344,27 @@ class ChainManager extends ChainManagerBase {
   }
 
   async fetchTokenMeta({ address }) {
+    // eslint-disable-next-line no-param-reassign
+    address = utils.formatToAddress(address);
+
+    /* */
     const contractApi = this.apiRpc.CRC20(address);
     // const balance = await contractApi.balanceOf(fromAddressHex);
     const name = await contractApi.name();
     const symbol = await contractApi.symbol();
     const decimals = await contractApi.decimals();
+
+    // const payload = this._createErc20TokenMetaRequest(address);
+    // const res = await this.apiRpc.provider.batch(payload);
+    // TODO name,symbol should decode by abi
+    // const { name, symbol, decimals } = res;
+
     const tokenMeta = {
       name,
       symbol,
       decimals: decimals.toString(),
     };
-    console.log(tokenMeta);
+    console.log('fetchTokenMeta by chain', tokenMeta);
     return tokenMeta;
   }
 }

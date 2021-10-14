@@ -68,3 +68,13 @@ export const CONST_DURATIONS = {
   MONTH: 30 * 24 * 60 * 60 * 1000,
   YEAR: 365 * 24 * 60 * 60 * 1000,
 };
+
+export const CONST_ERC20_METHODS_HEX = {
+  balanceOf: '0x70a08231',
+  approve: '0x095ea7b3',
+  allowance: '0xdd62ed3e',
+  transfer: '0xa9059cbb',
+  name: '0x06fdde03',
+  symbol: '0x95d89b41',
+  decimals: '0x313ce567',
+};

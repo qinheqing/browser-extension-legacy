@@ -82,9 +82,15 @@ function PageTokenAdd() {
   const wallet = storeWallet.currentWallet;
   const handleAddTokenClick = useCallback(
     async (_token) => {
-      const meta = await wallet.chainManager.fetchTokenMeta({
-        address: _token.address,
-      });
+      let meta = {};
+      try {
+        meta = await wallet.chainManager.fetchTokenMeta({
+          address: _token.address,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+
       console.log('handleAddTokenClick', meta);
       setTokenToAdd({
         ..._token,

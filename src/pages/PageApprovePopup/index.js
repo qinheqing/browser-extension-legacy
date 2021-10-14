@@ -37,9 +37,9 @@ function useApproveQuery() {
     chainId: "0x1"
     id: 1649593367
     jsonrpc: "2.0"
-    location: "http://testnet.unibuild.art/browse/"
+    location: "http://xxxx/abc/"
     method: "cfx_requestAccounts"
-    origin: "http://testnet.unibuild.art"
+    origin: "http://xxxx"
     streamName: "onekey-provider-cfx"
     tabId: 233
      */

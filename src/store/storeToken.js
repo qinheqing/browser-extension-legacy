@@ -448,12 +448,19 @@ class StoreToken extends BaseStore {
 
   async addAssociateToken(tokenMeta, fee) {
     const wallet = storeWallet.currentWallet;
+
+    // CFX local token add mode
     if (wallet.isLocalAddTokenMode) {
+      if (!tokenMeta.name || !tokenMeta.symbol) {
+        utilsToast.toast.error('无法获取代币数据');
+        return '';
+      }
       this.addAccountLocalToken({ token: tokenMeta });
       storeHistory.goBack();
       return '';
     }
 
+    // SOL chain token add mode
     if (fee && fee > this.currentNativeTokenBalance.balance) {
       utilsToast.toast.error('手续费不足');
       return '';
