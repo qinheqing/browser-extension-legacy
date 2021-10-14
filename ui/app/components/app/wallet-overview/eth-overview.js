@@ -107,7 +107,7 @@ const EthOverview = ({ className }) => {
         </>
       }
       className={className}
-      icon={<Identicon diameter={32} ethLogo={etherLogo} />}
+      icon={<div className="eth-overview__balance-text">Total Balance</div>}
     />
   );
 };

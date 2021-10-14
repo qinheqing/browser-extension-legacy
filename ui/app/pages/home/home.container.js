@@ -32,7 +32,7 @@ import {
 } from 'shared/constants/alerts';
 import Home from './home.component';
 
-const mapStateToProps = (state) => {
+const mapStateToProps = (state, ownProps) => {
   const { metamask, appState } = state;
   const {
     suggestedTokens,
@@ -70,6 +70,9 @@ const mapStateToProps = (state) => {
     getWeb3ShimUsageStateForOrigin(state, originOfCurrentTab) ===
       WEB3_SHIM_USAGE_ALERT_STATES.RECORDED;
 
+  const { location } = ownProps;
+  const { pathname } = location;
+
   return {
     hwOnlyMode,
     connectedAccounts,
@@ -90,6 +93,7 @@ const mapStateToProps = (state) => {
     originOfCurrentTab,
     shouldShowWeb3ShimUsageNotification,
     pendingApprovals: Object.values(pendingApprovals),
+    currentPath: pathname,
   };
 };
 

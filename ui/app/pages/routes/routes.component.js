@@ -24,7 +24,7 @@ import ConfirmAddSuggestedTokenPage from '../confirm-add-suggested-token';
 import CreateAccountPage from '../create-account';
 import Loading from '../../components/ui/loading-screen';
 import LoadingNetwork from '../../components/app/loading-network-screen';
-import NetworkDropdown from '../../components/app/dropdowns/network-dropdown';
+import NetworkDropdown from '../../components/app/dropdowns-popover/network-dropdown';
 import AccountMenu from '../../components/app/account-menu';
 import { Modal } from '../../components/app/modals';
 import Alert from '../../components/ui/alert';
@@ -52,6 +52,7 @@ import {
   UNLOCK_ROUTE,
   CONFIRMATION_V_NEXT_ROUTE,
   CHANGE_PASSWORD_ROUTE,
+  CONNECTED_ROUTE,
 } from '../../helpers/constants/routes';
 import {
   ENVIRONMENT_TYPE_NOTIFICATION,
@@ -104,7 +105,7 @@ class AllRoutesComponents extends Component {
               component={RevealSeedConfirmation}
               exact
             />
-            <Authenticated path={SETTINGS_ROUTE} component={Settings} />
+            {/* <Authenticated path={SETTINGS_ROUTE} component={Settings} /> */}
             <Authenticated
               path={`${CONFIRM_TRANSACTION_ROUTE}/:id?`}
               component={ConfirmTransaction}
@@ -220,90 +221,6 @@ export default class Routes extends Component {
     });
   }
 
-  onInitializationUnlockPage() {
-    const { location } = this.props;
-    return Boolean(
-      matchPath(location.pathname, {
-        path: INITIALIZE_UNLOCK_ROUTE,
-        exact: true,
-      }),
-    );
-  }
-
-  onNotHomePage() {
-    const { location } = this.props;
-    return !matchPath(location.pathname, {
-      path: DEFAULT_ROUTE,
-      exact: true,
-    });
-  }
-
-  onConfirmPage() {
-    const { location } = this.props;
-    return Boolean(
-      matchPath(location.pathname, {
-        path: CONFIRM_TRANSACTION_ROUTE,
-        exact: false,
-      }),
-    );
-  }
-
-  hideAppHeader() {
-    const { location } = this.props;
-
-    const isInitializing = Boolean(
-      matchPath(location.pathname, {
-        path: INITIALIZE_ROUTE,
-        exact: false,
-      }),
-    );
-
-    if (isInitializing && !this.onInitializationUnlockPage()) {
-      return true;
-    }
-
-    const windowType = getEnvironmentType();
-
-    if (windowType === ENVIRONMENT_TYPE_NOTIFICATION) {
-      return true;
-    }
-
-    if (windowType === ENVIRONMENT_TYPE_POPUP && this.onConfirmPage()) {
-      return true;
-    }
-
-    if (windowType === ENVIRONMENT_TYPE_POPUP && this.onNotHomePage()) {
-      return true;
-    }
-
-    const isNewAppRoutesPath = Boolean(
-      matchPath(location.pathname, {
-        path: ROUTE_PREFIX,
-        exact: false,
-      }),
-    );
-
-    const isHandlingPermissionsRequest = Boolean(
-      matchPath(location.pathname, {
-        path: CONNECT_ROUTE,
-        exact: false,
-      }),
-    );
-
-    const isHandlingAddEthereumChainRequest = Boolean(
-      matchPath(location.pathname, {
-        path: CONFIRMATION_V_NEXT_ROUTE,
-        exact: false,
-      }),
-    );
-
-    return (
-      isHandlingPermissionsRequest ||
-      isHandlingAddEthereumChainRequest ||
-      isNewAppRoutesPath
-    );
-  }
-
   render() {
     const {
       isLoading,
@@ -353,12 +270,6 @@ export default class Routes extends Component {
       >
         <Modal />
         <Alert visible={this.props.alertOpen} msg={alertMessage} />
-        {!this.hideAppHeader() && (
-          <AppHeader
-            hideNetworkIndicator={this.onInitializationUnlockPage()}
-            disabled={this.onConfirmPage()}
-          />
-        )}
         <Sidebar
           sidebarOpen={sidebarIsOpen}
           sidebarShouldClose={sidebarShouldClose}
@@ -410,23 +321,6 @@ export default class Routes extends Component {
         return this.context.t('connectingToGoerli');
       default:
         return this.context.t('connectingTo', [providerId]);
-    }
-  }
-
-  getNetworkName() {
-    switch (this.props.provider.type) {
-      case 'mainnet':
-        return this.context.t('mainnet');
-      case 'ropsten':
-        return this.context.t('ropsten');
-      case 'kovan':
-        return this.context.t('kovan');
-      case 'rinkeby':
-        return this.context.t('rinkeby');
-      case 'goerli':
-        return this.context.t('goerli');
-      default:
-        return this.context.t('unknownNetwork');
     }
   }
 }

@@ -3,12 +3,13 @@
   min-height: 86px;
   margin: 0;
   background: #fff;
-  padding: 24px 16px;
+  padding: 20px 16px;
 
   @include Paragraph;
 
-  border-top: 1px solid $mercury;
-  border-bottom: 1px solid $mercury;
+  & + & {
+    border-top: 1px solid $mercury;
+  }
   color: $Black-100;
   display: grid;
   grid-template-columns: 0fr repeat(11, 1fr);
@@ -27,7 +28,9 @@
   &__icon {
     grid-area: icon;
     align-self: center;
-
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
     > * {
       margin: 0 16px 0 0;
     }
