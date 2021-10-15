@@ -20,7 +20,7 @@ global.$ok_confluxUtils = utils;
 
 // RPC server error:
 //  "invalid argument 0: failed to create address from base32 string 0x8a5c9db7f480083373274e3d2bf41ff628a9f1e0: base32 string 0x8a5c9db7f480083373274e3d2bf41ff628a9f1e0 is invalid format"
-function convertAddress(p, chainId) {
+function convertToCfxAddress(p, chainId) {
   // 0x8a5c9db7f480083373274e3d2bf41ff628a9f1e0
   //  ->
   // cfx:aamr93vsstxs457rnhxe99wbxwy1n2bpuefunhrvh2
@@ -43,14 +43,14 @@ function convertAddress(p, chainId) {
 // https://github.com/Conflux-Chain/conflux-portal/blob/develop/app/scripts/controllers/network/createBase32AddressMiddleware.js
 // https://github.com/Conflux-Chain/conflux-portal/blob/develop/app/scripts/controllers/network/createCfxMiddleware.js
 // createBlockRefRewriteMiddleware:   add block number to last params
-function convertParamsAddress(params, chainId) {
+function convertToCfxParams(params, chainId) {
   if (isPlainObject(params)) {
-    return convertAddress(params, chainId);
+    return convertToCfxAddress(params, chainId);
   }
 
   if (isArray(params)) {
     let paramsArr = params;
-    paramsArr = params.map((p) => convertAddress(p, chainId));
+    paramsArr = params.map((p) => convertToCfxAddress(p, chainId));
     // rename last parameter = "latest" | "latest_mined"
     const lastParam = paramsArr[paramsArr.length - 1];
     if (
@@ -93,11 +93,12 @@ async function handleDappMethods({ req, res, next, services }) {
   }
 
   /*
-  TODO
+  TODO provider method check
   - can invoke locked
   - can invoke at other chain
     - same baseChain, different chainId (ETH,BSC,HECO)
     - different baseChain (EVM,SOL,CFX)
+  - can invoke no address connection approved
   - event emit
     - chainId
     - accounts
@@ -109,7 +110,6 @@ async function handleDappMethods({ req, res, next, services }) {
     conflux.networkVersion='42'
     conflux.selectedAddress='cfxtest:aakwe36c88x8y84h53fkfk8br52m67mpkp63et1ztm'
   */
-  res.cfx_isMocked = true; // TODO remove
 
   // wallet method ----------------------------------------------
   // - onekey_getProviderOverwriteEnabled
@@ -222,10 +222,9 @@ async function handleDappMethods({ req, res, next, services }) {
   // - eth_call
   // - net_version
 
-  console.log('RPC handleDappMethods', req);
-  req.params = convertParamsAddress(req.params, req.chainId);
+  req.params = convertToCfxParams(req.params, req.chainId);
 
-  // TODO cache wallet if chain not changed
+  // TODO cache wallet if chain and account not changed
   const wallet = await storeDappApproval.createWallet();
   const rpc = wallet.chainManager.apiRpc.provider;
   const rpcRes = await rpc.call(req.method, ...[].concat(req.params || []));

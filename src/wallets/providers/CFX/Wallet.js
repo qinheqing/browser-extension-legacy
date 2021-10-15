@@ -91,7 +91,7 @@ class Wallet extends WalletBase {
     // eslint-disable-next-line no-param-reassign
     accountInfo = accountInfo || this.accountInfo;
 
-    // TODO check Conflux._signTransaction how to prepare tx info
+    // check sdk Conflux._signTransaction how to prepare tx info
     if (!tx.gasPrice || !tx.gas) {
       // eslint-disable-next-line no-param-reassign
       tx = await this.addFeeInfoToTx({ tx, feeInfo });
@@ -135,10 +135,9 @@ class Wallet extends WalletBase {
     // eslint-disable-next-line no-param-reassign
     address = address.address || address;
     try {
-      // TODO
       const networkId = optionsHelper.getChainId(this.options);
-      const addr1 = format.hexAddress(address);
-      const addr2 = format.address(address, networkId);
+      const hexAddress = format.hexAddress(address);
+      const cfxAddress = format.address(address, networkId);
       return true;
       // eslint-disable-next-line no-unreachable
     } catch (err) {
@@ -159,9 +158,6 @@ class Wallet extends WalletBase {
     const txData = { ...data };
     txData.from = this._toCfxAddressSafe(txData.from);
     txData.to = this._toCfxAddressSafe(txData.to);
-
-    // TODO try decode ERC20 by getTokenData, pick approve method
-    // noop
     const decodedData = parseErc20Transaction(data);
     let parsed = null;
     if (decodedData && decodedData.name) {

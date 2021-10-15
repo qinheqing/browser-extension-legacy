@@ -23,7 +23,8 @@ import { allBuiltInChains } from '../../config/chains/allBuiltInChains';
 import utilsApp from '../../utils/utilsApp';
 
 class StoreDappApproval extends BaseStoreWithStorage {
-  // TODO ensure this store run in background
+  // TODO ensure this store run in background,
+  //      use class decorator instead of shouldRunInBackground
   constructor(props) {
     super(props);
     // auto detect fields decorators, and make them reactive
@@ -41,6 +42,7 @@ class StoreDappApproval extends BaseStoreWithStorage {
     // [origin]: { origin, lastUpdate, accounts: [ { address, baseChain, chainKey, origin } ] }
   };
 
+  // rename to getCurrentWallet
   async createWallet() {
     const chainInfo = await this.getCurrentChainInfo();
     const accountInfo = await this.getCurrentAccountRaw();
@@ -200,7 +202,6 @@ class StoreDappApproval extends BaseStoreWithStorage {
       origin,
       accounts,
     });
-    // TODO emit accounts change
     return accounts;
   }
 

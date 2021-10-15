@@ -30,7 +30,9 @@ class StoreTransfer extends BaseStore {
     const dispose = autorun(() => {
       const payload = this.previewPayload;
       untracked(() => {
-        this.fetchTransferFeeInfoDebounce();
+        if (payload.to && payload.amount) {
+          this.fetchTransferFeeInfoDebounce();
+        }
       });
     });
     return () => {
@@ -106,9 +108,9 @@ class StoreTransfer extends BaseStore {
       const feeInfo = await wallet.fetchTransactionFeeInfo(tx);
       return feeInfo || {};
     } catch (ex) {
+      // user input previewPayload may be invalid, catch error here
       console.error(ex);
       return {};
-      // user input previewPayload may be invalid, catch error here
     }
   }
 
@@ -116,11 +118,16 @@ class StoreTransfer extends BaseStore {
   async fetchTransferFeeInfo() {
     const wallet = storeWallet.currentWallet;
     const accountInfo = storeAccount.currentAccountInfo;
-    const tx = await wallet.createGeneralTransferTxObject({
-      accountInfo,
-      ...this.previewPayload,
-    });
-    this.feeInfo = await this.fetchFeeInfo(tx);
+    try {
+      const tx = await wallet.createGeneralTransferTxObject({
+        accountInfo,
+        ...this.previewPayload,
+      });
+      this.feeInfo = await this.fetchFeeInfo(tx);
+    } catch (error) {
+      console.error(error);
+      this.feeInfo = {};
+    }
   }
 
   fetchTransferFeeInfoDebounce = debounce(this.fetchTransferFeeInfo, 600).bind(

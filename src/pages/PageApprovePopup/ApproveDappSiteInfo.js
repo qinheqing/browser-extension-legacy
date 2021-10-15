@@ -3,6 +3,7 @@ import { observer } from 'mobx-react-lite';
 import storeAccount from '../../store/storeAccount';
 import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
 import AppIcons from '../../components/AppIcons';
+import { ChainLogoIcon } from '../../components/LogoIcon';
 
 function ApproveDappSiteInfo({ query, title, showAccountInfo = false }) {
   const account = storeAccount.currentAccountInfo;
@@ -16,6 +17,7 @@ function ApproveDappSiteInfo({ query, title, showAccountInfo = false }) {
         <>
           <div className="font-bold">{account.name}</div>
           <div className="text-center break-all text-sm text-gray-500 leading-none">
+            <ChainLogoIcon size="sm" className="mr-2" />
             {storeAccount.currentAccountAddressShort}
           </div>
         </>

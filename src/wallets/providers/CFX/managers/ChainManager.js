@@ -193,9 +193,8 @@ class ChainManager extends ChainManagerBase {
     return '0';
   }
 
-  // TODO pass txObject, userInputs( gasPrice,gasLimit ) to estimate fee
   async fetchTransactionFeeInfo(tx) {
-    // TODO calculate default fee here
+    // TODO calculate default fee here, ex: 21000
     if (
       !tx ||
       !this.wallet.isValidAddress(tx.to) ||
@@ -203,8 +202,6 @@ class ChainManager extends ChainManagerBase {
     ) {
       return { fee: NaN };
     }
-
-    // TODO if tx contains feeInfo ( calculated by dapp ), return it
 
     const rpc = this.apiRpc;
     // const res = await this.apiRpc.fetchTransactionFeeInfo(tx);
@@ -358,7 +355,7 @@ class ChainManager extends ChainManagerBase {
 
     // const payload = this._createErc20TokenMetaRequest(address);
     // const res = await this.apiRpc.provider.batch(payload);
-    // TODO name,symbol should decode by abi
+    // RPC result name,symbol should decode by abi
     // const { name, symbol, decimals } = res;
 
     const tokenMeta = {
