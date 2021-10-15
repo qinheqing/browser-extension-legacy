@@ -8,6 +8,7 @@ import bgGetRootController from './bg/bgGetRootController';
 import { HdKeyManagerBase } from './HdKeyManager';
 import { UiBackgroundProxy } from './bg/uiBackgroundProxy';
 
+// run in background
 class KeyringToolsBase {
   constructor(options, wallet) {
     this.options = options;
@@ -35,6 +36,7 @@ class KeyringToolsBase {
   }
 }
 
+// run in background
 class KeyringBase {
   constructor(options) {
     this.options = options;
@@ -92,6 +94,7 @@ class KeyringBase {
   }
 }
 
+// run in background
 class KeyringHdBase extends KeyringBase {
   async _getHdRootSeed() {
     const appHdAccount =
@@ -144,9 +147,15 @@ class KeyringHdBase extends KeyringBase {
   }
 }
 
+// run in background
 class KeyringSingleChainBase extends KeyringBase {}
 
+// run in background
 class KeyringHardwareBase extends KeyringBase {
+  async getAccountPrivateKey({ seed, path }) {
+    throw new Error('Hardware privateKey exporting is not supported.');
+  }
+
   async getAddresses({ indexes = [0] }) {
     const bundle = indexes.map((index) => ({
       path: this.hdkeyManager.createHdPath({ index }),
@@ -156,6 +165,7 @@ class KeyringHardwareBase extends KeyringBase {
       coin: toLower(this.baseChain),
       bundle,
     };
+    // TODO hardwareManager
     const { id, success, payload } = await this.hardwareManager.getAddress(
       params,
     );
@@ -189,10 +199,16 @@ class KeyringHardwareBase extends KeyringBase {
     }
     return [];
   }
+
+  signTransaction() {
+    return utilsApp.throwToBeImplemented(this);
+  }
 }
 
+// run in background
 class KeyringWatchOnlyBase extends KeyringBase {}
 
+// run in background
 class KeyringPickerBase {
   keyrings = {
     [CONSTS_ACCOUNT_TYPES.Wallet]: KeyringHdBase,
@@ -227,7 +243,8 @@ class KeyringPickerBase {
   }
 }
 
-class KeyringBgProxy extends UiBackgroundProxy {
+// run in ui
+class KeyringUiToBgProxy extends UiBackgroundProxy {
   constructor(options) {
     super(options);
     this.options = options;
@@ -266,10 +283,10 @@ class KeyringBgProxy extends UiBackgroundProxy {
 
 export {
   KeyringToolsBase,
-  KeyringHdBase,
-  KeyringSingleChainBase,
-  KeyringHardwareBase,
-  KeyringWatchOnlyBase,
   KeyringPickerBase,
-  KeyringBgProxy,
+  KeyringHdBase,
+  KeyringHardwareBase,
+  KeyringSingleChainBase,
+  KeyringWatchOnlyBase,
+  KeyringUiToBgProxy,
 };

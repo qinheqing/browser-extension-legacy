@@ -10,7 +10,7 @@ import utilsNumber from '../utils/utilsNumber';
 import ChainManagerBase from './ChainManagerBase';
 import { HdKeyManagerBase } from './HdKeyManager';
 import uiBackgroundProxy from './bg/uiBackgroundProxy';
-import { KeyringBgProxy } from './KeyringBase';
+import { KeyringUiToBgProxy } from './KeyringBase';
 import optionsHelper from './optionsHelper';
 
 class WalletBase {
@@ -50,11 +50,12 @@ class WalletBase {
 
   chainManager = new ChainManagerBase(this.options, this);
 
+  // TODO remove used outside ./wallets
   hdkeyManager = new HdKeyManagerBase(this.options, this);
 
   get keyringProxy() {
     this._keyringProxy =
-      this._keyringProxy || new KeyringBgProxy(this.options, this);
+      this._keyringProxy || new KeyringUiToBgProxy(this.options, this);
     return this._keyringProxy;
   }
 

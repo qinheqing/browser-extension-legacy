@@ -52,7 +52,7 @@ export const CONST_DAPP_MESSAGE_TYPES = {
 };
 
 export const BACKGROUND_PROXY_MODULE_NAMES = {
-  hardware: 'hardware',
+  hardware: 'hardware', // TODO remove
   keyring: 'keyring',
   misc: 'misc',
   approve: 'approve',

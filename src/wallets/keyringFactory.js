@@ -34,5 +34,5 @@ function createKeyring(options) {
 }
 
 export default {
-  createKeyring,
+  createKeyring, // run in background
 };

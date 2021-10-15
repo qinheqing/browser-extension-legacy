@@ -2,6 +2,7 @@ import assert from 'assert';
 import HdKey from 'hdkey';
 import utilsApp from '../utils/utilsApp';
 
+// run in background
 class HdKeyManagerBase {
   constructor(options, wallet) {
     this.options = options;

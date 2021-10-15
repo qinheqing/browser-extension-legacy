@@ -6,8 +6,6 @@ import {
   KeyringHdBase,
   KeyringPickerBase,
 } from '../../KeyringBase';
-import utilsApp from '../../../utils/utilsApp';
-import { HdKeyManagerBase } from '../../HdKeyManager';
 
 import { CONSTS_ACCOUNT_TYPES } from '../../../consts/consts';
 import HdKeyManager from './managers/HdKeyManager';
