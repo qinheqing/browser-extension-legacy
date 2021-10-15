@@ -33,6 +33,8 @@ import {
   LockClosedIcon,
   LinkIcon,
   PencilIcon,
+  ShieldCheckIcon,
+  ShieldExclamationIcon,
 } from '@heroicons/react/outline';
 import { SpinnerIcon, QuestionIcon } from './icons';
 
@@ -73,6 +75,8 @@ const AppIcons = {
   LockClosedIcon,
   LinkIcon,
   PencilIcon,
+  ShieldExclamationIcon,
+  ShieldCheckIcon,
 };
 
 export default AppIcons;

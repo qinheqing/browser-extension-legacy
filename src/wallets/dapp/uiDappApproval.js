@@ -39,6 +39,11 @@ async function approveTransaction(query, txid) {
   return resolve(query, txid);
 }
 
+// approveConnection remove
+async function removeAccountsConnection(payload) {
+  return _bgProxyCall('removeAccountsConnection', payload);
+}
+
 // uiDappApproval.js
 // DappApprovalMethods.js
 // storeDappApproval.js
@@ -56,8 +61,9 @@ const onChainChanged = debounce(async function (payload) {
 }, 300);
 
 export default {
-  approveTransaction,
+  removeAccountsConnection,
   approveConnection,
+  approveTransaction,
   resolve,
   reject,
   onUnlockedChanged,

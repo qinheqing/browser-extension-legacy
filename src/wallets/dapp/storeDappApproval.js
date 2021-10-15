@@ -7,7 +7,7 @@ import {
   action,
   makeObservable,
 } from 'mobx';
-import { uniqBy, isNil } from 'lodash';
+import { uniqBy, isNil, cloneDeep } from 'lodash';
 import BaseStoreWithStorage from '../../store/BaseStoreWithStorage';
 import backgroundProxy from '../bg/backgroundProxy';
 import utilsStorage from '../../utils/utilsStorage';
@@ -38,7 +38,7 @@ class StoreDappApproval extends BaseStoreWithStorage {
 
   @observable.ref
   connections = {
-    // [origin]: [ { address, baseChain, chainKey, origin } ]
+    // [origin]: { origin, lastUpdate, accounts: [ { address, baseChain, chainKey, origin } ] }
   };
 
   async createWallet() {
@@ -118,10 +118,10 @@ class StoreDappApproval extends BaseStoreWithStorage {
   }
 
   @action.bound
-  async saveAccounts({ baseChain, chainKey, origin, accounts }) {
+  async saveAccountsConnection({ baseChain, chainKey, origin, accounts }) {
     // eslint-disable-next-line no-param-reassign
     chainKey = ''; // chainKey not support in events, so disable it
-    const currentAccounts = this.connections[origin] || [];
+    const currentAccounts = this._getApprovedAccountsFromOrigin(origin);
     const appendAccounts = accounts.map((address) => {
       return {
         address,
@@ -136,8 +136,30 @@ class StoreDappApproval extends BaseStoreWithStorage {
     );
     this.connections = {
       ...this.connections,
-      [origin]: newAccounts,
+      [origin]: {
+        origin,
+        lastUpdate: Date.now(),
+        accounts: newAccounts,
+      },
     };
+  }
+
+  @action.bound
+  async removeAccountsConnection({ origin, account }) {
+    const originInfo = this.connections[origin];
+    if (originInfo && account) {
+      originInfo.accounts = originInfo.accounts.filter(
+        (acc) => acc.address !== account.address,
+      );
+    }
+
+    if (!account || !originInfo.accounts.length) {
+      delete this.connections[origin];
+    }
+
+    this.connections = { ...this.connections };
+    await utilsApp.delay(500);
+    this.onAccountsChanged();
   }
 
   async getChainMeta({ baseChain }) {
@@ -172,7 +194,7 @@ class StoreDappApproval extends BaseStoreWithStorage {
     }
     accounts = await this.openApprovalPopup(request);
     // TODO check baseChain and chainKey is matched with current chain
-    await this.saveAccounts({
+    await this.saveAccountsConnection({
       baseChain,
       chainKey,
       origin,
@@ -180,6 +202,10 @@ class StoreDappApproval extends BaseStoreWithStorage {
     });
     // TODO emit accounts change
     return accounts;
+  }
+
+  _getApprovedAccountsFromOrigin(origin) {
+    return this.connections[origin]?.accounts || [];
   }
 
   async getAccounts({ baseChain, chainKey, origin }) {
@@ -200,7 +226,7 @@ class StoreDappApproval extends BaseStoreWithStorage {
     }
     // TODO baseChain not match
     // TODO NewHome not match ( current is EVM chain )
-    const allAccounts = this.connections[origin] || [];
+    const allAccounts = this._getApprovedAccountsFromOrigin(origin);
     return allAccounts
       .filter((acc) => {
         let found = acc.baseChain === baseChain;
@@ -216,7 +242,7 @@ class StoreDappApproval extends BaseStoreWithStorage {
         );
       })
       .map((acc) => acc.address);
-    // TODO emit accounts change
+    // TODO update lastUpdate
   }
 
   async openApprovalPopup(request) {

@@ -49,6 +49,10 @@ class DappApprovalMethods {
   onChainChanged() {
     global._storeDappApproval.onChainChanged();
   }
+
+  removeAccountsConnection(payload) {
+    return global._storeDappApproval.removeAccountsConnection(payload);
+  }
 }
 
 export default DappApprovalMethods;

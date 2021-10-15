@@ -21,6 +21,7 @@ import {
   ROUTE_TX_HISTORY,
   ROUTE_WALLET_SELECT,
   ROUTE_ACCOUNT_DETAIL,
+  ROUTE_APPROVE_SETTINGS,
 } from '../../routes/routeUrls';
 import storeWallet from '../../store/storeWallet';
 import storeToken from '../../store/storeToken';
@@ -69,6 +70,14 @@ const HomeTopActionsBar = observer(function () {
           storeHistory.goToPageTokenDetail({
             token: storeToken.currentNativeToken,
           });
+        }}
+      />
+
+      <HomeTopActionButton
+        text="授权"
+        icon={AppIcons.ShieldExclamationIcon}
+        onClick={() => {
+          storeHistory.push(ROUTE_APPROVE_SETTINGS);
         }}
       />
 

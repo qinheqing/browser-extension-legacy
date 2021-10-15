@@ -144,6 +144,7 @@
     "content-hash": "^2.5.2",
     "copy-to-clipboard": "^3.0.8",
     "currency-formatter": "^1.4.2",
+    "date-fns": "^2.25.0",
     "dayjs": "^1.10.6",
     "debounce-stream": "^2.0.0",
     "debug": "^4.3.2",
