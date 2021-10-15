@@ -118,7 +118,7 @@ function TransactionItemView({
   );
 }
 
-async function decodeTxAsyncSOL(txStr) {
+async function decodeTxAsync(txStr) {
   const txDecoded = await storeWallet.currentWallet.decodeTransactionData({
     address: storeAccount.currentAccountAddress,
     data: txStr,
@@ -133,7 +133,6 @@ const ApproveTransaction = observer(function ({
   query,
   isBatch = false,
   transactions,
-  decodeTxAsync,
   renderItem = () => null,
 }) {
   const txStrList = [].concat(transactions);
@@ -158,12 +157,18 @@ const ApproveTransaction = observer(function ({
       fee: "27224"
       gasLimit: "36298"
       gasPrice: "1"
-      gasUsed: "27224"
+      gas: "27224"
        */
-      const _feeInfo = await storeTransfer.fetchFeeInfo(transactions[0]);
-      setFeeInfo(_feeInfo);
+      if (txListDecoded.length > 0) {
+        let _feeInfo = txListDecoded[0]?.instructions[0]?.feeInfo;
+        const tx = transactions[0];
+        if (!_feeInfo && tx) {
+          _feeInfo = await storeTransfer.fetchFeeInfo(tx);
+        }
+        setFeeInfo(_feeInfo);
+      }
     })();
-  }, []);
+  }, [txListDecoded, transactions]);
   const account = storeAccount.currentAccountInfo;
   if (!account) {
     return <div>Current wallet account not found</div>;
@@ -193,6 +198,7 @@ const ApproveTransaction = observer(function ({
                   message: txStrList,
                   transactions: txStrList,
                   isBatch,
+                  feeInfo,
                 });
               } finally {
                 setLoading(false);
@@ -273,7 +279,6 @@ const ApproveTransactionSOL = observer(function ({
       onReject={onReject}
       query={query}
       isBatch={isBatch}
-      decodeTxAsync={decodeTxAsyncSOL}
       renderItem={({ index, instruction }) => (
         <TxInstructionCardSOL key={index} instruction={instruction} />
       )}
@@ -281,10 +286,10 @@ const ApproveTransactionSOL = observer(function ({
   );
 });
 
-function withCopyHandle(text, { shorten = true } = {}) {
+function withCopyHandle(text, { shorten = true, textDisplay } = {}) {
   return (
     <CopyHandle text={text}>
-      {shorten ? utilsApp.shortenAddress(text) : text}
+      {textDisplay ?? (shorten ? utilsApp.shortenAddress(text) : text)}
     </CopyHandle>
   );
 }
@@ -292,39 +297,85 @@ function withCopyHandle(text, { shorten = true } = {}) {
 const TxInstructionCardCFX = observer(function ({ data }) {
   const { decimals, currency } = storeAccount.currentAccountInfo;
   // TODO try catch
-  const amount = utilsNumber.hexToIntString(data.value);
+  const amount = utilsNumber.hexToIntString(data.value || '0');
   const amountView = (
-    <span>
-      <AmountText value={amount} decimals={decimals} /> {currency}
-    </span>
+    <AmountText
+      value={amount}
+      decimals={decimals}
+      unit={<strong>{currency}</strong>}
+    />
   );
+  let entriesErc20 = null;
+  let txType = '合约交易';
+
+  if (data.parsed) {
+    // erc20 method
+    if (data.parsed.method === 'approve') {
+      txType = '代币授权';
+      const {
+        token,
+        amount: tokenAmount,
+        spender,
+        tokenInfo,
+      } = data.parsed.approve || {};
+      entriesErc20 = [
+        ['允许该合约方花费您的代币', withCopyHandle(spender)],
+        ['授权代币', withCopyHandle(token, { textDisplay: tokenInfo?.symbol })],
+        [
+          '授权数量',
+          utilsNumber.isMaxNumber(tokenAmount) ? (
+            '无限制'
+          ) : (
+            <AmountText
+              key={1}
+              value={tokenAmount}
+              decimals={tokenInfo?.decimals}
+              unit={<strong>{tokenInfo?.symbol}</strong>}
+            />
+          ),
+        ],
+      ];
+    }
+  }
+
   const entries = [
+    ['类型', txType],
     ['发送方', withCopyHandle(data.from)],
     ['接收方', withCopyHandle(data.to)],
-    ['数据', withCopyHandle(data.data)],
     ['金额', amountView],
+    ['数据', withCopyHandle(data.data)],
   ];
+
   // TODO safe render
-  return <TxInstructionCardBase entries={entries} />;
+  return (
+    <>
+      <TxInstructionCardBase entries={entries} />
+      {entriesErc20 && <TxInstructionCardBase entries={entriesErc20} />}
+    </>
+  );
 });
 
 const ApproveTransactionCFX = observer(function ({ query, isBatch = false }) {
   const wallet = storeWallet.currentWallet;
   // TODO multiple transaction params
   const tx = query.request.params[0];
-  const onApprove = useCallback(async () => {
-    // wallet.fetchTransactionFeeInfo
-    // wallet.addFeeInfoToTx
-    const txid = await wallet.signAndSendTxObject({
-      tx,
-    });
-    if (txid) {
-      utilsToast.toastTx({ txid, message: '交易提交成功' });
-      await uiDappApproval.approveTransaction(query, txid);
-      await utilsApp.delay(2000);
-      window.close();
-    }
-  }, [query, tx, wallet]);
+  const onApprove = useCallback(
+    async ({ feeInfo }) => {
+      // wallet.fetchTransactionFeeInfo
+      // wallet.addFeeInfoToTx
+      const txid = await wallet.signAndSendTxObject({
+        tx,
+        feeInfo,
+      });
+      if (txid) {
+        utilsToast.toastTx({ txid, message: '交易提交成功' });
+        await uiDappApproval.approveTransaction(query, txid);
+        await utilsApp.delay(2000);
+        window.close();
+      }
+    },
+    [query, tx, wallet],
+  );
 
   const transactions = query.request.params;
   return (
@@ -334,7 +385,6 @@ const ApproveTransactionCFX = observer(function ({ query, isBatch = false }) {
       onReject={window.close}
       query={query}
       isBatch={isBatch}
-      decodeTxAsync={decodeTxAsyncSOL}
       renderItem={({ index, instruction }) => (
         <TxInstructionCardCFX data={instruction} />
       )}

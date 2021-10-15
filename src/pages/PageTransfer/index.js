@@ -116,7 +116,6 @@ function PageTransfer() {
 
       <FeeInfoPanel feeInfo={storeTransfer.feeInfo} />
 
-      <div className="mt-4" />
       <div className="px-4">
         <OneButton
           disabled={!storeTransfer.toAddress || !storeTransfer.amount}

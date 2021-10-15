@@ -125,7 +125,7 @@ class Wallet extends WalletBase {
     return tx;
   }
 
-  async signAndSendTxObject({ accountInfo, tx }) {
+  async signAndSendTxObject({ accountInfo, feeInfo, tx }) {
     const txStr = bs58.encode(tx.serializeMessage());
     const signStr = await this.signTx(txStr);
 

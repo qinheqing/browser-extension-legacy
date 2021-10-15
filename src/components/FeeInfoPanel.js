@@ -33,7 +33,7 @@ const FeeInfoPanelInDappApproval = observer(function ({ feeInfo }) {
           </OneDetailItem>
 
           <OneDetailItem title="燃料上限">
-            <span>{feeInfo.gasUsed}</span>
+            <span>{feeInfo.gas}</span>
           </OneDetailItem>
         </>
       )}
@@ -83,12 +83,13 @@ function FeeInfoPanel({ feeInfo }) {
               title="燃料上限"
               end={
                 <span>
-                  {feeInfo.gasUsed}
+                  {feeInfo.gas}
                   {/* <span className="ml-1" />*/}
                 </span>
               }
             />
           </div>
+          <div className="h-4" />
         </>
       )}
     </OneField>

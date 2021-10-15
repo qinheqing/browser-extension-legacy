@@ -204,6 +204,8 @@ class ChainManager extends ChainManagerBase {
       return { fee: NaN };
     }
 
+    // TODO if tx contains feeInfo ( calculated by dapp ), return it
+
     const rpc = this.apiRpc;
     // const res = await this.apiRpc.fetchTransactionFeeInfo(tx);
     const gasPrice = await rpc.getGasPrice(CFX_EPOCH_TAG);
@@ -214,10 +216,10 @@ class ChainManager extends ChainManagerBase {
     const storageLimitStr = storageCollateralized.toString();
     return {
       fee: utilsNumber.bigNum(gasPriceStr).times(gasUsedStr).toFixed(),
-      gasLimit: gasLimit.toString(),
+      gasLimitMax: gasLimit.toString(),
       storageCollateralized,
       // read by addFeeInfoToTx()
-      gasUsed: gasUsedStr,
+      gas: gasUsedStr,
       gasPrice: gasPriceStr,
       storageLimit: storageLimitStr,
     };

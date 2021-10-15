@@ -205,15 +205,18 @@ async function handleDappMethods({ req, res, next, services }) {
 
   // transaction and sign ----------------------------------------------
   // TODO unlock check, account matched check (provider.selectedAccount)
+  //    chain matched check
   // - cfx_sendTransaction
   if (method === 'cfx_sendTransaction') {
+    // await storeDappApproval.requestAccounts();
+    // await storeDappApproval.getAccounts();
     const txid = await storeDappApproval.openApprovalPopup(req);
     res.result = txid;
     return;
   }
 
   // chain rpc method ----------------------------------------------
-  // TODO unlock check
+  // TODO unlock check, chain matched check
   // - eth_blockNumber
   // - eth_epochNumber
   // - eth_call

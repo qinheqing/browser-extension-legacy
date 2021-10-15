@@ -101,7 +101,7 @@ class Wallet extends WalletBase {
     }
   }
 
-  decodeTransactionData({ address, data }) {
+  async decodeTransactionData({ address, data }) {
     // noop
   }
 }

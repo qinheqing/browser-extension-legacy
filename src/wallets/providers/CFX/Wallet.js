@@ -3,10 +3,16 @@ import { Conflux, Contract, format } from 'js-conflux-sdk';
 import WalletBase from '../../WalletBase';
 import utilsApp from '../../../utils/utilsApp';
 import optionsHelper from '../../optionsHelper';
+import {
+  getTokenData,
+  parseErc20Transaction,
+} from '../../../../ui/app/helpers/utils/transactions.util';
+import utilsNumber from '../../../utils/utilsNumber';
 import ChainManager from './managers/ChainManager';
 import HdKeyManager from './managers/HdKeyManager';
 import TokenManager from './managers/TokenManager';
 import { CFX_EPOCH_TAG } from './consts/consts';
+import utils from './utils/utils';
 
 class Wallet extends WalletBase {
   get optionsDefault() {
@@ -81,14 +87,14 @@ class Wallet extends WalletBase {
   }
 
   // txObject -> txStr -> txStrSigned -> signedTx -> signedTxRaw -> send(raw)
-  async signAndSendTxObject({ accountInfo, tx }) {
+  async signAndSendTxObject({ accountInfo, feeInfo, tx }) {
     // eslint-disable-next-line no-param-reassign
     accountInfo = accountInfo || this.accountInfo;
 
     // TODO check Conflux._signTransaction how to prepare tx info
-    if (!tx.gasPrice) {
+    if (!tx.gasPrice || !tx.gas) {
       // eslint-disable-next-line no-param-reassign
-      tx = await this.addFeeInfoToTx({ tx });
+      tx = await this.addFeeInfoToTx({ tx, feeInfo });
     }
 
     if (!tx.nonce) {
@@ -120,6 +126,11 @@ class Wallet extends WalletBase {
     // return requestAirdrop(address);
   }
 
+  getChainId() {
+    const chainId = optionsHelper.getChainId(this.options);
+    return chainId;
+  }
+
   isValidAddress(address = '') {
     // eslint-disable-next-line no-param-reassign
     address = address.address || address;
@@ -135,38 +146,112 @@ class Wallet extends WalletBase {
     }
   }
 
-  decodeTransactionData({ address, data }) {
+  _getContractMethodParamValue(data, paramName) {
+    return data?.args?.[paramName]?.toString();
+  }
+
+  _toCfxAddressSafe(address) {
+    const networkId = optionsHelper.getChainId(this.options);
+    return utils.formatToAddressSafe(address, networkId);
+  }
+
+  async decodeTransactionData({ address, data }) {
+    const txData = { ...data };
+    txData.from = this._toCfxAddressSafe(txData.from);
+    txData.to = this._toCfxAddressSafe(txData.to);
+
+    // TODO try decode ERC20 by getTokenData, pick approve method
     // noop
-    console.log({ address, data });
+    const decodedData = parseErc20Transaction(data);
+    let parsed = null;
+    if (decodedData && decodedData.name) {
+      const method = decodedData.name;
+      const tokenHex = data.to;
+      const token = this._toCfxAddressSafe(tokenHex);
+      let tokenInfo = null;
+      try {
+        tokenInfo = await this.chainManager.fetchTokenMeta({ address: token });
+      } catch (error) {
+        console.error(error);
+      }
+      const spenderHex = this._getContractMethodParamValue(
+        decodedData,
+        '_spender',
+      );
+      const spender = this._toCfxAddressSafe(spenderHex);
+      const amount = this._getContractMethodParamValue(decodedData, '_value');
+      parsed = {
+        method,
+        approve: {
+          token,
+          tokenHex,
+          tokenInfo,
+          spender,
+          spenderHex,
+          amount,
+        },
+      };
+    }
+    txData.parsed = parsed;
+
+    // parse feeInfo
+    let feeInfo = null;
+    if (data.gas && data.gasPrice && data.storageLimit) {
+      let { gas, gasPrice, storageLimit } = data;
+      gas = utilsNumber.hexToIntString(gas);
+      gasPrice = utilsNumber.hexToIntString(gasPrice);
+      storageLimit = utilsNumber.hexToIntString(storageLimit);
+      feeInfo = {
+        fee: utilsNumber.bigNum(gasPrice).times(gas).toFixed(),
+        gas,
+        gasPrice,
+        storageLimit,
+      };
+    }
+    txData.feeInfo = feeInfo;
+
+    console.log('decodeTransactionData', {
+      address,
+      data,
+      decodedData,
+      feeInfo,
+      parsed,
+    });
+
     return {
-      instructions: [data],
+      instructions: [txData],
     };
   }
 
   async addFeeInfoToTx({ tx, feeInfo }) {
-    if (!feeInfo) {
+    if (!feeInfo || !Object.keys(feeInfo).length) {
       // eslint-disable-next-line no-param-reassign
       feeInfo = await this.fetchTransactionFeeInfo(tx);
     }
-    const { gasUsed, gasPrice, storageLimit } = feeInfo;
+    const { gas, gasPrice, storageLimit } = feeInfo;
     return {
       ...tx,
       gasPrice,
-      gas: gasUsed, // gasLimit
+      gas, // gasLimit
       storageLimit,
     };
   }
 
   async addBlockInfoToTx({ tx, accountInfo }) {
     const rpc = this.chainManager.apiRpc;
+    let chainId = this.getChainId();
 
     // TODO batch rpc call
-    const status = await rpc.getStatus(CFX_EPOCH_TAG);
+    if (!chainId) {
+      const status = await rpc.getStatus(CFX_EPOCH_TAG);
+      chainId = status.chainId;
+    }
+
     const nonce = await rpc.getNextNonce(accountInfo.address, CFX_EPOCH_TAG);
     const epochHeight = await rpc.getEpochNumber(CFX_EPOCH_TAG);
     return {
       ...tx,
-      chainId: status.chainId, // endpoint status.chainId
+      chainId, // endpoint status.chainId
       nonce: nonce.toString ? nonce.toString() : nonce, // sender next nonce
       epochHeight,
     };

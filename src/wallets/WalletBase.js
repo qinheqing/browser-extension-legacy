@@ -112,7 +112,7 @@ class WalletBase {
   }
 
   // tx is object, return txid
-  async signAndSendTxObject({ accountInfo, tx }) {
+  async signAndSendTxObject({ accountInfo, feeInfo, tx }) {
     return utilsApp.throwToBeImplemented(this);
   }
 
@@ -216,13 +216,10 @@ class WalletBase {
   }
 
   async transfer({ tx, feeInfo, accountInfo }) {
-    const txWithFeeInfo = await this.addFeeInfoToTx({
-      tx,
-      feeInfo,
-    });
     const txid = await this.signAndSendTxObject({
+      tx,
       accountInfo,
-      tx: txWithFeeInfo,
+      feeInfo,
     });
     return txid;
   }
@@ -267,7 +264,7 @@ class WalletBase {
 
   // decode tx data message from dapp
   //    return { instructions: [txDecoded, txDecoded] }
-  decodeTransactionData({ address, data }) {
+  async decodeTransactionData({ address, data }) {
     return utilsApp.throwToBeImplemented(this);
   }
 

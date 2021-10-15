@@ -70,12 +70,24 @@ function toNormalNumber({
 }
 
 function hexToIntString(hex) {
-  return bigNum(parseInt(hex, 16)).toFixed();
+  if (isString(hex)) {
+    // eslint-disable-next-line no-param-reassign
+    hex = hex.replace(/^0x/giu, '');
+    // eslint-disable-next-line no-param-reassign
+    hex = `0x${hex}`;
+  }
+  return bigNum(hex).toFixed();
 }
 
 function intToHex(num, { prefix = '0x' } = {}) {
-  const hex = parseFloat(num).toString(16);
+  const hex = bigNum(num).toString(16);
   return `${prefix}${hex}`;
+}
+
+function isMaxNumber(num) {
+  return bigNum(num).gte(
+    '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+  );
 }
 
 const utilsNumber = {
@@ -86,7 +98,8 @@ const utilsNumber = {
   toBnRoundMode,
   hexToIntString,
   intToHex,
+  isMaxNumber,
 };
 
-global._utilsNumber = utilsNumber;
+global.$ok_utilsNumber = utilsNumber;
 export default utilsNumber;

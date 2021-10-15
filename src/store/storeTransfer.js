@@ -187,13 +187,10 @@ class StoreTransfer extends BaseStore {
       accountInfo,
       ...this.previewPayload,
     });
-    // TODO always fetch latest tx feeInfo onChain before submit,
-    //      this value will be different in preview feeInfo
-    const feeInfo = await wallet.fetchTransactionFeeInfo(tx);
     const txid = await wallet.transfer({
       accountInfo,
       tx,
-      feeInfo,
+      feeInfo: this.feeInfo,
     });
     if (txid) {
       utilsToast.toastTx({ txid, message: '转账提交成功' });

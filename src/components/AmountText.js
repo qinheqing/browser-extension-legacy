@@ -9,6 +9,7 @@ export default function AmountText({
   decimals = 0,
   precision = 8, // TODO read from chainInfo config
   roundMode = 'round', // floor,ceil,round
+  unit = '',
 }) {
   const num = utilsNumber.toNormalNumber({
     value,
@@ -19,6 +20,7 @@ export default function AmountText({
   return (
     <span data-value={value} data-decimals={decimals}>
       {num}
+      {unit && <span> {unit}</span>}
     </span>
   );
 }
