@@ -1,12 +1,17 @@
 import assert from 'assert';
 import { isNil, toLower } from 'lodash';
-import { CONST_HARDWARE_MODELS, CONSTS_ACCOUNT_TYPES } from '../consts/consts';
+import {
+  CONST_ADD_TOKEN_MODE,
+  CONST_HARDWARE_MODELS,
+  CONSTS_ACCOUNT_TYPES,
+} from '../consts/consts';
 import utilsApp from '../utils/utilsApp';
-import ChainProviderBase from './ChainProviderBase';
-import HardwareProviderBase from './HardwareProviderBase';
-import { HdKeyProviderBase } from './HdKeyProvider';
+import utilsNumber from '../utils/utilsNumber';
+import ChainManagerBase from './ChainManagerBase';
+import { HdKeyManagerBase } from './HdKeyManager';
 import uiBackgroundProxy from './bg/uiBackgroundProxy';
-import KeyringBase from './KeyringBase';
+import { KeyringUiToBgProxy } from './KeyringBase';
+import optionsHelper from './optionsHelper';
 
 class WalletBase {
   constructor(options = {}) {
@@ -14,8 +19,8 @@ class WalletBase {
       // TODO chainInfo, accountInfo
       hardwareModel = CONST_HARDWARE_MODELS.Unknown,
       hdPath,
-      accountInfo,
       chainInfo,
+      accountInfo,
       ...others
     } = options;
     // TODO merge to options, remove
@@ -23,9 +28,12 @@ class WalletBase {
     this.hdPathCustomTemplate = hdPath;
     this.chainInfo = chainInfo; // required
     this.accountInfo = accountInfo;
+    this.baseChain = chainInfo?.baseChain ?? '';
     this.options = {
       ...this.optionsDefault,
       ...options,
+      balanceDecimals: chainInfo?.nativeToken?.decimals,
+      hdPathTemplate: chainInfo?.hdPathTemplate,
     };
   }
 
@@ -40,27 +48,15 @@ class WalletBase {
 
   hardwareModel = CONST_HARDWARE_MODELS.Unknown;
 
-  // TODO rename controller、service、manager
-  hardwareProvider = new HardwareProviderBase(this.options); // OneKeyConnect
+  chainManager = new ChainManagerBase(this.options, this);
 
-  chainProvider = new ChainProviderBase(this.options);
+  // TODO remove used outside ./wallets
+  hdkeyManager = new HdKeyManagerBase(this.options, this);
 
-  hdkeyProvider = new HdKeyProviderBase(this.options);
-
-  keyring = new KeyringBase(this.options);
-
-  bgProxy = uiBackgroundProxy;
-
-  // TODO rename to hdkeyProvider
-  hdkey = null; // new HDKey()
-
-  // TODO rename to accountInfo.baseChain
-  get hdCoin() {
-    return utilsApp.throwToBeImplemented(this);
-  }
-
-  get hdCoinLowerCase() {
-    return toLower(this.hdCoin);
+  get keyringProxy() {
+    this._keyringProxy =
+      this._keyringProxy || new KeyringUiToBgProxy(this.options, this);
+    return this._keyringProxy;
   }
 
   get accountType() {
@@ -71,97 +67,28 @@ class WalletBase {
     return this.accountInfo?.path;
   }
 
-  // utils ----------------------------------------------
-
-  keyringProxyCall({ method, params }) {
-    return this.bgProxy.keyringProxyCall({
-      options: { ...this.options, isAtBackground: true },
-      method,
-      params,
-    });
+  get addTokenMode() {
+    return optionsHelper.getAddTokenMode(this.options);
   }
+
+  get isLocalAddTokenMode() {
+    return this.addTokenMode === CONST_ADD_TOKEN_MODE.LOCAL;
+  }
+
+  get isChainAddTokenMode() {
+    return this.addTokenMode === CONST_ADD_TOKEN_MODE.CHAIN;
+  }
+
+  // utils ----------------------------------------------
 
   // address ----------------------------------------------
 
-  /**
-   *
-   * @param index
-   * @return
-    "hardwareModel": "onekey",
-   "hdCoin": "ETH",
-   "hdPathIndex": 0,
-   "hdPathTemplate": "m/44'/60'/0'/0/{{index}}",
-   "hdPath": "m/44'/60'/0'/0/0",
-   */
-  buildAddressMeta({ index, hdPath, ...others }) {
-    return this.keyring.buildAddressMeta({ index, hdPath, ...others });
-  }
-
-  async getAddresses({ indexes = [0], hdPaths = [], ...others }) {
-    // TODO refactor to keyringController.getAddresses
-    //    - HdWalletKeyring.getAddresses
-    //    - HardwareKeyring.getAddresses
-    //    - SingleChainKeyring.getAddresses
-    if (this.accountType === CONSTS_ACCOUNT_TYPES.Wallet) {
-      return this.getAddressesByHdWallet({ indexes, hdPaths, ...others });
-    }
-
-    if (this.accountType === CONSTS_ACCOUNT_TYPES.Hardware) {
-      return this.getAddressesByHardware({ indexes, hdPaths, ...others });
-    }
-    throw new Error(
-      `getAddresses of accountType ${this.accountType} is not supported`,
-    );
-  }
-
-  async getAddressesByHdWallet({ indexes = [0], hdPaths = [], ...others }) {
-    return this.keyringProxyCall({
-      method: 'getAddressesByHdWallet',
-      params: { indexes, hdPaths, ...others },
+  async getAddresses({ indexes = [0], ...others }) {
+    // this.accountType === CONSTS_ACCOUNT_TYPES.Wallet
+    return this.keyringProxy.getAddresses({
+      indexes,
+      ...others,
     });
-  }
-
-  async getAddressesByHardware({ indexes = [0] }) {
-    const bundle = indexes.map((index) => ({
-      path: this.hdkeyProvider.createHdPath({ index }),
-      showOnTrezor: false,
-    }));
-    const params = {
-      coin: this.hdCoinLowerCase,
-      bundle,
-    };
-    const { id, success, payload } = await this.hardwareProvider.getAddress(
-      params,
-    );
-    console.log({
-      req: {
-        params,
-      },
-      res: {
-        id,
-        success,
-        payload,
-      },
-    });
-
-    if (success) {
-      return payload.map((data, i) => {
-        /*
-          "path": [1,2,3,4,5]
-          "serializedPath": "m/44'/60'/0'/0/0",
-          "address": "0x99F825D80cADd21D77D13B7e13D25960B40a6299",
-         */
-        const { serializedPath, address } = data;
-        return {
-          address,
-          ...this.buildAddressMeta({
-            index: indexes[i],
-            hdPath: serializedPath,
-          }),
-        };
-      });
-    }
-    return [];
   }
 
   // transaction ----------------------------------------------
@@ -169,45 +96,28 @@ class WalletBase {
   // tx is String
   async signTx(txStr) {
     const hdPath = this.accountHdPath;
-    if (this.accountType === CONSTS_ACCOUNT_TYPES.Wallet) {
-      return this.signTxByHdWallet({ tx: txStr, hdPath });
-    }
 
-    if (this.accountType === CONSTS_ACCOUNT_TYPES.Hardware) {
-      return this.signTxByHardware({ tx: txStr, hdPath });
-    }
-    throw new Error(
-      `signTx of accountType ${this.accountType} is not supported`,
-    );
-  }
-
-  // tx is String
-  async signTxByHardware({ tx, hdPath, ...others }) {
-    return this.hardwareProvider.signTransaction({
-      tx,
+    // tx is String
+    return this.keyringProxy.signTransaction({
+      tx: txStr,
       hdPath,
-      ...others,
-    });
-  }
-
-  // tx is String
-  async signTxByHdWallet({ tx, hdPath, ...others }) {
-    return this.keyringProxyCall({
-      method: 'signTxByHdWallet',
-      params: { tx, hdPath, ...others },
     });
   }
 
   // tx is String
   async sendTx(txStr) {
-    const txid = await this.chainProvider.sendTransaction({
+    const txid = await this.chainManager.sendTransaction({
       rawTransaction: txStr,
     });
     return txid;
   }
 
   // tx is object, return txid
-  async signAndSendTxObject({ accountInfo, tx }) {
+  async signAndSendTxObject({ accountInfo, feeInfo, tx }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  async serializeTxObject(tx) {
     return utilsApp.throwToBeImplemented(this);
   }
 
@@ -229,22 +139,22 @@ class WalletBase {
   }
 
   // return tx object
-  async createAddAssociateTokenTxObject({ accountInfo, contract }) {
+  async createAddTokenTxObject({ accountInfo, contract }) {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  getTransactionFee() {
-    return this.chainProvider.getTransactionFee();
+  fetchTransactionFeeInfo(tx) {
+    return this.chainManager.fetchTransactionFeeInfo(tx);
   }
 
   async getTxHistory({ ...others }) {
-    return this.chainProvider.getTxHistory({ ...others });
+    return this.chainManager.getTxHistory({ ...others });
   }
 
   // transfer ----------------------------------------------
 
-  async transfer({
-    account,
+  async createGeneralTransferTxObject({
+    accountInfo,
     from,
     to,
     amount,
@@ -252,23 +162,29 @@ class WalletBase {
     contract,
     isToken = false,
   }) {
-    // TODO accountName: feePayer, signer, creator
-    const accountInfo = account || this.accountInfo;
+    // eslint-disable-next-line no-param-reassign
+    accountInfo = accountInfo || this.accountInfo;
 
     assert(accountInfo, 'transfer tx need account to sign');
 
     // const { decimals, mint } = balanceInfo;
     const _decimals = isNil(decimals) ? this.options.balanceDecimals : decimals;
-    // decimals convert
-    // TODO bignumber
-    const _amount = Math.round(parseFloat(amount) * 10 ** _decimals);
+    // decimals convert unit
+    let _amountUnit = utilsNumber.parseUnits(amount, decimals);
+    _amountUnit = utilsNumber.toNormalNumber({
+      value: _amountUnit,
+      roundMode: 'floor',
+      nanText: null,
+    });
+    _amountUnit = _amountUnit ?? undefined;
+
     const _from = from || accountInfo.address;
 
     console.log('transfer', {
       accountInfo,
       _from,
       to,
-      _amount,
+      _amount: _amountUnit,
       _decimals,
       contract,
       isToken,
@@ -276,24 +192,36 @@ class WalletBase {
 
     let tx = null;
     if (isToken) {
-      // transfer token
+      // transfer erc20 token
       tx = await this.createTransferTokenTxObject({
         accountInfo,
-        from: _from,
         to,
-        amount: _amount,
-        decimals: _decimals,
+        amount: _amountUnit,
         contract,
+        from: _from,
+        decimals: _decimals,
       });
     } else {
       // transfer native token
       tx = await this.createTransferTxObject({
         accountInfo,
         to,
-        amount: _amount,
+        amount: _amountUnit,
       });
     }
-    const txid = await this.signAndSendTxObject({ accountInfo, tx });
+    return tx;
+  }
+
+  async addFeeInfoToTx({ tx, feeInfo }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  async transfer({ tx, feeInfo, accountInfo }) {
+    const txid = await this.signAndSendTxObject({
+      tx,
+      accountInfo,
+      feeInfo,
+    });
     return txid;
   }
 
@@ -303,7 +231,7 @@ class WalletBase {
   //      so we can see two Token with the same mint address, may be a bug
   async addAssociateToken({ account, contract }) {
     const accountInfo = account || this.accountInfo;
-    const tx = await this.createAddAssociateTokenTxObject({
+    const tx = await this.createAddTokenTxObject({
       accountInfo,
       contract,
     });
@@ -314,30 +242,61 @@ class WalletBase {
   // ----------------------------------------------
 
   async getAccountPrivateKey({ path, ...others }) {
-    if (this.accountType === CONSTS_ACCOUNT_TYPES.Wallet) {
-      return this.keyringProxyCall({
-        method: 'getAccountPrivateKey',
-        params: { path, ...others },
-      });
-    }
-    throw new Error(
-      `getAccountPrivateKey is NOT supported. (accountType=${this.accountType})`,
-    );
+    return this.keyringProxy.getAccountPrivateKey({
+      path,
+      ...others,
+    });
   }
 
   async requestAirdrop() {
     return utilsApp.throwToBeImplemented(this);
   }
 
+  // TODO move isValidAddress to new class Utils
+  //    isValidAddress() is public, do something like parameter convert, result convert and catch
+  //    then call private method _isValidAddress() which needs to be implemented by subClass
+
   // getLatestNonce
   // get fee from gasNow
   // signMultipleTx
-  isValidAddress({ address }) {
+  isValidAddress(address = '') {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  getBlockBrowserLink({ tx, account, token, block }) {
+  // decode tx data message from dapp
+  //    return { instructions: [txDecoded, txDecoded] }
+  async decodeTransactionData({ address, data }) {
     return utilsApp.throwToBeImplemented(this);
+  }
+
+  // TODO rename browser to explorer
+  getBlockBrowserLink({ tx, account, token, block }) {
+    const { chainInfo } = this.options;
+    const browserLinks = chainInfo?.browser?.[0];
+
+    assert(browserLinks, 'chainInfo.browser NOT exists');
+    assert(browserLinks.tx, 'chainInfo.browser.tx NOT exists');
+    assert(browserLinks.account, 'chainInfo.browser.account NOT exists');
+    assert(browserLinks.token, 'chainInfo.browser.token NOT exists');
+    assert(browserLinks.block, 'chainInfo.browser.block NOT exists');
+    assert(browserLinks.home, 'chainInfo.browser.home NOT exists');
+
+    if (tx) {
+      return utilsApp.formatTemplate(browserLinks.tx, { tx });
+    }
+
+    if (account) {
+      return utilsApp.formatTemplate(browserLinks.account, { account });
+    }
+
+    if (token) {
+      return utilsApp.formatTemplate(browserLinks.token, { token });
+    }
+
+    if (block) {
+      return utilsApp.formatTemplate(browserLinks.block, { block });
+    }
+    return browserLinks.home || utilsApp.throwToBeImplemented(this);
   }
 }
 

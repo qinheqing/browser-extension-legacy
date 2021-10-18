@@ -48,7 +48,8 @@ function PageAccountDetail() {
 
           <EditableLabel
             className="pt-2"
-            defaultValue={storeAccount.currentAccount.name}
+            maxLength={36}
+            defaultValue={storeAccount.currentAccountInfo.name}
             onSubmit={storeAccount.changeAccountName}
           />
         </div>
@@ -64,7 +65,7 @@ function PageAccountDetail() {
             </li>
             <li className="px-4 py-4 sm:px-6 flex justify-between items-center">
               <div>路径</div>
-              <div>{storeAccount.currentAccount.path}</div>
+              <div>{storeAccount.currentAccountInfo.path}</div>
             </li>
             <li className="px-4 py-4 sm:px-6 flex justify-between items-center">
               <div>类型</div>
@@ -99,7 +100,7 @@ function PageAccountDetail() {
           </ul>
         </div>
         {storeStorage.allAccountsRaw.length > 1 ? (
-          <div className="mt-10 px-3">
+          <div className="my-10 px-3">
             <button
               onClick={() => setDialogVisible(true)}
               type="button"

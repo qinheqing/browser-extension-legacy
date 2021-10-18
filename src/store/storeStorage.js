@@ -13,12 +13,14 @@ import {
   CONST_CHAIN_KEYS,
   CONSTS_ACCOUNT_TYPES,
 } from '../consts/consts';
+import utilsStorage from '../utils/utilsStorage';
 import BaseStoreWithStorage from './BaseStoreWithStorage';
 import dataMigration from './dataMigration';
 
 class StoreStorage extends BaseStoreWithStorage {
   constructor(props) {
     super(props);
+    this.storageNamespace = utilsStorage.STORAGE_NS_UI;
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
 
@@ -30,12 +32,15 @@ class StoreStorage extends BaseStoreWithStorage {
 
       this.autosave('currentAccountRaw'),
       this.autosave('currentChainKey'),
+      this.autosave('currentChainInfo'),
       this.autosave('currentTokensRaw'),
       this.autosave('currentPendingTxid'),
 
       this.autosave('accountsGroupFilter'),
+      this.autosave('allPendingTxRaw'),
       this.autosave('allAccountsRaw'),
 
+      this.autosave('accountLocalTokensRaw'),
       this.autosave('tokenMetasRaw'),
       this.autosave('tokenBalancesRaw'),
       this.autosave('tokenPricesRaw'),
@@ -54,6 +59,7 @@ class StoreStorage extends BaseStoreWithStorage {
           to: dataMigration.CURRENT_DATA_VERSION,
         });
       }
+      // ensure Page Components mounting after storageReady
       this.storageReady = true;
     });
   }
@@ -77,6 +83,7 @@ class StoreStorage extends BaseStoreWithStorage {
 
   @observable.ref
   currentAccountRaw = {
+    baseChain: '',
     chainKey: '',
     id: '', // id missing
     type: CONSTS_ACCOUNT_TYPES.Hardware,
@@ -87,6 +94,9 @@ class StoreStorage extends BaseStoreWithStorage {
 
   @observable.ref
   currentChainKey = null;
+
+  @observable.ref
+  currentChainInfo = {};
 
   // TODO add this to url query, because popup open new window will lost this params
   @observable.ref
@@ -99,6 +109,14 @@ class StoreStorage extends BaseStoreWithStorage {
   currentPendingTxid = [
     // txid, txid, txid
   ];
+
+  @observable.ref
+  allPendingTxRaw = {};
+
+  @observable.ref
+  accountLocalTokensRaw = {
+    // accountKey: { tokenContractAddress: { address } }
+  };
 
   // TODO custom token added by user (ETH)
   @observable.ref

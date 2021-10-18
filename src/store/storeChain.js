@@ -1,6 +1,6 @@
 /* eslint import/no-cycle: "error" */
 import { observable, computed, makeObservable, action } from 'mobx';
-import { toPlainObject, sortBy } from 'lodash';
+import { toPlainObject, sortBy, cloneDeep } from 'lodash';
 import OneChainInfo from '../classes/OneChainInfo';
 import {
   CONST_ETH,
@@ -10,31 +10,11 @@ import {
   CONST_BTC,
 } from '../consts/consts';
 import utilsApp from '../utils/utilsApp';
-import chainsConfig from '../config/chainsConfig';
+import chains from '../config/chains';
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../ui/app/helpers/constants/common';
+import { allBuiltInChainsMap } from '../config/chains/allBuiltInChains';
 import BaseStore from './BaseStore';
 import storeStorage from './storeStorage';
-
-// TODO use https://github.com/OneKeyHQ/remote-config
-function createBuiltInChains() {
-  let chainsRaw = [
-    chainsConfig.SOL,
-    // chainsConfig.BTC,
-    // chainsConfig.BSC,
-  ];
-  if (IS_ENV_IN_TEST_OR_DEBUG) {
-    chainsRaw = [
-      ...chainsRaw,
-      chainsConfig.SOL_TEST,
-      // chainsConfig.BSC_TEST,
-    ];
-  }
-  return chainsRaw.reduce((prev, current) => {
-    const info = new OneChainInfo(current);
-    prev[info.key] = info;
-    return prev;
-  }, {});
-}
 
 class StoreChain extends BaseStore {
   constructor(props) {
@@ -45,7 +25,7 @@ class StoreChain extends BaseStore {
   }
 
   get chainsBuiltIn() {
-    return createBuiltInChains();
+    return allBuiltInChainsMap;
   }
 
   @computed
@@ -76,7 +56,7 @@ class StoreChain extends BaseStore {
       baseChain: CONST_CHAIN_KEYS.ETH,
       key: `Ropsten@${utilsApp.uuid()}`,
       name: 'Ropsten Testnet',
-      internalChainId: 3,
+      tokenChainId: 3,
       rpc: [`https://ropsten.infura.io/v3/${infura}`],
       currency: CONST_ETH,
       browser: ['https://ropsten.etherscan.io/'],
@@ -100,7 +80,9 @@ class StoreChain extends BaseStore {
   @action.bound
   setCurrentChainKey(key) {
     if (key) {
+      const chainInfo = this.chains[key] || {};
       storeStorage.currentChainKey = key;
+      storeStorage.currentChainInfo = cloneDeep(chainInfo);
     }
   }
 
@@ -128,6 +110,11 @@ class StoreChain extends BaseStore {
   @computed
   get currentBaseChain() {
     return this.currentChainInfo?.baseChain;
+  }
+
+  @computed
+  get currentNativeTokenUnitName() {
+    return this.currentChainInfo?.nativeToken?.unitName;
   }
 }
 

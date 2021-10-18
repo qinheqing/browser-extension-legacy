@@ -87,23 +87,36 @@ const externalModulesCopyFiles = [
   },
 ];
 
+const externalSourcemapsCopyFiles = [
+  {
+    // copy sourcemaps
+    // # sourceMappingURL=http://localhost:31317/sourcemaps/ui.js.map
+    src: `./app/vendor/js-conflux-sdk/1.7.0/js-conflux-sdk.umd.min.js.map`,
+    dest: `../sourcemaps/js-conflux-sdk.umd.min.js.map`,
+  },
+];
+
 const externalModulesHtmlInjectJs = [
-  'vendor/external-js/mobx',
-  'vendor/external-js/solana-web3',
+  'vendor/external-js/mobx.js', // mobx
+  'vendor/external-js/solana-web3.js', // @solana/web3.js
+  'vendor/js-conflux-sdk/1.7.0/js-conflux-sdk.umd.min.js', // js-conflux-sdk
   IS_LEGACY_BUILD && 'external-libs',
 ].filter(Boolean);
 
 const externalModulesGlobalShim = {
   //  import mobx from 'mobx';
   //        const mobx = window.mobx;
-  'mobx': 'mobx',
+  mobx: 'mobx',
   //  import solanaWeb3 from '@solana/web3.js';
   //        const solanaWeb3 = window.solanaWeb3;
   '@solana/web3.js': 'solanaWeb3',
+  // import Conflux from 'js-conflux-sdk';
+  //    const Conflux = window.Conflux
+  'js-conflux-sdk': 'Conflux',
 };
 
-// THIS IS NOT WORKING
-//    please update:   package.json #browser field
+// TODO: THIS IS NOT WORKING
+//    please update at:   package.json > browser field
 const externalModulesBrowserField = {
   // mobx-react-lite should be out of node_modules folder,
   //    so that the deps "mobx" can be resolved as global var.
@@ -117,6 +130,7 @@ module.exports = {
   browserifyPaths,
   browserifyAlias,
   externalModulesCopyFiles,
+  externalSourcemapsCopyFiles,
   externalModulesHtmlInjectJs,
   externalModulesGlobalShim,
   externalModulesBrowserField,

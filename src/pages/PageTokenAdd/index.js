@@ -79,12 +79,34 @@ function PageTokenAdd() {
       scrollContainer.current.dispatchEvent(new Event('scroll'));
   }, []);
 
+  const wallet = storeWallet.currentWallet;
+  const handleAddTokenClick = useCallback(
+    async (_token) => {
+      let meta = {};
+      try {
+        meta = await wallet.chainManager.fetchTokenMeta({
+          address: _token.address,
+        });
+      } catch (error) {
+        console.error(error);
+      }
+
+      console.log('handleAddTokenClick', meta);
+      setTokenToAdd({
+        ..._token,
+        ...meta,
+      });
+      setAddDialogOpen(true);
+    },
+    [wallet.chainManager, wallet],
+  );
+
   useEffect(() => {
     scrollContainer.current = document.querySelector(
       '.OneKey-AppPageLayoutBody',
     );
     storeToken.fetchAllTokenListMeta().then(triggerScrollEvent);
-    storeWallet.currentWallet.chainProvider
+    storeWallet.currentWallet.chainManager
       .getAddAssociateTokenFee()
       .then(setFee);
 
@@ -125,10 +147,7 @@ function PageTokenAdd() {
                 <TokenAddItem
                   key={token.address}
                   token={token}
-                  onAddClick={(_token) => {
-                    setTokenToAdd(_token);
-                    setAddDialogOpen(true);
-                  }}
+                  onAddClick={handleAddTokenClick}
                 />
               </LazyLoad>
             ))}
@@ -148,21 +167,25 @@ function PageTokenAdd() {
         }
         // TODO token fee display
         content={
-          <div>
-            需要支付 {/* TODO to TokenAmountText*/}
-            <AmountText
-              value={fee}
-              decimals={storeAccount.currentAccount.decimals}
-            />{' '}
-            {storeAccount.currentAccount.currency} 添加代币
-          </div>
+          fee > 0 && (
+            <div>
+              需要支付 {/* TODO to TokenAmountText*/}
+              <AmountText
+                value={fee}
+                decimals={storeAccount.currentAccountInfo.decimals}
+              />{' '}
+              {storeAccount.currentAccountInfo.currency} 添加代币
+            </div>
+          )
         }
         confirmText="确认添加"
         onConfirm={async () => {
-          return storeToken.addAssociateToken({
-            contract: tokenToAdd.address,
+          return storeToken.addAssociateToken(
+            {
+              ...tokenToAdd,
+            },
             fee,
-          });
+          );
         }}
       />
     </AppPageLayout>

@@ -25,7 +25,7 @@ async function showExtensionNotification(error) {
     notificationId = errorUrl;
   }
 
-  if (msg && global?.$$extensionPlatform?._showNotification) {
+  if (msg && global?.$ok_extensionPlatform?._showNotification) {
     if (lastErrorMsg === msg) {
       global.$$errorNotificationAvailableCount -= 1;
     } else {
@@ -33,8 +33,8 @@ async function showExtensionNotification(error) {
     }
     lastErrorMsg = msg;
 
-    global.$$extensionPlatform._subscribeToNotificationClicked();
-    global.$$extensionPlatform._showNotification(
+    global.$ok_extensionPlatform._subscribeToNotificationClicked();
+    global.$ok_extensionPlatform._showNotification(
       `OneKey Error`,
       msg,
       notificationId, // notification id

@@ -37,7 +37,7 @@ export default observer(function PageConnectHardware() {
       if (isSolWallet) {
         addrs = indexesRange.map((index) => ({
           address: index,
-          path: wallet.hdkeyProvider.createHdPath({ index }),
+          path: wallet.hdkeyManager.createHdPath({ index }),
           hdPathIndex: index,
           chainKey: chainInfo.key,
           type: CONSTS_ACCOUNT_TYPES.Hardware,

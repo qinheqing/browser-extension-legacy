@@ -21,13 +21,17 @@ function uuid() {
   return uuidMaker.v4().replace(/-/giu, '');
 }
 
+function bufferToHex(bytes, { prefix = '0x' } = {}) {
+  return prefix + Buffer.from(bytes).toString('hex');
+}
+
 async function mnemonicToSeed(mnemonic) {
   const bip39 = await import('bip39');
   if (!bip39.validateMnemonic(mnemonic)) {
     throw new Error('Invalid seed words');
   }
   const seed = await bip39.mnemonicToSeed(mnemonic);
-  return Buffer.from(seed).toString('hex');
+  return bufferToHex(seed, { prefix: '' });
 }
 
 function includeScripts(src) {
@@ -107,14 +111,17 @@ async function waitForDataLoaded({ data, log }) {
     } else {
       console.log('waitForDataLoaded');
     }
+
     getDataArrFunc.forEach((getData) => {
       const d = getData();
       if (d === false) {
         isAllLoaded = false;
       }
+
       if (isNil(d)) {
         isAllLoaded = false;
       }
+
       if (isEmpty(d)) {
         if (isPlainObject(d) || isArray(d)) {
           isAllLoaded = false;
@@ -143,9 +150,11 @@ function reactSafeRender(content, { tryToString = true, ...others } = {}) {
   if (isArray(safeRenderStr)) {
     return safeRenderStr.map((item) => reactSafeRender(item, options));
   }
+
   if (tryToString && safeRenderStr?.toString) {
     safeRenderStr = safeRenderStr.toString();
   }
+
   if (isString(safeRenderStr) || isNumber(safeRenderStr)) {
     return safeRenderStr;
   }
@@ -163,6 +172,10 @@ function reactSafeRender(content, { tryToString = true, ...others } = {}) {
 
 function isNewHome() {
   return utilsStorage.getAutoSaveLocalStorageItem('homeType') === 'NEW';
+}
+
+function isOldHome() {
+  return !isNewHome();
 }
 
 function objectToUint8Array(dataObj = {}) {
@@ -189,10 +202,12 @@ export default {
   isBackgroundEnvironment,
   isUiEnvironment,
   isNewHome,
+  isOldHome,
   waitForDataLoaded,
   delay,
   changeCase,
   reactSafeRender,
   objectToUint8Array,
   trackEventNoop,
+  bufferToHex,
 };

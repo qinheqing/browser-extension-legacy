@@ -1,3 +1,4 @@
+/* eslint import/no-cycle: "error" */
 import { sortBy, range } from 'lodash';
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../ui/app/helpers/constants/common';
 

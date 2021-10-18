@@ -134,7 +134,7 @@ function createProviderProxy({ provider }) {
 
 function initOneKeyVariable({ provider }) {
   window.onekey = createProviderProxy({ provider });
-  window.onekey.__mockOtherProviderInject = () => {
+  global.$ok_mockOtherProviderInject = () => {
     if (otherProvider) {
       window.ethereum = otherProvider;
       console.log('otherProvider set ', otherProvider);

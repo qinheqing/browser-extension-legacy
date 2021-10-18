@@ -39,15 +39,23 @@ export default class ExtensionPlatform {
     });
   }
 
-  focusWindow(windowId) {
+  focusWindow(windowId, options) {
     return new Promise((resolve, reject) => {
-      extension.windows.update(windowId, { focused: true }, () => {
-        const error = checkForError();
-        if (error) {
-          return reject(error);
-        }
-        return resolve();
-      });
+      extension.windows.update(
+        windowId,
+        {
+          drawAttention: true, // no effect if the window already has focus
+          focused: true,
+          ...options,
+        },
+        () => {
+          const error = checkForError();
+          if (error) {
+            return reject(error);
+          }
+          return resolve();
+        },
+      );
     });
   }
 
@@ -78,6 +86,18 @@ export default class ExtensionPlatform {
   closeCurrentWindow() {
     return extension.windows.getCurrent((windowDetails) => {
       return extension.windows.remove(windowDetails.id);
+    });
+  }
+
+  getWindow(windowId, queryOptions = {}) {
+    return new Promise((resolve, reject) => {
+      extension.windows.get(windowId, queryOptions, (windowObject) => {
+        const error = checkForError();
+        if (error) {
+          return reject(error);
+        }
+        return resolve(windowObject);
+      });
     });
   }
 
@@ -141,9 +161,14 @@ export default class ExtensionPlatform {
     });
   }
 
-  getAllTabs() {
+  getTabsInWindow(windowId) {
+    return this.getTabs({ windowId });
+  }
+
+  // https://developer.chrome.com/docs/extensions/reference/tabs/#method-query
+  getTabs(queryInfo) {
     return new Promise((resolve, reject) => {
-      extension.tabs.query({}, (tabs) => {
+      extension.tabs.query(queryInfo, (tabs) => {
         const error = checkForError();
         if (error) {
           return reject(error);
@@ -151,6 +176,10 @@ export default class ExtensionPlatform {
         return resolve(tabs);
       });
     });
+  }
+
+  getAllTabs() {
+    return this.getTabs({});
   }
 
   getActiveTabs() {
@@ -181,6 +210,20 @@ export default class ExtensionPlatform {
   switchToTab(tabId) {
     return new Promise((resolve, reject) => {
       extension.tabs.update(tabId, { highlighted: true }, (tab) => {
+        const err = checkForError();
+        if (err) {
+          reject(err);
+        } else {
+          resolve(tab);
+        }
+      });
+    });
+  }
+
+  updateTab(tabId, updateInfo) {
+    return new Promise((resolve, reject) => {
+      // https://developer.chrome.com/docs/extensions/reference/tabs/#method-update
+      extension.tabs.update(tabId, updateInfo, (tab) => {
         const err = checkForError();
         if (err) {
           reject(err);

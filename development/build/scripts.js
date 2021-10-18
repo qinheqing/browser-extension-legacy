@@ -889,23 +889,28 @@ function renderHtmlFile(htmlName, groupSet, commonSet, browserPlatforms) {
   const jsBundles = [
     // fixed modules ahead ----------------------------------------------
     ...configs.externalModulesHtmlInjectJs,
-    'lockdown-run', // secure ES module, which cause mobx, solanaWeb3 init fail.
     !IS_LEGACY_BUILD && 'runtime-cjs',
     // ----------------------------------------------
     ...commonSet.values(),
     ...groupSet.values(),
+    // ----------------------------------------------
+    'lockdown-run.js', // secure ES module, which cause mobx, solanaWeb3 confluxSdk init fail.
   ]
     .filter(Boolean)
-    .map((label) => `./${label}.js?_t=${new Date().getTime()}.00000`);
+    .map(
+      (label) =>
+        `./${label.replace(
+          /\.js$/giu,
+          '',
+        )}.js?_t=${new Date().getTime()}.00000`,
+    );
 
   const htmlOutput = Sqrl.render(htmlTemplate, { jsBundles, gaCode });
   browserPlatforms.forEach((platform) => {
     const dest = `./dist/${platform}/${htmlName}.html`;
-    const dest2 = `./dist/${platform}/${htmlName}.bak.html`;
     // console.log('htmlOutput', htmlOutput);
     // we dont have a way of creating async events atm
     writeFileSync(dest, htmlOutput);
-    writeFileSync(dest2, htmlOutput);
   });
 }
 

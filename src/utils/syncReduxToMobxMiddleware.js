@@ -19,6 +19,7 @@ const syncReduxToMobxMiddleware = (store) => (next) => (action) => {
       hwOnlyMode,
       currentCurrency,
     };
+    storeApp.metamaskStateReady = true;
   }
 
   return result;

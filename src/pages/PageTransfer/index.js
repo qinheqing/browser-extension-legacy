@@ -25,6 +25,8 @@ import {
   OneFieldItem,
 } from '../../components/OneField';
 import { TokenLogoIcon } from '../../components/LogoIcon';
+import storeChain from '../../store/storeChain';
+import FeeInfoPanel from '../../components/FeeInfoPanel';
 
 function PageTransfer() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -37,8 +39,12 @@ function PageTransfer() {
   useEffect(() => {
     storeTransfer.clearData();
     if (storeWallet.currentWallet) {
-      storeTransfer.fetchTransactionFee();
+      // noop
     }
+  }, []);
+
+  useEffect(() => {
+    return storeTransfer.autoRunFetchFeeInfo();
   }, []);
 
   if (useDataRequiredOrRedirect(storeTransfer.fromToken)) {
@@ -108,18 +114,7 @@ function PageTransfer() {
         />
       </OneField>
 
-      <OneField>
-        <OneFieldItem
-          titleWrapped
-          title="交易费"
-          end={
-            <span>
-              {storeTransfer.fee}
-              <span className="ml-1">{storeTransfer.feeSymbol}</span>
-            </span>
-          }
-        />
-      </OneField>
+      <FeeInfoPanel feeInfo={storeTransfer.feeInfo} />
 
       <div className="px-4">
         <OneButton

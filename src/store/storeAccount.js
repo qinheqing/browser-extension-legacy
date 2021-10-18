@@ -32,10 +32,11 @@ class StoreAccount extends BaseStore {
     autorun(() => {
       const { currentAccountRaw } = storeStorage;
       untracked(() => {
-        const { currentAccount } = this;
-        if (currentAccount?.chainKey) {
-          storeChain.setCurrentChainKey(currentAccount?.chainKey);
+        const { currentAccountInfo } = this;
+        if (currentAccountInfo?.chainKey) {
+          storeChain.setCurrentChainKey(currentAccountInfo?.chainKey);
         }
+        console.log('clear pending tx on mount');
         storeTx.clearPendingTx();
       });
     });
@@ -55,14 +56,17 @@ class StoreAccount extends BaseStore {
     // TODO debounce
     const wallet = walletFactory.createWallet({
       chainInfo: storeChain.currentChainInfo,
-      accountInfo: this.currentAccount,
+      accountInfo: this.currentAccountInfo,
     });
     storeWallet.setCurrentWallet(wallet);
   }
 
+  @observable
+  refreshKey = 1;
+
   // TODO rename to currentAccountInfo
   @computed
-  get currentAccount() {
+  get currentAccountInfo() {
     if (!storeStorage.currentAccountRaw) {
       return null;
     }
@@ -83,12 +87,12 @@ class StoreAccount extends BaseStore {
 
   @computed
   get currentAccountAddress() {
-    return this.currentAccount?.address;
+    return this.currentAccountInfo?.address;
   }
 
   @computed
   get currentAccountChainKey() {
-    return this.currentAccount?.chainKey;
+    return this.currentAccountInfo?.chainKey;
   }
 
   @computed
@@ -104,13 +108,13 @@ class StoreAccount extends BaseStore {
   @computed
   get currentAccountTypeText() {
     let type;
-    switch (this.currentAccount.type) {
+    switch (this.currentAccountInfo.type) {
       case CONSTS_ACCOUNT_TYPES.Hardware: {
         type = '硬件账户';
         break;
       }
 
-      case CONSTS_ACCOUNT_TYPES.Observer: {
+      case CONSTS_ACCOUNT_TYPES.WatchOnly: {
         type = '观察账户';
         break;
       }
@@ -183,15 +187,15 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   changeAccountName(newName) {
-    this.currentAccount.name = newName;
+    this.currentAccountInfo.name = newName;
     storeStorage.currentAccountRaw = {
       ...storeStorage.currentAccountRaw,
       name: newName,
     };
     const index = findIndex(storeStorage.allAccountsRaw, (e) => {
       return (
-        e.address === this.currentAccount.address &&
-        e.chainKey === this.currentAccount.chainKey
+        e.address === this.currentAccountInfo.address &&
+        e.chainKey === this.currentAccountInfo.chainKey
       );
     });
 
@@ -224,7 +228,15 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   setCurrentAccount({ account }) {
-    storeStorage.currentAccountRaw = { ...account };
+    if (!account.chainKey) {
+      return;
+    }
+    storeChain.setCurrentChainKey(account.chainKey);
+    const baseChain = storeChain.currentBaseChain;
+    storeStorage.currentAccountRaw = {
+      ...account,
+      baseChain: account?.baseChain ?? baseChain,
+    };
   }
 
   @action.bound
@@ -251,7 +263,7 @@ class StoreAccount extends BaseStore {
       this.addAccounts(addresses);
     }
 
-    if (!this.currentAccount) {
+    if (!this.currentAccountInfo) {
       const _accounts = getAccountsInCurrentChain();
       _accounts[0] && this.setCurrentAccount({ account: _accounts[0] });
     }
@@ -260,7 +272,7 @@ class StoreAccount extends BaseStore {
   // storeAccount.autofixMismatchAddresses();
   @action.bound
   async _fixAccountAddress(account = {}) {
-    const accountNew = account;
+    const accountNew = { ...account };
     if (!accountNew.chainKey) {
       return null;
     }
@@ -285,6 +297,7 @@ class StoreAccount extends BaseStore {
         );
         // rewrite correct address
         accountNew.address = addressReal || 'ErrorAddress';
+        accountNew.baseChain = accountNew.baseChain || chainInfo.baseChain;
         return accountNew;
       }
     }
@@ -293,25 +306,33 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   async autofixMismatchAddresses() {
-    let updated = false;
-
-    if (await this._fixAccountAddress(storeStorage.currentAccountRaw)) {
-      updated = true;
+    const currentAccountRawFixed = await this._fixAccountAddress(
+      storeStorage.currentAccountRaw,
+    );
+    if (currentAccountRawFixed) {
+      storeStorage.currentAccountRaw = currentAccountRawFixed;
     }
 
+    // ----------------------------------------------
+    let updated = false;
+    const allAccountsRawFixed = [];
     for (let i = 0; i < storeStorage.allAccountsRaw.length; i++) {
       const account = storeStorage.allAccountsRaw[i];
-      if (await this._fixAccountAddress(account)) {
+      const accountFixed = await this._fixAccountAddress(account);
+      if (accountFixed) {
         updated = true;
       }
+      allAccountsRawFixed.push(accountFixed || account);
     }
 
     if (updated) {
-      storeStorage.currentAccountRaw = {
-        ...storeStorage.currentAccountRaw,
-      };
-      storeStorage.allAccountsRaw = [...storeStorage.allAccountsRaw];
+      storeStorage.allAccountsRaw = allAccountsRawFixed;
     }
+  }
+
+  @action.bound
+  async autofixCurrentAccountInfo() {
+    // noop
   }
 }
 

@@ -102,6 +102,7 @@ export class PermissionsController {
     engine.push(
       createPermissionsMethodMiddleware({
         addDomainMetadata: this.addDomainMetadata.bind(this),
+        isUnlocked: this._isUnlocked.bind(this),
         getAccounts: this.getAccounts.bind(this, origin),
         getUnlockPromise: () => this._getUnlockPromise(true),
         hasPermission: this.hasPermission.bind(this, origin),
@@ -115,6 +116,7 @@ export class PermissionsController {
     );
 
     engine.push(
+      // @onekeyhq/rcp-cap
       this.permissions.providerMiddlewareFunction.bind(this.permissions, {
         origin,
       }),
@@ -719,6 +721,7 @@ export class PermissionsController {
             metadata: { id, origin },
           } = req;
 
+          console.log('>>>> requestUserApproval <<<<<');
           return this.approvals.addAndShowApprovalRequest({
             id,
             origin,

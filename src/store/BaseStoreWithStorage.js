@@ -22,6 +22,7 @@ const extStorage = new ExtensionStore();
 class BaseStoreWithStorage extends BaseStore {
   constructor(props) {
     super(props);
+    this.storageNamespace = this.constructor.name;
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
   }
@@ -65,10 +66,16 @@ class BaseStoreWithStorage extends BaseStore {
 
   // TODO make autosave to decorator
   // TODO data migrate implement
-  async autosave(storeProp, { useLocalStorage, defaultValue } = {}) {
+  async autosave(
+    storeProp,
+    { useLocalStorage = USE_LOCAL_STORAGE, defaultValue } = {},
+  ) {
     // eslint-disable-next-line consistent-this
     const store = this;
-    const storageKey = utilsStorage.buildAutoSaveStorageKey(storeProp);
+    const storageKey = utilsStorage.buildAutoSaveStorageKey(
+      storeProp,
+      this.storageNamespace,
+    );
 
     // * init from localStorage
     let value = await this.getStorageItemAsync(storageKey, {

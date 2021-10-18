@@ -33,7 +33,7 @@ function ImportAccountItem({
     isNative: true,
     address: account.address,
     chainKey: account.chainKey,
-    symbol: storeChain.currentChainInfo?.currency,
+    symbol: wallet.chainInfo?.currency,
   });
   const displayIndex = account.hdPathIndex + 1;
   return (
@@ -55,7 +55,7 @@ function ImportAccountItem({
         />
       </div>
 
-      <div className="ImportAccountsList_itemContent">
+      <div className="flex-1">
         <div className="break-all text-sm leading-none">{account.address}</div>
         <small className="text-gray-400 text-xs">{account.path}</small>
         <div className="flex items-center justify-between text-sm leading-none">
@@ -113,18 +113,13 @@ function ImportAccountsList({ wallet, onLoadMore }) {
       a.hdPathIndex < b.hdPathIndex ? -1 : 1,
     );
     const newAccounts = accountsSorted.map((addr) => {
-      const { address, path, name, chainKey, type } = addr;
       accountNameIndex += 1;
       // TODO init data from initFirstAccount() and buildAddressMeta()
-      return {
-        name: wallet.chainInfo.generateAccountName({
-          index: accountNameIndex,
-        }),
-        chainKey,
-        address,
-        path,
-        type,
-      };
+      const account = { ...addr };
+      account.name = wallet.chainInfo.generateAccountName({
+        index: accountNameIndex,
+      });
+      return account;
     });
 
     storeAccount.addAccounts(newAccounts);
@@ -168,7 +163,7 @@ function ImportAccountsList({ wallet, onLoadMore }) {
         </OneButton>
         <div className="flex-1" />
         <OneButton
-          updateHook={updateHook}
+          key={`btn-import-${updateHook}`}
           type="primary"
           disabled={!selectedAccountsLength}
           onClick={confirmImport}

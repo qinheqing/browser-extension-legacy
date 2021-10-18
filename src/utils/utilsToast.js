@@ -29,13 +29,14 @@ function ErrorToastView({ error }) {
 function toastError(error = {}) {
   const errorString = (error?.message || '') + (error?.stack || '');
   const now = new Date().getTime();
-  if (
-    !errorString ||
-    errorString !== lastErrorData.text ||
-    now > lastErrorData.date + 1000
-  ) {
+  if (!errorString || error.IS_MUTE_NOTIFY) {
+    return;
+  }
+
+  if (errorString !== lastErrorData.text || now > lastErrorData.date + 1000) {
     toast.error(<ErrorToastView error={error} />);
   }
+
   lastErrorData = {
     text: errorString,
     date: now,

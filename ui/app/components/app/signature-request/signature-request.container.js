@@ -1,4 +1,5 @@
 import { connect } from 'react-redux';
+import log from 'loglevel';
 import { clearConfirmTransaction } from '../../../ducks/confirm-transaction/confirm-transaction.duck';
 import { accountsWithSendEtherInfoSelector } from '../../../selectors';
 import { getAccountByAddress } from '../../../helpers/utils/util';
@@ -36,6 +37,10 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   } = txData;
 
   const fromAccount = getAccountByAddress(allAccounts, from);
+  log.info('SignatureRequest', {
+    txData,
+    fromAccount,
+  });
 
   let cancel;
   let sign;

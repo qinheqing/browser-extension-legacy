@@ -1,3 +1,5 @@
+import log from 'loglevel';
+import { STREAM_PROVIDER_ETH } from '../../constants/consts';
 import handlers from './handlers';
 
 const handlerMap = handlers.reduce((map, handler) => {
@@ -26,6 +28,15 @@ const handlerMap = handlers.reduce((map, handler) => {
  */
 export default function createMethodMiddleware(opts) {
   return function methodMiddleware(req, res, next, end) {
+    if (req?.streamName !== STREAM_PROVIDER_ETH) {
+      // log.info('DAPP_RPC_MIDDLEWARE', req.id, {
+      //   method: req.method,
+      //   req,
+      //   services: opts,
+      // });
+      return next();
+    }
+
     if (handlerMap.has(req.method)) {
       return handlerMap.get(req.method)(req, res, next, end, opts);
     }

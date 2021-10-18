@@ -21,6 +21,7 @@ import {
   ROUTE_TX_HISTORY,
   ROUTE_WALLET_SELECT,
   ROUTE_ACCOUNT_DETAIL,
+  ROUTE_APPROVE_SETTINGS,
 } from '../../routes/routeUrls';
 import storeWallet from '../../store/storeWallet';
 import storeToken from '../../store/storeToken';
@@ -73,6 +74,14 @@ const HomeTopActionsBar = observer(function () {
       />
 
       <HomeTopActionButton
+        text="授权"
+        icon={AppIcons.ShieldExclamationIcon}
+        onClick={() => {
+          storeHistory.push(ROUTE_APPROVE_SETTINGS);
+        }}
+      />
+
+      <HomeTopActionButton
         text="锁屏"
         icon={AppIcons.LockClosedIcon}
         onClick={storeApp.lockScreen}
@@ -111,6 +120,7 @@ function RefreshButton() {
           await storeToken.fetchCurrentAccountTokens({
             forceUpdateTokenMeta: true,
           });
+          storeAccount.refreshKey = new Date().getTime();
         } finally {
           setLoading(false);
         }
@@ -209,6 +219,7 @@ const HomeAssetsList = observer(function () {
 function PageHome() {
   const history = useHistory();
   const [copied, handleCopy] = useCopyToClipboard();
+  const { isUnlocked } = storeApp.legacyState;
 
   useEffect(() => {
     storeAccount.initFirstAccount();
@@ -219,10 +230,13 @@ function PageHome() {
   }, []);
 
   useEffect(() => {
-    if (storeApp.legacyState.isUnlocked) {
-      storeAccount.autofixMismatchAddresses();
-    }
-  }, [storeApp.legacyState.isUnlocked]);
+    (async () => {
+      if (isUnlocked) {
+        await storeAccount.autofixMismatchAddresses();
+        await storeAccount.autofixCurrentAccountInfo();
+      }
+    })();
+  }, [isUnlocked]);
 
   const onAccountClick = useCallback(() => {
     storeHistory.push(ROUTE_ACCOUNT_DETAIL);
@@ -248,17 +262,18 @@ function PageHome() {
       }
       title="钱包"
     >
-      {!storeAccount.currentAccount && (
+      {!storeAccount.currentAccountInfo && (
         <div className="h-full u-flex-center px-4">
           点击右上角按钮选择或创建账户
         </div>
       )}
-      {storeAccount.currentAccount && (
+      {storeAccount.currentAccountInfo && (
         <>
           <AccountCard
+            key={storeAccount.refreshKey}
             showMaskAssetBalanceEye
             maskAssetBalance={storeStorage.maskAssetBalance}
-            account={storeAccount.currentAccount}
+            account={storeAccount.currentAccountInfo}
             showBalance
             watchBalanceChange
             showActiveBadge={false}
@@ -268,7 +283,7 @@ function PageHome() {
             <HomeTopActionsBar />
             <div>
               <HomeAssetsHeader />
-              <HomeAssetsList />
+              <HomeAssetsList key={storeAccount.refreshKey} />
             </div>
           </div>
         </>

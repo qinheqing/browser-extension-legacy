@@ -20,13 +20,25 @@ export default class NotificationManager {
    * notification windows are given a 'popup' type.
    *
    */
-  async showPopup() {
+  async showPopup(url = '') {
     const popup = await this._getPopup();
+    const popupUlr = `notification.html#${url}`;
 
     // Bring focus to chrome popup
     if (popup) {
+      const tabs = await this.platform.getTabsInWindow(popup.id);
+      if (tabs[0]) {
+        await this.platform.updateTab(tabs[0].id, {
+          url: popupUlr,
+        });
+      }
+
+      popup.alwaysOnTop = true; // not working
       // bring focus to existing chrome popup
-      await this.platform.focusWindow(popup.id);
+      await this.platform.focusWindow(popup.id, {
+        // url: url ? popupUlr : undefined, // not allowed
+        // alwaysOnTop: true, // not allowed
+      });
     } else {
       let left = 0;
       let top = 0;
@@ -46,10 +58,14 @@ export default class NotificationManager {
 
       // create new notification popup
       const popupWindow = await this.platform.openWindow({
-        url: 'notification.html',
-        type: 'popup',
+        url: [popupUlr],
+        // https://developer.chrome.com/docs/extensions/reference/windows/#type-WindowType
+        type: 'popup', // normal, popup ('panel' is deprecated)
+        // alwaysOnTop: true, // not allowed
         width: NOTIFICATION_WIDTH,
         height: NOTIFICATION_HEIGHT,
+        focused: true,
+        incognito: false,
         left,
         top,
       });

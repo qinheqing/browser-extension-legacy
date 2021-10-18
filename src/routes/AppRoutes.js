@@ -19,11 +19,13 @@ import {
   ROUTE_ACCOUNT_DETAIL,
   ROUTE_PRIVATE_KEY_EXPORT,
   ROUTE_DEMO_I18N,
+  ROUTE_APPROVE_SETTINGS,
 } from './routeUrls';
 
 const PageConnectHardware = lazy(() => import('../pages/PageConnectHardware'));
 const PageWalletSelect = lazy(() => import('../pages/PageWalletSelect'));
 const PageApprovePopup = lazy(() => import('../pages/PageApprovePopup'));
+const PageApproveSettings = lazy(() => import('../pages/PageApproveSettings'));
 const PageCreateAccount = lazy(() => import('../pages/PageCreateAccount'));
 const PageTransfer = lazy(() => import('../pages/PageTransfer'));
 const PageTransactionHistory = lazy(() =>
@@ -75,6 +77,11 @@ export default function AppRoutes() {
           <RouteAuthenticated
             path={ROUTE_APPROVE_POPUP}
             component={PageApprovePopup}
+            exact
+          />
+          <RouteAuthenticated
+            path={ROUTE_APPROVE_SETTINGS}
+            component={PageApproveSettings}
             exact
           />
           <RouteAuthenticated

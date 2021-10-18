@@ -88,14 +88,19 @@ export default class Home extends PureComponent {
 
     this.setState({ mounted: true });
     if (isNotification && totalUnapprovedCount === 0) {
+      // close approve notification popup windows.
       global.platform.closeCurrentWindow();
     } else if (firstPermissionsRequestId) {
+      // approve connection from Dapp
       history.push(`${CONNECT_ROUTE}/${firstPermissionsRequestId}`);
     } else if (unconfirmedTransactionsCount > 0) {
+      // approve transaction from Dapp
       history.push(CONFIRM_TRANSACTION_ROUTE);
     } else if (Object.keys(suggestedTokens).length > 0) {
+      // add token from https://www.onekey.so/tokens
       history.push(CONFIRM_ADD_SUGGESTED_TOKEN_ROUTE);
     } else if (pendingApprovals.length > 0) {
+      // add chain from https://chainlist.org/
       history.push(CONFIRMATION_V_NEXT_ROUTE);
     }
   }

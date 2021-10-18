@@ -61,6 +61,15 @@ export function getTokenData(data) {
   }
 }
 
+export function parseErc20Transaction(tx) {
+  try {
+    return hstInterface.parseTransaction(tx);
+  } catch (error) {
+    log.debug('Failed to parse transaction data.', error, tx);
+    return undefined;
+  }
+}
+
 async function getMethodFrom4Byte(fourBytePrefix) {
   const fourByteResponse = await fetchWithCache(
     `https://www.4byte.directory/api/v1/signatures/?hex_signature=${fourBytePrefix}`,

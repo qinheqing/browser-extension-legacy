@@ -1,0 +1,148 @@
+diff --git a/node_modules/@onekeyhq/providers/dist/BaseProvider.d.ts b/node_modules/@onekeyhq/providers/dist/BaseProvider.d.ts
+index 57c0f1d..03c5ce5 100644
+--- a/node_modules/@onekeyhq/providers/dist/BaseProvider.d.ts
++++ b/node_modules/@onekeyhq/providers/dist/BaseProvider.d.ts
+@@ -52,6 +52,8 @@ export default class BaseProvider extends SafeEventEmitter {
+      * See [chainId.network]{@link https://chainid.network} for more information.
+      */
+     chainId: string | null;
++    chainKey: string | null;
++    streamName: string | null;
+     /**
+      * The user's currently selected Ethereum address.
+      * If null, MetaMask is either locked or the user has not permitted any
+@@ -134,9 +136,10 @@ export default class BaseProvider extends SafeEventEmitter {
+      * @param networkInfo.chainId - The latest chain ID.
+      * @param networkInfo.networkVersion - The latest network ID.
+      */
+-    protected _handleChainChanged({ chainId, networkVersion, }?: {
++    protected _handleChainChanged({ chainId, networkVersion, chainKey }?: {
+         chainId?: string;
+         networkVersion?: string;
++        chainKey?: string;
+     }): void;
+     /**
+      * Called when accounts may have changed. Diffs the new accounts value with
+diff --git a/node_modules/@onekeyhq/providers/dist/BaseProvider.js b/node_modules/@onekeyhq/providers/dist/BaseProvider.js
+index a3cb270..e89525b 100644
+--- a/node_modules/@onekeyhq/providers/dist/BaseProvider.js
++++ b/node_modules/@onekeyhq/providers/dist/BaseProvider.js
+@@ -13,6 +13,7 @@ const eth_rpc_errors_1 = require("eth-rpc-errors");
+ const is_stream_1 = require("is-stream");
+ const messages_1 = __importDefault(require("./messages"));
+ const utils_1 = require("./utils");
++let logIndex = 0
+ class BaseProvider extends safe_event_emitter_1.default {
+     /**
+      * @param connectionStream - A Node.js duplex stream
+@@ -31,10 +32,14 @@ class BaseProvider extends safe_event_emitter_1.default {
+         this._log = logger;
+         this.setMaxListeners(maxEventListeners);
+         // private state
+-        this._state = Object.assign({}, BaseProvider._defaultState);
++        const _state = Object.assign({
++          jsonRpcStreamName,
++        }, BaseProvider._defaultState);
++        this._state = _state
+         // public state
+         this.selectedAddress = null;
+         this.chainId = null;
++        this.streamName = jsonRpcStreamName;
+         // bind functions (to prevent consumers from making unbound calls)
+         this._handleAccountsChanged = this._handleAccountsChanged.bind(this);
+         this._handleConnect = this._handleConnect.bind(this);
+@@ -64,7 +69,12 @@ class BaseProvider extends safe_event_emitter_1.default {
+         this._initializeState();
+         // handle JSON-RPC notifications
+         this._jsonRpcConnection.events.on('notification', (payload) => {
+-            const { method, params } = payload;
++            const { method, params,streamName } = payload;
++            console.log((streamName||'')+' @onekeyhq/providers.BaseProvider on notification '+(logIndex++));
++            console.log('  ',payload);
++            if(streamName && this.streamName && streamName!==this.streamName ) {
++              return;
++            }
+             if (method === 'metamask_accountsChanged') {
+                 this._handleAccountsChanged(params);
+             }
+@@ -74,6 +84,7 @@ class BaseProvider extends safe_event_emitter_1.default {
+             else if (method === 'metamask_chainChanged' && this.selectedAddress) {
+                 this._handleChainChanged(params);
+             }
++            // eth_subscription
+             else if (utils_1.EMITTED_NOTIFICATIONS.includes(method)) {
+                 this.emit('message', {
+                     type: method,
+@@ -140,12 +151,12 @@ class BaseProvider extends safe_event_emitter_1.default {
+      */
+     async _initializeState() {
+         try {
+-            const { accounts, chainId, isUnlocked, networkVersion, } = (await this.request({
++            const { accounts, chainId, isUnlocked, networkVersion,chainKey } = (await this.request({
+                 method: 'metamask_getProviderState',
+             }));
+             // indicate that we've connected, for EIP-1193 compliance
+             this.emit('connect', { chainId });
+-            this._handleChainChanged({ chainId, networkVersion });
++            this._handleChainChanged({ chainId, networkVersion ,chainKey});
+             this._handleUnlockStateChanged({ accounts, isUnlocked });
+             this._handleAccountsChanged(accounts);
+         }
+@@ -155,6 +166,9 @@ class BaseProvider extends safe_event_emitter_1.default {
+         finally {
+             this._state.initialized = true;
+             this.emit('_initialized');
++            if( this._state && this._state.accounts ){
++              this.emit('accountsChanged', this._state.accounts);
++            }
+         }
+     }
+     /**
+@@ -170,8 +184,14 @@ class BaseProvider extends safe_event_emitter_1.default {
+             if (!payload.jsonrpc) {
+                 payload.jsonrpc = '2.0';
+             }
++            payload.chainId = payload.chainId || this.chainId;
++            payload.baseChain = this.baseChain;
++            payload.chainKey = this.chainKey;
++            payload.params = payload.params || {};
+             if (payload.method === 'eth_accounts' ||
+-                payload.method === 'eth_requestAccounts') {
++                payload.method === 'eth_requestAccounts'||
++                payload.method === 'cfx_accounts' ||
++                payload.method === 'cfx_requestAccounts') {
+                 // handle accounts changing
+                 cb = (err, res) => {
+                     this._handleAccountsChanged(res.result || [], payload.method === 'eth_accounts');
+@@ -250,7 +270,7 @@ class BaseProvider extends safe_event_emitter_1.default {
+      * @param networkInfo.chainId - The latest chain ID.
+      * @param networkInfo.networkVersion - The latest network ID.
+      */
+-    _handleChainChanged({ chainId, networkVersion, } = {}) {
++    _handleChainChanged({ chainId, networkVersion, chainKey } = {}) {
+         if (!chainId ||
+             typeof chainId !== 'string' ||
+             !chainId.startsWith('0x') ||
+@@ -266,6 +286,7 @@ class BaseProvider extends safe_event_emitter_1.default {
+             this._handleConnect(chainId);
+             if (chainId !== this.chainId) {
+                 this.chainId = chainId;
++                this.chainKey = chainKey;
+                 if (this._state.initialized) {
+                     this.emit('chainChanged', this.chainId);
+                 }
+diff --git a/node_modules/@onekeyhq/providers/dist/MetaMaskInpageProvider.js b/node_modules/@onekeyhq/providers/dist/MetaMaskInpageProvider.js
+index 21f12ee..aedaf4c 100644
+--- a/node_modules/@onekeyhq/providers/dist/MetaMaskInpageProvider.js
++++ b/node_modules/@onekeyhq/providers/dist/MetaMaskInpageProvider.js
+@@ -268,8 +268,8 @@ class MetaMaskInpageProvider extends BaseProvider_1.default {
+      * @param networkInfo.chainId - The latest chain ID.
+      * @param networkInfo.networkVersion - The latest network ID.
+      */
+-    _handleChainChanged({ chainId, networkVersion, } = {}) {
+-        super._handleChainChanged({ chainId, networkVersion });
++    _handleChainChanged({ chainId, networkVersion,chainKey } = {}) {
++        super._handleChainChanged({ chainId, networkVersion,chainKey });
+         if (networkVersion &&
+             networkVersion !== 'loading' &&
+             networkVersion !== this.networkVersion) {

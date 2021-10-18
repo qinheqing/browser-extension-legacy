@@ -21,45 +21,9 @@ class UiBackgroundProxy {
     });
     return response;
   }
-
-  // ----------------------------------------------
-
-  async keyringProxyCall({ options, method, params }) {
-    return this.baseProxyCall({
-      module: BACKGROUND_PROXY_MODULE_NAMES.keyring,
-      options,
-      method,
-      params,
-    });
-  }
-
-  // ----------------------------------------------
-
-  async hardwareProxyCall({ method, params }) {
-    return this.baseProxyCall({
-      module: BACKGROUND_PROXY_MODULE_NAMES.hardware,
-      method,
-      params,
-    });
-  }
-
-  hardwareGetAddressETH(params) {
-    return this.hardwareProxyCall({ method: 'ethereumGetAddress', params });
-  }
-
-  hardwareGetAddressSOL(params) {
-    return this.hardwareProxyCall({ method: 'stellarGetAddress', params });
-  }
-
-  hardwareGetAddress(params) {
-    return this.hardwareProxyCall({ method: 'getAddress', params });
-  }
-
-  hardwareGetPublicKey(params) {
-    return this.hardwareProxyCall({ method: 'getPublicKey', params });
-  }
 }
 
 const uiBackgroundProxy = new UiBackgroundProxy();
-global.$$uiBackgroundProxy = uiBackgroundProxy;
+global.$ok_uiBackgroundProxy = uiBackgroundProxy;
 export default uiBackgroundProxy;
+export { UiBackgroundProxy };

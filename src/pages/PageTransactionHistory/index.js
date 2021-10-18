@@ -5,6 +5,7 @@ import classnames from 'classnames';
 import TimeAgo from 'react-timeago';
 import timeAgoZhStrings from 'react-timeago/lib/language-strings/zh-CN';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
+import { isNil } from 'lodash';
 import AppPageLayout from '../../components/AppPageLayout';
 import OneButton from '../../components/OneButton';
 import storeWallet from '../../store/storeWallet';
@@ -21,6 +22,64 @@ import storeStorage from '../../store/storeStorage';
 import styles from './index.css';
 
 const timeAgoLocaleFormatter = buildFormatter(timeAgoZhStrings);
+
+function getTxid(tx) {
+  return tx?.transaction?.signatures?.[0] ?? tx.hash;
+}
+
+function getTxTime(tx) {
+  // TODO rpc getTransactionByHash NOT contains timestamp
+  //    use chainManager.apiRpc.getBlockByHash
+  return tx.blockTime ?? tx.timestamp;
+}
+
+function _getTxInstructions(tx) {
+  const instructions = tx?.transaction?.message?.instructions || [];
+  return instructions;
+}
+
+function getTxInfo(tx) {
+  const instructions = _getTxInstructions(tx);
+  if (instructions[0]) {
+    return instructions[0];
+  }
+  const hasMethod = tx.method !== '0x' && Boolean(tx.method);
+  const info = {
+    ...tx,
+    program: hasMethod ? 'contract' : 'system', // system, other
+    parsed: {
+      method: hasMethod ? tx.method : '',
+      type: 'transfer',
+      info: {
+        source: tx.from,
+        destination: tx.to,
+        lamports: tx.value?.toString() ?? tx.value,
+      },
+    },
+  };
+  return info;
+}
+
+function getTxError(tx) {
+  if (tx?.meta?.err) {
+    return tx?.meta?.err;
+  }
+  const successCode = 0;
+  if (!isNil(tx.status) && tx.status !== successCode) {
+    return 'Error';
+  }
+  return null;
+}
+
+function filterPendingTxConfirmed(confirmedTxList) {
+  const pendingTxs = storeStorage.currentPendingTxid.filter((txid) => {
+    return !confirmedTxList.find((confirmTx) => {
+      const confirmId = getTxid(confirmTx);
+      return confirmId === txid;
+    });
+  });
+  storeStorage.currentPendingTxid = [...pendingTxs];
+}
 
 function TransactionInfoIcon({ IconComponent, iconClassName, className }) {
   return (
@@ -95,6 +154,54 @@ function InstructionsInfoCard({
       IconComponent={AppIcons.CheckIcon}
     />
   );
+
+  if (parsed) {
+    // program: system, spl-token, ...
+    const ixType = parsed.type;
+    const { destination, lamports, source } = parsed.info || {};
+    const okStatus = txMeta?.status?.Ok;
+
+    const amount = lamports;
+    const { decimals, currency } = account;
+
+    if (program === 'system' && ixType === 'transfer') {
+      if (destination === account.address) {
+        icon = (
+          <TransactionInfoIcon
+            className="bg-blue-50"
+            iconClassName="text-blue-600"
+            IconComponent={AppIcons.ArrowDownIcon}
+          />
+        );
+
+        title = (
+          <span>
+            接收 <AmountText value={amount} decimals={decimals} /> {currency}
+          </span>
+        );
+        content = <span>发送方: {utilsApp.shortenAddress(source)}</span>;
+      } else if (source === account.address) {
+        icon = (
+          <TransactionInfoIcon
+            className="bg-yellow-50"
+            iconClassName="text-yellow-600"
+            IconComponent={AppIcons.ArrowUpIcon}
+          />
+        );
+
+        title = (
+          <span>
+            发送 <AmountText value={amount} decimals={decimals} /> {currency}
+          </span>
+        );
+        content = <span>接收方: {utilsApp.shortenAddress(destination)}</span>;
+      }
+    } else {
+      // content = '交易成功'
+      // icon = null
+    }
+  }
+
   if (error) {
     content = '交易错误';
     icon = (
@@ -105,66 +212,22 @@ function InstructionsInfoCard({
       />
     );
   }
-  if (!parsed) {
-    // some transaction can not be parsed, like DAPP contract interaction
-    return (
-      <TransactionInfoCardView
-        icon={icon}
-        title={title}
-        content={content}
-        time={timeMs}
-        onClick={onClick}
-      />
+
+  if (parsed.method) {
+    content = (
+      <div>
+        {content}
+        <div className="w-36 overflow-ellipsis overflow-hidden">
+          {parsed.method}
+        </div>
+      </div>
     );
-  }
-  // program: system, spl-token, ...
-  const ixType = parsed.type;
-  const { destination, lamports, source } = parsed.info || {};
-  const okStatus = txMeta?.status?.Ok;
-
-  const amount = lamports;
-  const { decimals, currency } = account;
-
-  if (program === 'system' && parsed.type === 'transfer') {
-    if (destination === account.address) {
-      icon = (
-        <TransactionInfoIcon
-          className="bg-blue-50"
-          iconClassName="text-blue-600"
-          IconComponent={AppIcons.ArrowDownIcon}
-        />
-      );
-      title = (
-        <span>
-          接收 <AmountText value={amount} decimals={decimals} /> {currency}
-        </span>
-      );
-      content = <span>发送方: {utilsApp.shortenAddress(source)}</span>;
-    } else if (source === account.address) {
-      icon = (
-        <TransactionInfoIcon
-          className="bg-yellow-50"
-          iconClassName="text-yellow-600"
-          IconComponent={AppIcons.ArrowUpIcon}
-        />
-      );
-      title = (
-        <span>
-          发送 <AmountText value={amount} decimals={decimals} /> {currency}
-        </span>
-      );
-      content = <span>接收方: {utilsApp.shortenAddress(destination)}</span>;
-    }
-  } else {
-    // content = <span>交易成功</span>;
-    // icon = null
   }
 
   return (
     <TransactionInfoCardView
-      loading={false}
-      title={title}
       icon={icon}
+      title={title}
       content={content}
       time={timeMs}
       onClick={onClick}
@@ -173,54 +236,56 @@ function InstructionsInfoCard({
 }
 
 function TransactionInfoCard({ account, tx, onClick }) {
-  const txid = tx?.transaction?.signatures?.[0];
-  const time = tx?.blockTime;
-  const instructions = tx?.transaction?.message?.instructions || [];
-  const error = tx?.meta?.err;
+  const txid = getTxid(tx);
+  const time = getTxTime(tx);
+  const info = getTxInfo(tx);
+  const error = getTxError(tx);
+  const meta = tx.meta || {};
   return (
-    <>
-      {instructions.map((ix, index) => (
-        <InstructionsInfoCard
-          error={error}
-          onClick={onClick}
-          key={index}
-          account={account}
-          ix={ix}
-          txid={txid}
-          time={time}
-          txMeta={tx.meta || {}}
-        />
-      ))}
-    </>
+    <InstructionsInfoCard
+      onClick={onClick}
+      error={error}
+      account={account}
+      ix={info}
+      txid={txid}
+      time={time}
+      txMeta={meta}
+    />
   );
 }
 
 function PendingTransactionCard({ txid, ...others }) {
   const [tx, setTx] = useState(null);
-  async function confirmTransaction() {
-    try {
-      // start WSS WebSocket to confirmTransaction status
-      const res =
-        await storeWallet.currentWallet.chainProvider.confirmTransaction({
+  const { chainManager } = storeWallet.currentWallet;
+
+  useEffect(() => {
+    async function confirmTransaction() {
+      try {
+        // start WSS WebSocket to confirmTransaction status
+        const res = await chainManager.confirmTransaction({
           txid,
         });
-      // res = {"context":{"slot":85562176},"value":{"err":null}}
-      const res1 =
-        await storeWallet.currentWallet.chainProvider.getTransactions({
+        // res = {"context":{"slot":85562176},"value":{"err":null}}
+        const res1 = await chainManager.getTransactions({
           ids: [txid],
         });
-      const confirmedTx = res1?.items?.[0];
-      if (confirmedTx) {
-        setTx(confirmedTx);
-        console.log('confirmTransaction', confirmedTx);
+        const confirmedTx = res1?.items?.[0];
+        if (confirmedTx) {
+          setTx(confirmedTx);
+          console.log('confirmTransaction', confirmedTx);
+        }
+      } catch (e) {
+        // confirmTransaction timeout will throw exception
+        console.error('PendingTransactionCard.confirmTransaction error', e);
       }
-    } catch (e) {
-      // confirmTransaction timeout will throw exception
     }
-  }
-  useEffect(() => {
     confirmTransaction();
-  }, []);
+    return () => {
+      chainManager.confirmTransactionCancel({
+        txid,
+      });
+    };
+  }, [txid, chainManager]);
 
   if (tx) {
     return <TransactionInfoCard tx={tx} {...others} />;
@@ -244,7 +309,7 @@ function PageTransactionHistory() {
         limit: 20,
       });
       setTxList(res.items);
-      storeTx.filterPendingTxConfirmed(res.items);
+      filterPendingTxConfirmed(res.items);
     } finally {
       setLoading(false);
     }
@@ -275,7 +340,7 @@ function PageTransactionHistory() {
             <PendingTransactionCard
               key={txid}
               txid={txid}
-              account={storeAccount.currentAccount}
+              account={storeAccount.currentAccountInfo}
               onClick={() => {
                 storeHistory.openBlockBrowserLink({ tx: txid });
               }}
@@ -283,12 +348,12 @@ function PageTransactionHistory() {
           ))}
 
           {txList.map((tx) => {
-            const txid = tx?.transaction?.signatures?.[0];
+            const txid = getTxid(tx);
             return (
               <TransactionInfoCard
                 key={txid}
                 tx={tx}
-                account={storeAccount.currentAccount}
+                account={storeAccount.currentAccountInfo}
                 onClick={() => {
                   storeHistory.openBlockBrowserLink({ tx: txid });
                 }}

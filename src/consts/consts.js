@@ -3,13 +3,20 @@ export const CONST_BTC = 'BTC';
 export const CONST_ETH = 'ETH';
 export const CONST_SOL = 'SOL';
 export const CONST_BNB = 'BNB';
+export const CONST_CFX = 'CFX';
 export const CONST_CHAIN_KEYS = {
   BTC: 'BTC',
+  ETH: 'ETH',
   BSC: 'BSC',
   BSC_TEST_NET: 'BSC_T',
-  ETH: 'ETH',
   SOL: 'SOL',
   SOL_TEST_NET: 'SOL_T',
+  CFX: 'CFX',
+  CFX_TEST: 'CFX_T',
+};
+export const CONST_ADD_TOKEN_MODE = {
+  LOCAL: 'LOCAL',
+  CHAIN: 'CHAIN',
 };
 export const CONST_HARDWARE_MODELS = {
   OneKeyClassic: 'onekey',
@@ -25,7 +32,7 @@ export const CONST_TX_TYPES = {
 };
 export const CONSTS_ACCOUNT_TYPES = {
   SingleChain: 'SingleChain', // mnemonic、seed、private key、keyStore import single chain account
-  Observer: 'Observer', // Observer account
+  WatchOnly: 'WatchOnly', // WatchOnly account
   Hardware: 'Hardware', // Hardware HD account
   Wallet: 'Wallet', // Wallet HD account
 };
@@ -45,9 +52,10 @@ export const CONST_DAPP_MESSAGE_TYPES = {
 };
 
 export const BACKGROUND_PROXY_MODULE_NAMES = {
-  hardware: 'hardware',
+  hardware: 'hardware', // TODO remove
   keyring: 'keyring',
   misc: 'misc',
+  approve: 'approve',
 };
 
 export const CONST_DURATIONS = {
@@ -59,4 +67,14 @@ export const CONST_DURATIONS = {
   WEEK: 7 * 24 * 60 * 60 * 1000,
   MONTH: 30 * 24 * 60 * 60 * 1000,
   YEAR: 365 * 24 * 60 * 60 * 1000,
+};
+
+export const CONST_ERC20_METHODS_HEX = {
+  balanceOf: '0x70a08231',
+  approve: '0x095ea7b3',
+  allowance: '0xdd62ed3e',
+  transfer: '0xa9059cbb',
+  name: '0x06fdde03',
+  symbol: '0x95d89b41',
+  decimals: '0x313ce567',
 };

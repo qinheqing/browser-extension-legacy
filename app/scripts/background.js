@@ -43,7 +43,7 @@ import getFirstPreferredLangCode from './lib/get-first-preferred-lang-code';
 import getObjStructure from './lib/getObjStructure';
 import setupEnsIpfsResolver from './lib/ens-ipfs/setup';
 import errorsGlobalHandler from './errorsGlobalHandler';
-import backgroundSolana from '../../src/wallets/SOL/modules/dappProvider/background';
+import backgroundSolana from '../../src/wallets/providers/SOL/dapp/background';
 import backgroundContainer from './backgroundContainer';
 import i18nBackground from './i18nBackground';
 /* eslint-enable import/first */
@@ -53,15 +53,16 @@ const mboxReferences = {
   observer,
   name: 1,
 };
-
+global.$ok_extensionizer = extension;
 global.ONEKEY_DISABLE_AUTO_PERSIST_DATA = false;
 const { sentry } = global;
 const firstTimeState = { ...rawFirstTimeState };
 
 const platform = new ExtensionPlatform();
 platform.clearCurrentTabsList();
-global.$$extensionPlatform = platform;
-global.$$testThrowError = () => {
+// duplicate with [ global.METAMASK_NOTIFIER.platform ]
+global.$ok_extensionPlatform = platform;
+global.$ok_testThrowError = () => {
   setTimeout(() => {
     throw new Error(`Error test: ${new Date().getTime()}`);
   }, 1000);
@@ -295,9 +296,10 @@ function setupController(initState, initLangCode) {
   });
 
   backgroundContainer.setRootController(controller);
+  global.$ok_isUnlockedCheck = controller.isUnlocked.bind(controller);
 
   if (inTest || process.env.METAMASK_DEBUG) {
-    global.$$metamaskController = controller;
+    global.$ok_metamaskController = controller;
   }
 
   setupEnsIpfsResolver({
@@ -537,7 +539,7 @@ function setupController(initState, initLangCode) {
 /**
  * Opens the browser popup for user confirmation
  */
-async function triggerUi() {
+async function triggerUi(url = '') {
   const tabs = await platform.getActiveTabs();
   const currentlyActiveMetamaskTab = Boolean(
     tabs.find((tab) => openMetamaskTabsIDs[tab.id]),
@@ -555,7 +557,7 @@ async function triggerUi() {
   ) {
     uiIsTriggering = true;
     try {
-      await notificationManager.showPopup();
+      await notificationManager.showPopup(url);
     } finally {
       uiIsTriggering = false;
     }
@@ -566,16 +568,42 @@ async function triggerUi() {
  * Opens the browser popup for user confirmation of watchAsset
  * then it waits until user interact with the UI
  */
-async function openPopup() {
-  await triggerUi();
-  await new Promise((resolve) => {
-    const interval = setInterval(() => {
-      if (!notificationIsOpen) {
-        clearInterval(interval);
-        resolve();
-      }
-    }, 1000);
-  });
+async function openPopup(url = '', { waitClose = true } = {}) {
+  await triggerUi(url);
+  // wait for popup window closed by any action with the UI
+  //      like confirm approve, cancel approve, close window
+  if (waitClose) {
+    await new Promise((resolve) => {
+      const interval = setInterval(() => {
+        if (!notificationIsOpen) {
+          clearInterval(interval);
+          resolve();
+          log.info('openPopup wait close done: ' + url);
+        }
+      }, 1000);
+    });
+  } else {
+    log.info('openPopup: ' + url);
+  }
+}
+
+async function openApprovalPopup(
+  { baseChain = '', request = {}, key } = {},
+  { waitClose = false, ...others } = {},
+) {
+  const searchParams = new URLSearchParams();
+  // searchParams.set('origin', sender.origin);
+  // searchParams.set('networkId', message.data.params.network);
+  // searchParams.set('chainId', message.data.params.chainId);
+  searchParams.set('request', JSON.stringify(request));
+  searchParams.set('key', key);
+  return openPopup(
+    `/app/approve-popup/${baseChain.toLowerCase()}?${searchParams.toString()}`,
+    {
+      waitClose,
+      ...others,
+    },
+  );
 }
 
 // On first install, open a new tab with MetaMask
@@ -588,4 +616,8 @@ extension.runtime.onInstalled.addListener(({ reason }) => {
   }
 });
 
+// $ok_openPopup('/app/approve-popup/')
+global.$ok_openPopup = openPopup;
+global.$ok_openApprovalPopup = openApprovalPopup;
+global.$ok_triggerUi = triggerUi;
 backgroundSolana.init();

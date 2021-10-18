@@ -31,7 +31,9 @@ function createEtcTasks({ browserPlatforms, livereload }) {
   const zip = createTask(
     'zip',
     composeParallel(
-      ...browserPlatforms.map((platform) => createZipTask(platform)),
+      ...browserPlatforms.map((platform) =>
+        createZipTask(platform, `onekey-${platform}-${version}.zip`),
+      ),
       createZipTask('sourcemaps', `sourcemaps-${version}.zip`),
     ),
   );
@@ -45,18 +47,78 @@ function createEtcTasks({ browserPlatforms, livereload }) {
     server.listen(31317);
   });
 
+  const extractZipBash = createTask('extractZipBash', async function () {
+    createExtractBashText(browserPlatforms);
+  });
+
   const done = createTask('done', function () {
     notifier.notify('Build complete!');
   });
 
-  return { done, clean, reload, zip, moduleFix, sourcemapServer };
+  return {
+    done,
+    clean,
+    reload,
+    zip,
+    moduleFix,
+    extractZipBash,
+    sourcemapServer,
+  };
+}
+
+function createExtractBashText(platforms) {
+  const optionsChoice = platforms.map((p) => `"${p}"`).join(' ');
+  const writeFileName = 'builds/extract-zip.command';
+  fse.writeFileSync(
+    writeFileName,
+    `#!/bin/bash
+
+set -x
+
+PS3='Please enter your choice: '
+options=(${optionsChoice} "Quit")
+version="${version}"
+select opt in "\${options[@]}"
+do
+    case $opt in
+        "firefox")
+            echo "you chose choice $REPLY which is $opt"
+            break
+            ;;
+        "chrome")
+            echo "you chose choice $REPLY which is $opt"
+            break
+            ;;
+        "brave")
+            echo "you chose choice $REPLY which is $opt"
+            break
+            ;;
+        "opera")
+            echo "you chose choice $REPLY which is $opt"
+            break
+            ;;
+        "Quit")
+            exit
+            break
+            ;;
+        *) echo "invalid option $REPLY";;
+    esac
+done
+
+basename=\`dirname "$0"\`
+file="$basename/onekey-$opt-$version"
+unzip -o $file -d $file
+cp "$file/manifest.test.json" "$file/manifest.json"
+  `,
+  );
+  fse.chmod(writeFileName, 0o777);
 }
 
 function createZipTask(target, filename) {
   return async () => {
     await pump(
       gulp.src(`dist/${target}/**`),
-      gulpZip(filename || `onekey-${target}-${version}.zip`),
+      gulpZip(filename),
       gulp.dest('builds'),
     );
   };

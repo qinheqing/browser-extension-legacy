@@ -1,4 +1,9 @@
-class OneDappMessage {
+import {
+  CONST_DAPP_RESPONSE_TYPES_SOL,
+  CONST_DAPP_METHODS_SOL,
+} from './consts';
+
+class DappMessageSOL {
   // https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L32
   constructor({ id, method, params, result, error, channel, data }) {
     this.id = id;
@@ -12,44 +17,56 @@ class OneDappMessage {
     // need determine messageType here:
     //    https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L37
     this.__messageType__ = 'ONEKEY_EXT';
+    throw new Error('use DappMessageSOL instead');
   }
 
+  // Message from Ext -> Dapp
   static connectedMessage({ id, params: { publicKey, autoApprove } }) {
-    return new OneDappMessage({
+    return new DappMessageSOL({
       id,
-      method: 'connected',
+      // https://github.com/project-serum/sol-wallet-adapter/blob/be3fb1414425dc8ae64d67599d677f9acc09fe4c/src/index.ts#L53
+      method: CONST_DAPP_RESPONSE_TYPES_SOL.connected,
       params: { publicKey, autoApprove },
     });
   }
 
+  // Message from Ext -> Dapp
   static disconnectedMessage({ id, params }) {
-    return new OneDappMessage({
+    return new DappMessageSOL({
       id,
-      method: 'disconnected',
+      // https://github.com/project-serum/sol-wallet-adapter/blob/be3fb1414425dc8ae64d67599d677f9acc09fe4c/src/index.ts#L63
+      method: CONST_DAPP_RESPONSE_TYPES_SOL.disconnected,
       params,
     });
   }
 
+  // Message from Ext -> Dapp
   static signedMessage({
     id,
     result: { signatures, signature, publicKey, ...others },
   }) {
-    return new OneDappMessage({
+    return new DappMessageSOL({
       id,
+      // https://github.com/project-serum/sol-wallet-adapter/blob/be3fb1414425dc8ae64d67599d677f9acc09fe4c/src/index.ts#L65
       result: { signatures, signature, publicKey, ...others },
     });
   }
 
+  // Message from Ext -> Dapp
   static errorMessage({ id, error }) {
-    return new OneDappMessage({
+    return new DappMessageSOL({
       id,
+      // https://github.com/project-serum/sol-wallet-adapter/blob/be3fb1414425dc8ae64d67599d677f9acc09fe4c/src/index.ts#L65
       error,
     });
   }
 
+  // Message between background, contentscript, popup ui
+  //    chrome.runtime.onMessage.addListener( message =>... )
+  //    chrome.runtime.sendMessage( message )
   static extensionRuntimeMessage({ channel, data }) {
-    return new OneDappMessage({ channel, data });
+    return new DappMessageSOL({ channel, data });
   }
 }
 
-export default OneDappMessage;
+export default DappMessageSOL;

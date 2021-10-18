@@ -43,24 +43,63 @@ function isValidNumber(value) {
   return !bigNum(value).isNaN();
 }
 
-function toNormalNumber({ value, decimals, precision, roundMode = 'round' }) {
+function parseUnits(value, decimals) {
+  return bigNum(10).pow(decimals).times(value).toFixed();
+}
+
+function toNormalNumber({
+  value,
+  decimals = 0,
+  precision,
+  roundMode = 'round',
+  nanText = '-',
+}) {
   const num = bigNum(value).div(bigNum(10).pow(decimals));
-  const result = num.toFixed(precision, toBnRoundMode(roundMode));
-  if (result === 'NaN') {
-    return '-';
+  if (num.isNaN()) {
+    return nanText;
   }
+  const numStr = num.toFixed(precision, toBnRoundMode(roundMode));
+  if (numStr === 'NaN') {
+    return nanText;
+  }
+
   if (num.equals(0)) {
     return '0';
   }
-  return result;
+  return numStr;
+}
+
+function hexToIntString(hex) {
+  if (isString(hex)) {
+    // eslint-disable-next-line no-param-reassign
+    hex = hex.replace(/^0x/giu, '');
+    // eslint-disable-next-line no-param-reassign
+    hex = `0x${hex}`;
+  }
+  return bigNum(hex).toFixed();
+}
+
+function intToHex(num, { prefix = '0x' } = {}) {
+  const hex = bigNum(num).toString(16);
+  return `${prefix}${hex}`;
+}
+
+function isMaxNumber(num) {
+  return bigNum(num).gte(
+    '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+  );
 }
 
 const utilsNumber = {
   bigNum,
   isValidNumber,
   toNormalNumber,
+  parseUnits,
   toBnRoundMode,
+  hexToIntString,
+  intToHex,
+  isMaxNumber,
 };
 
-global._utilsNumber = utilsNumber;
+global.$ok_utilsNumber = utilsNumber;
 export default utilsNumber;

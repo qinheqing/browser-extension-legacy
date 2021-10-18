@@ -52,7 +52,7 @@ function PagePrivateKeyExport() {
                 }
                 const key =
                   await storeWallet.currentWallet.getAccountPrivateKey({
-                    path: storeAccount.currentAccount.path,
+                    path: storeAccount.currentAccountInfo.path,
                   });
                 setPrivateKey(key);
                 setPwd('');

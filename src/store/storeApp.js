@@ -14,6 +14,7 @@ import {
   getStore,
 } from '../../ui/app/store/actions';
 import { UNLOCK_ROUTE } from '../../ui/app/helpers/constants/routes';
+import utilsApp from '../utils/utilsApp';
 import BaseStore from './BaseStore';
 import storeStorage from './storeStorage';
 import storeHistory from './storeHistory';
@@ -28,7 +29,7 @@ class StoreApp extends BaseStore {
       const { homeType } = storeStorage;
       untracked(() => {
         uiGetBgControllerAsync().then((bg) => {
-          if (homeType === 'NEW') {
+          if (utilsApp.isNewHome()) {
             bg.disconnectAllDomainAccounts();
           } else {
             bg.emitAccountChangedToConnectedDomain(
@@ -66,12 +67,23 @@ class StoreApp extends BaseStore {
   }
 
   @observable.ref
+  metamaskStateReady = false;
+
+  @observable.ref
   legacyState = {
     isUnlocked: false,
     selectedAddress: '',
     hwOnlyMode: false,
     currentCurrency: 'usd',
   };
+
+  @computed
+  get isUnlocked() {
+    if (!this.metamaskStateReady) {
+      return undefined;
+    }
+    return this.legacyState.isUnlocked;
+  }
 }
 
 global._storeApp = new StoreApp();

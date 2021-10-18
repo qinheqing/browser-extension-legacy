@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
+import LoadingIndicator from '../../../ui/app/components/ui/loading-indicator';
+import LoadingSpinner from '../LoadingSpinner';
+import Spinner from '../../../ui/app/components/ui/spinner';
 
 function OneButton({
   size = 'md',
@@ -13,6 +16,7 @@ function OneButton({
   className,
   disabled,
   onClick,
+  loading = false,
   children,
   ...others
 }) {
@@ -20,6 +24,7 @@ function OneButton({
   cls.push(
     'items-center border focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50',
   );
+
   cls.push(
     {
       primary: classnames(
@@ -42,6 +47,7 @@ function OneButton({
       }),
     }[type],
   );
+
   cls.push(
     classnames({
       '!rounded-full': rounded,
@@ -49,29 +55,30 @@ function OneButton({
       'flex w-full text-center justify-center': block,
     }),
   );
+
   cls.push(
     {
       '2xs': classnames('text-xs font-medium rounded', {
         'p-0.5': rounded,
         'px-1.5 py-1 ': !rounded,
       }),
-      'xs': classnames('text-xs font-medium rounded', {
+      xs: classnames('text-xs font-medium rounded', {
         'p-1': rounded,
         'px-2.5 py-1.5 ': !rounded,
       }),
-      'sm': classnames('text-sm leading-4 font-medium rounded-md', {
+      sm: classnames('text-sm leading-4 font-medium rounded-md', {
         'p-1.5': rounded,
         'px-3 py-2 ': !rounded,
       }),
-      'md': classnames(' text-sm font-medium rounded-md', {
+      md: classnames(' text-sm font-medium rounded-md', {
         'p-2': rounded,
         'px-4 py-2': !rounded,
       }),
-      'lg': classnames(' text-base font-medium rounded-md', {
+      lg: classnames(' text-base font-medium rounded-md', {
         'p-2': rounded,
         'px-4 py-2': !rounded,
       }),
-      'xl': classnames(' text-base font-medium rounded-md', {
+      xl: classnames(' text-base font-medium rounded-md', {
         'p-2.5': rounded,
         'px-4.5 py-2.5': !rounded,
       }),
@@ -80,12 +87,21 @@ function OneButton({
 
   return (
     <button
-      disabled={disabled}
+      disabled={disabled || loading}
       className={classnames(cls, {}, className)}
       onClick={onClick}
       {...others}
     >
-      {children}
+      {loading && (
+        <>
+          &nbsp;
+          <LoadingSpinner className="w-4" />
+          &nbsp;
+          {/* <Spinner />*/}
+          {/* <LoadingIndicator isLoading />*/}
+        </>
+      )}
+      {!loading && children}
     </button>
   );
 }

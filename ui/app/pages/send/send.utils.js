@@ -204,6 +204,7 @@ async function estimateGasForSend({
 
   // if recipient has no code, gas is 21k max:
   if (!sendToken && !data) {
+    // * send native token
     const code = Boolean(to) && (await global.eth.getCode(to));
     // Geth will return '0x', and ganache-core v2.2.1 will return '0x0'
     const codeIsEmpty = !code || code === '0x' || code === '0x0';
@@ -211,6 +212,8 @@ async function estimateGasForSend({
       return SIMPLE_GAS_COST;
     }
   } else if (sendToken && !to) {
+    // * send erc20 token without to
+    // TODO what situation about this?
     return BASE_TOKEN_GAS_COST;
   }
 
@@ -309,6 +312,7 @@ function addGasBuffer(
   ) {
     return initialGasLimitHex;
   }
+
   // if bufferedGasLimit is below blockGasLimit, use bufferedGasLimit
   if (
     conversionLessThan(

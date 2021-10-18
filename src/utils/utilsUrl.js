@@ -32,5 +32,5 @@ const utilsUrl = {
   getQuery,
   addQuery,
 };
-global.$$utilsUrl = utilsUrl;
+global.$ok_utilsUrl = utilsUrl;
 export default utilsUrl;

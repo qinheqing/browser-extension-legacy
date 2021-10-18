@@ -22,6 +22,8 @@ function TokenDepositQrcode({ tokenInfo, children }) {
     return 'Token info not found';
   }
 
+  const depositAddress = tokenInfo.depositAddress || tokenInfo.ownerAddress;
+
   return (
     <div className="bg-white p-8 flex flex-col items-center mx-4 rounded-2xl">
       <div className="flex items-center text-xs text-gray-400">
@@ -36,9 +38,7 @@ function TokenDepositQrcode({ tokenInfo, children }) {
       />
       <div className="text-xs text-gray-400 mb-2">账户地址</div>
       <div className="text-xs break-all text-center">
-        <CopyHandle text={tokenInfo.depositAddress}>
-          {tokenInfo.depositAddress}
-        </CopyHandle>
+        <CopyHandle text={depositAddress}>{depositAddress}</CopyHandle>
       </div>
     </div>
   );

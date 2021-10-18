@@ -12,6 +12,7 @@ module.exports = createStaticAssetTasks;
 
 const copyTargets = [
   ...configs.externalModulesCopyFiles,
+  ...configs.externalSourcemapsCopyFiles,
   {
     src: './app/_locales/',
     dest: '_locales',
@@ -189,7 +190,9 @@ function createStaticAssetTasks({ livereload, browserPlatforms }) {
     await Promise.all(
       sources.map(async (src) => {
         const relativePath = path.relative(baseDir, src);
-        await fs.copy(src, `${dest}${relativePath}`);
+        const dist = `${dest}${relativePath}`;
+        // console.log('>>>  file copy:', src, dist);
+        await fs.copy(src, dist);
       }),
     );
   }

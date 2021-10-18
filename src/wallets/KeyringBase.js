@@ -1,37 +1,108 @@
+import { toLower } from 'lodash';
 import utilsApp from '../utils/utilsApp';
+import {
+  BACKGROUND_PROXY_MODULE_NAMES,
+  CONSTS_ACCOUNT_TYPES,
+} from '../consts/consts';
 import bgGetRootController from './bg/bgGetRootController';
-import { HdKeyProviderBase } from './HdKeyProvider';
+import { HdKeyManagerBase } from './HdKeyManager';
+import { UiBackgroundProxy } from './bg/uiBackgroundProxy';
 
-// TODO merge KeyringBase: HardwareKeyring、SingleChainKeyring、HdWalletKeyring
+// run in background
+class KeyringToolsBase {
+  constructor(options, wallet) {
+    this.options = options;
+    this.wallet = wallet;
+  }
+
+  // hdPrivateKey -> chain sdk account
+  privateKeyToAccount({ privateKey }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  // hdPrivateKey -> address
+  privateKeyToAddress({ privateKey }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  // hdPrivateKey sign
+  privateKeySign({ privateKey, tx }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  // hdPrivateKey -> chain sdk account privateKey
+  privateKeyToString({ privateKey }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+}
+
+// run in background
 class KeyringBase {
   constructor(options) {
     this.options = options;
-    this.hdkeyProvider = new HdKeyProviderBase(this.options);
   }
 
-  buildAddressMeta({ index, hdPath }) {
+  get hdkeyManager() {
+    this._hdkeyManager =
+      this._hdkeyManager || new HdKeyManagerBase(this.options);
+    return this._hdkeyManager;
+  }
+
+  get keyringTools() {
+    this._keyringTools =
+      this._keyringTools || new KeyringToolsBase(this.options);
+    return this._keyringTools;
+  }
+
+  /**
+   *
+   * @param index
+   * @return
+    "hardwareModel": "onekey",
+   "hdPathIndex": 0,
+   "hdPathTemplate": "m/44'/60'/0'/0/{{index}}",
+   "hdPath": "m/44'/60'/0'/0/0",
+   */
+  buildAddressMeta({ index, hdPath } = {}) {
     // AddressInfo?  AccountInfo?
     return {
       // address
       chainKey: this.options?.chainInfo?.key, // read from chainInfo
       // name
-      path: hdPath || this.hdkeyProvider.createHdPath({ index }),
-      type: this.options?.accountInfo?.type,
       // TODO remove ----------------------------------------------
+      type: this.options?.accountInfo?.type,
       hardwareModel: this.options?.accountInfo?.hardwareModel, // read from accountInfo
       baseChain: this.options?.chainInfo?.baseChain, // read from chainInfo.baseChain
       hdPathIndex: index,
-      hdPathTemplate: this.hdkeyProvider.hdPathTemplate,
+      path: hdPath || this.hdkeyManager.createHdPath({ index }),
+      hdPathTemplate: this.hdkeyManager.hdPathTemplate,
     };
   }
 
+  async getAccountPrivateKey({ seed, path }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  // getAddressesByHdWallet
+  getAddresses() {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  // signTxByHdWallet
+  signTransaction() {
+    return utilsApp.throwToBeImplemented(this);
+  }
+}
+
+// run in background
+class KeyringHdBase extends KeyringBase {
   async _getHdRootSeed() {
     const appHdAccount =
       bgGetRootController().keyringController.getKeyringsByType(
         'HD Key Tree',
       )?.[0];
     const { mnemonic } = appHdAccount;
-    const seed = await this.hdkeyProvider.mnemonicToSeed({ mnemonic });
+    const seed = await this.hdkeyManager.mnemonicToSeed({ mnemonic });
     if (!seed || !mnemonic) {
       throw new Error('mnemonic seed can not be empty');
     }
@@ -40,19 +111,26 @@ class KeyringBase {
 
   async _getHdPrivateKey({ seed, path }) {
     const _seed = seed || (await this._getHdRootSeed());
-    const dpath = await this.hdkeyProvider.derivePath({ seed: _seed, path });
+    const dpath = await this.hdkeyManager.derivePath({ seed: _seed, path });
     return dpath.privateKey;
   }
 
-  async getAddressesByHdWallet({ indexes = [0], hdPaths = [], ...others }) {
+  async getAccountPrivateKey({ seed, path }) {
+    const privateKey = await this._getHdPrivateKey({ seed, path });
+    return this.keyringTools.privateKeyToString({ privateKey });
+  }
+
+  async getAddresses({ indexes = [0], hdPaths = [], ...others }) {
     const hdPathList = hdPaths.length
       ? hdPaths
-      : indexes.map((index) => this.hdkeyProvider.createHdPath({ index }));
+      : indexes.map((index) => this.hdkeyManager.createHdPath({ index }));
     const seed = await this._getHdRootSeed();
     const addresses = await Promise.all(
       hdPathList.map(async (path, i) => {
         const privateKey = await this._getHdPrivateKey({ seed, path });
-        const address = await this.privateKeyToAddress({ privateKey });
+        const address = await this.keyringTools.privateKeyToAddress({
+          privateKey,
+        });
         return {
           address,
           ...this.buildAddressMeta({ index: indexes[i] }),
@@ -63,22 +141,152 @@ class KeyringBase {
     return addresses;
   }
 
-  async signTxByHdWallet({ tx, hdPath, ...others }) {
+  async signTransaction({ tx, hdPath, ...others }) {
     const privateKey = await this._getHdPrivateKey({ path: hdPath });
-    return this.privateKeySign({ privateKey, tx });
+    return this.keyringTools.privateKeySign({ privateKey, tx });
   }
+}
 
-  privateKeyToAddress({ privateKey }) {
-    return utilsApp.throwToBeImplemented(this);
-  }
+// run in background
+class KeyringSingleChainBase extends KeyringBase {}
 
-  privateKeySign({ privateKey, tx }) {
-    return utilsApp.throwToBeImplemented(this);
-  }
-
+// run in background
+class KeyringHardwareBase extends KeyringBase {
   async getAccountPrivateKey({ seed, path }) {
+    throw new Error('Hardware privateKey exporting is not supported.');
+  }
+
+  async getAddresses({ indexes = [0] }) {
+    const bundle = indexes.map((index) => ({
+      path: this.hdkeyManager.createHdPath({ index }),
+      showOnTrezor: false,
+    }));
+    const params = {
+      coin: toLower(this.baseChain),
+      bundle,
+    };
+    // TODO hardwareManager
+    const { id, success, payload } = await this.hardwareManager.getAddress(
+      params,
+    );
+    console.log({
+      req: {
+        ...params,
+      },
+      res: {
+        id,
+        success,
+        payload,
+      },
+    });
+
+    if (success) {
+      return payload.map((data, i) => {
+        /*
+          "path": [1,2,3,4,5]
+          "serializedPath": "m/44'/60'/0'/0/0",
+          "address": "0x99F825D80cADd21D77D13B7e13D25960B40a6299",
+         */
+        const { serializedPath, address } = data;
+        return {
+          address,
+          ...this.buildAddressMeta({
+            index: indexes[i],
+            hdPath: serializedPath,
+          }),
+        };
+      });
+    }
+    return [];
+  }
+
+  signTransaction() {
     return utilsApp.throwToBeImplemented(this);
   }
 }
 
-export default KeyringBase;
+// run in background
+class KeyringWatchOnlyBase extends KeyringBase {}
+
+// run in background
+class KeyringPickerBase {
+  keyrings = {
+    [CONSTS_ACCOUNT_TYPES.Wallet]: KeyringHdBase,
+    [CONSTS_ACCOUNT_TYPES.Hardware]: KeyringHardwareBase,
+    [CONSTS_ACCOUNT_TYPES.SingleChain]: KeyringSingleChainBase,
+    [CONSTS_ACCOUNT_TYPES.WatchOnly]: KeyringWatchOnlyBase,
+  };
+
+  create(options) {
+    const accountType = options?.accountInfo?.type;
+    const baseChain = options?.chainInfo?.baseChain;
+    const KeyringClass = this.keyrings[accountType];
+    if (!KeyringClass) {
+      throw new Error(
+        `NO Keyring class matched for (accountType=${accountType} baseChain=${baseChain})`,
+      );
+    }
+
+    if (
+      [
+        KeyringHdBase,
+        KeyringHardwareBase,
+        KeyringSingleChainBase,
+        KeyringWatchOnlyBase,
+      ].includes(KeyringClass)
+    ) {
+      throw new Error(
+        `NO Keyring class implemented for (accountType=${accountType} baseChain=${baseChain})`,
+      );
+    }
+    return new KeyringClass(options);
+  }
+}
+
+// run in ui
+class KeyringUiToBgProxy extends UiBackgroundProxy {
+  constructor(options) {
+    super(options);
+    this.options = options;
+  }
+
+  async keyringProxyCall({ method, params }) {
+    return this.baseProxyCall({
+      module: BACKGROUND_PROXY_MODULE_NAMES.keyring,
+      options: this.options,
+      method,
+      params,
+    });
+  }
+
+  async getAddresses({ indexes = [0], ...others }) {
+    return this.keyringProxyCall({
+      method: 'getAddresses',
+      params: { indexes, ...others },
+    });
+  }
+
+  async signTransaction({ tx, hdPath, ...others }) {
+    return this.keyringProxyCall({
+      method: 'signTransaction',
+      params: { tx, hdPath, ...others },
+    });
+  }
+
+  async getAccountPrivateKey({ path, ...others }) {
+    return this.keyringProxyCall({
+      method: 'getAccountPrivateKey',
+      params: { path, ...others },
+    });
+  }
+}
+
+export {
+  KeyringToolsBase,
+  KeyringPickerBase,
+  KeyringHdBase,
+  KeyringHardwareBase,
+  KeyringSingleChainBase,
+  KeyringWatchOnlyBase,
+  KeyringUiToBgProxy,
+};

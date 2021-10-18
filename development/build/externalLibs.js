@@ -14,6 +14,8 @@ const ignoreDeps = [
   'mobx', // global standalone
   'mobx-react-lite', // global standalone
   '@solana/web3.js', // global standalone
+  'js-conflux-sdk',
+  'axios',
   '@onekeyhq/ui-components',
 
   'bip39', // mnemonic will not working correctly when make bip39 to external-libs

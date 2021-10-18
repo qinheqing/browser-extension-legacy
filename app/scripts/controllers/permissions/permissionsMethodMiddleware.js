@@ -1,7 +1,10 @@
 import { createAsyncMiddleware } from '@onekeyhq/json-rpc-engine';
 import { ethErrors } from 'eth-rpc-errors';
+import handlersCFX from 'wallets/providers/CFX/dapp/handlers';
+import log from 'loglevel';
 import bgHelpers from '../../../../src/wallets/bg/bgHelpers';
 import utilsApp from '../../../../src/utils/utilsApp';
+import { STREAM_PROVIDER_CFX } from '../../constants/consts';
 
 export const MOCK_ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 
@@ -11,6 +14,10 @@ export const MOCK_CHAIN_ID_WHEN_NEW_APP = {
   chainId: '0xEEEEEEEE',
   networkVersion: '4008636142',
 };
+
+function showBrowserNotification({ title, message, url }) {
+  global.$ok_extensionPlatform?._showNotification(title, message, url);
+}
 
 /**
  * Create middleware for handling certain methods and preprocessing permissions requests.
@@ -22,11 +29,42 @@ export default function createPermissionsMethodMiddleware({
   hasPermission,
   notifyAccountsChanged,
   requestAccountsPermission,
+  ...others
 }) {
   let isProcessingRequestAccounts = false;
 
   return createAsyncMiddleware(async (req, res, next) => {
     let responseHandler;
+
+    // if (req && req?.streamName === STREAM_PROVIDER_SOL) {
+    // }
+
+    if (req && req?.streamName === STREAM_PROVIDER_CFX) {
+      const services = {
+        addDomainMetadata,
+        getAccounts,
+        getUnlockPromise,
+        hasPermission,
+        notifyAccountsChanged,
+        requestAccountsPermission,
+        ...others,
+      };
+      // log.info('DAPP_RPC_MIDDLEWARE', req.id, {
+      //   method: req.method,
+      //   req,
+      //   services,
+      // });
+
+      await handlersCFX.handleDappMethods({
+        req,
+        res,
+        next,
+        services,
+      });
+      return;
+    }
+
+    // ETH EVM request ----------------------------------------------
 
     if (utilsApp.isNewHome()) {
       if (req.method === 'eth_chainId') {
@@ -41,6 +79,12 @@ export default function createPermissionsMethodMiddleware({
         // pass getAccounts() to permissionsMethodMiddleware, can not be [], will cause UI ask to approve many times
         // res.result = [MOCK_ZERO_ADDRESS];
         res.result = [];
+        if (req.method === 'eth_requestAccounts') {
+          showBrowserNotification({
+            title: `Chain network not matched: ${req.origin || ''}`,
+            message: `${req.method}`,
+          });
+        }
         return;
       }
     }
@@ -62,6 +106,7 @@ export default function createPermissionsMethodMiddleware({
           return;
         }
 
+        // check if domain is approved
         if (hasPermission('eth_accounts')) {
           isProcessingRequestAccounts = true;
           await getUnlockPromise();

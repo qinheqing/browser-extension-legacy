@@ -7,7 +7,7 @@ class OneChainInfo {
     name = '', // display name: BSC
     fullName = '', // full display name: Binance Smart Chain
     description = '',
-    internalChainId = -1, //
+    tokenChainId = -1, //
     rpc = [],
     currency = '', // BNB
     scan = [], // TODO remove
@@ -24,7 +24,7 @@ class OneChainInfo {
     this.description = description;
     this.rpc = rpc;
     // https://chainid.network/
-    this.internalChainId = internalChainId; // internalChainId or chainId
+    this.tokenChainId = tokenChainId; // tokenChainId for coingecko
     this.currency = currency;
     this.browser = browser;
     this.isCustom = isCustom;
@@ -45,6 +45,7 @@ class OneChainInfo {
     if (this.accountNamePrefix) {
       return `${this.accountNamePrefix}-${index}`;
     }
+
     if (this.isCustom) {
       return `${this.currency}-${index}`;
     }

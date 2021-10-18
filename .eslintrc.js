@@ -37,6 +37,7 @@ module.exports = {
     'development/chromereload.js',
     'app/vendor/**',
     'app/vendor-js/**',
+    'src/vendors/**',
     'test/e2e/send-eth-with-private-key-test/**',
     'nyc_output/**',
     '.vscode/**',
@@ -60,7 +61,7 @@ module.exports = {
 
   rules: {
     // Prettier changes and reasoning
-
+    'no-tabs': 'off',
     'import/no-anonymous-default-export': 'off',
     'prettier/prettier': 'error',
     'no-unused-vars': 'warn',

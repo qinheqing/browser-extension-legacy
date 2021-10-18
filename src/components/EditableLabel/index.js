@@ -12,7 +12,7 @@ class EditableLabel extends Component {
   };
 
   static defaultProps = {
-    maxLength: 10,
+    maxLength: Infinity,
   };
 
   state = {
