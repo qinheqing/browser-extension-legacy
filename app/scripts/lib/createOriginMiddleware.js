@@ -11,8 +11,13 @@ export default function createOriginMiddleware(opts) {
   ) {
     req.origin = opts.origin;
     req.location = opts.location;
-    req.streamName = opts.streamName;
-    res.streamName = opts.streamName;
+
+    req.streamName = req.streamName || opts.streamName;
+    req.baseChain = req.baseChain || opts.baseChain;
+
+    res.streamName = res.streamName || opts.streamName;
+    res.baseChain = res.baseChain || opts.baseChain;
+
     next();
   };
 }

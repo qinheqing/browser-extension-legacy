@@ -11,25 +11,24 @@ export default function createLoggerMiddleware(opts) {
     /** @type {any} */ res,
     /** @type {Function} */ next,
   ) {
-    log.info(`DAPP_RPC start (${opts.origin}): ${opts.location}`, req);
+    // streamName, baseChain
+    const reqMeta = ` ${opts.streamName}-${opts.baseChain} (${opts.origin}): ${opts.location} `;
+
+    log.info(`DAPP_RPC [START] ${reqMeta}`, req);
 
     next((/** @type {Function} */ cb) => {
       if (res.error) {
         // https://sentry.io/organizations/onekey_hq/issues/2296866142
         //    this log will send to sentry, display error object directly
-        log.error('Error in RPC response >>> \n', res.error);
+        log.error(`Error in RPC response ${reqMeta} >>> \n`, res.error);
       }
+
+      log.info(`DAPP_RPC [END] ${reqMeta}`, req, '\r\n -> ', res);
 
       if (req.isMetamaskInternal) {
         return;
       }
 
-      log.info(
-        `DAPP_RPC end (${opts.origin}): ${opts.location}`,
-        req,
-        '\r\n -> ',
-        res,
-      );
       cb();
     });
   };

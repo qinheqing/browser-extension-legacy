@@ -14,10 +14,7 @@ import utilsStorage from '../../utils/utilsStorage';
 import utilsNumber from '../../utils/utilsNumber';
 import walletFactory from '../walletFactory';
 import { NOTIFICATION_NAMES } from '../../../app/scripts/controllers/permissions/enums';
-import {
-  STREAM_PROVIDER_CFX,
-  STREAM_PROVIDER_ETH,
-} from '../../../app/scripts/constants/consts';
+import { STREAM_PROVIDER_CFX } from '../../../app/scripts/constants/consts';
 import bgGetRootController from '../bg/bgGetRootController';
 import { allBuiltInChains } from '../../config/chains/allBuiltInChains';
 import utilsApp from '../../utils/utilsApp';
@@ -271,7 +268,9 @@ class StoreDappApproval extends BaseStoreWithStorage {
   notifyAllConnections(getPayload) {
     // noop
     const bg = bgGetRootController({ unlockRequired: false });
+
     bg.notifyAllConnections(getPayload, STREAM_PROVIDER_CFX);
+    // bg.notifyAllConnections(getPayload, STREAM_PROVIDER_SOL;
   }
 
   onUnlockedChanged({ isUnlocked } = {}) {

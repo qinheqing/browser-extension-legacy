@@ -27,9 +27,9 @@ export default class NotificationManager {
     // Bring focus to chrome popup
     if (popup) {
       const tabs = await this.platform.getTabsInWindow(popup.id);
-      if (tabs[0] && url) {
+      if (tabs[0]) {
         await this.platform.updateTab(tabs[0].id, {
-          url: url ? popupUlr : undefined,
+          url: popupUlr,
         });
       }
 

@@ -1904,6 +1904,7 @@ export default class MetamaskController extends EventEmitter {
     const mux = setupMultiplex(connectionStream);
     // connect features
     this.setupControllerConnection(mux.createStream(STREAM_CONTROLLER));
+
     this.setupProviderConnection(
       mux.createStream(STREAM_PROVIDER_ETH),
       sender,
@@ -1978,6 +1979,9 @@ export default class MetamaskController extends EventEmitter {
    * @param {boolean} isInternal - True if this is a connection with an internal process
    */
   setupProviderConnection(outStream, sender, isInternal, { baseChain } = {}) {
+    if (!baseChain) {
+      throw new Error('baseChain is required of setupProviderConnection()');
+    }
     const origin = isInternal ? 'metamask' : new URL(sender.url).origin;
     let extensionId;
     if (sender.id !== this.extension.runtime.id) {
@@ -2059,13 +2063,20 @@ export default class MetamaskController extends EventEmitter {
     );
 
     // append origin to each request
-    engine.push(createOriginMiddleware({ origin, location, streamName }));
+    engine.push(
+      createOriginMiddleware({ origin, location, streamName, baseChain }),
+    );
+
     // append tabId to each request if it exists
     if (tabId) {
       engine.push(createTabIdMiddleware({ tabId }));
     }
+
     // logging
-    engine.push(createLoggerMiddleware({ origin, location }));
+    engine.push(
+      createLoggerMiddleware({ origin, location, streamName, baseChain }),
+    );
+
     engine.push(
       createOnboardingMiddleware({
         location,

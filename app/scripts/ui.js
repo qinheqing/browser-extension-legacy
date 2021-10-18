@@ -135,6 +135,7 @@ function initializeUi(activeTab, container, connectionStream, cb) {
 function connectToAccountManager(connectionStream, cb) {
   const mx = setupMultiplex(connectionStream);
   setupControllerConnection(mx.createStream(STREAM_CONTROLLER), cb);
+
   setupWeb3Connection(mx.createStream(STREAM_PROVIDER_ETH));
   setupWeb3Connection(mx.createStream(STREAM_PROVIDER_CFX));
 }

@@ -36,28 +36,8 @@ export default function createPermissionsMethodMiddleware({
   return createAsyncMiddleware(async (req, res, next) => {
     let responseHandler;
 
-    if (utilsApp.isNewHome()) {
-      if (req.method === 'eth_chainId') {
-        res.result = MOCK_CHAIN_ID_WHEN_NEW_APP.chainId;
-        return;
-      }
-
-      if (
-        req.method === 'eth_requestAccounts' ||
-        req.method === 'eth_accounts'
-      ) {
-        // pass getAccounts() to permissionsMethodMiddleware, can not be [], will cause UI ask to approve many times
-        // res.result = [MOCK_ZERO_ADDRESS];
-        res.result = [];
-        if (req.method === 'eth_requestAccounts') {
-          showBrowserNotification({
-            title: `Chain network not matched`,
-            message: `${req.method}`,
-          });
-        }
-        return;
-      }
-    }
+    // if (req && req?.streamName === STREAM_PROVIDER_SOL) {
+    // }
 
     if (req && req?.streamName === STREAM_PROVIDER_CFX) {
       const services = {
@@ -82,6 +62,31 @@ export default function createPermissionsMethodMiddleware({
         services,
       });
       return;
+    }
+
+    // ETH EVM request ----------------------------------------------
+
+    if (utilsApp.isNewHome()) {
+      if (req.method === 'eth_chainId') {
+        res.result = MOCK_CHAIN_ID_WHEN_NEW_APP.chainId;
+        return;
+      }
+
+      if (
+        req.method === 'eth_requestAccounts' ||
+        req.method === 'eth_accounts'
+      ) {
+        // pass getAccounts() to permissionsMethodMiddleware, can not be [], will cause UI ask to approve many times
+        // res.result = [MOCK_ZERO_ADDRESS];
+        res.result = [];
+        if (req.method === 'eth_requestAccounts') {
+          showBrowserNotification({
+            title: `Chain network not matched: ${req.origin || ''}`,
+            message: `${req.method}`,
+          });
+        }
+        return;
+      }
     }
 
     switch (req.method) {

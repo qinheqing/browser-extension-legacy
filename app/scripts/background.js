@@ -589,7 +589,7 @@ async function openPopup(url = '', { waitClose = true } = {}) {
 
 async function openApprovalPopup(
   { baseChain = '', request = {}, key } = {},
-  { waitClose = true, ...others } = {},
+  { waitClose = false, ...others } = {},
 ) {
   const searchParams = new URLSearchParams();
   // searchParams.set('origin', sender.origin);

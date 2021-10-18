@@ -5,7 +5,6 @@ import {
 } from '@onekeyhq/providers';
 import { JsonRpcEngine } from '@onekeyhq/json-rpc-engine';
 import logger from '../../../../log/logger';
-import { STREAM_PROVIDER_CFX } from '../../../../../app/scripts/constants/consts';
 import { CONST_CHAIN_KEYS } from '../../../../consts/consts';
 
 function createProviderProxy({ provider }) {
@@ -39,6 +38,7 @@ function setGlobalProvider({ provider }) {
       payload.method.startsWith('eth_')
     ) {
       newPayload.methodLegacy = newPayload.method;
+      newPayload.methodOriginal = newPayload.method;
       newPayload.method = newPayload.method.replace(/^eth_/giu, 'cfx_');
     }
     return this._rpcRequestOld(newPayload ?? payload, ...others);
