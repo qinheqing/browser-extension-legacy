@@ -24,8 +24,10 @@ class StoreDappApproval extends BaseStoreWithStorage {
   //      use class decorator instead of shouldRunInBackground
   constructor(props) {
     super(props);
+    this.storageNamespace = utilsStorage.STORAGE_NAMESPACES.dappApproval;
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
+
     this.autosave('connections');
   }
 
@@ -53,7 +55,7 @@ class StoreDappApproval extends BaseStoreWithStorage {
   async getUiStorageItem(key) {
     const storageKey = utilsStorage.buildAutoSaveStorageKey(
       key,
-      utilsStorage.STORAGE_NS_UI,
+      utilsStorage.STORAGE_NAMESPACES.storage,
     );
     const value = await this.getStorageItemAsync(storageKey);
     return value;

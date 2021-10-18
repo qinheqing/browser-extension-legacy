@@ -22,10 +22,11 @@ const extStorage = new ExtensionStore();
 class BaseStoreWithStorage extends BaseStore {
   constructor(props) {
     super(props);
-    this.storageNamespace = this.constructor.name;
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
   }
+
+  storageNamespace = '';
 
   async getStorageItemAsync(key, { useLocalStorage = USE_LOCAL_STORAGE } = {}) {
     if (useLocalStorage) {
@@ -70,6 +71,11 @@ class BaseStoreWithStorage extends BaseStore {
     storeProp,
     { useLocalStorage = USE_LOCAL_STORAGE, defaultValue } = {},
   ) {
+    if (!this.storageNamespace) {
+      throw new Error(
+        'Please init this.storageNamespace at BaseStoreWithStorage Sub-Class',
+      );
+    }
     // eslint-disable-next-line consistent-this
     const store = this;
     const storageKey = utilsStorage.buildAutoSaveStorageKey(

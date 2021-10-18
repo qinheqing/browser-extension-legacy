@@ -31,10 +31,8 @@
     {
       "matches": ["file://*/*", "http://*/*", "https://*/*"],
       "exclude_matches": [
-        "https://connect.onekey.so/iframe.html*",
-        "https://connect.onekey.so/iframe.html",
-        "*://connect.onekey.so/*/iframe.html",
-        "*://connect.onekey.so/iframe.html"
+        "*://connect.onekey.so/*",
+        "*://connect.test.onekey.so/*"
       ],
       "js": [
         "disable-console.js",
