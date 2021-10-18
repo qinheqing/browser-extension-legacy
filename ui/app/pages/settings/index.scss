@@ -265,3 +265,48 @@
     max-width: 250px;
   }
 }
+
+.setting-pages-v2 {
+  display: block;
+  &__menus {
+    padding: 10px 16px;
+  }
+  &__menu-item {
+    & + & {
+      margin-top: 8px;;
+    }
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #E7E7EE;
+    padding: 14px;
+    cursor: pointer;
+  }
+  &__menu-item-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+  &__menu-item-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+  &__menu-item-title {
+    font-weight: bold;
+    font-size: 16px;
+    color: #12121e;
+  }
+  &__menu-item-desc {
+    font-size: 13px;
+    color: #A0A0B0;
+  }
+  &__menu-item-arrow {
+    flex-shrink: 0;
+  }
+}
