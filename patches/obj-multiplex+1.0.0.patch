@@ -1,0 +1,13 @@
+diff --git a/node_modules/obj-multiplex/index.js b/node_modules/obj-multiplex/index.js
+index cfc0c99..04190d0 100644
+--- a/node_modules/obj-multiplex/index.js
++++ b/node_modules/obj-multiplex/index.js
+@@ -59,7 +59,7 @@ class ObjectMultiplex extends Duplex {
+     // get corresponding substream
+     const substream = this._substreams[name]
+     if (!substream) {
+-      console.warn(`ObjectMultiplex - orphaned data for stream "${name}"`)
++      // console.warn(`ObjectMultiplex - orphaned data for stream "${name}"`)
+       return callback()
+     }
+ 

@@ -76,10 +76,14 @@ export const METAMASK_CONTROLLER_EVENTS = {
   UPDATE_BADGE: 'updateBadge',
 };
 
+// connect.init() and connect.manifest() init settings only once
+// so eth-onekey-keyring should NOT call manifest()
 OneKeyKeyring.connect.init({
   // debug: true,
   // popup: true,
-  // connectSrc: 'https://connect1.test.onekey.so/', // NOT working
+  connectSrc: 'https://connect.onekey.so/',
+  // connectSrc: 'https://connect.test.onekey.so/',
+  // connectSrc: 'https://localhost:8088/',
   manifest: {
     email: 'hi@onekey.so',
     appUrl: 'https://www.onekey.so',
