@@ -82,6 +82,7 @@ function AccountCard({
             </span>
           )}
         </span>
+        <div className="flex-1" />
         {account.type === CONSTS_ACCOUNT_TYPES.Hardware && <HardwareTypeTag />}
       </header>
       <div className={classnames(styles.AccountCard__address)}>

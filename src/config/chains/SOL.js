@@ -1,8 +1,8 @@
 import { merge } from 'lodash';
 import { CONST_CHAIN_KEYS, CONST_ADD_TOKEN_MODE } from '../../consts/consts';
-import { normalizeChainInfo } from '../../wallets/helpers/configHelpers';
+import configsHelper from '../../wallets/helpers/configsHelper';
 
-const SOL = normalizeChainInfo({
+const SOL = configsHelper.normalizeChainInfo({
   key: CONST_CHAIN_KEYS.SOL,
   baseChain: CONST_CHAIN_KEYS.SOL,
 
@@ -51,7 +51,7 @@ const SOL = normalizeChainInfo({
   },
 });
 
-const SOL_TEST = normalizeChainInfo(
+const SOL_TEST = configsHelper.normalizeChainInfo(
   merge({}, SOL, {
     key: CONST_CHAIN_KEYS.SOL_TEST_NET,
     name: 'Solana 测试网',

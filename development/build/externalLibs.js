@@ -34,6 +34,9 @@ const ignoreDeps = [
   '@onekeyhq/providers', // nanoid_1.nanoid is not a function
   '@onekeyhq/json-rpc-engine', //  (0 , _jsonRpcEngine.createAsyncMiddleware) is not a function
   '@onekeyhq/post-message-stream',
+  // '@onekeyhq/connect',
+  // '@trezor/utxo-lib',
+  // 'blake2b',
 ];
 const commonDeps = ['lodash'];
 const reactDeps = allDependencies.filter((dep) => dep.match(/react/u));

@@ -4,7 +4,7 @@ import axios, { AxiosInstance } from 'axios';
 import { cloneDeep } from 'lodash';
 import ChainManagerBase from '../../../ChainManagerBase';
 import OneAccountInfo from '../../../../classes/OneAccountInfo';
-import optionsHelper from '../../../optionsHelper';
+import optionsHelper from '../../../helpers/optionsHelper';
 import utilsApp from '../../../../utils/utilsApp';
 import utilsNumber from '../../../../utils/utilsNumber';
 import { CFX_EPOCH_TAG } from '../consts/consts';

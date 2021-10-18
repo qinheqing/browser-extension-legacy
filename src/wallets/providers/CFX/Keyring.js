@@ -5,7 +5,7 @@ import {
   KeyringToolsBase,
 } from '../../KeyringBase';
 import { CONSTS_ACCOUNT_TYPES } from '../../../consts/consts';
-import optionsHelper from '../../optionsHelper';
+import optionsHelper from '../../helpers/optionsHelper';
 import utilsApp from '../../../utils/utilsApp';
 import HdKeyManager from './managers/HdKeyManager';
 

@@ -1,6 +1,6 @@
 import utilsApp from '../utils/utilsApp';
 import OneAccountInfo from '../classes/OneAccountInfo';
-import optionsHelper from './optionsHelper';
+import optionsHelper from './helpers/optionsHelper';
 
 class ChainManagerBase {
   constructor(options, wallet) {

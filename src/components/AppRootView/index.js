@@ -22,6 +22,7 @@ function NewHomeRootComponents() {
     <>
       <Helmet>
         <link rel="stylesheet" type="text/css" href="./tailwind.css" />
+        <link rel="stylesheet" type="text/css" href="./index.new.css" />
       </Helmet>
       {/* LoadingScreen*/}
       <PreloadScreen />

@@ -1,6 +1,6 @@
 import { Conflux, Contract, format } from 'js-conflux-sdk';
 import { isString } from 'lodash';
-import optionsHelper from '../../../optionsHelper';
+import optionsHelper from '../../../helpers/optionsHelper';
 
 // https://confluxnetwork.gitbook.io/js-conflux-sdk/api/utils#util-format.js-format-static-address
 function formatToAddress(address, networkId, verbose = false) {

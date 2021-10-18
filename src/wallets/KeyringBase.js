@@ -1,12 +1,10 @@
-import { toLower } from 'lodash';
+import { toLower, isString } from 'lodash';
+import logger from 'loglevel';
 import utilsApp from '../utils/utilsApp';
-import {
-  BACKGROUND_PROXY_MODULE_NAMES,
-  CONSTS_ACCOUNT_TYPES,
-} from '../consts/consts';
+import { CONSTS_ACCOUNT_TYPES } from '../consts/consts';
 import bgGetRootController from './bg/bgGetRootController';
 import { HdKeyManagerBase } from './HdKeyManager';
-import { UiBackgroundProxy } from './bg/uiBackgroundProxy';
+import optionsHelper from './helpers/optionsHelper';
 
 // run in background
 class KeyringToolsBase {
@@ -84,12 +82,12 @@ class KeyringBase {
   }
 
   // getAddressesByHdWallet
-  getAddresses() {
+  async getAddresses() {
     return utilsApp.throwToBeImplemented(this);
   }
 
   // signTxByHdWallet
-  signTransaction() {
+  async signTransaction() {
     return utilsApp.throwToBeImplemented(this);
   }
 }
@@ -111,12 +109,18 @@ class KeyringHdBase extends KeyringBase {
 
   async _getHdPrivateKey({ seed, path }) {
     const _seed = seed || (await this._getHdRootSeed());
-    const dpath = await this.hdkeyManager.derivePath({ seed: _seed, path });
+    const dpath = await this.hdkeyManager.derivePath({
+      seed: _seed,
+      path,
+    });
     return dpath.privateKey;
   }
 
   async getAccountPrivateKey({ seed, path }) {
-    const privateKey = await this._getHdPrivateKey({ seed, path });
+    const privateKey = await this._getHdPrivateKey({
+      seed,
+      path,
+    });
     return this.keyringTools.privateKeyToString({ privateKey });
   }
 
@@ -127,7 +131,10 @@ class KeyringHdBase extends KeyringBase {
     const seed = await this._getHdRootSeed();
     const addresses = await Promise.all(
       hdPathList.map(async (path, i) => {
-        const privateKey = await this._getHdPrivateKey({ seed, path });
+        const privateKey = await this._getHdPrivateKey({
+          seed,
+          path,
+        });
         const address = await this.keyringTools.privateKeyToAddress({
           privateKey,
         });
@@ -143,7 +150,10 @@ class KeyringHdBase extends KeyringBase {
 
   async signTransaction({ tx, hdPath, ...others }) {
     const privateKey = await this._getHdPrivateKey({ path: hdPath });
-    return this.keyringTools.privateKeySign({ privateKey, tx });
+    return this.keyringTools.privateKeySign({
+      privateKey,
+      tx,
+    });
   }
 }
 
@@ -151,7 +161,114 @@ class KeyringHdBase extends KeyringBase {
 class KeyringSingleChainBase extends KeyringBase {}
 
 // run in background
-class KeyringHardwareBase extends KeyringBase {}
+class KeyringHardwareBase extends KeyringBase {
+  _onekeyConnect = null;
+
+  async getConnectAsync() {
+    // DO NOT add this module "@onekeyhq/connect" to package.json,
+    //        as two diffent version of connect (keyring) will break
+    if (!this._onekeyConnect) {
+      this._onekeyConnect = (
+        await import('@onekeyhq/eth-onekey-keyring')
+      ).default.connect;
+
+      // update manifest in @onekeyhq/eth-onekey-keyring
+      // this._onekeyConnect.manifest({
+      //   email: 'hi@onekey.so',
+      //   appUrl: 'https://www.onekey.so',
+      // });
+    }
+    return this._onekeyConnect;
+  }
+
+  getCoinParam() {
+    const baseChain = optionsHelper.getBaseChain(this.options);
+    return toLower(baseChain);
+  }
+
+  async getAccountPrivateKey({ seed, path }) {
+    throw new Error('Hardware privateKey exporting is not supported.');
+  }
+
+  async getAddresses({ indexes = [0] }) {
+    const bundle = indexes.map((index) => ({
+      path: this.hdkeyManager.createHdPath({ index }),
+      showOnTrezor: false,
+    }));
+    const params = {
+      coin: this.getCoinParam(),
+      bundle,
+    };
+
+    // TODO move to hardwareManager
+    // TODO OneKeyConnect.getFeatures save deviceId
+    // TODO autofix address ( deviceId must be the same )
+    // TODO ethereumGetAddress method name is different in each chain
+    const connect = await this.getConnectAsync();
+
+    const features = {};
+    // const features = await connect.getFeatures();
+
+    const resHw = await connect.ethereumGetAddress(params);
+    const { id, success, payload } = resHw;
+    logger.info('hardware OneKeyConnect invoke ', {
+      req: {
+        ...params,
+      },
+      res: {
+        id,
+        success,
+        payload,
+      },
+    });
+
+    // code: "Method_Interrupted"
+    // error: "Popup closed"
+    if (!success || (payload && payload.error && payload.code)) {
+      let errorMsg = '';
+      if (payload.error && isString(payload.error)) {
+        errorMsg = errorMsg || payload.error;
+      }
+
+      if (payload.code && isString(payload.code)) {
+        errorMsg = errorMsg || payload.code;
+      }
+      errorMsg = errorMsg || 'OneKey hardware connect failed.';
+      // should throw hardware string error to Error Object
+      throw new Error(errorMsg);
+    }
+
+    if (success) {
+      return payload.map((data, i) => {
+        /*
+            "path": [1,2,3,4,5]
+            "serializedPath": "m/44'/60'/0'/0/0",
+            "address": "0x99F825D80cADd21D77D13B7e13D25960B40a6299",
+           */
+        const { serializedPath, address } = data;
+        return {
+          deviceId: features?.payload?.device_id ?? '',
+          address,
+          ...this.buildAddressMeta({
+            index: indexes[i],
+            hdPath: serializedPath,
+          }),
+        };
+      });
+    }
+    return [];
+  }
+
+  async signTransaction(payload) {
+    // hdPath: "m/44'/501'/0'/0'"
+    // tx: "QwE1gc..."
+    const { hdPath, tx } = payload;
+    const coin = this.getCoinParam();
+    const connect = await this.getConnectAsync();
+    logger.info('hardware signTransaction', payload);
+    return utilsApp.throwToBeImplemented(this);
+  }
+}
 
 // run in background
 class KeyringWatchOnlyBase extends KeyringBase {}
@@ -191,44 +308,6 @@ class KeyringPickerBase {
   }
 }
 
-// run in ui
-class KeyringUiToBgProxy extends UiBackgroundProxy {
-  constructor(options) {
-    super(options);
-    this.options = options;
-  }
-
-  async keyringProxyCall({ method, params }) {
-    return this.baseProxyCall({
-      module: BACKGROUND_PROXY_MODULE_NAMES.keyring,
-      options: this.options,
-      method,
-      params,
-    });
-  }
-
-  async getAddresses({ indexes = [0], ...others }) {
-    return this.keyringProxyCall({
-      method: 'getAddresses',
-      params: { indexes, ...others },
-    });
-  }
-
-  async signTransaction({ tx, hdPath, ...others }) {
-    return this.keyringProxyCall({
-      method: 'signTransaction',
-      params: { tx, hdPath, ...others },
-    });
-  }
-
-  async getAccountPrivateKey({ path, ...others }) {
-    return this.keyringProxyCall({
-      method: 'getAccountPrivateKey',
-      params: { path, ...others },
-    });
-  }
-}
-
 export {
   KeyringToolsBase,
   KeyringPickerBase,
@@ -236,5 +315,4 @@ export {
   KeyringHardwareBase,
   KeyringSingleChainBase,
   KeyringWatchOnlyBase,
-  KeyringUiToBgProxy,
 };

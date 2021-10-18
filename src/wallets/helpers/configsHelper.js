@@ -6,4 +6,4 @@ function normalizeChainInfo(config) {
   return config;
 }
 
-export { normalizeChainInfo };
+export default { normalizeChainInfo };

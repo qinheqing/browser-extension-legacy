@@ -10,8 +10,8 @@ import utilsNumber from '../utils/utilsNumber';
 import ChainManagerBase from './ChainManagerBase';
 import { HdKeyManagerBase } from './HdKeyManager';
 import uiBackgroundProxy from './bg/uiBackgroundProxy';
-import { KeyringUiToBgProxy } from './KeyringBase';
-import optionsHelper from './optionsHelper';
+import optionsHelper from './helpers/optionsHelper';
+import KeyringUiToBgProxy from './KeyringUiToBgProxy';
 
 class WalletBase {
   constructor(options = {}) {

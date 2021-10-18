@@ -34,34 +34,22 @@ export default observer(function PageConnectHardware() {
 
       let addrs = [];
 
-      if (isSolWallet) {
-        addrs = indexesRange.map((index) => ({
-          address: index,
-          path: wallet.hdkeyManager.createHdPath({ index }),
-          hdPathIndex: index,
-          chainKey: chainInfo.key,
-          type: CONSTS_ACCOUNT_TYPES.Hardware,
-        }));
-      } else {
-        addrs = await wallet.getAddresses({ indexes: indexesRange });
-      }
+      addrs = await wallet.getAddresses({ indexes: indexesRange });
 
-      addrs = await Promise.all(
-        addrs.map(async (addr) => {
-          let { address } = addr;
-          if (isSolWallet) {
-            // mock SOL address as hardware not ready yet
-            const account = await connectMockSOL.getAccountFromMnemonic({
-              hdPath: addr.path,
-            });
-            address = account.publicKey.toString();
-          }
-          return {
-            ...addr,
-            address,
-          };
-        }),
-      );
+      // SOL mock
+      const solMockAddresses = [
+        'CwaSJrcjte7hMPwmg19pZLDsS5AuMBEQLteLccA2SPbr',
+        '6M1MeutRFKKpNygxqUQKNqq6D33n2NG8dBH4WMp9nKyh',
+        'Ax9JER8RuZbPNKrXXr8PCgjnt4CyxTS2rnNqdKnrwQo8',
+        'AoQsoSHHxVXbneD1sJswVhndvPtRCaB6VSEuAfQnKhJA',
+        'EzLtfR1uEqR7tibYrnVkVZSjcwyauRCGdYQKRC2vA9qG',
+      ];
+      addrs = [0, 1, 2, 3, 4].map((index) => {
+        return {
+          ...addrs[index],
+          address: solMockAddresses[index],
+        };
+      });
 
       return addrs;
     },
@@ -84,20 +72,18 @@ export default observer(function PageConnectHardware() {
     setWallet(_wallet);
   };
 
-  if (!wallet) {
-    return (
-      <AppPageLayout>
-        <SelectHardware
-          connectToHardwareWallet={connectToHardwareWallet}
-          browserSupported={browserSupported}
-        />
-      </AppPageLayout>
-    );
-  }
-
   return (
-    <AppPageLayout>
-      <ImportAccountsList wallet={wallet} onLoadMore={generateAccounts} />
+    <AppPageLayout className="" title="连接硬件设备">
+      <div className="PageConnectHardware">
+        {wallet ? (
+          <ImportAccountsList wallet={wallet} onLoadMore={generateAccounts} />
+        ) : (
+          <SelectHardware
+            connectToHardwareWallet={connectToHardwareWallet}
+            browserSupported={browserSupported}
+          />
+        )}
+      </div>
     </AppPageLayout>
   );
 });
