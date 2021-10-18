@@ -171,12 +171,6 @@ class KeyringHardwareBase extends KeyringBase {
       this._onekeyConnect = (
         await import('@onekeyhq/eth-onekey-keyring')
       ).default.connect;
-
-      // update manifest in @onekeyhq/eth-onekey-keyring
-      // this._onekeyConnect.manifest({
-      //   email: 'hi@onekey.so',
-      //   appUrl: 'https://www.onekey.so',
-      // });
     }
     return this._onekeyConnect;
   }
