@@ -27,8 +27,8 @@ export function formatDate(date, format = "M/d/y 'at' T") {
 
 export function formatDateWithYearContext(
   date,
-  formatThisYear = 'MMM d',
-  fallback = 'MMM d, y',
+  formatThisYear = 'HH:mm · MMM d',
+  fallback = 'HH:mm · MMM d, y',
 ) {
   const dateTime = DateTime.fromMillis(date);
   const now = DateTime.local();

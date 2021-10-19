@@ -381,17 +381,10 @@ export default class AccountMenu extends Component {
                 }
                 text={t('createAccount')}
               />
-              <AccountMenuItem
+              {/* <AccountMenuItem
                 onClick={() => {
                   toggleAccountMenu();
                   history.push(SETTINGS_ROUTE);
-                  this.context.trackEvent({
-                    eventOpts: {
-                      category: 'Navigation',
-                      action: 'Main Menu',
-                      name: 'Opened Settings',
-                    },
-                  });
                 }}
                 icon={
                   <img
@@ -400,7 +393,7 @@ export default class AccountMenu extends Component {
                   />
                 }
                 text={t('settings')}
-              />
+              /> */}
             </>
           )}
           {hwOnlyMode && (

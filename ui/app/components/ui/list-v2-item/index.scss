@@ -1,9 +1,9 @@
-.list-item {
+.list-v2-item {
   width: 100%;
   min-height: 86px;
   margin: 0;
   background: #fff;
-  padding: 14px 12px;
+  padding: 20px 16px;
 
   @include Paragraph;
 
@@ -16,7 +16,7 @@
   grid-template-areas:
     'icon head     head     head     head     head     head     head     right right right right'
     'icon sub      sub      sub      sub      sub      sub      sub      right right right right'
-    '.    actions  actions  actions  actions  actions  actions  actions  right right right right';
+    '.    actions  actions  actions  actions  actions  actions  actions  actions  actions  actions  actions';
   align-items: start;
   cursor: pointer;
 
@@ -38,6 +38,7 @@
 
   &__actions {
     grid-area: actions;
+    place-self: center end;
   }
 
   &__heading {
