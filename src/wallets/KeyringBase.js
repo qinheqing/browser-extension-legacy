@@ -192,6 +192,7 @@ class KeyringHardwareBase extends KeyringBase {
     const params = {
       coin: this.getCoinParam(),
       bundle,
+      includingFeatures: true,
     };
 
     // TODO move to hardwareManager
@@ -204,16 +205,12 @@ class KeyringHardwareBase extends KeyringBase {
     // const features = await connect.getFeatures();
 
     const resHw = await connect.ethereumGetAddress(params);
-    const { id, success, payload } = resHw;
+    const { id, success, payload, device } = resHw;
     logger.info('hardware OneKeyConnect invoke ', {
       req: {
         ...params,
       },
-      res: {
-        id,
-        success,
-        payload,
-      },
+      res: resHw,
     });
 
     // code: "Method_Interrupted"
