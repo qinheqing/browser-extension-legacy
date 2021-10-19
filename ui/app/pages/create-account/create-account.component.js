@@ -7,6 +7,7 @@ import {
   IMPORT_ACCOUNT_ROUTE,
   CONNECT_HARDWARE_ROUTE,
 } from '../../helpers/constants/routes';
+import { goToPageConnectHardware } from '../../helpers/utils/util';
 import NewAccountCreateForm from './new-account.container';
 import NewAccountImportForm from './import-account';
 import ConnectHardwareForm from './connect-hardware';
@@ -47,7 +48,7 @@ export default class CreateAccountPage extends Component {
 
         <div
           className={getClassNames(CONNECT_HARDWARE_ROUTE)}
-          onClick={() => history.push(CONNECT_HARDWARE_ROUTE)}
+          onClick={() => goToPageConnectHardware()}
         >
           {this.context.t('hardware')}
         </div>

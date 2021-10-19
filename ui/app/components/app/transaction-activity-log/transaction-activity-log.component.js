@@ -76,6 +76,40 @@ export default class TransactionActivityLog extends PureComponent {
     ) : null;
   }
 
+  renderActivityV2(activity, index) {
+    const { conversionRate, nativeCurrency } = this.props;
+    const { eventKey, value, timestamp, hash } = activity;
+    const ethValue =
+      index === 0
+        ? `${getValueFromWeiHex({
+            value,
+            fromCurrency: ETH,
+            toCurrency: ETH,
+            conversionRate,
+            numberOfDecimals: 6,
+          })} ${nativeCurrency}`
+        : getEthConversionFromWeiHex({
+            value,
+            fromCurrency: ETH,
+            nativeCurrency,
+            conversionRate,
+            numberOfDecimals: 6,
+          });
+    const formattedTimestamp = formatDate(timestamp, 'T M/d/y');
+    const label = eventKey.replace('transaction', '');
+
+    return (
+      <div className="transaction-activity-log__activity-row">
+        <div className="transaction-activity-log__activity-row-left">
+          {label}
+        </div>
+        <div className="transaction-activity-log__activity-row-right">
+          {formattedTimestamp}
+        </div>
+      </div>
+    );
+  }
+
   renderActivity(activity, index) {
     const { conversionRate, nativeCurrency } = this.props;
     const { eventKey, value, timestamp, hash } = activity;
@@ -137,7 +171,7 @@ export default class TransactionActivityLog extends PureComponent {
         </div>
         <div className="transaction-activity-log__activities-container">
           {activities.map((activity, index) =>
-            this.renderActivity(activity, index),
+            this.renderActivityV2(activity, index),
           )}
         </div>
       </div>

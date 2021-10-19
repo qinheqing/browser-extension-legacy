@@ -2,7 +2,7 @@ import React, { useMemo, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { useHistory } from 'react-router-dom';
-import ListItem from '../../ui/list-item';
+import ListV2Item from '../../ui/list-v2-item';
 import { useTransactionDisplayData } from '../../../hooks/useTransactionDisplayData';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import { useCancelTransaction } from '../../../hooks/useCancelTransaction';
@@ -32,9 +32,8 @@ export default function TransactionListItem({
     initialTransaction: { id },
     primaryTransaction: { err, status },
   } = transactionGroup;
-  const [cancelEnabled, cancelTransaction] = useCancelTransaction(
-    transactionGroup,
-  );
+  const [cancelEnabled, cancelTransaction] =
+    useCancelTransaction(transactionGroup);
   const retryTransaction = useRetryTransaction(transactionGroup);
   const shouldShowSpeedUp = useShouldShowSpeedUp(
     transactionGroup,
@@ -59,8 +58,7 @@ export default function TransactionListItem({
     category === TRANSACTION_GROUP_CATEGORIES.SIGNATURE_REQUEST;
   const isApproval = category === TRANSACTION_GROUP_CATEGORIES.APPROVAL;
   const isUnapproved = status === TRANSACTION_STATUSES.UNAPPROVED;
-  const isApproved = status === TRANSACTION_STATUSES.APPROVED
-  const isSwap = category === TRANSACTION_GROUP_CATEGORIES.SWAP;
+  const isApproved = status === TRANSACTION_STATUSES.APPROVED;
 
   const className = classnames('transaction-list-item', {
     'transaction-list-item--unconfirmed':
@@ -84,8 +82,7 @@ export default function TransactionListItem({
     const btn = (
       <Button
         onClick={cancelTransaction}
-        rounded
-        className="transaction-list-item__header-button"
+        className="transaction-list-item__cancel-button"
         disabled={!cancelEnabled}
       >
         {t('cancel')}
@@ -115,29 +112,36 @@ export default function TransactionListItem({
     if (!shouldShowSpeedUp || !isPending || isUnapproved || isApproved) {
       return null;
     }
-    return (
-      <Button
-        type="secondary"
-        rounded
-        onClick={retryTransaction}
-        className="transaction-list-item-details__header-button"
-      >
-        {t('speedUp')}
-      </Button>
-    );
+    return <Button onClick={retryTransaction}>{t('speedUp')}</Button>;
   }, [shouldShowSpeedUp, isUnapproved, t, isPending, retryTransaction]);
 
   return (
     <>
-      <ListItem
+      <ListV2Item
         onClick={toggleShowDetails}
         className={className}
         title={title}
         icon={
-          <TransactionIcon category={category} status={displayedStatusKey} />
+          <img
+            style={{ width: '28px', height: '28px' }}
+            src="./images/arrow-circle.svg"
+          />
+          // <TransactionIcon category={category} status={displayedStatusKey} />
         }
         subtitle={
-          <h3>
+          <div>
+            {!isPending && (
+              <div
+                className={
+                  subtitleContainsOrigin
+                    ? 'transaction-list-item__origin'
+                    : 'transaction-list-item__address'
+                }
+                title={subtitle}
+              >
+                {subtitle}
+              </div>
+            )}
             <TransactionStatus
               isPending={isPending}
               isEarliestNonce={isEarliestNonce}
@@ -145,17 +149,7 @@ export default function TransactionListItem({
               date={date}
               status={displayedStatusKey}
             />
-            <span
-              className={
-                subtitleContainsOrigin
-                  ? 'transaction-list-item__origin'
-                  : 'transaction-list-item__address'
-              }
-              title={subtitle}
-            >
-              {subtitle}
-            </span>
-          </h3>
+          </div>
         }
         rightContent={
           !isSignatureReq &&
@@ -178,7 +172,7 @@ export default function TransactionListItem({
           {speedUpButton}
           {cancelButton}
         </div>
-      </ListItem>
+      </ListV2Item>
       {showDetails && (
         <TransactionListItemDetails
           title={title}
@@ -188,7 +182,7 @@ export default function TransactionListItem({
           senderAddress={senderAddress}
           recipientAddress={recipientAddress}
           onRetry={retryTransaction}
-          showRetry={status === TRANSACTION_STATUSES.FAILED && !isSwap}
+          showRetry={status === TRANSACTION_STATUSES.FAILED}
           showSpeedUp={shouldShowSpeedUp}
           isEarliestNonce={isEarliestNonce}
           onCancel={cancelTransaction}
