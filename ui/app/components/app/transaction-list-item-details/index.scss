@@ -1,4 +1,18 @@
 .transaction-list-item-details {
+  &__row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 30px;
+    border-bottom: 1px solid #E7E7EE;
+  }
+  &__row-label {
+    font-size: 12px;
+  }
+  &__row-content {
+    font-size: 12px;
+  }
   &__header {
     margin: 8px 16px;
     display: flex;
@@ -30,7 +44,7 @@
   }
 
   &__sender-to-recipient-container {
-    margin-bottom: 8px;
+    margin-bottom: 24px;
   }
 
   &__cards-container {
@@ -48,6 +62,13 @@
   &__transaction-activity-log {
     flex: 2;
     min-width: 0;
-    padding-left: 12px;
+  }
+  &__address {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  &__address-icon {
+    margin-left: 5px;
   }
 }

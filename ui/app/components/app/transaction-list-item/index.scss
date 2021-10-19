@@ -20,6 +20,11 @@
     color: $Grey-500;
   }
 
+  &__cancel-button {
+    background-color: #f9f9fb;
+    color: #A0A0B0;
+  }
+
   &__pending-actions {
     padding-top: 12px;
     display: flex;
@@ -30,6 +35,7 @@
       padding: 8px;
       width: 75px;
       white-space: nowrap;
+      border-radius: 12px;
     }
 
     & > .button:first-child {
@@ -48,10 +54,10 @@
     text-overflow: initial;
   }
 
-  .transaction-status::after {
-    content: "·";
-    margin: 0 4px;
-  }
+  // .transaction-status::after {
+  //   content: "·";
+  //   margin: 0 4px;
+  // }
 
   &__origin,
   &__address {

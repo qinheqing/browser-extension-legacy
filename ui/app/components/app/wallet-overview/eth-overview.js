@@ -87,23 +87,19 @@ const EthOverview = ({ className }) => {
       }
       buttons={
         <>
-          <IconButton
+          <div
             className="eth-overview__button"
-            data-testid="eth-overview-send"
-            Icon={SendIcon}
-            label={t('send')}
             onClick={() => {
-              sendEvent();
               history.push(SEND_ROUTE);
             }}
-          />
-          <IconButton
-            className="eth-overview__button"
-            disabled={!isSwapEnable}
-            Icon={SwapIcon}
-            onClick={handleSwap}
-            label={t('swap')}
-          />
+          >
+            <img src="./images/arrow-up.svg" />
+            <span className="eth-overview__button-text">Send</span>
+          </div>
+          <div className="eth-overview__button">
+            <img src="./images/qrcode.svg" />
+            <span className="eth-overview__button-text">Receive</span>
+          </div>
         </>
       }
       className={className}

@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useSelector } from 'react-redux';
+import { groupBy } from 'lodash';
 import {
   nonceSortedCompletedTransactionsSelector,
   nonceSortedPendingTransactionsSelector,
@@ -102,13 +103,15 @@ export default function TransactionList({
             <div className="transaction-list__header">
               {`${t('queue')} (${pendingTransactions.length})`}
             </div>
-            {pendingTransactions.map((transactionGroup, index) => (
-              <TransactionListItem
-                isEarliestNonce={index === 0}
-                transactionGroup={transactionGroup}
-                key={`${transactionGroup.nonce}:${index}`}
-              />
-            ))}
+            <div className="transaction-list__items-wrapper">
+              {pendingTransactions.map((transactionGroup, index) => (
+                <TransactionListItem
+                  isEarliestNonce={index === 0}
+                  transactionGroup={transactionGroup}
+                  key={`${transactionGroup.nonce}:${index}`}
+                />
+              ))}
+            </div>
           </div>
         )}
         <div className="transaction-list__completed-transactions">
@@ -116,14 +119,16 @@ export default function TransactionList({
             <div className="transaction-list__header">{t('history')}</div>
           ) : null}
           {completedTransactions.length > 0 ? (
-            completedTransactions
-              .slice(0, limit)
-              .map((transactionGroup, index) => (
-                <TransactionListItem
-                  transactionGroup={transactionGroup}
-                  key={`${transactionGroup.nonce}:${limit + index - 10}`}
-                />
-              ))
+            <div className="transaction-list__items-wrapper">
+              {completedTransactions
+                .slice(0, limit)
+                .map((transactionGroup, index) => (
+                  <TransactionListItem
+                    transactionGroup={transactionGroup}
+                    key={`${transactionGroup.nonce}:${limit + index - 10}`}
+                  />
+                ))}
+            </div>
           ) : (
             <div className="transaction-list__empty">
               <div className="transaction-list__empty-text">

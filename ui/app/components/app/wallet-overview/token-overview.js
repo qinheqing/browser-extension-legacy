@@ -73,33 +73,16 @@ const TokenOverview = ({ className, token }) => {
       }
       buttons={
         <>
-          <IconButton
-            className="token-overview__button"
+          <div
+            className="eth-overview__button"
             onClick={() => {
-              sendTokenEvent();
               dispatch(updateSendToken(token));
               history.push(SEND_ROUTE);
             }}
-            Icon={SendIcon}
-            label={t('send')}
-            data-testid="eth-overview-send"
-          />
-          <IconButton
-            className="token-overview__button"
-            disabled={!isSwapEnable}
-            Icon={SwapIcon}
-            onClick={handleSwap}
-            label={t('swap')}
-            tooltipRender={(contents) => (
-              <Tooltip
-                title={t('onlyAvailableOnMainnet')}
-                position="bottom"
-                disabled={isSwapEnable}
-              >
-                {contents}
-              </Tooltip>
-            )}
-          />
+          >
+            <img src="./images/arrow-up.svg" />
+            <span className="eth-overview__button-text">Send</span>
+          </div>
         </>
       }
       className={className}

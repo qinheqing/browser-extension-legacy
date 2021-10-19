@@ -88,11 +88,23 @@
   }
 
   &__button {
-    margin-right: 24px;
+    width: 120px;
+    height: 40px;
+    border: 1px solid #E7E7EE;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: white;
+    & + & {
+      margin-left: 10px;
+    }
   }
 
-  &__button:last-of-type {
-    margin-right: 0;
+  &__button-text {
+    margin-left: 10px;
   }
 
   &__circle {
@@ -134,10 +146,18 @@
   }
 
   &__button {
-    margin-right: 24px;
-  }
-
-  &__button:last-of-type {
-    margin-right: 0;
+    width: 120px;
+    height: 40px;
+    border: 1px solid #E7E7EE;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: white;
+    & + & {
+      margin-left: 10px;
+    }
   }
 }
