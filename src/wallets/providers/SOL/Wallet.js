@@ -126,10 +126,12 @@ class Wallet extends WalletBase {
   }
 
   async signAndSendTxObject({ accountInfo, feeInfo, tx }) {
-    const txStr = bs58.encode(tx.serializeMessage());
-    const signStr = await this.signTx(txStr);
+    const txStrBase58 = bs58.encode(tx.serializeMessage());
 
-    const signBytes = bs58.decode(signStr);
+    // SOL signTx: input and output are all base58 encoded string.
+    const signStrBase58 = await this.signTx(txStrBase58);
+
+    const signBytes = bs58.decode(signStrBase58);
     const publicKey = new PublicKey(accountInfo.address);
 
     tx.addSignature(publicKey, signBytes);

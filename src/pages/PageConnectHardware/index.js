@@ -36,21 +36,6 @@ export default observer(function PageConnectHardware() {
 
       addrs = await wallet.getAddresses({ indexes: indexesRange });
 
-      // SOL mock
-      const solMockAddresses = [
-        'CwaSJrcjte7hMPwmg19pZLDsS5AuMBEQLteLccA2SPbr',
-        '6M1MeutRFKKpNygxqUQKNqq6D33n2NG8dBH4WMp9nKyh',
-        'Ax9JER8RuZbPNKrXXr8PCgjnt4CyxTS2rnNqdKnrwQo8',
-        'AoQsoSHHxVXbneD1sJswVhndvPtRCaB6VSEuAfQnKhJA',
-        'EzLtfR1uEqR7tibYrnVkVZSjcwyauRCGdYQKRC2vA9qG',
-      ];
-      addrs = [0, 1, 2, 3, 4].map((index) => {
-        return {
-          ...addrs[index],
-          address: solMockAddresses[index],
-        };
-      });
-
       return addrs;
     },
     [wallet],

@@ -96,12 +96,16 @@ class WalletBase {
   // tx is String
   async signTx(txStr) {
     const hdPath = this.accountHdPath;
+    const deviceId = this.accountInfo?.deviceId;
 
     // tx is String
-    return this.keyringProxy.signTransaction({
+    const signedTxStr = this.keyringProxy.signTransaction({
       tx: txStr,
       hdPath,
+      deviceId,
     });
+    // signedTx is String
+    return signedTxStr;
   }
 
   // tx is String

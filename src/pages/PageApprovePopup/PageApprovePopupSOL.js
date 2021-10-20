@@ -236,6 +236,7 @@ const ApproveTransaction = observer(function ({
     : query.request.params.message;
   const txStrList = [].concat(messageToSign);
   const [txListDecoded, setTxListDecoded] = useState([]);
+  const [btnLoading, setBtnLoading] = useState(false);
   useEffect(() => {
     Promise.all(txStrList.map(async (txStr) => decodeTxAsync(txStr))).then(
       (txs) => setTxListDecoded(txs),
@@ -270,11 +271,13 @@ const ApproveTransaction = observer(function ({
           </OneButton>
           <div className="w-4" />
           <OneButton
+            loading={btnLoading}
             block
             type="primary"
-            onClick={() =>
-              onApprove({ autoApprove: false, message: txStrList, isBatch })
-            }
+            onClick={() => {
+              setBtnLoading(true);
+              onApprove({ autoApprove: false, message: txStrList, isBatch });
+            }}
           >
             {/* 交易授权*/}
             确认授权
@@ -445,6 +448,7 @@ function PageApprovePopupSOL() {
     message,
     isBatch = false, // signAllTransactions
   } = {}) => {
+    const wallet = storeWallet.currentWallet;
     // const txMessage = messages[0];
     const txMessageList = [].concat(message);
 
@@ -452,7 +456,8 @@ function PageApprovePopupSOL() {
     const signatures = [];
     for (let i = 0; i < txMessageList.length; i++) {
       const txMessage = txMessageList[i];
-      const signature = await storeWallet.currentWallet.signTx(txMessage);
+      // TODO signAllTransactions here one by one
+      const signature = await wallet.signTx(txMessage);
       signatures.push(signature);
     }
 

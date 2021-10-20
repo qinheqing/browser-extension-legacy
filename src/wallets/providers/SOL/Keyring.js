@@ -54,6 +54,14 @@ class KeyringHardware extends KeyringHardwareBase {
     this._hdkeyManager = this._hdkeyManager || new HdKeyManager(this.options);
     return this._hdkeyManager;
   }
+
+  async callGetAddress({ connect, params }) {
+    return connect.solanaGetAddress(params);
+  }
+
+  async callSignTransaction({ connect, params }) {
+    return connect.solanaSignTransaction(params);
+  }
 }
 
 class KeyringPicker extends KeyringPickerBase {

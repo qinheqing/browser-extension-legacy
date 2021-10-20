@@ -81,13 +81,17 @@ class KeyringBase {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  // getAddressesByHdWallet
   async getAddresses() {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  // signTxByHdWallet
+  // sign single transaction ONLY
   async signTransaction() {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  // TODO sign multiple transaction
+  async signAllTransactions() {
     return utilsApp.throwToBeImplemented(this);
   }
 }
@@ -155,10 +159,11 @@ class KeyringHdBase extends KeyringBase {
       tx,
     });
   }
-}
 
-// run in background
-class KeyringSingleChainBase extends KeyringBase {}
+  async signAllTransactions() {
+    return utilsApp.throwToBeImplemented(this);
+  }
+}
 
 // run in background
 class KeyringHardwareBase extends KeyringBase {
@@ -184,14 +189,34 @@ class KeyringHardwareBase extends KeyringBase {
     throw new Error('Hardware privateKey exporting is not supported.');
   }
 
+  async callGetAddress({ connect, params }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  async callSignTransaction({ connect, params }) {
+    return utilsApp.throwToBeImplemented(this);
+  }
+
+  /* TODO need upgrade firmware error
+  {
+    "id": 1,
+    "success": false,
+    "payload": {
+      "error": "Unknown message",
+      "code": "Failure_UnexpectedMessage"
+    },
+    "device": {}
+  }
+   */
   async getAddresses({ indexes = [0] }) {
     const bundle = indexes.map((index) => ({
       path: this.hdkeyManager.createHdPath({ index }),
-      showOnTrezor: false,
+      showOnTrezor: false, // deprecate for showOnDevice
+      showOnDevice: false,
     }));
     const params = {
-      coin: this.getCoinParam(),
       bundle,
+      coin: this.getCoinParam(),
       includingFeatures: true,
     };
 
@@ -201,10 +226,7 @@ class KeyringHardwareBase extends KeyringBase {
     // TODO ethereumGetAddress method name is different in each chain
     const connect = await this.getConnectAsync();
 
-    const features = {};
-    // const features = await connect.getFeatures();
-
-    const resHw = await connect.ethereumGetAddress(params);
+    const resHw = await this.callGetAddress({ connect, params });
     const { id, success, payload, device } = resHw;
     logger.info('hardware OneKeyConnect invoke ', {
       req: {
@@ -238,7 +260,7 @@ class KeyringHardwareBase extends KeyringBase {
            */
         const { serializedPath, address } = data;
         return {
-          deviceId: features?.payload?.device_id ?? '',
+          deviceId: device?.features?.device_id ?? '',
           address,
           ...this.buildAddressMeta({
             index: indexes[i],
@@ -250,16 +272,35 @@ class KeyringHardwareBase extends KeyringBase {
     return [];
   }
 
-  async signTransaction(payload) {
+  async signTransaction({ hdPath, tx, deviceId } = {}) {
     // hdPath: "m/44'/501'/0'/0'"
     // tx: "QwE1gc..."
-    const { hdPath, tx } = payload;
     const coin = this.getCoinParam();
     const connect = await this.getConnectAsync();
-    logger.info('hardware signTransaction', payload);
+    // TODO signAllTransactions by bundle
+    const params = {
+      bundle: [{ path: hdPath, rawTx: tx, showOnDevice: true }],
+      coin,
+      deviceId,
+    };
+    const resHw = await this.callSignTransaction({ connect, params });
+    const { success, payload } = resHw;
+    console.log('hardware signTransaction', resHw);
+    // TODO base hardware response and error handle
+    if (!success) {
+      throw new Error(payload.error || payload.code);
+    }
+    const signature = payload?.[0]?.signature ?? '';
+    return signature;
+  }
+
+  async signAllTransactions() {
     return utilsApp.throwToBeImplemented(this);
   }
 }
+
+// run in background
+class KeyringSingleChainBase extends KeyringBase {}
 
 // run in background
 class KeyringWatchOnlyBase extends KeyringBase {}
