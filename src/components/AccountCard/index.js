@@ -8,7 +8,7 @@ import storeApp from '../../store/storeApp';
 import storeStorage from '../../store/storeStorage';
 import TokenBalance from '../TokenBalance';
 import AppIcons from '../AppIcons';
-import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
+import { CONST_ACCOUNT_TYPES } from '../../consts/consts';
 import CopyHandle from '../CopyHandle';
 import storeToken from '../../store/storeToken';
 import { ChainLogoIcon } from '../LogoIcon';
@@ -83,7 +83,7 @@ function AccountCard({
           )}
         </span>
         <div className="flex-1" />
-        {account.type === CONSTS_ACCOUNT_TYPES.Hardware && <HardwareTypeTag />}
+        {account.type === CONST_ACCOUNT_TYPES.Hardware && <HardwareTypeTag />}
       </header>
       <div className={classnames(styles.AccountCard__address)}>
         <CopyHandle text={account.address}>

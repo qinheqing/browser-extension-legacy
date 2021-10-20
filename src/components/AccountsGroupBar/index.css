@@ -28,10 +28,7 @@
 }
 
 .AccountsGroupItem__icon {
-  border-radius: 99999px;
-  width: 32px;
-  height: 32px;
-  background: #eee;
+  box-shadow: 0 0 0 2px rgba(0, 153, 43, var(--tw-bg-opacity));
 }
 
 .AccountsGroupItem__icon_active {

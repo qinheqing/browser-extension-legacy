@@ -15,6 +15,8 @@ import storeChain from '../../store/storeChain';
 import uiBackgroundProxy from '../../wallets/bg/uiBackgroundProxy';
 import utilsUrl from '../../utils/utilsUrl';
 import uiDappApproval from '../../wallets/dapp/uiDappApproval';
+import useInitFirstAccount from '../../hooks/useInitFirstAccount';
+import storeAccount from '../../store/storeAccount';
 import PageApprovePopupSOL from './PageApprovePopupSOL';
 import PageApprovePopupCFX from './PageApprovePopupCFX';
 
@@ -66,25 +68,44 @@ function useBeforeUnload(query) {
   }, [query]);
 }
 
+function ChainOrAccountNotReady({ message }) {
+  return (
+    <div className="flex flex-col items-center p-4">
+      <div className="text-center py-16">{message}</div>
+      <OneButton
+        onClick={async () => {
+          window.close();
+        }}
+      >
+        关闭弹窗
+      </OneButton>
+    </div>
+  );
+}
+
 function PageApprovePopupEnsureChain() {
   const chainInfo = storeChain?.currentChainInfo;
   const query = useApproveQuery();
   useBeforeUnload(query);
+  const initAccountReady = useInitFirstAccount();
+
+  if (!initAccountReady) {
+    return <ChainOrAccountNotReady message="账户初始化中" />;
+  }
 
   if (chainInfo?.baseChain !== query.baseChain || !utilsApp.isNewHome()) {
     return (
-      <div className="flex flex-col items-center p-4">
-        <div className="text-center py-16">
-          请先切换到 {query.baseChain} 网络
-        </div>
-        <OneButton
-          onClick={async () => {
-            window.close();
-          }}
-        >
-          关闭弹窗
-        </OneButton>
-      </div>
+      <ChainOrAccountNotReady
+        message={<span>请先切换到 {query.baseChain} 网络</span>}
+      />
+    );
+  }
+
+  if (!storeAccount.currentAccountAddress) {
+    return (
+      <ChainOrAccountNotReady
+        message={<span>请先选择或创建 {query.baseChain} 账户</span>}
+      />
     );
   }
 

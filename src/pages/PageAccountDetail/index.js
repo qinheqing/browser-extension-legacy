@@ -17,7 +17,7 @@ import {
   ROUTE_TX_HISTORY,
 } from '../../routes/routeUrls';
 import { REVEAL_SEED_ROUTE } from '../../../ui/app/helpers/constants/routes';
-import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
+import { CONST_ACCOUNT_TYPES } from '../../consts/consts';
 
 function PageAccountDetail() {
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -73,9 +73,8 @@ function PageAccountDetail() {
               <div>{storeAccount.currentAccountTypeText}</div>
             </li>
             {storeAccount.currentAccountInfo.type ===
-              CONSTS_ACCOUNT_TYPES.Wallet && (
+              CONST_ACCOUNT_TYPES.Wallet && (
               <>
-                (
                 <li className="px-4 py-4 sm:px-6 flex justify-between items-center">
                   <div>私钥</div>
                   <div>
@@ -102,7 +101,6 @@ function PageAccountDetail() {
                     </OneButton>
                   </div>
                 </li>
-                )
               </>
             )}
           </ul>

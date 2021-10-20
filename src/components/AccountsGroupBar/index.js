@@ -38,7 +38,7 @@ const AccountsGroupItem = observer(function ({
         active={isActive}
         border={false}
         label={isTestNet && 'Test'}
-        className={classnames({
+        className={classnames(isActive && styles.AccountsGroupItem__icon, {
           'scale-90': size === 'sm',
           '!bg-gray-100': !isActive,
         })}
@@ -62,10 +62,9 @@ const AccountsGroupItemChain = observer(function ({ chainKey, ...others }) {
     <AccountsGroupItem
       icon={chainInfo.chainLogo}
       onClick={() => {
-        storeStorage.accountsGroupFilter = {
-          type: CONST_ACCOUNTS_GROUP_FILTER_TYPES.chain,
+        storeAccount.setAccountsGroupFilterToChain({
           chainKey,
-        };
+        });
       }}
       isTestNet={chainInfo.isTestNet}
       isActive={storeAccount.accountsGroupFilter?.chainKey === chainKey}

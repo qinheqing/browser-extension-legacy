@@ -40,7 +40,10 @@ class StoreHistory extends BaseStore {
     this.history.replace(url, ...others);
   }
 
-  goBack() {
+  goBack({ fallbackUrl } = {}) {
+    if (fallbackUrl && window.history.length <= 1) {
+      this.replace(fallbackUrl);
+    }
     this.history.goBack();
   }
 
@@ -61,13 +64,6 @@ class StoreHistory extends BaseStore {
     const storeChain = (await import('./storeChain')).default;
     const storeStorage = (await import('./storeStorage')).default;
     const utilsToast = (await import('../utils/utilsToast')).default;
-
-    if (storeApp.legacyState.hwOnlyMode) {
-      utilsToast.toast.info(
-        '硬件设备暂不支持 Solana 和 Conflux，请选择其他网络',
-      );
-      return;
-    }
 
     storeStorage.homeType = 'NEW';
     if (chainKey) {

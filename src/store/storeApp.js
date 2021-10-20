@@ -73,7 +73,8 @@ class StoreApp extends BaseStore {
   legacyState = {
     isUnlocked: false,
     selectedAddress: '',
-    hwOnlyMode: false,
+    hwOnlyMode: true,
+    isInitialized: false,
     currentCurrency: 'usd',
   };
 
@@ -83,6 +84,16 @@ class StoreApp extends BaseStore {
       return undefined;
     }
     return this.legacyState.isUnlocked;
+  }
+
+  @computed
+  get isHardwareOnlyMode() {
+    return this.legacyState.hwOnlyMode;
+  }
+
+  @computed
+  get isInitialized() {
+    return this.legacyState.isInitialized;
   }
 }
 

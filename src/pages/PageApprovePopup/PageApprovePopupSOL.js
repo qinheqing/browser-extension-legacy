@@ -28,7 +28,6 @@ import OneDetailItem, {
 } from '../../components/OneDetailItem';
 import storeTransfer from '../../store/storeTransfer';
 import utilsUrl from '../../utils/utilsUrl';
-import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
 import utilsApp from '../../utils/utilsApp';
 import { OneField } from '../../components/OneField';
 import OneCellItem from '../../components/OneCellItem';

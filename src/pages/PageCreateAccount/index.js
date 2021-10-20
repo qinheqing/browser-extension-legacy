@@ -6,7 +6,7 @@ import AppPageLayout from '../../components/AppPageLayout';
 import storeAccount from '../../store/storeAccount';
 import walletFactory from '../../wallets/walletFactory';
 import OneAccountInfo from '../../classes/OneAccountInfo';
-import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
+import { CONST_ACCOUNT_TYPES } from '../../consts/consts';
 import ReactJsonView from '../../components/ReactJsonView';
 import ImportAccountsList from '../../components/ImportAccountsList';
 
@@ -18,7 +18,7 @@ function PageCreateAccount() {
     return walletFactory.createWallet({
       chainInfo,
       accountInfo: new OneAccountInfo({
-        type: CONSTS_ACCOUNT_TYPES.Wallet,
+        type: CONST_ACCOUNT_TYPES.Wallet,
       }),
     });
   }, []);

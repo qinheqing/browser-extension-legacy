@@ -1,7 +1,7 @@
 import { toLower, isString } from 'lodash';
 import logger from 'loglevel';
 import utilsApp from '../utils/utilsApp';
-import { CONSTS_ACCOUNT_TYPES } from '../consts/consts';
+import { CONST_ACCOUNT_TYPES } from '../consts/consts';
 import bgGetRootController from './bg/bgGetRootController';
 import { HdKeyManagerBase } from './HdKeyManager';
 import optionsHelper from './helpers/optionsHelper';
@@ -272,14 +272,14 @@ class KeyringHardwareBase extends KeyringBase {
     return [];
   }
 
-  async signTransaction({ hdPath, tx, deviceId } = {}) {
+  async signTransaction({ address, hdPath, tx, deviceId } = {}) {
     // hdPath: "m/44'/501'/0'/0'"
     // tx: "QwE1gc..."
     const coin = this.getCoinParam();
     const connect = await this.getConnectAsync();
     // TODO signAllTransactions by bundle
     const params = {
-      bundle: [{ path: hdPath, rawTx: tx, showOnDevice: true }],
+      bundle: [{ address, path: hdPath, rawTx: tx, showOnDevice: true }],
       coin,
       deviceId,
     };
@@ -308,10 +308,10 @@ class KeyringWatchOnlyBase extends KeyringBase {}
 // run in background
 class KeyringPickerBase {
   keyrings = {
-    [CONSTS_ACCOUNT_TYPES.Wallet]: KeyringHdBase,
-    [CONSTS_ACCOUNT_TYPES.Hardware]: KeyringHardwareBase,
-    [CONSTS_ACCOUNT_TYPES.SingleChain]: KeyringSingleChainBase,
-    [CONSTS_ACCOUNT_TYPES.WatchOnly]: KeyringWatchOnlyBase,
+    [CONST_ACCOUNT_TYPES.Wallet]: KeyringHdBase,
+    [CONST_ACCOUNT_TYPES.Hardware]: KeyringHardwareBase,
+    [CONST_ACCOUNT_TYPES.SingleChain]: KeyringSingleChainBase,
+    [CONST_ACCOUNT_TYPES.WatchOnly]: KeyringWatchOnlyBase,
   };
 
   create(options) {

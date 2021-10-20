@@ -30,8 +30,9 @@ function LogoIcon({
           'w-6 h-6': size === 'sm',
           'bg-gray-50': !active,
           'bg-green-100': active,
-          'border border-gray-100': border,
+          border,
         },
+        border && (active ? 'border-green-600' : 'border-gray-100'),
         className,
       )}
     >

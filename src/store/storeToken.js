@@ -76,7 +76,7 @@ class StoreToken extends BaseStore {
           }),
         );
 
-        if (isNil(decimals)) {
+        if (isNil(tokenInfo.decimals)) {
           console.error(
             `token decimals not found: ${JSON.stringify(tokenRaw)}`,
           );
@@ -274,11 +274,39 @@ class StoreToken extends BaseStore {
   _buildTokenMetaCache({ tokenMeta, token }) {
     const symbol = this.correctTokenSymbol(tokenMeta);
     const key = this._buildTokenMetaKey({ token });
+
+    /*
+    tokenMeta (from tokenList.json)
+      address: "rz251Qbsa27sL8Y1H7h4qu71j6Q7ukNmskg5ZDhPCg3"
+      chainId: 102
+      decimals: 6
+      logoURI: "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/rz251Qbsa27sL8Y1H7h4qu71j6Q7ukNmskg5ZDhPCg3/logo.png"
+      name: "Hiro LaunchDAO"
+      symbol: "HIRO"
+
+    token (from RPC)
+      address: "E7Q9obd837chGQY3mWz2YawNhkCQbAx4ZYisrSrrDPqD"
+      associatedAddress: "E7Q9obd837chGQY3mWz2YawNhkCQbAx4ZYisrSrrDPqD"
+      balance: "0"
+      chainKey: "SOL_T"
+      contractAddress: "rz251Qbsa27sL8Y1H7h4qu71j6Q7ukNmskg5ZDhPCg3"
+      decimals: 9
+      depositAddress: "AFDCmixQdG9XNejn6zyM8dueqWxqn9wmsMmf5i4RctxK"
+      isAssociatedToken: true
+      ownerAddress: "AFDCmixQdG9XNejn6zyM8dueqWxqn9wmsMmf5i4RctxK"
+      chainId: 102
+      platformId: "solana"
+      programAddress: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+     */
     const meta = {
+      address: token.contractAddress,
+      chainId: token.chainId,
+      decimals: token.decimals,
+      name: symbol,
       ...tokenMeta,
       lastUpdate: new Date().getTime(),
       symbol,
-      isEditable: !tokenMeta,
+      isEditable: !tokenMeta, // tokenMeta will be undefined, if not includes by tokenList.json
     };
     return {
       key,

@@ -8,7 +8,7 @@ import SelectHardware from '../../../ui/app/pages/create-account/connect-hardwar
 import {
   CONST_CHAIN_KEYS,
   CONST_HARDWARE_MODELS,
-  CONSTS_ACCOUNT_TYPES,
+  CONST_ACCOUNT_TYPES,
 } from '../../consts/consts';
 import storeChain from '../../store/storeChain';
 import walletFactory from '../../wallets/walletFactory';
@@ -33,10 +33,13 @@ export default observer(function PageConnectHardware() {
       const indexesRange = range(start, start + limit);
 
       let addrs = [];
-
-      addrs = await wallet.getAddresses({ indexes: indexesRange });
-
-      return addrs;
+      try {
+        addrs = await wallet.getAddresses({ indexes: indexesRange });
+        return addrs;
+      } catch (error) {
+        setWallet(null);
+        return [];
+      }
     },
     [wallet],
   );
@@ -46,7 +49,7 @@ export default observer(function PageConnectHardware() {
   ) => {
     const chainInfo = storeAccount.chainInfoOfAccountsGroup;
     const accountInfo = new OneAccountInfo({
-      type: CONSTS_ACCOUNT_TYPES.Hardware,
+      type: CONST_ACCOUNT_TYPES.Hardware,
       hardwareModel: device,
     });
     const _wallet = walletFactory.createWallet({

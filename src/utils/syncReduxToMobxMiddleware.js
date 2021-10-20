@@ -10,11 +10,17 @@ const syncReduxToMobxMiddleware = (store) => (next) => (action) => {
   // console.log('Redux action dispatch: ', action, newState);
 
   if (newState.metamask) {
-    const { isUnlocked, selectedAddress, hwOnlyMode, currentCurrency } =
-      newState.metamask;
+    const {
+      isUnlocked,
+      isInitialized,
+      selectedAddress,
+      hwOnlyMode,
+      currentCurrency,
+    } = newState.metamask;
     // TODO optimize
     storeApp.legacyState = {
       isUnlocked,
+      isInitialized,
       selectedAddress,
       hwOnlyMode,
       currentCurrency,

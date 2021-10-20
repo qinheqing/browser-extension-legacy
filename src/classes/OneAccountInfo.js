@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { CONSTS_ACCOUNT_TYPES } from '../consts/consts';
+import { CONST_ACCOUNT_TYPES } from '../consts/consts';
 
 // TODO rename folder to models
 
@@ -44,7 +44,7 @@ class OneAccountInfo {
 
   chainInfo = null;
 
-  type = CONSTS_ACCOUNT_TYPES.Hardware;
+  type = CONST_ACCOUNT_TYPES.Hardware;
 
   name = ''; // HD-BSC-1
 

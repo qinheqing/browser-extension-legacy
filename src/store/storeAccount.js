@@ -9,7 +9,7 @@ import {
 } from 'mobx';
 import { uniqBy, findIndex, isNil, cloneDeep } from 'lodash';
 import {
-  CONSTS_ACCOUNT_TYPES,
+  CONST_ACCOUNT_TYPES,
   CONST_ACCOUNTS_GROUP_FILTER_TYPES,
   CONST_CHAIN_KEYS,
 } from '../consts/consts';
@@ -21,6 +21,7 @@ import storeChain from './storeChain';
 import storeWallet from './storeWallet';
 import storeTx from './storeTx';
 import storeStorage from './storeStorage';
+import storeApp from './storeApp';
 
 class StoreAccount extends BaseStore {
   constructor(props) {
@@ -47,6 +48,17 @@ class StoreAccount extends BaseStore {
       const { currentBaseChain } = storeChain;
       untracked(() => {
         this.updateCurrentWallet();
+      });
+    });
+
+    autorun(() => {
+      const { isHardwareOnlyMode, homeType } = storeApp;
+      untracked(() => {
+        const { isInitialized, isUnlocked } = storeApp;
+        const isNewHome = utilsApp.isNewHome();
+        if (isInitialized && isUnlocked) {
+          this.initFirstAccount();
+        }
       });
     });
   }
@@ -105,25 +117,35 @@ class StoreAccount extends BaseStore {
     return storeStorage.accountsGroupFilter;
   }
 
+  @action.bound
+  setAccountsGroupFilterToChain({ chainKey }) {
+    if (storeChain.chainsKeys.includes(chainKey)) {
+      storeStorage.accountsGroupFilter = {
+        type: CONST_ACCOUNTS_GROUP_FILTER_TYPES.chain,
+        chainKey,
+      };
+    }
+  }
+
   @computed
   get currentAccountTypeText() {
     let type;
     switch (this.currentAccountInfo.type) {
-      case CONSTS_ACCOUNT_TYPES.Hardware: {
+      case CONST_ACCOUNT_TYPES.Hardware: {
         type = '硬件账户';
         break;
       }
 
-      case CONSTS_ACCOUNT_TYPES.WatchOnly: {
+      case CONST_ACCOUNT_TYPES.WatchOnly: {
         type = '观察账户';
         break;
       }
 
-      case CONSTS_ACCOUNT_TYPES.SingleChain: {
+      case CONST_ACCOUNT_TYPES.SingleChain: {
         type = '单币种账户';
         break;
       }
-      case CONSTS_ACCOUNT_TYPES.Wallet:
+      case CONST_ACCOUNT_TYPES.Wallet:
       default: {
         type = '钱包账户';
       }
@@ -156,13 +178,13 @@ class StoreAccount extends BaseStore {
 
     if (filter.type === CONST_ACCOUNTS_GROUP_FILTER_TYPES.hardware) {
       return storeStorage.allAccountsRaw.filter(
-        (acc) => acc.type === CONSTS_ACCOUNT_TYPES.Hardware,
+        (acc) => acc.type === CONST_ACCOUNT_TYPES.Hardware,
       );
     }
 
     if (filter.type === CONST_ACCOUNTS_GROUP_FILTER_TYPES.wallet) {
       return storeStorage.allAccountsRaw.filter(
-        (acc) => acc.type === CONSTS_ACCOUNT_TYPES.Wallet,
+        (acc) => acc.type === CONST_ACCOUNT_TYPES.Wallet,
       );
     }
     return [];
@@ -172,9 +194,14 @@ class StoreAccount extends BaseStore {
     if (!chainKey) {
       return [];
     }
-    return storeStorage.allAccountsRaw.filter(
-      (acc) => acc.chainKey === chainKey,
-    );
+    return storeStorage.allAccountsRaw
+      .filter((acc) => acc.chainKey === chainKey)
+      .filter((acc) => {
+        if (storeApp.isHardwareOnlyMode) {
+          return acc.type === CONST_ACCOUNT_TYPES.Hardware;
+        }
+        return true;
+      });
   }
 
   addAccounts(accounts = []) {
@@ -207,9 +234,14 @@ class StoreAccount extends BaseStore {
   }
 
   canCurrentAccountDelete() {
+    if (this.currentAccountInfo?.type !== CONST_ACCOUNT_TYPES.Wallet) {
+      return true;
+    }
     return (
       storeStorage.allAccountsRaw.filter(
-        (item) => item.chainKey === storeChain.currentChainKey,
+        (item) =>
+          item.chainKey === storeChain.currentChainKey &&
+          item.type === CONST_ACCOUNT_TYPES.Wallet,
       ).length > 1
     );
   }
@@ -238,8 +270,14 @@ class StoreAccount extends BaseStore {
   }
 
   @action.bound
+  clearCurrentAccount() {
+    return this.setCurrentAccount({ account: null });
+  }
+
+  @action.bound
   setCurrentAccount({ account }) {
-    if (!account?.chainKey) {
+    if (!account || !account?.chainKey) {
+      storeStorage.currentAccountRaw = storeStorage.CURRENT_ACCOUNT_RAW_DEFAULT;
       return;
     }
     storeChain.setCurrentChainKey(account.chainKey);
@@ -257,13 +295,32 @@ class StoreAccount extends BaseStore {
       this.getAccountsByChainKey(storeChain.currentChainKey);
 
     const accounts = getAccountsInCurrentChain();
+    const noAccountsExists = accounts.length === 0;
+    const chainKeyNotMatched =
+      this.currentAccountChainKey !== storeChain.currentChainKey;
 
-    if (accounts.length === 0) {
+    if (noAccountsExists && this.currentAccountInfo) {
+      this.clearCurrentAccount();
+    }
+
+    if (chainKeyNotMatched || !this.currentAccountChainKey) {
+      this.clearCurrentAccount();
+    }
+
+    if (
+      storeApp.isHardwareOnlyMode &&
+      this.currentAccountInfo?.type !== CONST_ACCOUNT_TYPES.Hardware
+    ) {
+      this.clearCurrentAccount();
+    }
+
+    // create first account
+    if (noAccountsExists && !storeApp.isHardwareOnlyMode) {
       const chainInfo = storeChain.currentChainInfo;
       const _wallet = walletFactory.createWallet({
         chainInfo,
         accountInfo: new OneAccountInfo({
-          type: CONSTS_ACCOUNT_TYPES.Wallet,
+          type: CONST_ACCOUNT_TYPES.Wallet,
         }),
       });
       const addresses = await _wallet.getAddresses({
@@ -275,12 +332,9 @@ class StoreAccount extends BaseStore {
       this.addAccounts(addresses);
     }
 
-    if (
-      !this.currentAccountInfo ||
-      this.currentAccountChainKey !== storeChain.currentChainKey
-    ) {
+    if (!this.currentAccountInfo || chainKeyNotMatched) {
       const _accounts = getAccountsInCurrentChain();
-      _accounts[0] && this.setCurrentAccount({ account: _accounts[0] });
+      this.setCurrentAccount({ account: _accounts[0] });
     }
   }
 
@@ -299,7 +353,7 @@ class StoreAccount extends BaseStore {
       chainInfo,
       accountInfo: new OneAccountInfo(accountNew),
     });
-    if (accountNew.type === CONSTS_ACCOUNT_TYPES.Wallet) {
+    if (accountNew.type === CONST_ACCOUNT_TYPES.Wallet) {
       // TODO use path query addresses, as index is not saved in storage
       //    wallet.getAccountAddress();  return real address, not storage cache
       const addresses = await wallet.getAddresses({
@@ -343,11 +397,6 @@ class StoreAccount extends BaseStore {
     if (updated) {
       storeStorage.allAccountsRaw = allAccountsRawFixed;
     }
-  }
-
-  @action.bound
-  async autofixCurrentAccountInfo() {
-    // noop
   }
 }
 
