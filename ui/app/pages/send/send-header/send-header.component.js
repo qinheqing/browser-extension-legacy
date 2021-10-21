@@ -23,6 +23,7 @@ export default class SendHeader extends Component {
   render() {
     return (
       <PageContainerHeader
+        onBackButtonClick={() => this.onClose()}
         onClose={() => this.onClose()}
         // title={this.context.t(this.props.titleKey)}
         title="Send"

@@ -16071,6 +16071,7 @@ js-conflux-sdk@^1.7.0:
     secp256k1 "^3.7.1"
     superagent "^6.1.0"
     websocket "^1.0.31"
+
 js-cookie@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-3.0.1.tgz#9e39b4c6c2f56563708d7d31f6f5f21873a92414"
@@ -26500,7 +26501,7 @@ write@^0.2.1:
   dependencies:
     mkdirp "^0.5.1"
 
-ws@7.1.0, ws@7.2.3, ws@7.4.6, ws@^1.1.0, ws@^3.0.0, ws@^5.1.1, ws@^7, ws@^7.4.5, ws@^7.4.6:
+ws@7.2.3, ws@7.4.6, ws@^1.1.0, ws@^3.0.0, ws@^5.1.1, ws@^7, ws@^7.4.5, ws@^7.4.6:
   version "7.5.3"
   resolved "https://registry.npmjs.org/ws/-/ws-7.5.3.tgz#160835b63c7d97bfab418fc1b8a9fced2ac01a74"
   integrity sha512-kQ/dHIzuLrS6Je9+uv81ueZomEwH0qVYstcAQ4/Z93K8zeko9gtAbttJWzoC5ukqXY1PpoouV3+VSOqEAFt5wg==
