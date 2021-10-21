@@ -121,6 +121,7 @@ function RefreshButton() {
             forceUpdateTokenMeta: true,
           });
           storeAccount.refreshKey = new Date().getTime();
+          await utilsApp.delay(1500);
         } finally {
           setLoading(false);
         }
@@ -220,27 +221,37 @@ function PageHome() {
   const history = useHistory();
   const [copied, handleCopy] = useCopyToClipboard();
   const { isUnlocked } = storeApp.legacyState;
-
-  useEffect(() => {
-    storeAccount.initFirstAccount();
-  }, []);
-
-  useEffect(() => {
-    storeToken.fetchCurrentAccountTokens();
-  }, []);
+  const [currentAccountReady, setCurrentAccountReady] = useState(false);
 
   useEffect(() => {
     (async () => {
-      if (isUnlocked) {
+      await storeAccount.initFirstAccount();
+      setCurrentAccountReady(true);
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (currentAccountReady) {
+      storeToken.fetchCurrentAccountTokens();
+    }
+  }, [currentAccountReady]);
+
+  useEffect(() => {
+    (async () => {
+      if (isUnlocked && currentAccountReady) {
         await storeAccount.autofixMismatchAddresses();
         await storeAccount.autofixCurrentAccountInfo();
       }
     })();
-  }, [isUnlocked]);
+  }, [isUnlocked, currentAccountReady]);
 
   const onAccountClick = useCallback(() => {
     storeHistory.push(ROUTE_ACCOUNT_DETAIL);
   }, []);
+
+  if (!currentAccountReady) {
+    return null;
+  }
 
   return (
     <AppPageLayout

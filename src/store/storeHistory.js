@@ -56,8 +56,9 @@ class StoreHistory extends BaseStore {
     this.replace(ROUTE_HOME);
   }
 
-  async goToHomeNew() {
+  async goToHomeNew({ chainKey } = {}) {
     const storeApp = (await import('./storeApp')).default;
+    const storeChain = (await import('./storeChain')).default;
     const storeStorage = (await import('./storeStorage')).default;
     const utilsToast = (await import('../utils/utilsToast')).default;
 
@@ -67,6 +68,9 @@ class StoreHistory extends BaseStore {
     }
 
     storeStorage.homeType = 'NEW';
+    if (chainKey) {
+      storeChain.setCurrentChainKey(chainKey);
+    }
     this.push(ROUTE_HOME);
   }
 

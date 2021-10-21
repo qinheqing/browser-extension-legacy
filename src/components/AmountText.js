@@ -18,7 +18,7 @@ export default function AmountText({
     roundMode,
   });
   return (
-    <span data-value={value} data-decimals={decimals}>
+    <span data-value={isNaN(value) ? 'NaN' : value} data-decimals={decimals}>
       {num}
       {unit && <span> {unit}</span>}
     </span>

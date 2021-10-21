@@ -80,9 +80,11 @@ class StoreChain extends BaseStore {
   @action.bound
   setCurrentChainKey(key) {
     if (key) {
-      const chainInfo = this.chains[key] || {};
-      storeStorage.currentChainKey = key;
-      storeStorage.currentChainInfo = cloneDeep(chainInfo);
+      const chainInfo = this.chains[key];
+      if (chainInfo) {
+        storeStorage.currentChainKey = key;
+        storeStorage.currentChainInfo = cloneDeep(chainInfo);
+      }
     }
   }
 

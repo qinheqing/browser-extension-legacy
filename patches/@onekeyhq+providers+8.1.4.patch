@@ -24,7 +24,7 @@ index 57c0f1d..03c5ce5 100644
      /**
       * Called when accounts may have changed. Diffs the new accounts value with
 diff --git a/node_modules/@onekeyhq/providers/dist/BaseProvider.js b/node_modules/@onekeyhq/providers/dist/BaseProvider.js
-index a3cb270..e89525b 100644
+index a3cb270..eec3a18 100644
 --- a/node_modules/@onekeyhq/providers/dist/BaseProvider.js
 +++ b/node_modules/@onekeyhq/providers/dist/BaseProvider.js
 @@ -13,6 +13,7 @@ const eth_rpc_errors_1 = require("eth-rpc-errors");
@@ -57,8 +57,8 @@ index a3cb270..e89525b 100644
          this._jsonRpcConnection.events.on('notification', (payload) => {
 -            const { method, params } = payload;
 +            const { method, params,streamName } = payload;
-+            console.log((streamName||'')+' @onekeyhq/providers.BaseProvider on notification '+(logIndex++));
-+            console.log('  ',payload);
++            // console.log((streamName||'')+' @onekeyhq/providers.BaseProvider on notification '+(logIndex++));
++            // console.log('  ',payload);
 +            if(streamName && this.streamName && streamName!==this.streamName ) {
 +              return;
 +            }

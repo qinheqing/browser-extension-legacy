@@ -3,7 +3,10 @@ const KEYS = {};
 // TODO add dev、test、prd flag
 const STORAGE_KEY_PREFIX = 'onekey/';
 
-const STORAGE_NS_UI = 'storage';
+const STORAGE_NAMESPACES = {
+  storage: 'storage',
+  dappApproval: 'dappApproval',
+};
 
 function buildFullKey(key) {
   return STORAGE_KEY_PREFIX + key;
@@ -14,7 +17,7 @@ function getAutoSaveLocalStorageItem(name, ns) {
   return getItem(storageKey);
 }
 
-function buildAutoSaveStorageKey(name, ns = STORAGE_NS_UI) {
+function buildAutoSaveStorageKey(name, ns = STORAGE_NAMESPACES.storage) {
   return `autosave.${ns}.${name}`;
 }
 
@@ -41,7 +44,7 @@ function clear() {
 }
 
 export default {
-  STORAGE_NS_UI,
+  STORAGE_NAMESPACES,
   KEYS,
   setItem,
   getItem,

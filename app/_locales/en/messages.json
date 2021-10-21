@@ -1592,6 +1592,9 @@
   "solana": {
     "message": "Solana Mainnet"
   },
+  "conflux": {
+    "message": "Conflux Mainnet"
+  },
   "somethingWentWrong": {
     "message": "Oops! Something went wrong."
   },

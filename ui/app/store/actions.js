@@ -1416,7 +1416,9 @@ export function actionAutoSelectHwAccountInHwOnlyModeAsync() {
     // * Disconnect all non-hardware accounts
     for (let i = 0; i < nonHardwareAccounts.length; i++) {
       const { address } = nonHardwareAccounts[i];
-      await dispatch(actionRemoveAccountAllPermissionsAsync(address));
+      if (address) {
+        await dispatch(actionRemoveAccountAllPermissionsAsync(address));
+      }
     }
 
     // * Select first hardware account if current account is NOT hardware

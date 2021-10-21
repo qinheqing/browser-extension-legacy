@@ -1,0 +1,13 @@
+diff --git a/node_modules/@onekeyhq/object-multiplex/dist/ObjectMultiplex.js b/node_modules/@onekeyhq/object-multiplex/dist/ObjectMultiplex.js
+index 0374f04..33f0525 100644
+--- a/node_modules/@onekeyhq/object-multiplex/dist/ObjectMultiplex.js
++++ b/node_modules/@onekeyhq/object-multiplex/dist/ObjectMultiplex.js
+@@ -63,7 +63,7 @@ class ObjectMultiplex extends readable_stream_1.Duplex {
+         // get corresponding substream
+         const substream = this._substreams[name];
+         if (!substream) {
+-            console.warn(`ObjectMultiplex - orphaned data for stream "${name}"`);
++            // console.warn(`ObjectMultiplex - orphaned data for stream "${name}"`);
+             return callback();
+         }
+         // push data into substream

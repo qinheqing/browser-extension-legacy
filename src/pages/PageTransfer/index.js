@@ -92,13 +92,15 @@ function PageTransfer() {
           onChange={(e) => (storeTransfer.amount = e.target.value)}
           placeholder="输入转出金额"
           end={
-            <OneButton
-              onClick={() => storeTransfer.fillMaxAmount()}
-              size="2xs"
-              className="bg-gray-100"
-            >
-              最大
-            </OneButton>
+            storeTransfer.feeInfo?.fee !== undefined && (
+              <OneButton
+                onClick={() => storeTransfer.fillMaxAmount()}
+                size="2xs"
+                className="bg-gray-100"
+              >
+                最大
+              </OneButton>
+            )
           }
         />
         <OneFieldItem

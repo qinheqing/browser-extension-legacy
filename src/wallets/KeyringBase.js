@@ -151,59 +151,7 @@ class KeyringHdBase extends KeyringBase {
 class KeyringSingleChainBase extends KeyringBase {}
 
 // run in background
-class KeyringHardwareBase extends KeyringBase {
-  async getAccountPrivateKey({ seed, path }) {
-    throw new Error('Hardware privateKey exporting is not supported.');
-  }
-
-  async getAddresses({ indexes = [0] }) {
-    const bundle = indexes.map((index) => ({
-      path: this.hdkeyManager.createHdPath({ index }),
-      showOnTrezor: false,
-    }));
-    const params = {
-      coin: toLower(this.baseChain),
-      bundle,
-    };
-    // TODO hardwareManager
-    const { id, success, payload } = await this.hardwareManager.getAddress(
-      params,
-    );
-    console.log({
-      req: {
-        ...params,
-      },
-      res: {
-        id,
-        success,
-        payload,
-      },
-    });
-
-    if (success) {
-      return payload.map((data, i) => {
-        /*
-          "path": [1,2,3,4,5]
-          "serializedPath": "m/44'/60'/0'/0/0",
-          "address": "0x99F825D80cADd21D77D13B7e13D25960B40a6299",
-         */
-        const { serializedPath, address } = data;
-        return {
-          address,
-          ...this.buildAddressMeta({
-            index: indexes[i],
-            hdPath: serializedPath,
-          }),
-        };
-      });
-    }
-    return [];
-  }
-
-  signTransaction() {
-    return utilsApp.throwToBeImplemented(this);
-  }
-}
+class KeyringHardwareBase extends KeyringBase {}
 
 // run in background
 class KeyringWatchOnlyBase extends KeyringBase {}

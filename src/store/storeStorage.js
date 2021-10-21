@@ -20,7 +20,7 @@ import dataMigration from './dataMigration';
 class StoreStorage extends BaseStoreWithStorage {
   constructor(props) {
     super(props);
-    this.storageNamespace = utilsStorage.STORAGE_NS_UI;
+    this.storageNamespace = utilsStorage.STORAGE_NAMESPACES.storage;
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
 

@@ -30,7 +30,7 @@ class StoreTransfer extends BaseStore {
     const dispose = autorun(() => {
       const payload = this.previewPayload;
       untracked(() => {
-        if (payload.to && payload.amount) {
+        if (payload.to) {
           this.fetchTransferFeeInfoDebounce();
         }
       });
@@ -125,7 +125,7 @@ class StoreTransfer extends BaseStore {
       });
       this.feeInfo = await this.fetchFeeInfo(tx);
     } catch (error) {
-      console.error(error);
+      console.error('fetchTransferFeeInfo ERROR: ', error);
       this.feeInfo = {};
     }
   }
