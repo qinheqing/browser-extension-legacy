@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { Conflux, format, Contract } from 'js-conflux-sdk';
 import axios, { AxiosInstance } from 'axios';
+import { cloneDeep } from 'lodash';
 import ChainManagerBase from '../../../ChainManagerBase';
 import OneAccountInfo from '../../../../classes/OneAccountInfo';
 import optionsHelper from '../../../optionsHelper';
@@ -194,13 +195,18 @@ class ChainManager extends ChainManagerBase {
   }
 
   async fetchTransactionFeeInfo(tx) {
+    // eslint-disable-next-line no-param-reassign
+    tx = cloneDeep(tx || {});
     // TODO calculate default fee here, ex: 21000
     if (
-      !tx ||
       !this.wallet.isValidAddress(tx.to) ||
       !this.wallet.isValidAddress(tx.from)
     ) {
-      return { fee: NaN };
+      tx.to = undefined;
+      tx.from = undefined;
+      return {
+        fee: undefined,
+      };
     }
 
     const rpc = this.apiRpc;
@@ -348,10 +354,13 @@ class ChainManager extends ChainManagerBase {
 
     /* */
     const contractApi = this.apiRpc.CRC20(address);
+
     // const balance = await contractApi.balanceOf(fromAddressHex);
-    const name = await contractApi.name();
-    const symbol = await contractApi.symbol();
-    const decimals = await contractApi.decimals();
+    const [name, symbol, decimals] = await Promise.all([
+      contractApi.name(),
+      contractApi.symbol(),
+      contractApi.decimals(),
+    ]);
 
     // const payload = this._createErc20TokenMetaRequest(address);
     // const res = await this.apiRpc.provider.batch(payload);

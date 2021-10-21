@@ -9,3 +9,12 @@ if (process.env.NODE_ENV === 'production' || process.env.SENTRY_DSN_DEV) {
     getState: () => global.getSentryState?.() || {},
   });
 }
+
+if (!global.sentry) {
+  const mockFunc = () => null;
+  global.sentry = {
+    captureMessage: mockFunc,
+    captureException: mockFunc,
+    setUser: mockFunc,
+  };
+}

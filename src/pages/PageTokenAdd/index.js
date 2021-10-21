@@ -23,6 +23,7 @@ import AmountText from '../../components/AmountText';
 import storeAccount from '../../store/storeAccount';
 import { TokenLogoIcon } from '../../components/LogoIcon';
 import CopyHandle from '../../components/CopyHandle';
+import useLoadingCallback from '../../hooks/useLoadingCallback';
 import styles from './index.css';
 
 const TokenAddItem = observer(function ({ token, onAddClick }) {
@@ -36,6 +37,9 @@ const TokenAddItem = observer(function ({ token, onAddClick }) {
   symbol: "wSOL"
   tags: []
    */
+  const [onAddClickWithLoading, loading] = useLoadingCallback(() =>
+    onAddClick(token),
+  );
   const symbol = storeToken.correctTokenSymbol(token);
   const hasAdded = storeToken.currentTokens.find(
     (item) => item.contractAddress === token.address,
@@ -59,7 +63,11 @@ const TokenAddItem = observer(function ({ token, onAddClick }) {
             已添加
           </OneButton>
         ) : (
-          <OneButton onClick={() => onAddClick(token)} size="xs">
+          <OneButton
+            loading={loading}
+            onClick={onAddClickWithLoading}
+            size="xs"
+          >
             添加
           </OneButton>
         )

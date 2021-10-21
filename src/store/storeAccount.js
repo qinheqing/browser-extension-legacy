@@ -206,6 +206,14 @@ class StoreAccount extends BaseStore {
     }
   }
 
+  canCurrentAccountDelete() {
+    return (
+      storeStorage.allAccountsRaw.filter(
+        (item) => item.chainKey === storeChain.currentChainKey,
+      ).length > 1
+    );
+  }
+
   @action.bound
   deleteAccountByAddress(address) {
     if (storeStorage.allAccountsRaw.length <= 1) {
@@ -218,7 +226,10 @@ class StoreAccount extends BaseStore {
     );
     // todo delete all token、price、meta information
     if (address === curAddress) {
-      this.setCurrentAccount({ account: remains[0] });
+      const nextAccountOfSameChain = remains.find(
+        (item) => item.chainKey === storeChain.currentChainKey,
+      );
+      this.setCurrentAccount({ account: nextAccountOfSameChain || remains[0] });
     }
 
     if (remains.length >= 1) {
@@ -228,7 +239,7 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   setCurrentAccount({ account }) {
-    if (!account.chainKey) {
+    if (!account?.chainKey) {
       return;
     }
     storeChain.setCurrentChainKey(account.chainKey);
@@ -239,6 +250,7 @@ class StoreAccount extends BaseStore {
     };
   }
 
+  // setCompletedOnboarding() -> initDefaultAccountOfNewApp() -> storeAccount.initFirstAccount()
   @action.bound
   async initFirstAccount() {
     const getAccountsInCurrentChain = () =>
@@ -263,7 +275,10 @@ class StoreAccount extends BaseStore {
       this.addAccounts(addresses);
     }
 
-    if (!this.currentAccountInfo) {
+    if (
+      !this.currentAccountInfo ||
+      this.currentAccountChainKey !== storeChain.currentChainKey
+    ) {
       const _accounts = getAccountsInCurrentChain();
       _accounts[0] && this.setCurrentAccount({ account: _accounts[0] });
     }

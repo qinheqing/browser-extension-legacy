@@ -99,7 +99,7 @@ function PageAccountDetail() {
             </li>
           </ul>
         </div>
-        {storeStorage.allAccountsRaw.length > 1 ? (
+        {storeAccount.canCurrentAccountDelete() && (
           <div className="my-10 px-3">
             <button
               onClick={() => setDialogVisible(true)}
@@ -109,7 +109,7 @@ function PageAccountDetail() {
               删除账户
             </button>
           </div>
-        ) : null}
+        )}
       </div>
       <OneDialog
         title="删除账户"
