@@ -1592,6 +1592,9 @@
   "solana": {
     "message": "Solana 主网"
   },
+  "conflux": {
+    "message": "Conflux 主网"
+  },
   "somethingWentWrong": {
     "message": "糟糕！出问题了。"
   },

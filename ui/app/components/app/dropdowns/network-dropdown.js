@@ -21,6 +21,7 @@ import storeApp from '../../../../../src/store/storeApp';
 import { ROUTE_HOME } from '../../../../../src/routes/routeUrls';
 import storeStorage from '../../../../../src/store/storeStorage';
 import storeHistory from '../../../../../src/store/storeHistory';
+import { CONST_CHAIN_KEYS } from '../../../../../src/consts/consts';
 import { Dropdown, DropdownMenuItem } from './components/dropdown';
 
 // classes from nodes of the toggle element.
@@ -206,13 +207,20 @@ class NetworkDropdown extends Component {
     return name;
   }
 
-  renderNewAppEntry() {
+  renderNewAppEntry({
+    name = 'solana',
+    chainKey = CONST_CHAIN_KEYS.SOL,
+    colorBg = '#dc1fff',
+    colorText = '#9b9b9b',
+  } = {}) {
     const { history } = this.props;
     return (
       <DropdownMenuItem
         closeMenu={this.props.hideNetworkDropdown}
         onClick={() => {
-          storeHistory.goToHomeNew();
+          storeHistory.goToHomeNew({
+            chainKey,
+          });
         }}
         style={DROP_DOWN_MENU_ITEM_STYLE}
       >
@@ -220,16 +228,16 @@ class NetworkDropdown extends Component {
         <ColorIndicator
           size={SIZES.LG}
           type={ColorIndicator.TYPES.FILLED}
-          backgroundColor="#dc1fff"
+          backgroundColor={colorBg}
           borderColor={COLORS.TRANSPARENT}
         />
         <span
           className="network-name-item"
           style={{
-            color: '#9b9b9b',
+            color: colorText,
           }}
         >
-          {this.context.t('solana')}
+          {this.context.t(name)}
         </span>
       </DropdownMenuItem>
     );
@@ -321,7 +329,16 @@ class NetworkDropdown extends Component {
         {this.renderNetworkEntry('fantom')}
         {this.renderNetworkEntry('xdai')}
         {this.renderNetworkEntry('avalanche')}
-        {this.renderNewAppEntry()}
+        {this.renderNewAppEntry({
+          name: 'solana',
+          chainKey: CONST_CHAIN_KEYS.SOL,
+          colorBg: '#dc1fff',
+        })}
+        {this.renderNewAppEntry({
+          name: 'conflux',
+          chainKey: CONST_CHAIN_KEYS.CFX,
+          colorBg: '#415968',
+        })}
         {this.renderNetworkEntry('ropsten')}
         {this.renderNetworkEntry('kovan')}
         {this.renderNetworkEntry('rinkeby')}
