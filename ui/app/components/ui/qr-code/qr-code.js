@@ -45,11 +45,7 @@ function QrCodeView(props) {
           __html: qrImage.createTableTag(4),
         }}
       />
-      <ReadOnlyInput
-        wrapperClass="ellip-address-wrapper"
-        autoFocus
-        value={checksumAddress(data)}
-      />
+      <div className="ellip-address-wrapper">{checksumAddress(data)}</div>
     </div>
   );
 }

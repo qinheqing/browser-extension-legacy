@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 
 import Identicon from '../../ui/identicon';
 import { I18nContext } from '../../../contexts/i18n';
-import { SEND_ROUTE } from '../../../helpers/constants/routes';
+import { SEND_ROUTE, RECEIVE_ROUTE } from '../../../helpers/constants/routes';
 import { useTrackEvent } from '../../../hooks/useTrackEvent';
 import Tooltip from '../../ui/tooltip';
 import UserPreferencedCurrencyDisplay from '../user-preferenced-currency-display';
@@ -96,7 +96,12 @@ const EthOverview = ({ className }) => {
             <img src="./images/arrow-up.svg" />
             <span className="eth-overview__button-text">Send</span>
           </div>
-          <div className="eth-overview__button">
+          <div
+            className="eth-overview__button"
+            onClick={() => {
+              history.push(RECEIVE_ROUTE);
+            }}
+          >
             <img src="./images/qrcode.svg" />
             <span className="eth-overview__button-text">Receive</span>
           </div>

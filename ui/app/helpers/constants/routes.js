@@ -33,6 +33,7 @@ const CONNECT_ROUTE = '/connect';
 const CONNECT_CONFIRM_PERMISSIONS_ROUTE = '/confirm-permissions';
 const CONNECTED_ROUTE = '/connected';
 const CONNECTED_ACCOUNTS_ROUTE = '/connected/accounts';
+const RECEIVE_ROUTE = '/receive';
 
 const INITIALIZE_ROUTE = '/initialize';
 const INITIALIZE_WELCOME_ROUTE = '/initialize/welcome';
@@ -117,4 +118,5 @@ export {
   CONNECTED_ACCOUNTS_ROUTE,
   TRANSACTIONS_ROUTE,
   OVERVIEW_ROUTE,
+  RECEIVE_ROUTE,
 };
