@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import PageContainerHeader from '../../../components/ui/page-container/page-container-header';
+import PageContainerHeader from '../../../components/ui/page-container-v2/page-container-header';
 
 export default class SendHeader extends Component {
   static propTypes = {
@@ -23,9 +23,9 @@ export default class SendHeader extends Component {
   render() {
     return (
       <PageContainerHeader
-        className="send__header"
         onClose={() => this.onClose()}
-        title={this.context.t(this.props.titleKey)}
+        // title={this.context.t(this.props.titleKey)}
+        title="Send"
         headerCloseText={this.context.t('cancel')}
       />
     );

@@ -282,6 +282,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
         dispatchHideGasButtonGroup();
         dispatchCancelAndClose();
       }
+
       if (maxModeOn) {
         dispatchSetAmountToMax({
           balance,
@@ -298,9 +299,10 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     },
     cancelAndClose: () => {
       dispatchCancelAndClose();
-      if (isSpeedUp || isRetry) {
-        dispatchHideSidebar();
-      }
+      dispatchHideSidebar();
+      // if (isSpeedUp || isRetry) {
+      //   dispatchHideSidebar();
+      // }
     },
     disableSave:
       insufficientBalance ||
