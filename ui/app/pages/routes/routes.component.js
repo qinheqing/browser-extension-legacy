@@ -32,6 +32,7 @@ import AppHeader from '../../components/app/app-header';
 import UnlockPage from '../unlock-page';
 import Alerts from '../../components/app/alerts';
 import Asset from '../asset';
+import Receive from '../receive';
 
 import {
   ADD_TOKEN_ROUTE,
@@ -53,6 +54,7 @@ import {
   CONFIRMATION_V_NEXT_ROUTE,
   CHANGE_PASSWORD_ROUTE,
   CONNECTED_ROUTE,
+  RECEIVE_ROUTE,
 } from '../../helpers/constants/routes';
 import {
   ENVIRONMENT_TYPE_NOTIFICATION,
@@ -120,6 +122,7 @@ class AllRoutesComponents extends Component {
               component={AddTokenPage}
               exact
             />
+            <Authenticated path={RECEIVE_ROUTE} component={Receive} exact />
             <Authenticated
               path={CONFIRM_ADD_TOKEN_ROUTE}
               component={ConfirmAddTokenPage}
