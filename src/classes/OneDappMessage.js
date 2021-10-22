@@ -62,8 +62,8 @@ class DappMessageSOL {
   }
 
   // Message between background, contentscript, popup ui
-  //    chrome.runtime.onMessage.addListener( message =>... )
-  //    chrome.runtime.sendMessage( message )
+  //    extension.runtime.onMessage.addListener( message =>... )
+  //    extension.runtime.sendMessage( message )
   static extensionRuntimeMessage({ channel, data }) {
     return new DappMessageSOL({ channel, data });
   }

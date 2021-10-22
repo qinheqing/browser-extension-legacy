@@ -73,7 +73,7 @@ class StoreAccount extends BaseStore {
     storeWallet.setCurrentWallet(wallet);
   }
 
-  @observable
+  @observable.ref
   refreshKey = 1;
 
   // TODO rename to currentAccountInfo
@@ -130,7 +130,7 @@ class StoreAccount extends BaseStore {
   @computed
   get currentAccountTypeText() {
     let type;
-    switch (this.currentAccountInfo.type) {
+    switch (this.currentAccountInfo?.type) {
       case CONST_ACCOUNT_TYPES.Hardware: {
         type = '硬件账户';
         break;
@@ -277,7 +277,6 @@ class StoreAccount extends BaseStore {
   @action.bound
   setCurrentAccount({ account }) {
     if (!account || !account?.chainKey) {
-      storeStorage.currentAccountRaw = storeStorage.CURRENT_ACCOUNT_RAW_DEFAULT;
       return;
     }
     storeChain.setCurrentChainKey(account.chainKey);
