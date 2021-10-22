@@ -1,3 +1,4 @@
+import extension from 'extensionizer';
 import { CONST_DAPP_MESSAGE_TYPES } from '../../../../consts/consts';
 import DappMessageSOL from './DappMessageSOL';
 
@@ -11,7 +12,7 @@ function init() {
       }
 
       // TODO only chrome
-      window.chrome.runtime.sendMessage(
+      extension.runtime.sendMessage(
         DappMessageSOL.extensionRuntimeMessage({
           channel: CONST_DAPP_MESSAGE_TYPES.CHANNEL_CONTENT_TO_BG,
           data: event.detail,
