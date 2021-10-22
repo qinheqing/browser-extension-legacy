@@ -1,12 +1,12 @@
 import { merge } from 'lodash';
-import { normalizeChainInfo } from '../../../helpers/configHelpers';
+import configsHelper from '../../../helpers/configsHelper';
 import {
   CONST_CFX,
   CONST_CHAIN_KEYS,
   CONST_ADD_TOKEN_MODE,
 } from '../../../../consts/consts';
 
-const CFX = normalizeChainInfo({
+const CFX = configsHelper.normalizeChainInfo({
   key: CONST_CHAIN_KEYS.CFX,
   baseChain: CONST_CHAIN_KEYS.CFX,
 
@@ -54,7 +54,7 @@ const CFX = normalizeChainInfo({
 });
 
 // http://faucet.confluxnetwork.org/
-const CFX_TEST = normalizeChainInfo(
+const CFX_TEST = configsHelper.normalizeChainInfo(
   merge({}, CFX, {
     key: CONST_CHAIN_KEYS.CFX_TEST,
     name: 'Conflux 测试网',

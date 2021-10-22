@@ -98,8 +98,7 @@ export default class SelectHardware extends Component {
     };
 
     const text = this.context.t('orderOneHere');
-    const response = text
-      .replace('Onekey', links.trezor)
+    const response = text.replace('Onekey', links.trezor);
 
     return (
       <div
@@ -143,19 +142,31 @@ export default class SelectHardware extends Component {
     const steps = [
       {
         asset: 'hardware-wallet-step-1',
-        dimensions: { width: '225px', height: '75px' },
+        dimensions: {
+          width: '225px',
+          height: '75px',
+        },
+        style: { width: 255, height: 75 },
         title: this.context.t('step1HardwareWallet'),
         message: this.context.t('step1HardwareWalletMsg'),
       },
       {
         asset: 'hardware-wallet-step-2',
-        dimensions: { width: '300px', height: '100px' },
+        dimensions: {
+          width: '300px',
+          height: '100px',
+        },
+        style: { width: 300, height: 100 },
         title: this.context.t('step2HardwareWallet'),
         message: this.context.t('step2HardwareWalletMsg'),
       },
       {
         asset: 'hardware-wallet-step-3',
-        dimensions: { width: '120px', height: '90px' },
+        dimensions: {
+          width: '120px',
+          height: '90px',
+        },
+        style: { width: 120, height: 90 },
         title: this.context.t('step3HardwareWallet'),
         message: this.context.t('step3HardwareWalletMsg'),
       },
@@ -176,6 +187,7 @@ export default class SelectHardware extends Component {
               className="hw-connect__step-asset"
               src={`images/${step.asset}.svg`}
               {...step.dimensions}
+              style={step.style}
               alt=""
             />
           </div>

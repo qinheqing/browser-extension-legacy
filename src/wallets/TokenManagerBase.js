@@ -1,6 +1,6 @@
 import OneTokenInfo from '../classes/OneTokenInfo';
 import utilsApp from '../utils/utilsApp';
-import optionsHelper from './optionsHelper';
+import optionsHelper from './helpers/optionsHelper';
 
 export class TokenManagerBase {
   constructor(options, wallet) {

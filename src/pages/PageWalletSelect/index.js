@@ -16,6 +16,10 @@ import utilsApp from '../../utils/utilsApp';
 import OneButton from '../../components/OneButton';
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../../ui/app/helpers/constants/common';
 import storeHistory from '../../store/storeHistory';
+import storeChain from '../../store/storeChain';
+import { CONST_CHAIN_KEYS } from '../../consts/consts';
+import utilsToast from '../../utils/utilsToast';
+import storeApp from '../../store/storeApp';
 
 const AccountsList = observer(function () {
   const history = useHistory();
@@ -63,12 +67,22 @@ const AccountsList = observer(function () {
 
 function PageWalletSelect() {
   const history = useHistory();
+  const btnDisabled = !storeAccount.accountsGroupFilter.chainKey;
   const connectHardwareButton = (
     <OneButton
       block
       type="primary"
-      disabled={!storeAccount.accountsGroupFilter.chainKey}
-      onClick={() => utilsApp.openStandalonePage(ROUTE_CONNECT_HARDWARE)}
+      disabled={btnDisabled}
+      onClick={() => {
+        const chainInfo = storeChain.getChainInfoByKey(
+          storeAccount.accountsGroupFilter.chainKey,
+        );
+        if (chainInfo?.baseChain === CONST_CHAIN_KEYS.SOL) {
+          utilsApp.openStandalonePage(ROUTE_CONNECT_HARDWARE);
+        } else {
+          utilsToast.toast.info('该链暂不支持硬件钱包');
+        }
+      }}
     >
       连接硬件设备
     </OneButton>
@@ -78,19 +92,20 @@ function PageWalletSelect() {
       title="切换账户"
       footer={
         <footer className="bg-white flex justify-between py-2 px-3">
-          <OneButton
-            block
-            disabled={!storeAccount.accountsGroupFilter.chainKey}
-            onClick={() => history.push(ROUTE_CREATE_ACCOUNT)}
-          >
-            + 添加钱包账户
-          </OneButton>
-          {IS_ENV_IN_TEST_OR_DEBUG && (
+          <div className="min-w-[36px]" />
+          {!storeApp.isHardwareOnlyMode && (
             <>
+              <OneButton
+                block
+                disabled={btnDisabled}
+                onClick={() => history.push(ROUTE_CREATE_ACCOUNT)}
+              >
+                + 添加钱包账户
+              </OneButton>
               <div className="w-6" />
-              {connectHardwareButton}
             </>
           )}
+          {connectHardwareButton}
         </footer>
       }
     >

@@ -187,6 +187,7 @@ const ApproveTransaction = observer(function ({
           </OneButton>
           <div className="w-4" />
           <OneButton
+            // TODO loading on hardware confirm
             loading={loading}
             block
             type="primary"

@@ -7,6 +7,7 @@ import {
   isPlainObject,
   isBoolean,
   isDate,
+  mergeWith,
 } from 'lodash';
 import * as uuidMaker from 'uuid';
 import * as changeCase from 'change-case';
@@ -32,6 +33,17 @@ async function mnemonicToSeed(mnemonic) {
   }
   const seed = await bip39.mnemonicToSeed(mnemonic);
   return bufferToHex(seed, { prefix: '' });
+}
+
+function mergeObjectWithArrayConcat(...args) {
+  // eslint-disable-next-line consistent-return
+  const customizer = (objValue, srcValue) => {
+    if (isArray(objValue)) {
+      return objValue.concat(srcValue);
+    }
+    return undefined;
+  };
+  return mergeWith(...args, customizer);
 }
 
 function includeScripts(src) {
@@ -190,7 +202,7 @@ function trackEventNoop() {
   return new Promise((resolve) => resolve());
 }
 
-export default {
+const utilsApp = {
   uuid,
   formatTemplate,
   includeScripts,
@@ -210,4 +222,7 @@ export default {
   objectToUint8Array,
   trackEventNoop,
   bufferToHex,
+  mergeObjectWithArrayConcat,
 };
+global.$ok_utilsApp = utilsApp;
+export default utilsApp;

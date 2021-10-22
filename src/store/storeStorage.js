@@ -11,7 +11,7 @@ import {
 import {
   CONST_ACCOUNTS_GROUP_FILTER_TYPES,
   CONST_CHAIN_KEYS,
-  CONSTS_ACCOUNT_TYPES,
+  CONST_ACCOUNT_TYPES,
 } from '../consts/consts';
 import utilsStorage from '../utils/utilsStorage';
 import BaseStoreWithStorage from './BaseStoreWithStorage';
@@ -81,16 +81,20 @@ class StoreStorage extends BaseStoreWithStorage {
     // { chainKey, id, type, name, address, path }
   ];
 
+  get CURRENT_ACCOUNT_RAW_DEFAULT() {
+    return {
+      baseChain: '',
+      chainKey: '',
+      id: '', // id missing
+      type: CONST_ACCOUNT_TYPES.Hardware,
+      name: '',
+      address: '',
+      path: '',
+    };
+  }
+
   @observable.ref
-  currentAccountRaw = {
-    baseChain: '',
-    chainKey: '',
-    id: '', // id missing
-    type: CONSTS_ACCOUNT_TYPES.Hardware,
-    name: '',
-    address: '',
-    path: '',
-  };
+  currentAccountRaw = this.CURRENT_ACCOUNT_RAW_DEFAULT;
 
   @observable.ref
   currentChainKey = null;

@@ -59,6 +59,18 @@ function createManifestTasks({ browserPlatforms }) {
   const envDev = createTaskForModifyManifestForEnvironment((manifest) => {
     manifest.description = `${manifest.description} (## DEV_VERSION ##)`;
     manifest.permissions = [...manifest.permissions, 'webRequestBlocking'];
+    manifest.content_scripts[0].exclude_matches = [
+      ...manifest.content_scripts[0].exclude_matches,
+      // add localhost connect popup.html page supporting
+      'https://localhost:8088/*',
+      'http://localhost:8088/*',
+    ];
+
+    manifest.content_scripts[1].matches = [
+      ...manifest.content_scripts[1].matches,
+      // add localhost connect popup.html page supporting
+      'https://localhost:8088/popup.html',
+    ];
   });
 
   // testDev: add perms

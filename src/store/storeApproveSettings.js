@@ -8,6 +8,7 @@ import {
   makeObservable,
 } from 'mobx';
 import uiDappApproval from '../wallets/dapp/uiDappApproval';
+import utilsStorage from '../utils/utilsStorage';
 import BaseStoreWithStorage from './BaseStoreWithStorage';
 
 class StoreApproveSettings extends BaseStoreWithStorage {
@@ -35,7 +36,7 @@ class StoreApproveSettings extends BaseStoreWithStorage {
   async fetchSettings() {
     this.settings =
       (await this.getStorageItemAsync(
-        'autosave.StoreDappApproval.connections',
+        `autosave.${utilsStorage.STORAGE_NAMESPACES.dappApproval}.connections`,
       )) ?? {};
   }
 

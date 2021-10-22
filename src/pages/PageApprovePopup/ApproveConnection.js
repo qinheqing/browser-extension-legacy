@@ -2,8 +2,6 @@ import { observer } from 'mobx-react-lite';
 import React from 'react';
 import storeAccount from '../../store/storeAccount';
 import OneButton from '../../components/OneButton';
-import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
-import AppIcons from '../../components/AppIcons';
 import { ChainLogoIcon } from '../../components/LogoIcon';
 import ApprovePageLayout from './ApprovePageLayout';
 import ApproveDappSiteInfo from './ApproveDappSiteInfo';

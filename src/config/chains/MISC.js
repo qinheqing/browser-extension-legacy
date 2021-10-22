@@ -1,7 +1,7 @@
 import { CONST_BNB, CONST_BTC, CONST_CHAIN_KEYS } from '../../consts/consts';
-import { normalizeChainInfo } from '../../wallets/helpers/configHelpers';
+import configsHelper from '../../wallets/helpers/configsHelper';
 
-const BTC = normalizeChainInfo({
+const BTC = configsHelper.normalizeChainInfo({
   key: CONST_CHAIN_KEYS.BTC,
   name: 'BTC',
   baseChain: CONST_CHAIN_KEYS.BTC,
@@ -11,7 +11,7 @@ const BTC = normalizeChainInfo({
   browser: ['https://btc.com/'],
   isTestNet: false,
 });
-const BSC = normalizeChainInfo({
+const BSC = configsHelper.normalizeChainInfo({
   key: CONST_CHAIN_KEYS.BSC,
   name: 'BSC',
   baseChain: CONST_CHAIN_KEYS.ETH,
@@ -24,7 +24,7 @@ const BSC = normalizeChainInfo({
   browser: ['https://bscscan.com/'],
   isTestNet: false,
 });
-const BSC_TEST = normalizeChainInfo({
+const BSC_TEST = configsHelper.normalizeChainInfo({
   key: CONST_CHAIN_KEYS.BSC_TEST_NET,
   name: 'BSC Testnet',
   baseChain: CONST_CHAIN_KEYS.ETH,

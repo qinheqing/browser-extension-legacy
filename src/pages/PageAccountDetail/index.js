@@ -17,6 +17,7 @@ import {
   ROUTE_TX_HISTORY,
 } from '../../routes/routeUrls';
 import { REVEAL_SEED_ROUTE } from '../../../ui/app/helpers/constants/routes';
+import { CONST_ACCOUNT_TYPES } from '../../consts/consts';
 
 function PageAccountDetail() {
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -71,32 +72,37 @@ function PageAccountDetail() {
               <div>类型</div>
               <div>{storeAccount.currentAccountTypeText}</div>
             </li>
-            <li className="px-4 py-4 sm:px-6 flex justify-between items-center">
-              <div>私钥</div>
-              <div>
-                <OneButton
-                  onClick={() => {
-                    storeHistory.push(ROUTE_PRIVATE_KEY_EXPORT);
-                  }}
-                  size="2xs"
-                >
-                  导出私钥
-                </OneButton>
-              </div>
-            </li>
-            <li className="px-4 py-4 sm:px-6 flex justify-between items-center">
-              <div>助记词</div>
-              <div>
-                <OneButton
-                  onClick={() => {
-                    storeHistory.push(REVEAL_SEED_ROUTE);
-                  }}
-                  size="2xs"
-                >
-                  导出助记词
-                </OneButton>
-              </div>
-            </li>
+            {storeAccount.currentAccountInfo.type ===
+              CONST_ACCOUNT_TYPES.Wallet && (
+              <>
+                <li className="px-4 py-4 sm:px-6 flex justify-between items-center">
+                  <div>私钥</div>
+                  <div>
+                    <OneButton
+                      onClick={() => {
+                        storeHistory.push(ROUTE_PRIVATE_KEY_EXPORT);
+                      }}
+                      size="2xs"
+                    >
+                      导出私钥
+                    </OneButton>
+                  </div>
+                </li>
+                <li className="px-4 py-4 sm:px-6 flex justify-between items-center">
+                  <div>助记词</div>
+                  <div>
+                    <OneButton
+                      onClick={() => {
+                        storeHistory.push(REVEAL_SEED_ROUTE);
+                      }}
+                      size="2xs"
+                    >
+                      导出助记词
+                    </OneButton>
+                  </div>
+                </li>
+              </>
+            )}
           </ul>
         </div>
         {storeAccount.canCurrentAccountDelete() && (

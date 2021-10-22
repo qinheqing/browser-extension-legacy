@@ -13,8 +13,8 @@ import TokenBalance from '../TokenBalance';
 import storeAccount from '../../store/storeAccount';
 import OneTokenInfo from '../../classes/OneTokenInfo';
 import ReactJsonView from '../ReactJsonView';
-import { CONSTS_ACCOUNT_TYPES } from '../../consts/consts';
-import { ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
+import { CONST_ACCOUNT_TYPES } from '../../consts/consts';
+import { ROUTE_HOME, ROUTE_WALLET_SELECT } from '../../routes/routeUrls';
 import OneButton from '../OneButton';
 import storeChain from '../../store/storeChain';
 import AppIcons from '../AppIcons';
@@ -124,8 +124,9 @@ function ImportAccountsList({ wallet, onLoadMore }) {
 
     storeAccount.addAccounts(newAccounts);
     storeAccount.setCurrentAccount({ account: newAccounts[0] });
-    // history.replace(ROUTE_WALLET_SELECT);
-    storeHistory.goBack();
+    storeHistory.goBack({
+      fallbackUrl: ROUTE_HOME,
+    });
   }, [existsAccounts.length, selectedAccounts, wallet?.chainInfo]);
 
   const accountsPaged = accounts.slice(

@@ -2,7 +2,7 @@ import assert from 'assert';
 import { Conflux, Contract, format } from 'js-conflux-sdk';
 import WalletBase from '../../WalletBase';
 import utilsApp from '../../../utils/utilsApp';
-import optionsHelper from '../../optionsHelper';
+import optionsHelper from '../../helpers/optionsHelper';
 import {
   getTokenData,
   parseErc20Transaction,

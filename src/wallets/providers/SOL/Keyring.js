@@ -5,9 +5,10 @@ import {
   KeyringToolsBase,
   KeyringHdBase,
   KeyringPickerBase,
+  KeyringHardwareBase,
 } from '../../KeyringBase';
 
-import { CONSTS_ACCOUNT_TYPES } from '../../../consts/consts';
+import { CONST_ACCOUNT_TYPES } from '../../../consts/consts';
 import HdKeyManager from './managers/HdKeyManager';
 
 class KeyringTools extends KeyringToolsBase {
@@ -48,12 +49,28 @@ class KeyringHd extends KeyringHdBase {
   }
 }
 
+class KeyringHardware extends KeyringHardwareBase {
+  get hdkeyManager() {
+    this._hdkeyManager = this._hdkeyManager || new HdKeyManager(this.options);
+    return this._hdkeyManager;
+  }
+
+  async callGetAddress({ connect, params }) {
+    return connect.solanaGetAddress(params);
+  }
+
+  async callSignTransaction({ connect, params }) {
+    return connect.solanaSignTransaction(params);
+  }
+}
+
 class KeyringPicker extends KeyringPickerBase {
   keyrings = {
-    [CONSTS_ACCOUNT_TYPES.Wallet]: KeyringHd,
-    // [CONSTS_ACCOUNT_TYPES.Hardware]: KeyringHardwareBase,
-    // [CONSTS_ACCOUNT_TYPES.SingleChain]: KeyringSingleChainBase,
-    // [CONSTS_ACCOUNT_TYPES.WatchOnly]: KeyringWatchedBase,
+    [CONST_ACCOUNT_TYPES.Wallet]: KeyringHd,
+    [CONST_ACCOUNT_TYPES.Hardware]: KeyringHardware,
+    // [CONST_ACCOUNT_TYPES.Hardware]: KeyringHardwareBase,
+    // [CONST_ACCOUNT_TYPES.SingleChain]: KeyringSingleChainBase,
+    // [CONST_ACCOUNT_TYPES.WatchOnly]: KeyringWatchedBase,
   };
 }
 

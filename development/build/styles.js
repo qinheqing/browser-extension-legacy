@@ -21,7 +21,7 @@ function createStyleTasks({ livereload }) {
   const prod = createTask(
     'styles:prod',
     createScssBuildTask({
-      src: 'ui/app/css/index.scss',
+      src: ['ui/app/css/index.scss', 'src/styles/index.new.scss'],
       dest: 'ui/app/css/output',
       devMode: false,
     }),
@@ -30,7 +30,7 @@ function createStyleTasks({ livereload }) {
   const dev = createTask(
     'styles:dev',
     createScssBuildTask({
-      src: 'ui/app/css/index.scss',
+      src: ['ui/app/css/index.scss', 'src/styles/index.new.scss'],
       dest: 'ui/app/css/output',
       devMode: true,
       pattern: [
@@ -112,6 +112,7 @@ async function buildScssPipeline(src, dest, devMode, rtl) {
     // eslint-disable-next-line node/global-require
     sass.compiler = require('./sass-compiler');
   }
+
   await pump(
     ...[
       // pre-process

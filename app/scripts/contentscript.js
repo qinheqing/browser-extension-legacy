@@ -42,7 +42,8 @@ if (shouldInjectProvider()) {
  */
 function injectScript(content) {
   try {
-    const container = document.head || document.documentElement;
+    const container =
+      document.head || document.body || document.documentElement;
     const scriptTag = document.createElement('script');
     scriptTag.setAttribute('async', 'false');
     scriptTag.textContent = content;

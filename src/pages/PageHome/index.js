@@ -42,11 +42,21 @@ import walletFactory from '../../wallets/walletFactory';
 import OneAccountInfo from '../../classes/OneAccountInfo';
 import {
   BACKGROUND_PROXY_MODULE_NAMES,
-  CONSTS_ACCOUNT_TYPES,
+  CONST_ACCOUNT_TYPES,
 } from '../../consts/consts';
 import uiGetBgControllerAsync from '../../wallets/bg/uiGetBgControllerAsync';
 import uiBackgroundProxy from '../../wallets/bg/uiBackgroundProxy';
 import { I18nContext } from '../../../ui/app/contexts/i18n';
+import { ChainLogoIcon } from '../../components/LogoIcon';
+import useInitFirstAccount from '../../hooks/useInitFirstAccount';
+
+const LockScreenButton = () => (
+  <HomeTopActionButton
+    text="锁屏"
+    icon={AppIcons.LockClosedIcon}
+    onClick={storeApp.lockScreen}
+  />
+);
 
 const HomeTopActionsBar = observer(function () {
   const [copied, handleCopy] = useCopyToClipboard();
@@ -81,11 +91,7 @@ const HomeTopActionsBar = observer(function () {
         }}
       />
 
-      <HomeTopActionButton
-        text="锁屏"
-        icon={AppIcons.LockClosedIcon}
-        onClick={storeApp.lockScreen}
-      />
+      <LockScreenButton />
     </div>
   );
 });
@@ -221,42 +227,74 @@ function PageHome() {
   const history = useHistory();
   const [copied, handleCopy] = useCopyToClipboard();
   const { isUnlocked } = storeApp.legacyState;
-  const [currentAccountReady, setCurrentAccountReady] = useState(false);
+  const { currentAccountAddress } = storeAccount;
+  const initAccountReady = useInitFirstAccount();
 
   useEffect(() => {
-    (async () => {
-      await storeAccount.initFirstAccount();
-      setCurrentAccountReady(true);
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (currentAccountReady) {
+    if (initAccountReady && currentAccountAddress) {
       storeToken.fetchCurrentAccountTokens();
     }
-  }, [currentAccountReady]);
+  }, [initAccountReady, currentAccountAddress]);
 
   useEffect(() => {
     (async () => {
-      if (isUnlocked && currentAccountReady) {
+      if (initAccountReady && isUnlocked && currentAccountAddress) {
         await storeAccount.autofixMismatchAddresses();
-        await storeAccount.autofixCurrentAccountInfo();
       }
     })();
-  }, [isUnlocked, currentAccountReady]);
+  }, [initAccountReady, isUnlocked, currentAccountAddress]);
 
   const onAccountClick = useCallback(() => {
     storeHistory.push(ROUTE_ACCOUNT_DETAIL);
   }, []);
 
-  if (!currentAccountReady) {
+  if (!initAccountReady) {
     return null;
   }
+
+  const contentView = (() => {
+    const { isHardwareOnlyMode } = storeApp;
+    if (!currentAccountAddress) {
+      return (
+        <div className="h-full u-flex-center flex-col px-4">
+          <ChainLogoIcon />
+          <div className="my-4">
+            {isHardwareOnlyMode
+              ? '点击右上角按钮连接硬件'
+              : '点击右上角按钮选择或创建账户'}
+          </div>
+          <LockScreenButton />
+        </div>
+      );
+    }
+
+    return (
+      <>
+        <AccountCard
+          key={storeAccount.refreshKey}
+          showMaskAssetBalanceEye
+          maskAssetBalance={storeStorage.maskAssetBalance}
+          account={storeAccount.currentAccountInfo}
+          showBalance
+          watchBalanceChange
+          showActiveBadge={false}
+          onClick={onAccountClick}
+        />
+        <div className="bg-white shadow-2xl py-1 px-4 min-h-screen">
+          <HomeTopActionsBar />
+          <div>
+            <HomeAssetsHeader />
+            <HomeAssetsList key={storeAccount.refreshKey} />
+          </div>
+        </div>
+      </>
+    );
+  })();
 
   return (
     <AppPageLayout
       navLeft={
-        storeAccount.currentAccountAddress ? (
+        currentAccountAddress ? (
           <AppIcons.ClipboardListIcon
             role="button"
             className="w-6"
@@ -268,37 +306,17 @@ function PageHome() {
         <AppIcons.CollectionIcon
           role="button"
           className="w-6"
-          onClick={() => storeHistory.push(ROUTE_WALLET_SELECT)}
+          onClick={() => {
+            storeAccount.setAccountsGroupFilterToChain({
+              chainKey: storeChain.currentChainKey,
+            });
+            storeHistory.push(ROUTE_WALLET_SELECT);
+          }}
         />
       }
       title="钱包"
     >
-      {!storeAccount.currentAccountInfo && (
-        <div className="h-full u-flex-center px-4">
-          点击右上角按钮选择或创建账户
-        </div>
-      )}
-      {storeAccount.currentAccountInfo && (
-        <>
-          <AccountCard
-            key={storeAccount.refreshKey}
-            showMaskAssetBalanceEye
-            maskAssetBalance={storeStorage.maskAssetBalance}
-            account={storeAccount.currentAccountInfo}
-            showBalance
-            watchBalanceChange
-            showActiveBadge={false}
-            onClick={onAccountClick}
-          />
-          <div className="bg-white shadow-2xl py-1 px-4 min-h-screen">
-            <HomeTopActionsBar />
-            <div>
-              <HomeAssetsHeader />
-              <HomeAssetsList key={storeAccount.refreshKey} />
-            </div>
-          </div>
-        </>
-      )}
+      {contentView}
     </AppPageLayout>
   );
 }

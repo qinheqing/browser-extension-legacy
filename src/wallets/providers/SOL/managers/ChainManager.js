@@ -216,7 +216,8 @@ class ChainManager extends ChainManagerBase {
 
         // TODO replace to new OneTokenInfo().toJS()
         return {
-          platformId: this.options.chainInfo.platformId,
+          platformId: this.options.chainInfo?.platformId,
+          chainId: this.options.chainInfo?.tokenChainId,
           chainKey,
           ownerAddress, // Owner account address which token belongs to ( native token address )
           balance: tokenAmount.amount, // Token account balance

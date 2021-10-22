@@ -4,8 +4,8 @@ import {
   KeyringPickerBase,
   KeyringToolsBase,
 } from '../../KeyringBase';
-import { CONSTS_ACCOUNT_TYPES } from '../../../consts/consts';
-import optionsHelper from '../../optionsHelper';
+import { CONST_ACCOUNT_TYPES } from '../../../consts/consts';
+import optionsHelper from '../../helpers/optionsHelper';
 import utilsApp from '../../../utils/utilsApp';
 import HdKeyManager from './managers/HdKeyManager';
 
@@ -53,10 +53,10 @@ class KeyringHd extends KeyringHdBase {
 
 class KeyringPicker extends KeyringPickerBase {
   keyrings = {
-    [CONSTS_ACCOUNT_TYPES.Wallet]: KeyringHd,
-    // [CONSTS_ACCOUNT_TYPES.Hardware]: KeyringHardwareBase,
-    // [CONSTS_ACCOUNT_TYPES.SingleChain]: KeyringSingleChainBase,
-    // [CONSTS_ACCOUNT_TYPES.WatchOnly]: KeyringWatchedBase,
+    [CONST_ACCOUNT_TYPES.Wallet]: KeyringHd,
+    // [CONST_ACCOUNT_TYPES.Hardware]: KeyringHardwareBase,
+    // [CONST_ACCOUNT_TYPES.SingleChain]: KeyringSingleChainBase,
+    // [CONST_ACCOUNT_TYPES.WatchOnly]: KeyringWatchedBase,
   };
 }
 

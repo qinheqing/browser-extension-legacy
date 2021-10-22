@@ -1,8 +1,8 @@
 import { merge } from 'lodash';
 import { CONST_CHAIN_KEYS, CONST_ADD_TOKEN_MODE } from '../../consts/consts';
-import { normalizeChainInfo } from '../../wallets/helpers/configHelpers';
+import configsHelper from '../../wallets/helpers/configsHelper';
 
-const SOL = normalizeChainInfo({
+const SOL = configsHelper.normalizeChainInfo({
   key: CONST_CHAIN_KEYS.SOL,
   baseChain: CONST_CHAIN_KEYS.SOL,
 
@@ -20,11 +20,11 @@ const SOL = normalizeChainInfo({
   ],
   browser: [
     {
-      home: 'https://explorer.solana.com',
-      tx: 'https://explorer.solana.com/tx/{{tx}}',
-      account: 'https://explorer.solana.com/address/{{account}}',
-      token: 'https://explorer.solana.com/address/{{token}}',
-      block: 'https://explorer.solana.com/block/{{block}}',
+      home: 'https://solscan.io',
+      tx: 'https://solscan.io/tx/{{ tx }}',
+      account: 'https://solscan.io/account/{{ account }}',
+      token: 'https://solscan.io/token/{{ token }}',
+      block: 'https://solscan.io/block/{{ block }}',
     },
   ],
 
@@ -51,7 +51,7 @@ const SOL = normalizeChainInfo({
   },
 });
 
-const SOL_TEST = normalizeChainInfo(
+const SOL_TEST = configsHelper.normalizeChainInfo(
   merge({}, SOL, {
     key: CONST_CHAIN_KEYS.SOL_TEST_NET,
     name: 'Solana 测试网',
@@ -66,6 +66,13 @@ const SOL_TEST = normalizeChainInfo(
       // 'https://api.devnet.solana.com',
     ],
     browser: [
+      {
+        home: 'https://solscan.io?cluster=testnet',
+        tx: 'https://solscan.io/tx/{{ tx }}?cluster=testnet',
+        account: 'https://solscan.io/account/{{ account }}?cluster=testnet',
+        token: 'https://solscan.io/token/{{ token }}?cluster=testnet',
+        block: 'https://solscan.io/block/{{ block }}?cluster=testnet',
+      },
       {
         home: 'https://explorer.solana.com?cluster=testnet',
         tx: 'https://explorer.solana.com/tx/{{tx}}?cluster=testnet',

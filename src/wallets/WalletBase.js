@@ -3,15 +3,15 @@ import { isNil, toLower } from 'lodash';
 import {
   CONST_ADD_TOKEN_MODE,
   CONST_HARDWARE_MODELS,
-  CONSTS_ACCOUNT_TYPES,
+  CONST_ACCOUNT_TYPES,
 } from '../consts/consts';
 import utilsApp from '../utils/utilsApp';
 import utilsNumber from '../utils/utilsNumber';
 import ChainManagerBase from './ChainManagerBase';
 import { HdKeyManagerBase } from './HdKeyManager';
 import uiBackgroundProxy from './bg/uiBackgroundProxy';
-import { KeyringUiToBgProxy } from './KeyringBase';
-import optionsHelper from './optionsHelper';
+import optionsHelper from './helpers/optionsHelper';
+import KeyringUiToBgProxy from './KeyringUiToBgProxy';
 
 class WalletBase {
   constructor(options = {}) {
@@ -84,7 +84,7 @@ class WalletBase {
   // address ----------------------------------------------
 
   async getAddresses({ indexes = [0], ...others }) {
-    // this.accountType === CONSTS_ACCOUNT_TYPES.Wallet
+    // this.accountType === CONST_ACCOUNT_TYPES.Wallet
     return this.keyringProxy.getAddresses({
       indexes,
       ...others,
@@ -96,12 +96,18 @@ class WalletBase {
   // tx is String
   async signTx(txStr) {
     const hdPath = this.accountHdPath;
+    const deviceId = this.accountInfo?.deviceId;
+    const address = this.accountInfo?.address;
 
     // tx is String
-    return this.keyringProxy.signTransaction({
+    const signedTxStr = this.keyringProxy.signTransaction({
       tx: txStr,
       hdPath,
+      deviceId,
+      address,
     });
+    // signedTx is String
+    return signedTxStr;
   }
 
   // tx is String

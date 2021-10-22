@@ -30,7 +30,7 @@ export const CONST_TX_TYPES = {
   TokenAssociateAdd: 'TokenAssociateAdd',
   Unknown: 'Unknown',
 };
-export const CONSTS_ACCOUNT_TYPES = {
+export const CONST_ACCOUNT_TYPES = {
   SingleChain: 'SingleChain', // mnemonic、seed、private key、keyStore import single chain account
   WatchOnly: 'WatchOnly', // WatchOnly account
   Hardware: 'Hardware', // Hardware HD account
