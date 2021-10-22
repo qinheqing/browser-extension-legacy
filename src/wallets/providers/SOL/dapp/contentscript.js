@@ -28,7 +28,9 @@ function init() {
 
           window.dispatchEvent(
             new CustomEvent(CONST_DAPP_MESSAGE_TYPES.EVENT_CONTENT_TO_INPAGE, {
-              detail: response,
+              // FireFox: event.detail can not be Object, only String supported
+              //    Uncaught Error: Permission denied to access property "id"
+              detail: JSON.stringify(response),
             }),
           );
         },
