@@ -80,7 +80,7 @@ export default function AccountOptionsMenu({ anchorElement, onClose }) {
           {t('expandView')}
         </MenuItem>
       )}
-      <MenuItem
+      {/* <MenuItem
         data-testid="account-options-menu__account-details"
         onClick={() => {
           dispatch(showModal({ name: 'ACCOUNT_DETAILS' }));
@@ -90,7 +90,7 @@ export default function AccountOptionsMenu({ anchorElement, onClose }) {
         iconClassName="fas fa-qrcode"
       >
         {t('accountDetails')}
-      </MenuItem>
+      </MenuItem> */}
       <MenuItem
         onClick={() => {
           viewOnEtherscanEvent();

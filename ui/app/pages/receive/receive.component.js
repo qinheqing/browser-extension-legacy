@@ -39,11 +39,12 @@ const Receive = (props) => {
 
   return (
     <PageLayout
+      className="receive"
       title="Receive"
       onBack={onClick}
       subtitle={shortenAddress(address)}
     >
-      <div className="receive">
+      <div>
         <div className="receive__header">
           <EditableLabel
             className="receive__address-name"
