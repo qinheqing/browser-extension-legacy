@@ -210,8 +210,14 @@ export default class Home extends PureComponent {
   }
 
   render() {
-    const { forgottenPassword, hwOnlyMode, accountType, history, currentPath } =
-      this.props;
+    const {
+      forgottenPassword,
+      hwOnlyMode,
+      accountType,
+      history,
+      currentPath,
+      shouldShowSeedPhraseReminder,
+    } = this.props;
     const { t } = this.context;
     if (
       hwOnlyMode &&
@@ -289,7 +295,7 @@ export default class Home extends PureComponent {
                 />
               </div>
             </div>
-            {/* {this.renderNotifications()} */}
+            {this.renderNotifications()}
           </div>
         </div>
       </>

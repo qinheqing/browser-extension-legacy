@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import classnames from 'classnames';
 
-const PageLayout = ({ title, subtitle, onBack, children }) => {
+const PageLayout = ({ title, subtitle, onBack, children, className }) => {
   return (
-    <div className="page-layout">
+    <div className={classnames('page-layout', className)}>
       <div className="page-layout__header">
         <div className="page-layout__back" onClick={onBack}>
           <img src="./images/caret-left-black.svg" />
