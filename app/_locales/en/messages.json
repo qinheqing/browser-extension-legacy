@@ -858,7 +858,7 @@
     "message": "Import HD wallet"
   },
   "importYourExisting": {
-    "message": "Import your existing wallet using a 12/18/24 word seed phrase"
+    "message": "Import your existing wallet using recovery phrase"
   },
   "imported": {
     "message": "Imported"
@@ -1464,7 +1464,7 @@
     "message": "WARNING: Never disclose your backup phrase. Anyone with this phrase can take your Ether forever."
   },
   "secretPhrase": {
-    "message": "Enter your secret 12/18/24 words phrase here to restore your vault."
+    "message": "Support 12/18/24-word recovery phrase"
   },
   "securityAndPrivacy": {
     "message": "Security & Privacy"

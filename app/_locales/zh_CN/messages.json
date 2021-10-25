@@ -858,7 +858,7 @@
     "message": "导入钱包"
   },
   "importYourExisting": {
-    "message": "使用 12/18/24 个单词的助记词导入您现有的钱包。"
+    "message": "使用助记词导入您现有的钱包。"
   },
   "imported": {
     "message": "已导入"
@@ -1464,7 +1464,7 @@
     "message": "警告：切勿向他人透露您的钱包助记词。任何人一旦持有该钱包助记词，即可控制您的 Ether。"
   },
   "secretPhrase": {
-    "message": "目前支持使用 12/18/24 个单词的助记词来导入您的钱包"
+    "message": "支持 12/18/24 位助记词"
   },
   "securityAndPrivacy": {
     "message": "安全与隐私"
