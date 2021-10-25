@@ -1,6 +1,8 @@
 import url from 'url';
 import { createAsyncMiddleware } from '@onekeyhq/json-rpc-engine';
 import { ethErrors } from 'eth-rpc-errors';
+import { isString } from 'lodash';
+import utilsUrl from '../../../../../src/utils/utilsUrl';
 
 const RETRIABLE_ERRORS = [
   // ignore server overload errors
@@ -55,7 +57,15 @@ export function createFetchMiddleware({
           originHttpHeaderKey,
         });
 
-        const fetchRes = await window.fetch(fetchUrl, fetchParams);
+        let fetchUrlWithQuery = fetchUrl;
+        if (req.method && isString(req.method)) {
+          fetchUrlWithQuery = utilsUrl.addQuery({
+            url: fetchUrl,
+            query: { method: req.method },
+          });
+        }
+
+        const fetchRes = await window.fetch(fetchUrlWithQuery, fetchParams);
         // check for http errrors
         checkForHttpErrors(fetchRes);
         // parse response body
@@ -79,6 +89,10 @@ export function createFetchMiddleware({
         );
         // re-throw error if not retriable
         if (!isRetriable) {
+          if (err) {
+            // RPC network error ignore
+            err.ignoreBackgroundErrorNotification = true;
+          }
           throw err;
         }
       }
@@ -135,7 +149,7 @@ function parseResponse(fetchRes, body) {
 
 function createFetchConfigFromReq({ req, rpcUrl, originHttpHeaderKey }) {
   // eslint-disable-next-line
-  const parsedUrl = url.parse(rpcUrl)
+  const parsedUrl = url.parse(rpcUrl);
   const fetchUrl = normalizeUrlFromParsed(parsedUrl);
 
   // prepare payload

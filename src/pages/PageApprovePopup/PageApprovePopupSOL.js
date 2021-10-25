@@ -274,9 +274,17 @@ const ApproveTransaction = observer(function ({
             loading={btnLoading}
             block
             type="primary"
-            onClick={() => {
-              setBtnLoading(true);
-              onApprove({ autoApprove: false, message: txStrList, isBatch });
+            onClick={async () => {
+              try {
+                setBtnLoading(true);
+                await onApprove({
+                  autoApprove: false,
+                  message: txStrList,
+                  isBatch,
+                });
+              } finally {
+                setBtnLoading(false);
+              }
             }}
           >
             {/* 交易授权*/}

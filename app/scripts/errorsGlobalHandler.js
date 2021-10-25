@@ -8,11 +8,17 @@ async function showExtensionNotification(error) {
   let msg = isString(error) ? error : error?.message;
   const errorCodeI18n = error.errorCodeI18n || '';
   const errorUrl = error.errorUrl || '';
+
+  if (error?.ignoreBackgroundErrorNotification) {
+    return;
+  }
+
   if (errorCodeI18n) {
     // should use t0(key) return empty if key has no translation
     msg = i18nBackground.t0(errorCodeI18n) || msg;
     console.error('errorCodeI18n: ', errorCodeI18n);
   }
+
   let notificationId;
   if (global.$$errorNotificationAvailableCount <= 0) {
     // if availableCount is 0, use fixed notificationId,
