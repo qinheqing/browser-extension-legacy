@@ -52,6 +52,7 @@ class BaseStore {
         //  storeStorage.storageReady
         //  storeApp.metamaskStateReady
         //  storeApp.isInitialized
+        //  force run in UI process
         deps();
         untracked(() => {
           callback();
