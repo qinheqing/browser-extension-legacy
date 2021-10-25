@@ -2628,10 +2628,10 @@
   dependencies:
     readable-stream "2.3.3"
 
-"@onekeyhq/providers@^8.2.0":
-  version "8.2.0"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/providers/8.2.0/68b58dfbe6c3f1a444af4bd507980b802caf5c2c55a93625ff081df1955ad00e#fb7cb726a381a0f5a692c59b1d77af9e76d94295"
-  integrity sha512-qMnO/uxuscfFJu3eMkz9ejvEMI1QitVub9qhUmUUO9KYeQcDdfJITuir4byjB8LZKC/ts/qLNwlgGJs+aCb13w==
+"@onekeyhq/providers@^8.2.1":
+  version "8.2.1"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/providers/8.2.1/6389fef1927fcbd4971e7d995ce478268f743e0535a482fe1dbe1207df372047#f368c1a6164187575689c4d17de5e0a98c292f64"
+  integrity sha512-4C2Mt3Qh8mRQ80SH5JJO8HHaP6BwsZJ/Mgvdn3kvWKtmnguZ9WWfUe+o/HYfDvRYWBxouVh5b1z12kX4G7DYnQ==
   dependencies:
     "@onekeyhq/json-rpc-engine" "^6.1.1"
     "@onekeyhq/json-rpc-middleware-stream" "^3.0.3"

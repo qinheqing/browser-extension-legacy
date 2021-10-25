@@ -14,6 +14,8 @@ import {
   CONST_ACCOUNT_TYPES,
 } from '../consts/consts';
 import utilsStorage from '../utils/utilsStorage';
+import utilsApp from '../utils/utilsApp';
+import { IS_ENV_IN_TEST_OR_DEBUG } from '../../ui/app/helpers/constants/common';
 import BaseStoreWithStorage from './BaseStoreWithStorage';
 import dataMigration from './dataMigration';
 
@@ -24,7 +26,15 @@ class StoreStorage extends BaseStoreWithStorage {
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
 
-    Promise.all([
+    this.init();
+  }
+
+  async init() {
+    if (utilsApp.isEnvInTestOrDebug()) {
+      await utilsApp.delay(600);
+    }
+
+    await Promise.all([
       // homeType should be sync loaded, check utilsApp.isNewHome();
       this.autosave('homeType', { useLocalStorage: true }),
       this.autosave('maskAssetBalance'),
@@ -47,21 +57,22 @@ class StoreStorage extends BaseStoreWithStorage {
 
       this.autosave('chainsCustomRaw'),
       this.autosave('chainsSortKeys'),
-    ]).then(async () => {
-      if (dataMigration.CURRENT_DATA_VERSION > this.dataVersion) {
-        console.log(
-          `need storage data migration: ${this.dataVersion} => ${dataMigration.CURRENT_DATA_VERSION}`,
-        );
+    ]);
 
-        await dataMigration.doMigration({
-          storage: this,
-          from: this.dataVersion,
-          to: dataMigration.CURRENT_DATA_VERSION,
-        });
-      }
-      // ensure Page Components mounting after storageReady
-      this.storageReady = true;
-    });
+    if (dataMigration.CURRENT_DATA_VERSION > this.dataVersion) {
+      console.log(
+        `need storage data migration: ${this.dataVersion} => ${dataMigration.CURRENT_DATA_VERSION}`,
+      );
+
+      await dataMigration.doMigration({
+        storage: this,
+        from: this.dataVersion,
+        to: dataMigration.CURRENT_DATA_VERSION,
+      });
+    }
+
+    // ensure Page Components mounting after storageReady
+    this.storageReady = true;
   }
 
   @observable.ref
