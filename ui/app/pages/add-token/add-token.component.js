@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ethUtil from 'ethereumjs-util';
-import Notification from '@onekeyhq/ui-components/Notification';
+import { createStandaloneNotification } from '@onekeyhq/ui-components/Notification';
 import { checkExistingAddresses } from '../../helpers/utils/util';
 import { tokenInfoGetter } from '../../helpers/utils/token-util';
 import { CONFIRM_ADD_TOKEN_ROUTE } from '../../helpers/constants/routes';
@@ -17,6 +17,8 @@ import TokenItemDetails from './token-item-details';
 const emptyAddr = '0x0000000000000000000000000000000000000000';
 
 class AddToken extends Component {
+  notification = createStandaloneNotification();
+
   static contextTypes = {
     t: PropTypes.func,
   };
@@ -87,8 +89,9 @@ class AddToken extends Component {
     const { symbol } = tokenToAdd;
     const { addTokens } = this.props;
     addTokens([tokenToAdd]);
-    Notification.success(`${symbol} added to your token list`, {
+    this.notification.success(`${symbol} added to your token list`, {
       title: 'Token Added',
+      duration: 500,
     });
     this.setState({ tokenToAdd: undefined });
   }
