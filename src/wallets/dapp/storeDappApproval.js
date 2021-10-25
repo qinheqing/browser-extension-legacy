@@ -46,10 +46,15 @@ class StoreDappApproval extends BaseStoreWithStorage {
   async createWallet() {
     const chainInfo = await this.getCurrentChainInfo();
     const accountInfo = await this.getCurrentAccountRaw();
-    const wallet = walletFactory.createWallet({
-      chainInfo,
-      accountInfo,
-    });
+    const wallet = walletFactory.createWallet(
+      {
+        chainInfo,
+        accountInfo,
+      },
+      {
+        cache: true,
+      },
+    );
     return wallet;
   }
 
