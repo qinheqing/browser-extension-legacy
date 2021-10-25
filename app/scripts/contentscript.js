@@ -31,6 +31,16 @@ const LEGACY_PROVIDER = 'provider';
 const LEGACY_PUBLIC_CONFIG = 'publicConfig';
 
 if (shouldInjectProvider()) {
+  const versionInfo = {
+    version: extension.runtime.getManifest().version,
+    build: process.env.GITHUB_TAG || '',
+    versionFull: '',
+  };
+  versionInfo.versionFull = `v${versionInfo.version}`;
+  if (versionInfo.build) {
+    versionInfo.versionFull = `v${versionInfo.version} (${versionInfo.build})`;
+  }
+  injectScript(`window.onekeyAppVersionInfo = ${JSON.stringify(versionInfo)};`);
   injectScript(inpageBundle);
   setupStreams();
 }

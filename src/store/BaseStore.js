@@ -51,6 +51,7 @@ class BaseStore {
         // TODO add built-in deps
         //  storeStorage.storageReady
         //  storeApp.metamaskStateReady
+        //  storeApp.isInitialized
         deps();
         untracked(() => {
           callback();

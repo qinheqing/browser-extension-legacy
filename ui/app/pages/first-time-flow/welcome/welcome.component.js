@@ -9,6 +9,7 @@ import {
 import { CONST_FIRST_TIME_FLOW_TYPES } from '../../../helpers/constants/common';
 import { getNextRouteOfFirstTimeFlow } from '../../../selectors';
 import LanguageDropdown from '../../settings/settings-tab/language-dropdown';
+import utilsApp from '../../../../../src/utils/utilsApp';
 
 export default class Welcome extends PureComponent {
   static propTypes = {
@@ -98,6 +99,9 @@ export default class Welcome extends PureComponent {
                 {t('hwOnlyStarted')}
               </Button>
             )}
+          </div>
+          <div className="welcome-page__version">
+            {utilsApp.getAppVersion().versionFull}
           </div>
         </div>
       </div>

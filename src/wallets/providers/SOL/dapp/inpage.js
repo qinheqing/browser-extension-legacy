@@ -95,6 +95,7 @@ function init() {
       );
     },
   };
+  return window.sollet;
 }
 
 export default {

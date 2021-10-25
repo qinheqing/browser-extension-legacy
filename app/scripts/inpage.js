@@ -61,6 +61,11 @@ const metamaskStream = new WindowPostMessageStream({
   target: STREAM_CONTENT_SCRIPT,
 });
 
+const version =
+  global.onekeyAppVersionInfo?.versionFull ||
+  global.onekeyAppVersionInfo?.version ||
+  '';
+
 // ETH provider ----------------------------------------------
 const providerEth = initializeProvider({
   connectionStream: metamaskStream,
@@ -69,10 +74,12 @@ const providerEth = initializeProvider({
   shouldShimWeb3: false, // manually set window.ethereum by setGlobalProvider()
   shouldSetOnWindow: false, // manually shimWeb3 by shimWeb3()
 });
+providerEth.version = version;
 inpageConflict.resolveConflict({ provider: providerEth });
 
 // SOL provider ----------------------------------------------
-inpageSolana.init();
+const providerSolana = inpageSolana.init();
+providerSolana.version = version;
 // inpageSolanaLegacy.init();
 
 // CFX provider ----------------------------------------------
@@ -83,4 +90,5 @@ const providerConflux = initializeProvider({
   shouldShimWeb3: false, // manually set window.ethereum by setGlobalProvider()
   shouldSetOnWindow: false, // manually shimWeb3 by shimWeb3()
 });
+providerConflux.version = version;
 inpageConflux.init({ provider: providerConflux });
