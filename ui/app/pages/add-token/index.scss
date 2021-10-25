@@ -13,6 +13,9 @@
     box-shadow: none;
     border-radius: 0;
   }
+  & .page-container-v2__tabs {
+    justify-content: space-around;
+  }
   
   & .page-container__footer {
     border-top: none;
