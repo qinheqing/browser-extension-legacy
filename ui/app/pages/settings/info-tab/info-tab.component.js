@@ -1,10 +1,11 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../../components/ui/button';
+import utilsApp from '../../../../../src/utils/utilsApp';
 
 export default class InfoTab extends PureComponent {
   state = {
-    version: global.platform.getVersion(),
+    // version: global.platform.getVersion(),
   };
 
   static contextTypes = {
@@ -100,10 +101,7 @@ export default class InfoTab extends PureComponent {
                 {t('metamaskVersion')}
               </div>
               <div className="info-tab__version-number">
-                {this.state.version}
-                {process.env.GITHUB_TAG && (
-                  <span>&nbsp;({process.env.GITHUB_TAG})</span>
-                )}
+                {utilsApp.getAppVersion().versionFull}
               </div>
             </div>
             <div className="info-tab__item">

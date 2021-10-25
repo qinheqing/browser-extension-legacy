@@ -1,3 +1,4 @@
+/* eslint import/no-cycle: "error" */
 import {
   isString,
   isNumber,
@@ -18,19 +19,10 @@ import {
 } from '../../shared/constants/app';
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../ui/app/helpers/constants/common';
 import utilsStorage from './utilsStorage';
+import utilsVersion from './utilsVersion';
 
 function getAppVersion() {
-  const build = process.env.GITHUB_TAG;
-  const version = global.$ok_extensionPlatform.getVersion();
-  let versionFull = `v${version}`;
-  if (build) {
-    versionFull = `v${version} (${build})`;
-  }
-  return {
-    version,
-    build,
-    versionFull,
-  };
+  return utilsVersion.getVersionInfo();
 }
 
 function isEnvInTestOrDebug() {
