@@ -248,7 +248,9 @@ class KeyringHardwareBase extends KeyringBase {
       }
       errorMsg = errorMsg || 'OneKey hardware connect failed.';
       // should throw hardware string error to Error Object
-      throw new Error(errorMsg);
+      const errorObject = new Error(errorMsg);
+      // errorObject.ignoreBackgroundErrorNotification = true;
+      throw errorObject;
     }
 
     if (success) {
