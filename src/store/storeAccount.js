@@ -46,17 +46,21 @@ class StoreAccount extends BaseStore {
     autorun(() => {
       const { currentAccountRaw } = storeStorage;
       const { currentBaseChain } = storeChain;
+      const { storageReady } = storeStorage;
       untracked(() => {
-        this.updateCurrentWallet();
+        if (storageReady) {
+          this.updateCurrentWallet();
+        }
       });
     });
 
     autorun(() => {
       const { isHardwareOnlyMode, homeType } = storeApp;
+      const { storageReady } = storeStorage;
       untracked(() => {
         const { isInitialized, isUnlocked } = storeApp;
         const isNewHome = utilsApp.isNewHome();
-        if (isInitialized && isUnlocked) {
+        if (isInitialized && isUnlocked && storageReady) {
           this.initFirstAccount();
         }
       });

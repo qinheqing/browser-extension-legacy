@@ -12,7 +12,7 @@ export default function createLoggerMiddleware(opts) {
     /** @type {Function} */ next,
   ) {
     // streamName, baseChain
-    const reqMeta = ` ${opts.streamName}-${opts.baseChain} (${opts.origin}): ${opts.location} `;
+    const reqMeta = ` ${opts.streamName} @ ${opts.baseChain} (${opts.origin}) ${opts.location} `;
 
     log.info(`DAPP_RPC [START] ${reqMeta}`, req);
 
@@ -23,7 +23,13 @@ export default function createLoggerMiddleware(opts) {
         log.error(`Error in RPC response ${reqMeta} >>> \n`, res.error);
       }
 
-      log.info(`DAPP_RPC [END] ${reqMeta}`, req, '\r\n -> ', res);
+      log.info(
+        `DAPP_RPC [END] ${reqMeta}`,
+        '\r\n req -> ',
+        req,
+        '\r\n res -> ',
+        res,
+      );
 
       if (req.isMetamaskInternal) {
         return;

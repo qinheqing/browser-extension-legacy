@@ -1,6 +1,6 @@
 /* eslint import/no-cycle: "error" */
 import assert from 'assert';
-import { autorun, makeObservable, toJS, configure } from 'mobx';
+import { autorun, makeObservable, toJS, configure, untracked } from 'mobx';
 import { isFunction, isNil } from 'lodash';
 import utilsApp from '../utils/utilsApp';
 
@@ -26,6 +26,38 @@ class BaseStore {
         `[${this.constructor.name}] Mobx Store is not allowed in extension <background> runtime`,
       );
     }
+  }
+
+  /*
+    // useAutorun(storeBrowse.autoRunSearch);
+
+    autoRunSearch = this.makeAutoRun(
+      // callback
+      () => {
+        if (utilsApp.isBrowserSide()) {
+          void this.searchDebounce(this.query);
+        }
+      },
+      // deps getter
+      () => {
+        const { query } = this;
+        const { q, chainId, sort } = query;
+      },
+    );
+   */
+  makeAutoRun(callback, deps) {
+    return () => {
+      const dispose = autorun(() => {
+        // TODO add built-in deps
+        //  storeStorage.storageReady
+        //  storeApp.metamaskStateReady
+        deps();
+        untracked(() => {
+          callback();
+        });
+      });
+      return dispose;
+    };
   }
 
   toJS() {

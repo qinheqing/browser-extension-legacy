@@ -117,7 +117,7 @@
     "@onekeyhq/json-rpc-engine": "^6.1.1",
     "@onekeyhq/obs-store": "^7.0.2",
     "@onekeyhq/post-message-stream": "^4.0.1",
-    "@onekeyhq/providers": "^8.2.0",
+    "@onekeyhq/providers": "^8.2.1",
     "@onekeyhq/rpc-cap": "^3.2.2",
     "@onekeyhq/safe-event-emitter": "^2.0.1",
     "@popperjs/core": "^2.4.0",

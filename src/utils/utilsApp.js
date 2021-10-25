@@ -16,7 +16,12 @@ import {
   ENVIRONMENT_TYPE_BACKGROUND,
   ENVIRONMENT_TYPE_POPUP,
 } from '../../shared/constants/app';
+import { IS_ENV_IN_TEST_OR_DEBUG } from '../../ui/app/helpers/constants/common';
 import utilsStorage from './utilsStorage';
+
+function isEnvInTestOrDebug() {
+  return IS_ENV_IN_TEST_OR_DEBUG;
+}
 
 function uuid() {
   return uuidMaker.v4().replace(/-/giu, '');
@@ -203,6 +208,7 @@ function trackEventNoop() {
 }
 
 const utilsApp = {
+  isEnvInTestOrDebug,
   uuid,
   formatTemplate,
   includeScripts,
