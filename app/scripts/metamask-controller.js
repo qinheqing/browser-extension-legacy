@@ -2025,7 +2025,8 @@ export default class MetamaskController extends EventEmitter {
     });
 
     if (baseChain !== CONST_CHAIN_KEYS.ETH) {
-      window._storeDappApproval.emitChainChangedOnLoaded();
+      // TODO explain why ?
+      // window._storeDappApproval.emitChainChangedOnLoaded();
     }
   }
 

@@ -31,6 +31,7 @@ class StoreDappApproval extends BaseStoreWithStorage {
     this.autosave('connections');
   }
 
+  // TODO deprecated
   async emitChainChangedOnLoaded() {
     await utilsApp.delay(1000);
     this.onChainChanged();
@@ -166,7 +167,7 @@ class StoreDappApproval extends BaseStoreWithStorage {
   async getChainMeta({ baseChain }) {
     let chainInfo = await this.getCurrentChainInfo();
     // ext should return same baseChain.chainId, otherwise some dapp will cause errors
-    if (baseChain !== chainInfo.baseChain) {
+    if (!chainInfo || baseChain !== chainInfo.baseChain) {
       chainInfo = this.getChainInfoFromBaseChain({ baseChain });
     }
     const { tokenChainId, key: chainKey } = chainInfo;

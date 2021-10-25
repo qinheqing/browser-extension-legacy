@@ -12,6 +12,7 @@
     height: 60px;
     position: fixed;
     bottom: 0;
+    background: #f2f3f4;
 
     select.dropdown,
     select.dropdown:focus,
@@ -48,6 +49,11 @@
     @media screen and (max-width: 575px) {
       font-size: 0.9rem;
     }
+  }
+
+  &__version {
+    font-size: 12px;
+    color: #aaa;
   }
 
   &__buttons {

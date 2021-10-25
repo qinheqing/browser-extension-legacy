@@ -19,6 +19,20 @@ import {
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../ui/app/helpers/constants/common';
 import utilsStorage from './utilsStorage';
 
+function getAppVersion() {
+  const build = process.env.GITHUB_TAG;
+  const version = global.$ok_extensionPlatform.getVersion();
+  let versionFull = `v${version}`;
+  if (build) {
+    versionFull = `v${version} (${build})`;
+  }
+  return {
+    version,
+    build,
+    versionFull,
+  };
+}
+
 function isEnvInTestOrDebug() {
   return IS_ENV_IN_TEST_OR_DEBUG;
 }
@@ -229,6 +243,7 @@ const utilsApp = {
   trackEventNoop,
   bufferToHex,
   mergeObjectWithArrayConcat,
+  getAppVersion,
 };
 global.$ok_utilsApp = utilsApp;
 export default utilsApp;
