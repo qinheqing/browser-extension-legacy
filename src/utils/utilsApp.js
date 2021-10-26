@@ -108,11 +108,9 @@ function isUiEnvironment() {
   return !isBackgroundEnvironment();
 }
 
-function openStandalonePage(routeUrl) {
-  if (isPopupEnvironment()) {
-    global.platform.openExtensionInBrowser(routeUrl);
-  } else {
-    global.onekeyHistory.push(routeUrl);
+function ensureUiEnvironment() {
+  if (!isUiEnvironment()) {
+    throw new Error('This code can only run in UI environment');
   }
 }
 
@@ -221,10 +219,10 @@ const utilsApp = {
   mnemonicToSeed,
   throwToBeImplemented,
   shortenAddress,
-  openStandalonePage,
   isPopupEnvironment,
   isBackgroundEnvironment,
   isUiEnvironment,
+  ensureUiEnvironment,
   isNewHome,
   isOldHome,
   waitForDataLoaded,

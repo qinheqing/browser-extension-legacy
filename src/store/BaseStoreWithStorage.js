@@ -49,7 +49,7 @@ class BaseStoreWithStorage extends BaseStore {
     });
   }
 
-  createAutoRunHook({ store, storeProp, storageKey, useLocalStorage }) {
+  createAutoSaveAutoRunHook({ store, storeProp, storageKey, useLocalStorage }) {
     autorun(() => {
       const watchValue = store[storeProp];
       // keep this outside untracked(), otherwise deep object will not trigger autorun
@@ -101,7 +101,12 @@ class BaseStoreWithStorage extends BaseStore {
     }
 
     // * watch value change, auto save to localStorage
-    this.createAutoRunHook({ store, storeProp, storageKey, useLocalStorage });
+    this.createAutoSaveAutoRunHook({
+      store,
+      storeProp,
+      storageKey,
+      useLocalStorage,
+    });
   }
 }
 

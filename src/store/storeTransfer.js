@@ -18,6 +18,7 @@ import storeHistory from './storeHistory';
 import storeToken from './storeToken';
 import storeTx from './storeTx';
 import storeAccount from './storeAccount';
+import createAutoRun from './createAutoRun';
 
 class StoreTransfer extends BaseStore {
   constructor(props) {
@@ -26,20 +27,17 @@ class StoreTransfer extends BaseStore {
     makeObservable(this);
   }
 
-  autoRunFetchFeeInfo() {
-    const dispose = autorun(() => {
+  autoRunFetchFeeInfo = createAutoRun(
+    () => {
       const payload = this.previewPayload;
-      untracked(() => {
-        if (payload.to) {
-          this.fetchTransferFeeInfoDebounce();
-        }
-      });
-    });
-    return () => {
-      dispose();
-      console.log('dispose autorun autoRunFetchFeeInfo');
-    };
-  }
+      if (payload.to) {
+        this.fetchTransferFeeInfoDebounce();
+      }
+    },
+    () => {
+      const payload = this.previewPayload;
+    },
+  );
 
   @observable.ref
   fromToken = null;

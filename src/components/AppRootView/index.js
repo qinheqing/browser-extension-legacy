@@ -6,6 +6,7 @@ import { Portal } from '@headlessui/react';
 import { observer } from 'mobx-react-lite';
 import PreloadScreen from '../PreloadingScreen';
 import storeStorage from '../../store/storeStorage';
+import storeApp from '../../store/storeApp';
 import styles from './index.css';
 
 // AppToastContainer should be singleton
@@ -61,7 +62,7 @@ function AppRootView({ children }) {
 }
 
 const UniversalRoutesWrapper = observer(function ({ children }) {
-  if (!storeStorage.storageReady) {
+  if (!storeStorage.storageReady || !storeApp.metamaskStateReady) {
     return <PreloadScreen autoHideTimeout={false} />;
   }
   return (

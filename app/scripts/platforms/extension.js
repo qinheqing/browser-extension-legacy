@@ -15,15 +15,38 @@ export default class ExtensionPlatform {
     extension.runtime.reload();
   }
 
-  openTab(options) {
+  targets = {};
+
+  openTab(options, target) {
     return new Promise((resolve, reject) => {
-      extension.tabs.create(options, (newTab) => {
-        const error = checkForError();
-        if (error) {
-          return reject(error);
-        }
-        return resolve(newTab);
-      });
+      const createNewTab = () => {
+        extension.tabs.create(options, (newTab) => {
+          if (target) {
+            this.targets[target] = newTab.id;
+          }
+          const error = checkForError();
+          if (error) {
+            return reject(error);
+          }
+          return resolve(newTab);
+        });
+      };
+      const tabId = this.targets[target];
+      if (tabId) {
+        this.getTabById(tabId)
+          .then(() => {
+            this.updateTab(tabId, { highlighted: true, ...options })
+              .then(resolve)
+              .catch(reject);
+          })
+          // eslint-disable-next-line node/handle-callback-err
+          .catch((err) => {
+            delete this.targets[target];
+            createNewTab();
+          });
+      } else {
+        createNewTab();
+      }
     });
   }
 
@@ -105,7 +128,7 @@ export default class ExtensionPlatform {
     return extension.runtime.getManifest().version;
   }
 
-  openExtensionInBrowser(route = null, queryString = null) {
+  openExtensionInBrowser(route = null, queryString = null, target = '') {
     let extensionURL = extension.runtime.getURL('home.html');
 
     if (queryString) {
@@ -115,7 +138,7 @@ export default class ExtensionPlatform {
     if (route) {
       extensionURL += `#${route}`;
     }
-    this.openTab({ url: extensionURL });
+    this.openTab({ url: extensionURL }, target);
     if (getEnvironmentType() !== ENVIRONMENT_TYPE_BACKGROUND) {
       window.close();
     }
@@ -174,6 +197,18 @@ export default class ExtensionPlatform {
           return reject(error);
         }
         return resolve(tabs);
+      });
+    });
+  }
+
+  getTabById(tabId) {
+    return new Promise((resolve, reject) => {
+      extension.tabs.get(tabId, (tab) => {
+        const error = checkForError();
+        if (error) {
+          return reject(error);
+        }
+        return resolve(tab);
       });
     });
   }

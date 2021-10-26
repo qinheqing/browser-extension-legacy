@@ -16,12 +16,14 @@ import {
 import OneAccountInfo from '../classes/OneAccountInfo';
 import walletFactory from '../wallets/walletFactory';
 import utilsApp from '../utils/utilsApp';
+import uiGetBgControllerAsync from '../wallets/bg/uiGetBgControllerAsync';
 import BaseStore from './BaseStore';
 import storeChain from './storeChain';
 import storeWallet from './storeWallet';
 import storeTx from './storeTx';
 import storeStorage from './storeStorage';
 import storeApp from './storeApp';
+import createAutoRun from './createAutoRun';
 
 class StoreAccount extends BaseStore {
   constructor(props) {
@@ -30,41 +32,61 @@ class StoreAccount extends BaseStore {
 
     this.setFirstChainKeyAsDefaultFilter();
 
-    autorun(() => {
-      const { currentAccountRaw } = storeStorage;
-      untracked(() => {
+    createAutoRun(
+      () => {
         const { currentAccountInfo } = this;
         if (currentAccountInfo?.chainKey) {
           storeChain.setCurrentChainKey(currentAccountInfo?.chainKey);
         }
         console.log('clear pending tx on mount');
         storeTx.clearPendingTx();
-      });
-    });
+      },
+      () => {
+        const { currentAccountRaw } = storeStorage;
+      },
+    )();
 
     // TODO do not use auto run to new Wallet, as currentAccount balance change will trigger this callback
-    autorun(() => {
-      const { currentAccountRaw } = storeStorage;
-      const { currentBaseChain } = storeChain;
-      const { storageReady } = storeStorage;
-      untracked(() => {
-        if (storageReady) {
-          this.updateCurrentWallet();
-        }
-      });
-    });
+    createAutoRun(
+      () => {
+        this.updateCurrentWallet();
+      },
+      () => {
+        const { currentAccountRaw } = storeStorage;
+        const { currentBaseChain } = storeChain;
+      },
+    )();
 
-    autorun(() => {
-      const { isHardwareOnlyMode, homeType } = storeApp;
-      const { storageReady } = storeStorage;
-      untracked(() => {
+    createAutoRun(
+      () => {
         const { isInitialized, isUnlocked } = storeApp;
         const isNewHome = utilsApp.isNewHome();
-        if (isInitialized && isUnlocked && storageReady) {
+        if (isInitialized && isUnlocked) {
           this.initFirstAccount();
         }
-      });
-    });
+      },
+      () => {
+        const { isHardwareOnlyMode, homeType } = storeApp;
+      },
+    )();
+
+    createAutoRun(
+      () => {
+        uiGetBgControllerAsync().then((bg) => {
+          if (utilsApp.isNewHome()) {
+            bg.disconnectAllDomainAccounts();
+          } else {
+            bg.emitAccountChangedToConnectedDomain(
+              storeApp.legacyState.selectedAddress,
+            );
+          }
+          bg.notifyChainIdChanged();
+        });
+      },
+      () => {
+        const { homeType } = storeStorage;
+      },
+    )();
   }
 
   updateCurrentWallet() {
@@ -109,6 +131,11 @@ class StoreAccount extends BaseStore {
   @computed
   get currentAccountChainKey() {
     return this.currentAccountInfo?.chainKey;
+  }
+
+  @computed
+  get currentAccountTypeIsHardware() {
+    return this.currentAccountInfo?.type === CONST_ACCOUNT_TYPES.Hardware;
   }
 
   @computed
@@ -291,7 +318,10 @@ class StoreAccount extends BaseStore {
     };
   }
 
-  // setCompletedOnboarding() -> initDefaultAccountOfNewApp() -> storeAccount.initFirstAccount()
+  // ui -> actions.js
+  // -> setCompletedOnboarding()
+  // -> initDefaultAccountOfNewApp()
+  // -> storeAccount.initFirstAccount()
   @action.bound
   async initFirstAccount() {
     const getAccountsInCurrentChain = () =>

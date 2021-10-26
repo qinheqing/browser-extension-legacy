@@ -15,6 +15,7 @@ import {
   ROUTE_TOKEN_DETAIL,
   ROUTE_TRANSFER,
 } from '../routes/routeUrls';
+import openStandalonePage from '../utils/openStandalonePage';
 import BaseStore from './BaseStore';
 
 class StoreHistory extends BaseStore {
@@ -85,8 +86,14 @@ class StoreHistory extends BaseStore {
 
   async goToPageTransfer({ token }) {
     const storeTransfer = (await import('./storeTransfer')).default;
+    const storeAccount = (await import('./storeAccount')).default;
+
     storeTransfer.fromToken = cloneDeep(token);
-    this.push(ROUTE_TRANSFER);
+    if (storeAccount.currentAccountTypeIsHardware) {
+      openStandalonePage(ROUTE_TRANSFER, 'ROUTE_TRANSFER');
+    } else {
+      this.push(ROUTE_TRANSFER);
+    }
   }
 
   async goToPageTokenDetail({ token, replace = false }) {

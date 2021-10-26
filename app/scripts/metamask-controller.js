@@ -607,6 +607,9 @@ export default class MetamaskController extends EventEmitter {
       safelistPhishingDomain: this.safelistPhishingDomain.bind(this),
       getRequestAccountTabIds: (cb) => cb(null, this.getRequestAccountTabIds()),
       getOpenMetamaskTabsIds: (cb) => cb(null, this.getOpenMetamaskTabsIds()),
+      openExtensionInBrowser: this.platform.openExtensionInBrowser.bind(
+        this.platform,
+      ),
 
       // primary HD keyring management
       addNewAccount: nodeify(this.addNewAccount, this),

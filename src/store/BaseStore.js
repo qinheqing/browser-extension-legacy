@@ -28,40 +28,6 @@ class BaseStore {
     }
   }
 
-  /*
-    // useAutorun(storeBrowse.autoRunSearch);
-
-    autoRunSearch = this.makeAutoRun(
-      // callback
-      () => {
-        if (utilsApp.isBrowserSide()) {
-          void this.searchDebounce(this.query);
-        }
-      },
-      // deps getter
-      () => {
-        const { query } = this;
-        const { q, chainId, sort } = query;
-      },
-    );
-   */
-  makeAutoRun(callback, deps) {
-    return () => {
-      const dispose = autorun(() => {
-        // TODO add built-in deps
-        //  storeStorage.storageReady
-        //  storeApp.metamaskStateReady
-        //  storeApp.isInitialized
-        //  force run in UI process
-        deps();
-        untracked(() => {
-          callback();
-        });
-      });
-      return dispose;
-    };
-  }
-
   toJS() {
     const keys = Object.getOwnPropertyNames(this);
     const json = {};
