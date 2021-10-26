@@ -81,7 +81,12 @@ class StoreHistory extends BaseStore {
 
   async goToPageTokenAdd() {
     const storeToken = (await import('./storeToken')).default;
-    this.push(ROUTE_TOKEN_ADD);
+    const storeAccount = (await import('./storeAccount')).default;
+    if (storeAccount.currentAccountTypeIsHardware) {
+      openStandalonePage(ROUTE_TOKEN_ADD, 'HARDWARE_STANDALONE');
+    } else {
+      this.push(ROUTE_TOKEN_ADD);
+    }
   }
 
   async goToPageTransfer({ token }) {
@@ -90,7 +95,7 @@ class StoreHistory extends BaseStore {
 
     storeTransfer.fromToken = cloneDeep(token);
     if (storeAccount.currentAccountTypeIsHardware) {
-      openStandalonePage(ROUTE_TRANSFER, 'ROUTE_TRANSFER');
+      openStandalonePage(ROUTE_TRANSFER, 'HARDWARE_STANDALONE');
     } else {
       this.push(ROUTE_TRANSFER);
     }
