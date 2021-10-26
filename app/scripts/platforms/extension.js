@@ -34,14 +34,11 @@ export default class ExtensionPlatform {
       const tabId = this.targets[target];
       if (tabId) {
         this.getTabById(tabId)
-          .then(() => {
-            this.updateTab(tabId, { highlighted: true, ...options })
-              .then(resolve)
-              .catch(reject);
-          })
+          .then(() => this.closeTab(tabId))
           // eslint-disable-next-line node/handle-callback-err
-          .catch((err) => {
-            delete this.targets[target];
+          .catch((err) => null)
+          // eslint-disable-next-line node/handle-callback-err
+          .finally(() => {
             createNewTab();
           });
       } else {
@@ -282,6 +279,7 @@ export default class ExtensionPlatform {
     });
   }
 
+  // call when wallet remove
   closeAllSavedTabs({ ignoreSelf = true } = {}) {
     const tabsList = utilsStorage.getItem(CURRENT_TABS_LIST) || {};
     extension.tabs.getCurrent((tab) => {

@@ -26,6 +26,7 @@ class BaseStoreWithStorage extends BaseStore {
     makeObservable(this);
   }
 
+  // this.storageNamespace = utilsStorage.STORAGE_NAMESPACES.storage;
   storageNamespace = '';
 
   async getStorageItemAsync(key, { useLocalStorage = USE_LOCAL_STORAGE } = {}) {

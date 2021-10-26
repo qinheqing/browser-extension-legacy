@@ -11,6 +11,7 @@ import { trim, debounce } from 'lodash';
 import utilsNumber from '../utils/utilsNumber';
 import utilsToast from '../utils/utilsToast';
 import { ROUTE_TX_HISTORY } from '../routes/routeUrls';
+import utilsStorage from '../utils/utilsStorage';
 import BaseStore from './BaseStore';
 import storeBalance from './storeBalance';
 import storeWallet from './storeWallet';
@@ -19,18 +20,23 @@ import storeToken from './storeToken';
 import storeTx from './storeTx';
 import storeAccount from './storeAccount';
 import createAutoRun from './createAutoRun';
+import BaseStoreWithStorage from './BaseStoreWithStorage';
 
-class StoreTransfer extends BaseStore {
+class StoreTransfer extends BaseStoreWithStorage {
   constructor(props) {
     super(props);
+    this.storageNamespace = utilsStorage.STORAGE_NAMESPACES.transfer;
+
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
+
+    this.autosave('fromToken', { useLocalStorage: true });
   }
 
   autoRunFetchFeeInfo = createAutoRun(
     () => {
       const payload = this.previewPayload;
-      if (payload.to) {
+      if (payload && payload.to) {
         this.fetchTransferFeeInfoDebounce();
       }
     },
@@ -85,6 +91,9 @@ class StoreTransfer extends BaseStore {
   get previewPayload() {
     const toAddress = trim(this.toAddress || '');
     const token = this.fromToken;
+    if (!token) {
+      return {};
+    }
     const decimals = storeToken.getTokenDecimals(token);
 
     return {
