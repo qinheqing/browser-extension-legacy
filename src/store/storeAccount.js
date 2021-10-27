@@ -279,9 +279,6 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   deleteAccountByAddress(address) {
-    if (storeStorage.allAccountsRaw.length <= 1) {
-      return;
-    }
     const curAddress = this.currentAccountAddress;
     const remains = storeStorage.allAccountsRaw.filter(
       (e) =>
@@ -292,22 +289,26 @@ class StoreAccount extends BaseStore {
       const nextAccountOfSameChain = remains.find(
         (item) => item.chainKey === storeChain.currentChainKey,
       );
-      this.setCurrentAccount({ account: nextAccountOfSameChain || remains[0] });
+      const currentAccount = nextAccountOfSameChain || remains[0];
+      if (currentAccount) {
+        this.setCurrentAccount({ account: currentAccount });
+      } else {
+        this.clearCurrentAccount();
+      }
     }
 
-    if (remains.length >= 1) {
-      storeStorage.allAccountsRaw = [...remains];
-    }
+    storeStorage.allAccountsRaw = [...remains].filter(Boolean);
   }
 
   @action.bound
   clearCurrentAccount() {
-    return this.setCurrentAccount({ account: null });
+    storeStorage.currentAccountRaw = storeStorage.CURRENT_ACCOUNT_RAW_DEFAULT;
   }
 
   @action.bound
   setCurrentAccount({ account }) {
     if (!account || !account?.chainKey) {
+      this.clearCurrentAccount();
       return;
     }
     storeChain.setCurrentChainKey(account.chainKey);
