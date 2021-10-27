@@ -27,6 +27,7 @@ import {
 import { TokenLogoIcon } from '../../components/LogoIcon';
 import storeChain from '../../store/storeChain';
 import FeeInfoPanel from '../../components/FeeInfoPanel';
+import useAutorun from '../../hooks/useAutorun';
 
 function PageTransfer() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -43,9 +44,7 @@ function PageTransfer() {
     }
   }, []);
 
-  useEffect(() => {
-    return storeTransfer.autoRunFetchFeeInfo();
-  }, []);
+  useAutorun(storeTransfer.autoRunFetchFeeInfo, []);
 
   if (useDataRequiredOrRedirect(storeTransfer.fromToken)) {
     return <div />;

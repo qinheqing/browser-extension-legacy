@@ -14,6 +14,7 @@ import storeApp from './storeApp';
 import storeChain from './storeChain';
 import storeAccount from './storeAccount';
 import storeStorage from './storeStorage';
+import createAutoRun from './createAutoRun';
 
 class StoreDappNotify extends BaseStore {
   constructor(props) {
@@ -24,48 +25,45 @@ class StoreDappNotify extends BaseStore {
   }
 
   async setupAutorun() {
-    await utilsApp.waitForDataLoaded({
-      log: 'StoreDappNotify.setupAutorun',
-      data: [
-        () => storeApp.metamaskStateReady,
-        () => storeStorage.storageReady,
-      ],
-    });
-
     // onChainChanged
-    autorun(() => {
-      const chainKey = storeChain.currentChainKey;
-      const baseChain = storeChain.currentBaseChain;
-      const { homeType } = storeApp;
-      untracked(() => {
-        // noop
+    createAutoRun(
+      () => {
         uiDappApproval.onChainChanged();
-      });
-    });
+      },
+      () => {
+        const chainKey = storeChain.currentChainKey;
+        const baseChain = storeChain.currentBaseChain;
+        const { homeType } = storeApp;
+      },
+    )();
 
     // onAccountsChanged
-    autorun(() => {
-      const chainKey = storeChain.currentChainKey;
-      const { isUnlocked } = storeApp;
-      const { homeType } = storeApp;
-      const address = storeAccount.currentAccountAddress;
-      untracked(() => {
-        // noop
+    createAutoRun(
+      () => {
+        const address = storeAccount.currentAccountAddress;
         uiDappApproval.onAccountsChanged({
           address,
           _memo: 'StoreDappNotify.onAccountsChanged',
         });
-      });
-    });
+      },
+      () => {
+        const chainKey = storeChain.currentChainKey;
+        const { isUnlocked } = storeApp;
+        const { homeType } = storeApp;
+        const address = storeAccount.currentAccountAddress;
+      },
+    )();
 
     // onUnlockedChanged
-    autorun(() => {
-      const { isUnlocked } = storeApp;
-      untracked(() => {
-        // noop
+    createAutoRun(
+      () => {
+        const { isUnlocked } = storeApp;
         uiDappApproval.onUnlockedChanged({ isUnlocked });
-      });
-    });
+      },
+      () => {
+        const { isUnlocked } = storeApp;
+      },
+    )();
   }
 }
 

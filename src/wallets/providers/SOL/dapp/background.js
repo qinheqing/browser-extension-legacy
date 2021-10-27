@@ -1,3 +1,4 @@
+import extension from 'extensionizer';
 import { CONST_DAPP_MESSAGE_TYPES } from '../../../../consts/consts';
 import DappMessageSOL from './DappMessageSOL';
 import { CONST_DAPP_METHODS_SOL } from './consts';
@@ -12,25 +13,31 @@ function launchPopup(message, sender, sendResponse) {
   searchParams.set('request', JSON.stringify(message.data));
 
   // TODO consolidate popup dimensions
-  window.chrome.windows.getLastFocused((focusedWindow) => {
+  extension.windows.getLastFocused((focusedWindow) => {
     // open new chrome window
-    window.chrome.windows.create({
+    extension.windows.create({
       url: `notification.html#app/approve-popup/sol/?${searchParams.toString()}`,
       type: 'popup',
       width: 360,
       height: 600,
       top: focusedWindow.top,
       left: focusedWindow.left + (focusedWindow.width - 375),
-      setSelfAsOpener: true,
+      // Type error for parameter createData (Unexpected property "setSelfAsOpener") for windows.create.
+      // setSelfAsOpener: true,
       focused: true,
     });
+    // TODO reposition in firefox
+    // Firefox currently ignores left/top for create, but it works for update
+    // if (popupWindow.left !== left && popupWindow.state !== 'fullscreen') {
+    //   await this.platform.updateWindowPosition(popupWindow.id, left, top);
+    // }
   });
 
   responseHandlers.set(message.data.id, sendResponse);
 }
 
 function handleConnect(message, sender, sendResponse) {
-  window.chrome.storage.local.get('connectedWallets', (result) => {
+  extension.storage.local.get('connectedWallets', (result) => {
     const connectedWallet = (result.connectedWallets || {})[sender.origin];
     // eslint-disable-next-line no-negated-condition
     if (!connectedWallet) {
@@ -51,9 +58,9 @@ function handleConnect(message, sender, sendResponse) {
 }
 
 function handleDisconnect(message, sender, sendResponse) {
-  window.chrome.storage.local.get('connectedWallets', (result) => {
+  extension.storage.local.get('connectedWallets', (result) => {
     delete result.connectedWallets[sender.origin];
-    window.chrome.storage.local.set(
+    extension.storage.local.set(
       {
         connectedWallets: result.connectedWallets,
         lastUpdateStorageTime: `${new Date().toString()}/background.js`,
@@ -69,7 +76,7 @@ function handleDisconnect(message, sender, sendResponse) {
 }
 
 function init() {
-  window.chrome.runtime.onMessage.addListener(
+  extension.runtime.onMessage.addListener(
     // eslint-disable-next-line consistent-return
     (message, sender, _sendResponse) => {
       console.log('RPC (Dapp <-> Ext)', message, sender);

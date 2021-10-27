@@ -49,6 +49,7 @@ import uiBackgroundProxy from '../../wallets/bg/uiBackgroundProxy';
 import { I18nContext } from '../../../ui/app/contexts/i18n';
 import { ChainLogoIcon } from '../../components/LogoIcon';
 import useInitFirstAccount from '../../hooks/useInitFirstAccount';
+import openStandalonePage from '../../utils/openStandalonePage';
 
 const LockScreenButton = () => (
   <HomeTopActionButton
@@ -155,7 +156,7 @@ const HomeAssetsHeader = observer(function () {
             type="white"
             size="xs"
             rounded
-            onClick={() => utilsApp.openStandalonePage(ROUTE_HOME)}
+            onClick={() => openStandalonePage(ROUTE_HOME, '')}
           >
             <AppIcons.ArrowsExpandIcon className="w-5" />
           </OneButton>

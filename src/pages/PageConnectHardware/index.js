@@ -24,6 +24,7 @@ import NavBackButton from '../../components/NavBackButton';
 export default observer(function PageConnectHardware() {
   const [browserSupported, setBrowserSupported] = useState(true);
   const [wallet, setWallet] = useState(null);
+  const [error, setError] = useState(null);
 
   const generateAccounts = useCallback(
     async ({ start, limit }) => {
@@ -35,8 +36,10 @@ export default observer(function PageConnectHardware() {
       let addrs = [];
       try {
         addrs = await wallet.getAddresses({ indexes: indexesRange });
+        setError(null);
         return addrs;
-      } catch (error) {
+      } catch (err) {
+        setError(err);
         setWallet(null);
         return [];
       }
@@ -66,10 +69,18 @@ export default observer(function PageConnectHardware() {
         {wallet ? (
           <ImportAccountsList wallet={wallet} onLoadMore={generateAccounts} />
         ) : (
-          <SelectHardware
-            connectToHardwareWallet={connectToHardwareWallet}
-            browserSupported={browserSupported}
-          />
+          <>
+            {error && (
+              <div className="text-red-500 text-center p-4">
+                <div>连接硬件发生错误</div>
+                {error.message || 'HARDWARE_ERROR'}
+              </div>
+            )}
+            <SelectHardware
+              connectToHardwareWallet={connectToHardwareWallet}
+              browserSupported={browserSupported}
+            />
+          </>
         )}
       </div>
     </AppPageLayout>

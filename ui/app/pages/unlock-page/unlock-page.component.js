@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import TextField from '../../components/ui/text-field';
 import { DEFAULT_ROUTE } from '../../helpers/constants/routes';
+import utilsApp from '../../../../src/utils/utilsApp';
 
 export default class UnlockPage extends Component {
   static contextTypes = {
@@ -147,6 +148,9 @@ export default class UnlockPage extends Component {
             <button className="unlock-page__link" onClick={() => onImport()}>
               {t('resetWalletButton')}
             </button>
+            <div className="unlock-page__version">
+              {utilsApp.getAppVersion().versionFull}
+            </div>
           </div>
         </div>
       </div>

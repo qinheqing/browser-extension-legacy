@@ -16,12 +16,14 @@ import {
 import OneAccountInfo from '../classes/OneAccountInfo';
 import walletFactory from '../wallets/walletFactory';
 import utilsApp from '../utils/utilsApp';
+import uiGetBgControllerAsync from '../wallets/bg/uiGetBgControllerAsync';
 import BaseStore from './BaseStore';
 import storeChain from './storeChain';
 import storeWallet from './storeWallet';
 import storeTx from './storeTx';
 import storeStorage from './storeStorage';
 import storeApp from './storeApp';
+import createAutoRun from './createAutoRun';
 
 class StoreAccount extends BaseStore {
   constructor(props) {
@@ -30,37 +32,61 @@ class StoreAccount extends BaseStore {
 
     this.setFirstChainKeyAsDefaultFilter();
 
-    autorun(() => {
-      const { currentAccountRaw } = storeStorage;
-      untracked(() => {
+    createAutoRun(
+      () => {
         const { currentAccountInfo } = this;
         if (currentAccountInfo?.chainKey) {
           storeChain.setCurrentChainKey(currentAccountInfo?.chainKey);
         }
         console.log('clear pending tx on mount');
         storeTx.clearPendingTx();
-      });
-    });
+      },
+      () => {
+        const { currentAccountRaw } = storeStorage;
+      },
+    )();
 
     // TODO do not use auto run to new Wallet, as currentAccount balance change will trigger this callback
-    autorun(() => {
-      const { currentAccountRaw } = storeStorage;
-      const { currentBaseChain } = storeChain;
-      untracked(() => {
+    createAutoRun(
+      () => {
         this.updateCurrentWallet();
-      });
-    });
+      },
+      () => {
+        const { currentAccountRaw } = storeStorage;
+        const { currentBaseChain } = storeChain;
+      },
+    )();
 
-    autorun(() => {
-      const { isHardwareOnlyMode, homeType } = storeApp;
-      untracked(() => {
+    createAutoRun(
+      () => {
         const { isInitialized, isUnlocked } = storeApp;
         const isNewHome = utilsApp.isNewHome();
         if (isInitialized && isUnlocked) {
           this.initFirstAccount();
         }
-      });
-    });
+      },
+      () => {
+        const { isHardwareOnlyMode, homeType } = storeApp;
+      },
+    )();
+
+    createAutoRun(
+      () => {
+        uiGetBgControllerAsync().then((bg) => {
+          if (utilsApp.isNewHome()) {
+            bg.disconnectAllDomainAccounts();
+          } else {
+            bg.emitAccountChangedToConnectedDomain(
+              storeApp.legacyState.selectedAddress,
+            );
+          }
+          bg.notifyChainIdChanged();
+        });
+      },
+      () => {
+        const { homeType } = storeStorage;
+      },
+    )();
   }
 
   updateCurrentWallet() {
@@ -73,7 +99,7 @@ class StoreAccount extends BaseStore {
     storeWallet.setCurrentWallet(wallet);
   }
 
-  @observable
+  @observable.ref
   refreshKey = 1;
 
   // TODO rename to currentAccountInfo
@@ -108,6 +134,11 @@ class StoreAccount extends BaseStore {
   }
 
   @computed
+  get currentAccountTypeIsHardware() {
+    return this.currentAccountInfo?.type === CONST_ACCOUNT_TYPES.Hardware;
+  }
+
+  @computed
   get currentAccountAddressShort() {
     return utilsApp.shortenAddress(this.currentAccountAddress || '');
   }
@@ -130,7 +161,7 @@ class StoreAccount extends BaseStore {
   @computed
   get currentAccountTypeText() {
     let type;
-    switch (this.currentAccountInfo.type) {
+    switch (this.currentAccountInfo?.type) {
       case CONST_ACCOUNT_TYPES.Hardware: {
         type = '硬件账户';
         break;
@@ -248,9 +279,6 @@ class StoreAccount extends BaseStore {
 
   @action.bound
   deleteAccountByAddress(address) {
-    if (storeStorage.allAccountsRaw.length <= 1) {
-      return;
-    }
     const curAddress = this.currentAccountAddress;
     const remains = storeStorage.allAccountsRaw.filter(
       (e) =>
@@ -261,23 +289,26 @@ class StoreAccount extends BaseStore {
       const nextAccountOfSameChain = remains.find(
         (item) => item.chainKey === storeChain.currentChainKey,
       );
-      this.setCurrentAccount({ account: nextAccountOfSameChain || remains[0] });
+      const currentAccount = nextAccountOfSameChain || remains[0];
+      if (currentAccount) {
+        this.setCurrentAccount({ account: currentAccount });
+      } else {
+        this.clearCurrentAccount();
+      }
     }
 
-    if (remains.length >= 1) {
-      storeStorage.allAccountsRaw = [...remains];
-    }
+    storeStorage.allAccountsRaw = [...remains].filter(Boolean);
   }
 
   @action.bound
   clearCurrentAccount() {
-    return this.setCurrentAccount({ account: null });
+    storeStorage.currentAccountRaw = storeStorage.CURRENT_ACCOUNT_RAW_DEFAULT;
   }
 
   @action.bound
   setCurrentAccount({ account }) {
     if (!account || !account?.chainKey) {
-      storeStorage.currentAccountRaw = storeStorage.CURRENT_ACCOUNT_RAW_DEFAULT;
+      this.clearCurrentAccount();
       return;
     }
     storeChain.setCurrentChainKey(account.chainKey);
@@ -288,7 +319,10 @@ class StoreAccount extends BaseStore {
     };
   }
 
-  // setCompletedOnboarding() -> initDefaultAccountOfNewApp() -> storeAccount.initFirstAccount()
+  // ui -> actions.js
+  // -> setCompletedOnboarding()
+  // -> initDefaultAccountOfNewApp()
+  // -> storeAccount.initFirstAccount()
   @action.bound
   async initFirstAccount() {
     const getAccountsInCurrentChain = () =>

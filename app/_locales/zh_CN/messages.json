@@ -308,6 +308,9 @@
   "confirmed": {
     "message": "确认"
   },
+  "conflux": {
+    "message": "Conflux 主网"
+  },
   "congratulations": {
     "message": "恭喜"
   },
@@ -855,7 +858,7 @@
     "message": "导入钱包"
   },
   "importYourExisting": {
-    "message": "使用 12 个单词的助记词导入您现有的钱包。"
+    "message": "使用助记词导入您现有的钱包。"
   },
   "imported": {
     "message": "已导入"
@@ -1347,7 +1350,7 @@
     "message": "删除账户"
   },
   "removeAccountDescription": {
-    "message": "该账户已从您的钱包中删除。请在继续后续操作前，确认您是否已拥有该导入账户的原始账户助记词或账户密钥。您可以通过账户下拉菜单再次导入或创建账户。"
+    "message": "该账户将从您的钱包中删除。请在继续后续操作前，确认您是否已拥有该导入账户的原始账户助记词或账户密钥。您可以通过账户下拉菜单再次导入或创建账户。"
   },
   "requestsAwaitingAcknowledgement": {
     "message": "待确认的请求"
@@ -1461,7 +1464,7 @@
     "message": "警告：切勿向他人透露您的钱包助记词。任何人一旦持有该钱包助记词，即可控制您的 Ether。"
   },
   "secretPhrase": {
-    "message": "目前支持使用12个单词的助记词来导入您的钱包"
+    "message": "支持 12/18/24 位助记词"
   },
   "securityAndPrivacy": {
     "message": "安全与隐私"
@@ -1591,9 +1594,6 @@
   },
   "solana": {
     "message": "Solana 主网"
-  },
-  "conflux": {
-    "message": "Conflux 主网"
   },
   "somethingWentWrong": {
     "message": "糟糕！出问题了。"

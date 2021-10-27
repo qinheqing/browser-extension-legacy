@@ -38,6 +38,11 @@ function backupFiles() {
   files.forEach((file) => {
     const folder = path.dirname(file.path);
     const langISO = path.basename(folder);
+    const extName = path.extname(folder);
+
+    if (extName !== 'json') {
+      return;
+    }
 
     rewriteJsonFile({
       src: file.path,

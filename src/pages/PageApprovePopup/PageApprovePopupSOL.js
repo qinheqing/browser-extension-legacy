@@ -7,6 +7,7 @@ import { Message, PublicKey } from '@solana/web3.js';
 import { isString, isNumber, isDate } from 'lodash';
 import BN from 'bn.js';
 import { useParams, useLocation } from 'react-router-dom';
+import extension from 'extensionizer';
 import AppPageLayout from '../../components/AppPageLayout';
 import {
   BACKGROUND_PROXY_MODULE_NAMES,
@@ -273,9 +274,17 @@ const ApproveTransaction = observer(function ({
             loading={btnLoading}
             block
             type="primary"
-            onClick={() => {
-              setBtnLoading(true);
-              onApprove({ autoApprove: false, message: txStrList, isBatch });
+            onClick={async () => {
+              try {
+                setBtnLoading(true);
+                await onApprove({
+                  autoApprove: false,
+                  message: txStrList,
+                  isBatch,
+                });
+              } finally {
+                setBtnLoading(false);
+              }
             }}
           >
             {/* 交易授权*/}
@@ -332,7 +341,7 @@ const ApproveTransaction = observer(function ({
 
 // message from popup -> bg -> content -> inpage -> dapp
 function sendMessageToBg(message) {
-  global.chrome.runtime.sendMessage(
+  extension.runtime.sendMessage(
     DappMessageSOL.extensionRuntimeMessage({
       channel: CONST_DAPP_MESSAGE_TYPES.CHANNEL_POPUP_TO_BG,
       data: message,
@@ -525,7 +534,7 @@ function PageApprovePopupSOL() {
     const onConnect = ({ autoApprove = false } = {}) => {
       // * setConnectedAccount(wallet.publicKey);
       // * save to storage
-      global.chrome.storage.local.get('connectedWallets', (result) => {
+      extension.storage.local.get('connectedWallets', (result) => {
         const connectedWallets = {
           ...result?.connectedWallets,
           [query.origin]: {
@@ -533,11 +542,11 @@ function PageApprovePopupSOL() {
             autoApprove,
           },
         };
-        global.chrome.storage.local.set({
+        extension.storage.local.set({
           connectedWallets,
           lastUpdateStorageTime: `${new Date().toString()} > PagePopup.js`,
         });
-        global.chrome.storage.local.get('connectedWallets', console.log);
+        extension.storage.local.get('connectedWallets', console.log);
       });
 
       // * send publicKey to inpage provider

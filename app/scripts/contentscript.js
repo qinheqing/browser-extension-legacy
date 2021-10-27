@@ -5,6 +5,7 @@ import ObjectMultiplex from 'obj-multiplex';
 import extension from 'extensionizer';
 import PortStream from 'extension-port-stream';
 import contentscriptSolana from '../../src/wallets/providers/SOL/dapp/contentscript';
+import utilsVersion from '../../src/utils/utilsVersion';
 import {
   STREAM_CONTENT_SCRIPT,
   STREAM_INPAGE,
@@ -31,6 +32,8 @@ const LEGACY_PROVIDER = 'provider';
 const LEGACY_PUBLIC_CONFIG = 'publicConfig';
 
 if (shouldInjectProvider()) {
+  const versionInfo = utilsVersion.getVersionInfo();
+  injectScript(`window.onekeyAppVersionInfo = ${JSON.stringify(versionInfo)};`);
   injectScript(inpageBundle);
   setupStreams();
 }

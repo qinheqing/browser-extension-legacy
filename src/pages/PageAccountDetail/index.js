@@ -18,6 +18,7 @@ import {
 } from '../../routes/routeUrls';
 import { REVEAL_SEED_ROUTE } from '../../../ui/app/helpers/constants/routes';
 import { CONST_ACCOUNT_TYPES } from '../../consts/consts';
+import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
 
 function PageAccountDetail() {
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -26,6 +27,10 @@ function PageAccountDetail() {
     storeAccount.deleteAccountByAddress(storeAccount.currentAccountAddress);
     storeHistory.goBack();
   }, []);
+
+  if (useDataRequiredOrRedirect(storeAccount.currentAccountInfo)) {
+    return <div />;
+  }
 
   return (
     <AppPageLayout

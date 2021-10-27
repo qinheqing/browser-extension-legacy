@@ -308,6 +308,9 @@
   "confirmed": {
     "message": "Confirmed"
   },
+  "conflux": {
+    "message": "Conflux Mainnet"
+  },
   "congratulations": {
     "message": "Congratulations"
   },
@@ -855,7 +858,7 @@
     "message": "Import HD wallet"
   },
   "importYourExisting": {
-    "message": "Import your existing wallet using a 12 word seed phrase"
+    "message": "Import your existing wallet using recovery phrase"
   },
   "imported": {
     "message": "Imported"
@@ -1461,7 +1464,7 @@
     "message": "WARNING: Never disclose your backup phrase. Anyone with this phrase can take your Ether forever."
   },
   "secretPhrase": {
-    "message": "Enter your secret twelve word phrase here to restore your vault."
+    "message": "Support 12/18/24-word recovery phrase"
   },
   "securityAndPrivacy": {
     "message": "Security & Privacy"
@@ -1591,9 +1594,6 @@
   },
   "solana": {
     "message": "Solana Mainnet"
-  },
-  "conflux": {
-    "message": "Conflux Mainnet"
   },
   "somethingWentWrong": {
     "message": "Oops! Something went wrong."

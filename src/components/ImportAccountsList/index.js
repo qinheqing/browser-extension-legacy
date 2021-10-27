@@ -81,7 +81,7 @@ function ImportAccountItem({
   );
 }
 
-const LOAD_SIZE = 30;
+const LOAD_SIZE = 15;
 const PAGE_SIZE = 5;
 
 function ImportAccountsList({ wallet, onLoadMore }) {

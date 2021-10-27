@@ -1,3 +1,4 @@
+import extension from 'extensionizer';
 import { CONST_DAPP_MESSAGE_TYPES } from '../../../../consts/consts';
 import DappMessageSOL from './DappMessageSOL';
 
@@ -11,7 +12,7 @@ function init() {
       }
 
       // TODO only chrome
-      window.chrome.runtime.sendMessage(
+      extension.runtime.sendMessage(
         DappMessageSOL.extensionRuntimeMessage({
           channel: CONST_DAPP_MESSAGE_TYPES.CHANNEL_CONTENT_TO_BG,
           data: event.detail,
@@ -27,7 +28,9 @@ function init() {
 
           window.dispatchEvent(
             new CustomEvent(CONST_DAPP_MESSAGE_TYPES.EVENT_CONTENT_TO_INPAGE, {
-              detail: response,
+              // FireFox: event.detail can not be Object, only String supported
+              //    Uncaught Error: Permission denied to access property "id"
+              detail: JSON.stringify(response),
             }),
           );
         },

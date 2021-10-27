@@ -10,9 +10,17 @@ import WalletSOL from './providers/SOL/Wallet';
 import WalletCFX from './providers/CFX/Wallet';
 
 // TODO cache expire feature
-const walletsCacheMap = {};
+let walletsCacheMap = {};
 
-function createWallet(options = {}) {
+function createCacheKey({ chainInfo, accountInfo }) {
+  // eslint-disable-next-line no-param-reassign
+  chainInfo = chainInfo || {};
+  // eslint-disable-next-line no-param-reassign
+  accountInfo = accountInfo || {};
+  return `${chainInfo.baseChain}_${chainInfo.key}__${accountInfo.type}_${accountInfo.address}_${accountInfo.path}`;
+}
+
+function createWallet(options = {}, { cache = false } = {}) {
   const { chainInfo, accountInfo } = options;
   assert(
     chainInfo,
@@ -20,6 +28,16 @@ function createWallet(options = {}) {
   );
   const baseChain = chainInfo?.baseChain;
   let wallet = null;
+  let cacheKey = '';
+
+  if (cache) {
+    cacheKey = createCacheKey({ chainInfo, accountInfo });
+    wallet = walletsCacheMap[cacheKey]?.instance;
+    if (wallet) {
+      return wallet;
+    }
+  }
+
   switch (baseChain) {
     case CONST_CHAIN_KEYS.BTC:
       break;
@@ -37,6 +55,14 @@ function createWallet(options = {}) {
   }
 
   if (wallet) {
+    if (cache && cacheKey) {
+      // cache only last single instance
+      walletsCacheMap = {};
+      walletsCacheMap[cacheKey] = {
+        lastUpdate: Date.now(),
+        instance: wallet,
+      };
+    }
     return wallet;
   }
   throw new Error(`No Wallet class match for baseChain=${baseChain}`);

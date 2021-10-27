@@ -43,7 +43,7 @@ function getTxInfo(tx) {
   if (instructions[0]) {
     return instructions[0];
   }
-  const hasMethod = tx.method !== '0x' && Boolean(tx.method);
+  const hasMethod = tx && tx.method !== '0x' && Boolean(tx.method);
   const info = {
     ...tx,
     program: hasMethod ? 'contract' : 'system', // system, other
@@ -213,7 +213,8 @@ function InstructionsInfoCard({
     );
   }
 
-  if (parsed.method) {
+  // CFX tx contract method name
+  if (parsed && parsed.method) {
     content = (
       <div>
         {content}

@@ -24,22 +24,6 @@ class StoreApp extends BaseStore {
     super(props);
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
-
-    autorun(() => {
-      const { homeType } = storeStorage;
-      untracked(() => {
-        uiGetBgControllerAsync().then((bg) => {
-          if (utilsApp.isNewHome()) {
-            bg.disconnectAllDomainAccounts();
-          } else {
-            bg.emitAccountChangedToConnectedDomain(
-              this.legacyState.selectedAddress,
-            );
-          }
-          bg.notifyChainIdChanged();
-        });
-      });
-    });
   }
 
   // check homeType, use utilsApp.isNewHome();

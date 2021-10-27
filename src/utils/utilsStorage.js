@@ -6,6 +6,7 @@ const STORAGE_KEY_PREFIX = 'onekey/';
 const STORAGE_NAMESPACES = {
   storage: 'storage',
   dappApproval: 'dappApproval',
+  transfer: 'transfer',
 };
 
 function buildFullKey(key) {

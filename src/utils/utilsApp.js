@@ -1,3 +1,4 @@
+/* eslint import/no-cycle: "error" */
 import {
   isString,
   isNumber,
@@ -16,7 +17,17 @@ import {
   ENVIRONMENT_TYPE_BACKGROUND,
   ENVIRONMENT_TYPE_POPUP,
 } from '../../shared/constants/app';
+import { IS_ENV_IN_TEST_OR_DEBUG } from '../../ui/app/helpers/constants/common';
 import utilsStorage from './utilsStorage';
+import utilsVersion from './utilsVersion';
+
+function getAppVersion() {
+  return utilsVersion.getVersionInfo();
+}
+
+function isEnvInTestOrDebug() {
+  return IS_ENV_IN_TEST_OR_DEBUG;
+}
 
 function uuid() {
   return uuidMaker.v4().replace(/-/giu, '');
@@ -97,11 +108,9 @@ function isUiEnvironment() {
   return !isBackgroundEnvironment();
 }
 
-function openStandalonePage(routeUrl) {
-  if (isPopupEnvironment()) {
-    global.platform.openExtensionInBrowser(routeUrl);
-  } else {
-    global.onekeyHistory.push(routeUrl);
+function ensureUiEnvironment() {
+  if (!isUiEnvironment()) {
+    throw new Error('This code can only run in UI environment');
   }
 }
 
@@ -203,16 +212,17 @@ function trackEventNoop() {
 }
 
 const utilsApp = {
+  isEnvInTestOrDebug,
   uuid,
   formatTemplate,
   includeScripts,
   mnemonicToSeed,
   throwToBeImplemented,
   shortenAddress,
-  openStandalonePage,
   isPopupEnvironment,
   isBackgroundEnvironment,
   isUiEnvironment,
+  ensureUiEnvironment,
   isNewHome,
   isOldHome,
   waitForDataLoaded,
@@ -223,6 +233,7 @@ const utilsApp = {
   trackEventNoop,
   bufferToHex,
   mergeObjectWithArrayConcat,
+  getAppVersion,
 };
 global.$ok_utilsApp = utilsApp;
 export default utilsApp;

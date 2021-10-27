@@ -169,6 +169,28 @@ class KeyringHdBase extends KeyringBase {
 class KeyringHardwareBase extends KeyringBase {
   _onekeyConnect = null;
 
+  // TODO
+  parseError() {
+    this.callParseError();
+    // * Firmware need upgrade
+    /*
+      code: "Failure_UnexpectedMessage",
+      error: "Unknown message"
+     */
+    //
+    // * Need enable BlindSign
+    /*
+      code: "Failure_DataError",
+      error: "Please confirm the BlindSign enabled"
+     */
+    //
+    // * Address NOT matched with sign tx ( SOL only )
+    /*
+      code: "Failure_DataError",
+      error: "Invalid params"
+     */
+  }
+
   async getConnectAsync() {
     // DO NOT add this module "@onekeyhq/connect" to package.json,
     //        as two diffent version of connect (keyring) will break
@@ -185,10 +207,12 @@ class KeyringHardwareBase extends KeyringBase {
     return toLower(baseChain);
   }
 
-  async getAccountPrivateKey({ seed, path }) {
-    throw new Error('Hardware privateKey exporting is not supported.');
+  // eslint-disable-next-line node/handle-callback-err
+  async callParseError(error) {
+    return utilsApp.throwToBeImplemented(this);
   }
 
+  // TODO rename to absXXXX()
   async callGetAddress({ connect, params }) {
     return utilsApp.throwToBeImplemented(this);
   }
@@ -197,17 +221,10 @@ class KeyringHardwareBase extends KeyringBase {
     return utilsApp.throwToBeImplemented(this);
   }
 
-  /* TODO need upgrade firmware error
-  {
-    "id": 1,
-    "success": false,
-    "payload": {
-      "error": "Unknown message",
-      "code": "Failure_UnexpectedMessage"
-    },
-    "device": {}
+  async getAccountPrivateKey({ seed, path }) {
+    throw new Error('Hardware privateKey exporting is not supported.');
   }
-   */
+
   async getAddresses({ indexes = [0] }) {
     const bundle = indexes.map((index) => ({
       path: this.hdkeyManager.createHdPath({ index }),
@@ -248,7 +265,9 @@ class KeyringHardwareBase extends KeyringBase {
       }
       errorMsg = errorMsg || 'OneKey hardware connect failed.';
       // should throw hardware string error to Error Object
-      throw new Error(errorMsg);
+      const errorObject = new Error(errorMsg);
+      // errorObject.ignoreBackgroundErrorNotification = true;
+      throw errorObject;
     }
 
     if (success) {

@@ -89,4 +89,8 @@ function ignoreSentry(report) {
   return false;
 }
 
+function ignoreNotification() {
+  // err.ignoreBackgroundErrorNotification = true;
+}
+
 export default { ignoreSentry };

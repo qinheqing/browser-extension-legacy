@@ -44,6 +44,10 @@ this.emit('connect');
 
 import { CONST_DAPP_MESSAGE_TYPES } from '../../../../consts/consts';
 
+function isString(obj) {
+  return typeof obj === 'string';
+}
+
 function init() {
   window.sollet = {
     isOneKey: true,
@@ -60,15 +64,18 @@ function init() {
         if (event.target !== window) {
           return;
         }
+        const eventDetail = isString(event.detail)
+          ? JSON.parse(event.detail)
+          : event.detail;
 
-        if (event.detail.id === message.id) {
+        if (eventDetail?.id === message.id) {
           window.removeEventListener(
             CONST_DAPP_MESSAGE_TYPES.EVENT_CONTENT_TO_INPAGE,
             listener,
           );
           // send message to dapp (sol-wallet-adapter)
           // https://github.com/project-serum/sol-wallet-adapter/blob/master/src/index.ts#L65
-          window.postMessage(event.detail);
+          window.postMessage(eventDetail || {});
         }
       };
 
@@ -88,6 +95,7 @@ function init() {
       );
     },
   };
+  return window.sollet;
 }
 
 export default {

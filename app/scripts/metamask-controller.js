@@ -81,8 +81,8 @@ export const METAMASK_CONTROLLER_EVENTS = {
 OneKeyKeyring.connect.init({
   // debug: true,
   // popup: true,
-  // connectSrc: 'https://connect.onekey.so/',
-  connectSrc: 'https://connect.test.onekey.so/',
+  connectSrc: 'https://connect.onekey.so/',
+  // connectSrc: 'https://connect.test.onekey.so/',
   // connectSrc: 'https://localhost:8088/',
   manifest: {
     email: 'hi@onekey.so',
@@ -607,6 +607,9 @@ export default class MetamaskController extends EventEmitter {
       safelistPhishingDomain: this.safelistPhishingDomain.bind(this),
       getRequestAccountTabIds: (cb) => cb(null, this.getRequestAccountTabIds()),
       getOpenMetamaskTabsIds: (cb) => cb(null, this.getOpenMetamaskTabsIds()),
+      openExtensionInBrowser: this.platform.openExtensionInBrowser.bind(
+        this.platform,
+      ),
 
       // primary HD keyring management
       addNewAccount: nodeify(this.addNewAccount, this),
@@ -2025,7 +2028,8 @@ export default class MetamaskController extends EventEmitter {
     });
 
     if (baseChain !== CONST_CHAIN_KEYS.ETH) {
-      window._storeDappApproval.emitChainChangedOnLoaded();
+      // TODO explain why ?
+      // window._storeDappApproval.emitChainChangedOnLoaded();
     }
   }
 

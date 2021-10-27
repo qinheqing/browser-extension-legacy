@@ -36,9 +36,16 @@
     margin: 56px 0 8px;
   }
 
+  &__version {
+    font-size: 10px;
+  }
+
   &__links {
     margin-top: 25px;
     width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   &__link {
@@ -46,6 +53,10 @@
     background-color: unset;
     color: unset;
     font-size: unset;
+
+    &:hover {
+      color: $primary;
+    }
 
     &--import {
       color: $primary;

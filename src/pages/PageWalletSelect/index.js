@@ -20,6 +20,7 @@ import storeChain from '../../store/storeChain';
 import { CONST_CHAIN_KEYS } from '../../consts/consts';
 import utilsToast from '../../utils/utilsToast';
 import storeApp from '../../store/storeApp';
+import openStandalonePage from '../../utils/openStandalonePage';
 
 const AccountsList = observer(function () {
   const history = useHistory();
@@ -78,7 +79,7 @@ function PageWalletSelect() {
           storeAccount.accountsGroupFilter.chainKey,
         );
         if (chainInfo?.baseChain === CONST_CHAIN_KEYS.SOL) {
-          utilsApp.openStandalonePage(ROUTE_CONNECT_HARDWARE);
+          openStandalonePage(ROUTE_CONNECT_HARDWARE);
         } else {
           utilsToast.toast.info('该链暂不支持硬件钱包');
         }

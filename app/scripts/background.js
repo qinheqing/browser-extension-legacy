@@ -99,6 +99,9 @@ if (inTest || process.env.METAMASK_DEBUG) {
     try {
       await global.chrome.storage.local.clear(); // chrome
     } catch (ex) {}
+    try {
+      await extension.storage.local.clear(); // chrome
+    }catch (ex){}
     const currentStore = await localStore.get();
     console.log('currentStore=', JSON.stringify(currentStore, null, 2));
     console.log('Page will be reloaded in 3s...');

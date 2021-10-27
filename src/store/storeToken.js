@@ -21,6 +21,7 @@ import storeHistory from './storeHistory';
 import storeStorage from './storeStorage';
 import storePrice from './storePrice';
 import storeBalance from './storeBalance';
+import createAutoRun from './createAutoRun';
 
 class StoreToken extends BaseStore {
   constructor(props) {
@@ -29,26 +30,32 @@ class StoreToken extends BaseStore {
     // auto detect fields decorators, and make them reactive
     makeObservable(this);
 
-    autorun(() => {
-      const address = storeAccount.currentAccountAddress;
-      const chainKey = storeAccount.currentAccountChainKey;
-      untracked(() => {
+    createAutoRun(
+      () => {
+        const address = storeAccount.currentAccountAddress;
+        const chainKey = storeAccount.currentAccountChainKey;
         if (
           storeStorage.currentTokensRaw?.chainKey !== chainKey ||
           storeStorage.currentTokensRaw?.ownerAddress !== address
         ) {
           storeStorage.currentTokensRaw.tokens = [];
         }
-      });
-    });
+      },
+      () => {
+        const address = storeAccount.currentAccountAddress;
+        const chainKey = storeAccount.currentAccountChainKey;
+      },
+    )();
 
-    autorun(() => {
-      const chainKey = storeChain.currentChainKey;
-      untracked(() => {
+    createAutoRun(
+      () => {
         this.allTokenListMeta = [];
         this.tokenListFiltered = null;
-      });
-    });
+      },
+      () => {
+        const chainKey = storeChain.currentChainKey;
+      },
+    )();
   }
 
   @observable.ref
