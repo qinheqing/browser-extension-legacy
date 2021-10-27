@@ -107,7 +107,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          prefix: 'v${{ env.PKG_VERSION }}-build'
+          prefix: 'v${{ env.PKG_VERSION }}-##date##'
           debug: true
           export-change-log: true
           compare-to: ${{ github.event.inputs.compare-to }}
