@@ -226,6 +226,7 @@ const HomeAssetsList = observer(function () {
   );
 });
 
+// TODO redirect to oldHome useRedirectToCorrectHome
 function PageHome() {
   const history = useHistory();
   const [copied, handleCopy] = useCopyToClipboard();

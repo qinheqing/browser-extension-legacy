@@ -236,7 +236,7 @@ const ExtChainSelectorComponent = observer(function ({
       ]}
     >
       {/* TODO max-height max-width popup */}
-      <div className="max-h-[80vh] overflow-y-auto">
+      <div className="max-h-[420px] overflow-y-auto">
         <EVMChainGroup
           setRpcTarget={setRpcTarget}
           displayInvalidCustomNetworkAlert={displayInvalidCustomNetworkAlert}

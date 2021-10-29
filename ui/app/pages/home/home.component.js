@@ -103,6 +103,23 @@ export default class Home extends PureComponent {
     mounted: false,
   };
 
+  redirectToNewHomeIfNeed() {
+    const { history, isNotification } = this.props;
+    const { pathname } = history.location;
+    const allowedViewInNewHomePath = [SETTINGS_ROUTE];
+    if (
+      utilsApp.isNewHome() &&
+      // if Dapp create approve window (isNotification=true), do NOT redirect to new home
+      !isNotification &&
+      // view pages in array, do NOT redirect
+      !allowedViewInNewHomePath.find((item) => pathname.startsWith(item))
+    ) {
+      history.replace(ROUTE_HOME);
+      return true;
+    }
+    return false;
+  }
+
   componentDidMount() {
     const {
       firstPermissionsRequestId,
@@ -114,9 +131,7 @@ export default class Home extends PureComponent {
       pendingApprovals,
     } = this.props;
 
-    // if Dapp create approve window (isNotification=true), do NOT redirect to new home
-    if (!isNotification && utilsApp.isNewHome()) {
-      history.replace(ROUTE_HOME);
+    if (this.redirectToNewHomeIfNeed()) {
       return;
     }
 
@@ -168,6 +183,10 @@ export default class Home extends PureComponent {
 
     if (!prevState.closing && this.state.closing) {
       global.platform.closeCurrentWindow();
+    }
+
+    if (this.redirectToNewHomeIfNeed()) {
+      // return
     }
   }
 
