@@ -11,10 +11,10 @@ const Overview = () => {
   const history = useHistory();
   return (
     <div className="home__container">
-      <AppHeader />
+      {/* <AppHeader />*/}
       <ExtAppHeader />
       <div className="home__main-view">
-        <MenuBar />
+        {/* <MenuBar /> */}
         <div className="home__balance-wrapper">
           <EthOverview />
         </div>

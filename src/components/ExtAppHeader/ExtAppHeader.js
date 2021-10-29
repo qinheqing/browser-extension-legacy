@@ -11,6 +11,7 @@ function ExtAppHeader() {
       <div className="flex-1" />
       <ExtAccountSelector />
       <div className="flex-1" />
+      {/* TODO z-index in MM */}
       <ExtAppHeaderMoreDropdown />
     </div>
   );

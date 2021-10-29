@@ -3,6 +3,7 @@ import { Account, AccountSelector, Badge } from '@onekeyhq/ui-components';
 import { observer } from 'mobx-react-lite';
 import { connect } from 'react-redux';
 import classnames from 'classnames';
+import { useHistory } from 'react-router-dom';
 import utilsApp from '../../utils/utilsApp';
 import storeAccount from '../../store/storeAccount';
 import {
@@ -17,6 +18,12 @@ import TokenBalance from '../TokenBalance';
 import { PRIMARY } from '../../../ui/app/helpers/constants/common';
 import UserPreferencedCurrencyDisplay from '../../../ui/app/components/app/user-preferenced-currency-display';
 import * as actions from '../../../ui/app/store/actions';
+import useI18n from '../../hooks/useI18n';
+import {
+  IMPORT_ACCOUNT_ROUTE,
+  NEW_ACCOUNT_ROUTE,
+} from '../../../ui/app/helpers/constants/routes';
+import { goToPageConnectHardware } from '../../../ui/app/helpers/utils/util';
 
 function getCurrentAccountInfo({ selectedIdentity }) {
   /*  selectedIdentity
@@ -139,8 +146,9 @@ const AccountSelectorDropdownList = observer(function ({
   lastSelected: 1635498541128
   name: "Account 1"
    */
+  const t = useI18n();
   return (
-    <AccountSelector.OptionGroup title="Accounts">
+    <AccountSelector.OptionGroup title={t('myAccounts')}>
       {utilsApp.isNewHome() &&
         storeAccount.accountsListOfCurrentChain.map((account) => (
           <AccountItem
@@ -177,29 +185,39 @@ const ExtAccountSelectorComponent = observer(function ({
   evmAccounts,
   showAccountDetail,
 }) {
+  const history = useHistory();
   const triggerBtnRef = useRef(null);
   const close = useCallback(() => {
     triggerBtnRef?.current?.click();
   }, []);
-
+  const t = useI18n();
   return (
     <AccountSelector
       triggerButtonRef={(ref) => (triggerBtnRef.current = ref)}
       actions={[
         {
-          content: 'Add Account',
+          content: t('createAccount'),
           iconName: 'PlusSolid',
-          onAction: () => close(),
+          onAction: () => {
+            history.push(NEW_ACCOUNT_ROUTE);
+            close();
+          },
         },
         {
-          content: 'Setting',
-          iconName: 'CogSolid',
-          onAction: () => close(),
+          content: t('importAccount'),
+          iconName: 'DownloadSolid',
+          onAction: () => {
+            history.push(IMPORT_ACCOUNT_ROUTE);
+            close();
+          },
         },
         {
-          content: 'Lock',
-          iconName: 'LockClosedSolid',
-          onAction: () => close(),
+          content: t('connectHardwareWallet'),
+          iconName: 'DeviceMobileOutline',
+          onAction: () => {
+            goToPageConnectHardware();
+            close();
+          },
         },
       ]}
       place="bottom-center"
