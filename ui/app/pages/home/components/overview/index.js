@@ -5,12 +5,14 @@ import AppHeader from '../../../../components/app/app-header';
 import { EthOverview } from '../../../../components/app/wallet-overview';
 import AssetList from '../../../../components/app/asset-list';
 import { ASSET_ROUTE } from '../../../../helpers/constants/routes';
+import { ExtAppHeader } from '../../../../../../src/components/ExtAppHeader';
 
 const Overview = () => {
   const history = useHistory();
   return (
     <div className="home__container">
       <AppHeader />
+      <ExtAppHeader />
       <div className="home__main-view">
         <MenuBar />
         <div className="home__balance-wrapper">

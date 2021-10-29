@@ -6,7 +6,7 @@ const SOL = configsHelper.normalizeChainInfo({
   key: CONST_CHAIN_KEYS.SOL,
   baseChain: CONST_CHAIN_KEYS.SOL,
 
-  name: 'Solana',
+  name: 'Solana 主网',
   shortname: 'Solana',
   chainLogo: 'images/chains/solana.svg',
   isTestNet: false,

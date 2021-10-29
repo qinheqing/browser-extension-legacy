@@ -23,6 +23,7 @@ function LogoIcon({
   }, [imgSrc]);
   return (
     <div
+      data-img-src={imgSrc || ''}
       className={classnames(
         'relative rounded-full overflow-hidden u-inline-flex-center',
         {
