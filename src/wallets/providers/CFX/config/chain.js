@@ -10,7 +10,7 @@ const CFX = configsHelper.normalizeChainInfo({
   key: CONST_CHAIN_KEYS.CFX,
   baseChain: CONST_CHAIN_KEYS.CFX,
 
-  name: 'Conflux',
+  name: 'Conflux 主网',
   shortname: 'Conflux',
   chainLogo: 'images/chains/conflux.svg',
   isTestNet: false,

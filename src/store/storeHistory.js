@@ -60,23 +60,34 @@ class StoreHistory extends BaseStore {
     this.replace(ROUTE_HOME);
   }
 
-  async goToHomeNew({ chainKey } = {}) {
+  async goToHomeNew({ chainKey, replace = false } = {}) {
     const storeApp = (await import('./storeApp')).default;
     const storeChain = (await import('./storeChain')).default;
     const storeStorage = (await import('./storeStorage')).default;
     const utilsToast = (await import('../utils/utilsToast')).default;
 
     storeStorage.homeType = 'NEW';
+
     if (chainKey) {
       storeChain.setCurrentChainKey(chainKey);
     }
-    this.push(ROUTE_HOME);
+
+    if (replace) {
+      this.replace(ROUTE_HOME);
+    } else {
+      this.push(ROUTE_HOME);
+    }
   }
 
-  async goToHomeOld() {
+  async goToHomeOld({ replace = false }) {
     const storeStorage = (await import('./storeStorage')).default;
     storeStorage.homeType = 'OLD';
-    this.push(ROUTE_HOME_OLD);
+
+    if (replace) {
+      this.replace(ROUTE_HOME_OLD);
+    } else {
+      this.push(ROUTE_HOME_OLD);
+    }
   }
 
   async goToPageTokenAdd() {

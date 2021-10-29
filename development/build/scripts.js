@@ -570,7 +570,7 @@ function createBuildConfiguration() {
     require: [],
     // non-standard bify options
     manualExternal: [],
-    manualIgnore: ['react-image-fallback'],
+    manualIgnore: [],
     manualExclude: [],
   };
   return { label, bundlerOpts, events };

@@ -67,6 +67,7 @@ class StoreAccount extends BaseStore {
       },
       () => {
         const { isHardwareOnlyMode, homeType } = storeApp;
+        const { currentChainKey } = storeChain;
       },
     )();
 
@@ -219,6 +220,11 @@ class StoreAccount extends BaseStore {
       );
     }
     return [];
+  }
+
+  @computed
+  get accountsListOfCurrentChain() {
+    return this.getAccountsByChainKey(storeChain.currentChainKey);
   }
 
   getAccountsByChainKey(chainKey) {
