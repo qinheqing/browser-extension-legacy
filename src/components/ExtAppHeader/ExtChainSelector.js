@@ -8,7 +8,7 @@ import {
 import React, { useCallback, useContext, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { compose } from 'redux';
-import { withRouter } from 'react-router-dom';
+import { useHistory, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import storeChain from '../../store/storeChain';
 import { CONST_CHAIN_KEYS } from '../../consts/consts';
@@ -19,21 +19,44 @@ import storeHistory from '../../store/storeHistory';
 import { isPrefixedFormattedHexString } from '../../../shared/modules/network.utils';
 import evmChainsConfig from '../../config/chains/EVM';
 import { openAlert } from '../../../ui/app/ducks/alerts/invalid-custom-network';
+import { getEnvironmentType } from '../../../app/scripts/lib/util';
+import { ENVIRONMENT_TYPE_FULLSCREEN } from '../../../shared/constants/app';
+import {
+  NETWORKS_FORM_ROUTE,
+  NETWORKS_ROUTE,
+} from '../../../ui/app/helpers/constants/routes';
 
-function buildChainIcon(chain) {
-  let chainIcon = chain;
-  chainIcon = (chainIcon || '').toLowerCase();
-  if (['mainnet', 'ropsten', 'kovan', 'rinkeby'].includes(chain)) {
-    chainIcon = 'eth';
-  }
-  return chainIcon;
+function getEvmChainInfo(chain) {
+  // eslint-disable-next-line no-param-reassign
+  chain = (chain || '').toLowerCase();
+  let chainInfo = evmChainsConfig.find((item) => item.chain === chain);
+  chainInfo = chainInfo || { chain, chainName: chain, chainIcon: chain };
+  const chainIcon = chainInfo?.chainIcon || chainInfo?.chain || chain;
+  return {
+    ...chainInfo,
+    chainIcon,
+  };
 }
 
-function ExtChainInfo({ chain, name, description, ...rest }) {
+function ExtChainInfo({ chain, name, description, icon, ...rest }) {
+  const t = useI18n();
+
+  const chainInfo = getEvmChainInfo(chain);
+
+  // eslint-disable-next-line no-param-reassign
+  icon = icon ?? chainInfo.chainIcon;
+
+  // eslint-disable-next-line no-param-reassign
+  name =
+    name ??
+    (chainInfo.chainName || utilsApp.changeCase.capitalCase(chain || ''));
+
+  // eslint-disable-next-line no-param-reassign
+  description = description ?? (chain && t(chain));
+
   return (
     <Token
-      chain={(chain || '').toLowerCase()}
-      // TODO Warning: validateDOMNesting(...): <div> cannot appear as a descendant of <p>.
+      chain={(icon || '').toLowerCase()}
       name={name && <div className="text-left">{name}</div>}
       description={
         // TODO alignLeft
@@ -50,24 +73,23 @@ function TestNetBadge() {
 
 const ChainSelectorItem = observer(function ({
   chain = '',
-  chainIcon = '',
-  chainName = '',
-  chainDesc = '',
+  chainIcon,
+  chainName,
+  chainDesc,
   onSelect,
   isTestNet = false,
   isSelected = false,
 }) {
   const t = useI18n();
-  // eslint-disable-next-line no-param-reassign
-  chainIcon = chainIcon || buildChainIcon(chain);
-
-  const name = chainName || utilsApp.changeCase.capitalCase(chain);
-
-  const description = chainDesc || t(chain);
 
   return (
     <AccountSelector.Option isSelected={isSelected} onAction={onSelect}>
-      <ExtChainInfo chain={chainIcon} name={name} description={description} />
+      <ExtChainInfo
+        chain={chain}
+        chainIcon={chainIcon}
+        name={chainName}
+        description={chainDesc}
+      />
       {isTestNet && <TestNetBadge />}
     </AccountSelector.Option>
   );
@@ -194,16 +216,19 @@ const ExtChainSelectorComponent = observer(function ({
   frequentRpcListDetail,
   provider,
   setProviderType,
+  setSelectedSettingsRpcUrl,
+  setNetworksTabAddMode,
 }) {
+  const history = useHistory();
   const triggerBtnRef = useRef(null);
   const close = useCallback(() => {
     triggerBtnRef?.current?.click();
   }, []);
-  let chainIcon = provider.type;
+  let chain = provider.type;
   if (utilsApp.isNewHome()) {
-    chainIcon = storeChain.currentBaseChain;
+    chain = storeChain.currentBaseChain;
   }
-  chainIcon = buildChainIcon(chainIcon);
+  chain = getEvmChainInfo(chain).chainIcon;
 
   return (
     // TODO ChainSelector
@@ -212,26 +237,28 @@ const ExtChainSelectorComponent = observer(function ({
       place="bottom-start"
       trigger={{
         token: {
-          chain: chainIcon,
+          chain,
         },
       }}
       actions={[
         {
           content: (
             <div>
-              Customize this list in{' '}
-              <Link
-                color
-                // TODO If you want to write it to the DOM, pass a string instead: pure="true" or pure={value.toString()}.
-                pure="true"
-              >
-                {' '}
-                Networks
-              </Link>
+              Customize this list in <Link color> Networks</Link>
             </div>
           ),
           iconName: 'CogSolid',
-          onAction: () => close(),
+          onAction: () => {
+            // history.push(
+            //   getEnvironmentType() === ENVIRONMENT_TYPE_FULLSCREEN
+            //     ? NETWORKS_ROUTE
+            //     : NETWORKS_FORM_ROUTE, // show edit/create form besides
+            // );
+            history.push(NETWORKS_ROUTE);
+            setSelectedSettingsRpcUrl('');
+            setNetworksTabAddMode(false);
+            close();
+          },
         },
       ]}
     >
@@ -295,4 +322,4 @@ const ExtChainSelector = compose(
   connect(mapStateToProps, mapDispatchToProps),
 )(ExtChainSelectorComponent);
 
-export { ExtChainSelector };
+export { ExtChainSelector, ExtChainInfo };

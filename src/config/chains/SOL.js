@@ -13,6 +13,7 @@ const SOL = configsHelper.normalizeChainInfo({
   addTokenMode: CONST_ADD_TOKEN_MODE.CHAIN,
   hdPathTemplate: `m/44'/501'/{{index}}'/0'`,
   colorBg: '#8125f2',
+  hardwareSupport: true,
 
   rpc: [
     'https://api.mainnet-beta.solana.com',

@@ -37,8 +37,11 @@ import {
   DEFAULT_ROUTE,
 } from '../../helpers/constants/routes';
 import { WALLET_ACCOUNT_TYPES } from '../../helpers/constants/common';
-import { ROUTE_HOME } from '../../../../src/routes/routeUrls';
+import { ROUTE_HOME, ROUTE_TX_HISTORY } from '../../../../src/routes/routeUrls';
 import utilsApp from '../../../../src/utils/utilsApp';
+import useRedirectToCorrectHome, {
+  redirectToCorrectHome,
+} from '../../../../src/hooks/useRedirectToCorrectHome';
 import { History as TxHistory } from './components/history';
 import Overview from './components/overview';
 import { Tabs, Tab } from './components/tabs';
@@ -104,20 +107,12 @@ export default class Home extends PureComponent {
   };
 
   redirectToNewHomeIfNeed() {
-    const { history, isNotification } = this.props;
-    const { pathname } = history.location;
-    const allowedViewInNewHomePath = [SETTINGS_ROUTE];
-    if (
-      utilsApp.isNewHome() &&
-      // if Dapp create approve window (isNotification=true), do NOT redirect to new home
-      !isNotification &&
-      // view pages in array, do NOT redirect
-      !allowedViewInNewHomePath.find((item) => pathname.startsWith(item))
-    ) {
-      history.replace(ROUTE_HOME);
-      return true;
-    }
-    return false;
+    const { history } = this.props;
+    return redirectToCorrectHome({
+      fromNewHome: false,
+      history,
+      location: history.location,
+    });
   }
 
   componentDidMount() {
@@ -238,24 +233,6 @@ export default class Home extends PureComponent {
       shouldShowSeedPhraseReminder,
     } = this.props;
     const { t } = this.context;
-    if (
-      hwOnlyMode &&
-      accountType &&
-      accountType !== WALLET_ACCOUNT_TYPES.HARDWARE
-    ) {
-      return (
-        <div className="home__container home__connect-hw">
-          <Button
-            type="secondary"
-            onClick={() => {
-              goToPageConnectHardware();
-            }}
-          >
-            {t('connectHardwareWallet')}
-          </Button>
-        </div>
-      );
-    }
 
     if (forgottenPassword) {
       return <Redirect to={{ pathname: RESTORE_VAULT_ROUTE }} />;
@@ -290,7 +267,7 @@ export default class Home extends PureComponent {
                 <MenuItem
                   currentPath={currentPath}
                   history={history}
-                  path={OVERVIEW_ROUTE}
+                  path={utilsApp.isOldHome() ? OVERVIEW_ROUTE : ROUTE_HOME}
                   exact
                   defaultIcon={<img src="./images/tabs/home.svg" />}
                   activeIcon={<img src="./images/tabs/home-active.svg" />}
@@ -299,7 +276,9 @@ export default class Home extends PureComponent {
                   history={history}
                   exact
                   currentPath={currentPath}
-                  path={TRANSACTIONS_ROUTE}
+                  path={
+                    utilsApp.isOldHome() ? TRANSACTIONS_ROUTE : ROUTE_TX_HISTORY
+                  }
                   defaultIcon={<img src="./images/tabs/transaction.svg" />}
                   activeIcon={
                     <img src="./images/tabs/transaction-active.svg" />

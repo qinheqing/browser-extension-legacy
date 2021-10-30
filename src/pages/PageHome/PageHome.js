@@ -11,6 +11,7 @@ import { observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import { Button } from '@onekeyhq/ui-components';
 import AppPageLayout from '../../components/AppPageLayout';
 import storeAccount from '../../store/storeAccount';
 import AccountCard from '../../components/AccountCard';
@@ -30,7 +31,6 @@ import TokenInfoCard from '../../components/TokenInfoCard';
 import utilsToast from '../../utils/utilsToast';
 import { useCopyToClipboard } from '../../../ui/app/hooks/useCopyToClipboard';
 import utilsApp from '../../utils/utilsApp';
-import storeTransfer from '../../store/storeTransfer';
 import TxSubmitSuccessView from '../../components/TxSubmitSuccessView';
 import AppIcons from '../../components/AppIcons';
 import OneButton from '../../components/OneButton';
@@ -38,20 +38,12 @@ import storeHistory from '../../store/storeHistory';
 import storeChain from '../../store/storeChain';
 import storeStorage from '../../store/storeStorage';
 import storeApp from '../../store/storeApp';
-import storePrice from '../../store/storePrice';
-import walletFactory from '../../wallets/walletFactory';
-import OneAccountInfo from '../../classes/OneAccountInfo';
-import {
-  BACKGROUND_PROXY_MODULE_NAMES,
-  CONST_ACCOUNT_TYPES,
-} from '../../consts/consts';
-import uiGetBgControllerAsync from '../../wallets/bg/uiGetBgControllerAsync';
-import uiBackgroundProxy from '../../wallets/bg/uiBackgroundProxy';
-import { I18nContext } from '../../../ui/app/contexts/i18n';
 import { ChainLogoIcon } from '../../components/LogoIcon';
 import useInitFirstAccount from '../../hooks/useInitFirstAccount';
 import openStandalonePage from '../../utils/openStandalonePage';
 import { ExtAppHeader } from '../../components/ExtAppHeader';
+import useRedirectToCorrectHome from '../../hooks/useRedirectToCorrectHome';
+import useI18n from '../../hooks/useI18n';
 
 const LockScreenButton = () => (
   <HomeTopActionButton
@@ -233,6 +225,7 @@ function PageHome() {
   const { isUnlocked } = storeApp.legacyState;
   const { currentAccountAddress } = storeAccount;
   const initAccountReady = useInitFirstAccount();
+  const t = useI18n();
 
   useEffect(() => {
     if (initAccountReady && currentAccountAddress) {
@@ -252,6 +245,10 @@ function PageHome() {
     storeHistory.push(ROUTE_ACCOUNT_DETAIL);
   }, []);
 
+  if (useRedirectToCorrectHome({ fromNewHome: true })) {
+    return null;
+  }
+
   if (!initAccountReady) {
     return null;
   }
@@ -259,14 +256,27 @@ function PageHome() {
   const contentView = (() => {
     const { isHardwareOnlyMode } = storeApp;
     if (!currentAccountAddress) {
+      const hardwareConnectBtn = storeChain.currentChainSupportHardware ? (
+        <Button onClick={() => storeHistory.goToPageConnectHardware()}>
+          {t('connectHardwareWallet')}
+        </Button>
+      ) : (
+        <span>当前网络不支持硬件</span>
+      );
       return (
         <div className="h-full u-flex-center flex-col px-4">
           <ChainLogoIcon />
+
           <div className="my-4">
-            {isHardwareOnlyMode
-              ? '点击右上角按钮连接硬件'
-              : '点击右上角按钮选择或创建账户'}
+            {isHardwareOnlyMode ? (
+              hardwareConnectBtn
+            ) : (
+              <Button onClick={() => storeHistory.goToPageCreateAccount()}>
+                {t('createAccount')}
+              </Button>
+            )}
           </div>
+
           <LockScreenButton />
         </div>
       );
