@@ -8,9 +8,13 @@ import storeHistory from '../../store/storeHistory';
 import {
   CONNECTED_ROUTE,
   SETTINGS_ROUTE,
+  TRANSACTIONS_ROUTE,
 } from '../../../ui/app/helpers/constants/routes';
 import {
+  ROUTE_ACCOUNT_DETAIL,
   ROUTE_APPROVE_SETTINGS,
+  ROUTE_HOME,
+  ROUTE_HOME_OLD,
   ROUTE_TX_HISTORY,
 } from '../../routes/routeUrls';
 import {
@@ -22,10 +26,24 @@ import {
 } from '../../../ui/app/selectors';
 import { showModal } from '../../../ui/app/store/actions';
 import getAccountLink from '../../../ui/lib/account-link';
+import openStandalonePage from '../../utils/openStandalonePage';
+import utilsApp from '../../utils/utilsApp';
+import useCurrentAccountAvailable from '../../hooks/useCurrentAccountAvailable';
+import storeAccount from '../../store/storeAccount';
+
+function cleanSections(sections) {
+  return sections.filter((item) => {
+    if (item) {
+      item.items = item?.items?.filter(Boolean) || [];
+    }
+    return Boolean(item) && item.items && item.items.length > 0;
+  });
+}
 
 export function ExtAppHeaderMoreDropdown() {
   const t = useI18n();
   const history = useHistory();
+  const accountAvailable = useCurrentAccountAvailable();
   const dispatch = useDispatch();
   const selectedIdentity = useSelector(getSelectedIdentity);
   const keyring = useSelector(getCurrentKeyring);
@@ -33,41 +51,82 @@ export function ExtAppHeaderMoreDropdown() {
   const chainId = useSelector(getCurrentChainId);
   const rpcPrefs = useSelector(getRpcPrefsForCurrentProvider);
   const { address } = selectedIdentity;
-  const isRemovable = keyring.type !== 'HD Key Tree';
+  const isRemovable = utilsApp.isOldHome() && keyring.type !== 'HD Key Tree';
 
   return (
     <Dropdown
       place="bottom-end"
-      sections={[
+      sections={cleanSections([
+        // Expand View action
         {
+          items: [
+            utilsApp.isPopupEnvironment() && {
+              content: t('expandView'),
+              icon: 'ArrowsExpandOutline',
+              onAction: () => {
+                // global.platform.openExtensionInBrowser();
+                openStandalonePage(
+                  utilsApp.isNewHome() ? ROUTE_HOME : ROUTE_HOME_OLD,
+                  '',
+                );
+              },
+            },
+          ],
+        },
+        // Account related actions
+        accountAvailable && {
           items: [
             {
               content: t('accountDetails'),
-              icon: 'CogSolid',
+              icon: 'UserCircleSolid',
               onAction: () => {
+                if (utilsApp.isNewHome()) {
+                  storeHistory.push(ROUTE_ACCOUNT_DETAIL);
+                  return;
+                }
+
                 dispatch(showModal({ name: 'ACCOUNT_DETAILS' }));
               },
             },
             {
-              content: t('viewinExplorer'),
-              icon: 'CogSolid',
+              content: t('activity'),
+              icon: 'ClockSolid',
               onAction: () => {
+                if (utilsApp.isNewHome()) {
+                  storeHistory.push(ROUTE_TX_HISTORY);
+                  return;
+                }
+
+                storeHistory.push(TRANSACTIONS_ROUTE);
+              },
+            },
+            {
+              content: t('viewinExplorer'),
+              icon: 'ExternalLinkSolid',
+              onAction: () => {
+                if (utilsApp.isNewHome()) {
+                  storeHistory.openBlockBrowserLink({
+                    account: storeAccount.currentAccountAddress,
+                  });
+                  return;
+                }
+
                 global.platform.openTab({
                   url: getAccountLink(address, chainId, rpcPrefs, network),
                 });
               },
             },
-            {
-              content: t('connectedSites'),
-              icon: 'CogSolid',
-              onAction: () => {
-                history.push(CONNECTED_ROUTE);
-              },
-            },
-            {
+            isRemovable && {
               content: t('removeAccount'),
-              icon: 'CogSolid',
+              icon: 'TrashSolid',
               onAction: () => {
+                if (utilsApp.isNewHome()) {
+                  storeHistory.openBlockBrowserLink({
+                    account: storeAccount.currentAccountAddress,
+                  });
+                  return;
+                }
+
                 dispatch(
                   showModal({
                     name: 'CONFIRM_REMOVE_ACCOUNT',
@@ -78,6 +137,7 @@ export function ExtAppHeaderMoreDropdown() {
             },
           ],
         },
+        // System related actions
         {
           items: [
             {
@@ -91,23 +151,9 @@ export function ExtAppHeaderMoreDropdown() {
               // eslint-disable-next-line no-alert
               onAction: () => storeHistory.push(SETTINGS_ROUTE),
             },
-            {
-              content: '授权',
-              icon: 'ShieldExclamationSolid',
-              onAction: () => storeHistory.push(ROUTE_APPROVE_SETTINGS),
-            },
           ],
         },
-        {
-          items: [
-            {
-              content: t('activity'),
-              icon: 'ClockSolid',
-              onAction: () => storeHistory.push(ROUTE_TX_HISTORY),
-            },
-          ],
-        },
-      ]}
+      ])}
     />
   );
 }

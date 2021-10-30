@@ -8,6 +8,8 @@
     align-items: center;
     justify-content: center;
     padding: 30px;
+    flex: 1;
+    min-height: 100%;
   }
   &__container-wrapper {
     position: relative;

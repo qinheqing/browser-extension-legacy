@@ -15,7 +15,7 @@ export default function AppPageLayout({
   footer,
 }) {
   console.log('AppPageLayout render');
-  const showNavigationHeader = true;
+  const showNavigationHeader = !headerView;
   return (
     <div className={styles.root}>
       {showNavigationHeader && (

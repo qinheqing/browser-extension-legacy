@@ -11,6 +11,7 @@ import {
 } from '../../../helpers/constants/routes';
 import ColorIndicator from '../../../components/ui/color-indicator';
 import { COLORS, SIZES } from '../../../helpers/constants/design-system';
+import { ExtChainInfo } from '../../../../../src/components/ExtAppHeader/ExtChainSelector';
 import NetworkForm from './network-form';
 
 export default class NetworksTab extends PureComponent {
@@ -112,7 +113,8 @@ export default class NetworksTab extends PureComponent {
           }
         }}
       >
-        <NetworkIcon networkType={network.labelKey} />
+        {/* <NetworkIcon networkType={network.labelKey} />*/}
+        <ExtChainInfo chain={network.labelKey} name="" description="" />
         <div
           className={classnames('networks-tab__networks-list-name', {
             'networks-tab__networks-list-name--selected':

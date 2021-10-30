@@ -120,6 +120,11 @@ class StoreChain extends BaseStore {
   }
 
   @computed
+  get currentChainSupportHardware() {
+    return Boolean(this.currentChainInfo?.hardwareSupport);
+  }
+
+  @computed
   get currentNativeTokenUnitName() {
     return this.currentChainInfo?.nativeToken?.unitName;
   }

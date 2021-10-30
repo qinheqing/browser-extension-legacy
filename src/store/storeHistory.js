@@ -9,6 +9,8 @@ import {
 } from 'mobx';
 import { cloneDeep } from 'lodash';
 import {
+  ROUTE_CONNECT_HARDWARE,
+  ROUTE_CREATE_ACCOUNT,
   ROUTE_HOME,
   ROUTE_HOME_OLD,
   ROUTE_TOKEN_ADD,
@@ -16,6 +18,9 @@ import {
   ROUTE_TRANSFER,
 } from '../routes/routeUrls';
 import openStandalonePage from '../utils/openStandalonePage';
+import { goToPageConnectHardware } from '../../ui/app/helpers/utils/util';
+import utilsApp from '../utils/utilsApp';
+import { NEW_ACCOUNT_ROUTE } from '../../ui/app/helpers/constants/routes';
 import BaseStore from './BaseStore';
 
 class StoreHistory extends BaseStore {
@@ -88,6 +93,34 @@ class StoreHistory extends BaseStore {
     } else {
       this.push(ROUTE_HOME_OLD);
     }
+  }
+
+  async goToPageCreateAccount({ chainKey } = {}) {
+    if (utilsApp.isOldHome()) {
+      this.push(NEW_ACCOUNT_ROUTE);
+      return;
+    }
+    const storeAccount = (await import('./storeAccount')).default;
+    const storeChain = (await import('./storeChain')).default;
+
+    storeAccount.setAccountsGroupFilterToChain({
+      chainKey: chainKey || storeChain.currentChainKey,
+    });
+    this.push(ROUTE_CREATE_ACCOUNT);
+  }
+
+  async goToPageConnectHardware({ chainKey } = {}) {
+    if (utilsApp.isOldHome()) {
+      goToPageConnectHardware();
+      return;
+    }
+    const storeAccount = (await import('./storeAccount')).default;
+    const storeChain = (await import('./storeChain')).default;
+
+    storeAccount.setAccountsGroupFilterToChain({
+      chainKey: chainKey || storeChain.currentChainKey,
+    });
+    openStandalonePage(ROUTE_CONNECT_HARDWARE);
   }
 
   async goToPageTokenAdd() {

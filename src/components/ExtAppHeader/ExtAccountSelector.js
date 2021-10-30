@@ -24,6 +24,14 @@ import {
   NEW_ACCOUNT_ROUTE,
 } from '../../../ui/app/helpers/constants/routes';
 import { goToPageConnectHardware } from '../../../ui/app/helpers/utils/util';
+import storeApp from '../../store/storeApp';
+import openStandalonePage from '../../utils/openStandalonePage';
+import {
+  ROUTE_CONNECT_HARDWARE,
+  ROUTE_CREATE_ACCOUNT,
+} from '../../routes/routeUrls';
+import storeHistory from '../../store/storeHistory';
+import useCurrentAccountAvailable from '../../hooks/useCurrentAccountAvailable';
 
 function getCurrentAccountInfo({ selectedIdentity }) {
   /*  selectedIdentity
@@ -187,23 +195,34 @@ const ExtAccountSelectorComponent = observer(function ({
 }) {
   const history = useHistory();
   const triggerBtnRef = useRef(null);
+  const available = useCurrentAccountAvailable();
   const close = useCallback(() => {
     triggerBtnRef?.current?.click();
   }, []);
   const t = useI18n();
+  const canCreateWalletAccount = !storeApp.isHardwareOnlyMode;
+  const canImportSingleChainAccount =
+    !storeApp.isHardwareOnlyMode && utilsApp.isOldHome();
+  const canConnectHardware =
+    utilsApp.isOldHome() || storeChain.currentChainInfo?.hardwareSupport;
+
+  if (!available) {
+    return null;
+  }
+
   return (
     <AccountSelector
       triggerButtonRef={(ref) => (triggerBtnRef.current = ref)}
       actions={[
-        {
+        canCreateWalletAccount && {
           content: t('createAccount'),
           iconName: 'PlusSolid',
           onAction: () => {
-            history.push(NEW_ACCOUNT_ROUTE);
+            storeHistory.goToPageCreateAccount();
             close();
           },
         },
-        {
+        canImportSingleChainAccount && {
           content: t('importAccount'),
           iconName: 'DownloadSolid',
           onAction: () => {
@@ -211,26 +230,28 @@ const ExtAccountSelectorComponent = observer(function ({
             close();
           },
         },
-        {
+        canConnectHardware && {
           content: t('connectHardwareWallet'),
           iconName: 'DeviceMobileOutline',
           onAction: () => {
-            goToPageConnectHardware();
+            storeHistory.goToPageConnectHardware();
             close();
           },
         },
-      ]}
+      ].filter(Boolean)}
       place="bottom-center"
       trigger={{
         account: getCurrentAccountInfo({ selectedIdentity }),
       }}
     >
-      <AccountSelectorDropdownList
-        onClose={close}
-        evmAccounts={evmAccounts}
-        showAccountDetail={showAccountDetail}
-        selectedIdentity={selectedIdentity}
-      />
+      <div className="max-h-[420px] overflow-y-auto">
+        <AccountSelectorDropdownList
+          onClose={close}
+          evmAccounts={evmAccounts}
+          showAccountDetail={showAccountDetail}
+          selectedIdentity={selectedIdentity}
+        />
+      </div>
     </AccountSelector>
   );
 });
