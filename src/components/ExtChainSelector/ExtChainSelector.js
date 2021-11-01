@@ -1,11 +1,5 @@
-import {
-  Account,
-  AccountSelector,
-  Badge,
-  Token,
-  Link,
-} from '@onekeyhq/ui-components';
-import React, { useCallback, useContext, useRef } from 'react';
+import { AccountSelector, Link, Token, Switch } from '@onekeyhq/ui-components';
+import React, { useCallback, useRef } from 'react';
 import { observer } from 'mobx-react-lite';
 import { compose } from 'redux';
 import { useHistory, withRouter } from 'react-router-dom';
@@ -19,24 +13,10 @@ import storeHistory from '../../store/storeHistory';
 import { isPrefixedFormattedHexString } from '../../../shared/modules/network.utils';
 import evmChainsConfig from '../../config/chains/EVM';
 import { openAlert } from '../../../ui/app/ducks/alerts/invalid-custom-network';
-import { getEnvironmentType } from '../../../app/scripts/lib/util';
-import { ENVIRONMENT_TYPE_FULLSCREEN } from '../../../shared/constants/app';
-import {
-  NETWORKS_FORM_ROUTE,
-  NETWORKS_ROUTE,
-} from '../../../ui/app/helpers/constants/routes';
-
-function getEvmChainInfo(chain) {
-  // eslint-disable-next-line no-param-reassign
-  chain = (chain || '').toLowerCase();
-  let chainInfo = evmChainsConfig.find((item) => item.chain === chain);
-  chainInfo = chainInfo || { chain, chainName: chain, chainIcon: chain };
-  const chainIcon = chainInfo?.chainIcon || chainInfo?.chain || chain;
-  return {
-    ...chainInfo,
-    chainIcon,
-  };
-}
+import { NETWORKS_ROUTE } from '../../../ui/app/helpers/constants/routes';
+import { ExtTestNetBadge } from '../ExtTestNetBadge';
+import { getEvmChainInfo } from '../../hooks/useCurrentChainInfo';
+import storeStorage from '../../store/storeStorage';
 
 function ExtChainInfo({ chain, name, description, icon, ...rest }) {
   const t = useI18n();
@@ -56,6 +36,7 @@ function ExtChainInfo({ chain, name, description, icon, ...rest }) {
 
   return (
     <Token
+      size="lg"
       chain={(icon || '').toLowerCase()}
       name={name && <div className="text-left">{name}</div>}
       description={
@@ -65,10 +46,6 @@ function ExtChainInfo({ chain, name, description, icon, ...rest }) {
       {...rest}
     />
   );
-}
-
-function TestNetBadge() {
-  return <Badge>TestNet</Badge>;
 }
 
 const ChainSelectorItem = observer(function ({
@@ -81,6 +58,9 @@ const ChainSelectorItem = observer(function ({
   isSelected = false,
 }) {
   const t = useI18n();
+  if (isTestNet && !storeStorage.showTestNetChain) {
+    return null;
+  }
 
   return (
     <AccountSelector.Option isSelected={isSelected} onAction={onSelect}>
@@ -90,7 +70,7 @@ const ChainSelectorItem = observer(function ({
         name={chainName}
         description={chainDesc}
       />
-      {isTestNet && <TestNetBadge />}
+      {isTestNet && <ExtTestNetBadge />}
     </AccountSelector.Option>
   );
 });
@@ -146,12 +126,15 @@ const EVMChainGroup = observer(function ({
       {frequentRpcListDetail.map((info) => {
         const { rpcUrl, chainId, ticker, nickname } = info;
         let chainName = ticker;
+        let isTestNet = false;
         if (rpcUrl === 'http://localhost:8545') {
           chainName = 'Local ETH';
+          isTestNet = true;
         }
         return (
           <ChainSelectorItem
             key={chainId}
+            isTestNet={isTestNet}
             isSelected={
               utilsApp.isOldHome() &&
               provider.type === 'rpc' &&
@@ -191,20 +174,17 @@ const NewChainGroup = observer(function ({ baseChain, onClose }) {
   return (
     <AccountSelector.OptionGroup title={title}>
       {chains.map((chainInfo) => (
-        <AccountSelector.Option
+        <ChainSelectorItem
           key={chainInfo.key}
           isSelected={
             utilsApp.isNewHome() && storeChain.currentChainKey === chainInfo.key
           }
-          onAction={() => onSelect(chainInfo)}
-        >
-          <ExtChainInfo
-            chain={chainInfo.baseChain}
-            name={chainInfo.shortname}
-            description={chainInfo.name}
-          />
-          {chainInfo.isTestNet && <TestNetBadge />}
-        </AccountSelector.Option>
+          onSelect={() => onSelect(chainInfo)}
+          chain={chainInfo.baseChain}
+          chainName={chainInfo.shortname}
+          chainDesc={chainInfo.name}
+          isTestNet={chainInfo.isTestNet}
+        />
       ))}
     </AccountSelector.OptionGroup>
   );
@@ -238,6 +218,7 @@ const ExtChainSelectorComponent = observer(function ({
       trigger={{
         token: {
           chain,
+          size: 'md',
         },
       }}
       actions={[
@@ -262,6 +243,15 @@ const ExtChainSelectorComponent = observer(function ({
         },
       ]}
     >
+      <div className="pb-1">
+        <Switch
+          value={storeStorage.showTestNetChain}
+          className="cursor-pointer"
+          onChange={(val) => (storeStorage.showTestNetChain = val)}
+          label="显示测试网络"
+        />
+      </div>
+
       {/* TODO max-height max-width popup */}
       <div className="max-h-[420px] overflow-y-auto">
         <EVMChainGroup

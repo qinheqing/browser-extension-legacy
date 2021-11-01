@@ -138,11 +138,11 @@ table {
 }
 
 button {
-  border-style: none;
+  //border-style: none;
   cursor: pointer;
 
   &::-moz-focus-inner {
-    border: none;
+    //border: none;
   }
 }
 

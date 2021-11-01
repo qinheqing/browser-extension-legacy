@@ -5,7 +5,7 @@ import TokenBalance from '../TokenBalance';
 import OneCellItem from '../OneCellItem';
 import { TokenLogoIcon } from '../LogoIcon';
 
-function TokenInfoCard({ token, onClick, maskAssetBalance = false }) {
+function TokenInfoCardLegacy({ token, onClick, maskAssetBalance = false }) {
   const { symbol } = token;
   const { name, icon } = token;
   const tokenName = token.symbolOrName || token.contractAddressShort;
@@ -35,6 +35,37 @@ function TokenInfoCard({ token, onClick, maskAssetBalance = false }) {
             {symbol ? name : token.contractAddressShort}
           </small>
         </div>
+      }
+    />
+  );
+}
+
+function TokenInfoCard({ token, onClick, maskAssetBalance = false }) {
+  const { symbol } = token;
+  const { name, icon } = token;
+  const tokenName = token.symbolOrName || token.contractAddressShort;
+  const tokenDesc = symbol ? name : token.contractAddressShort;
+
+  return (
+    <OneCellItem
+      border={false}
+      appearance="flat"
+      data-contract-address={token.contractAddress || ''}
+      className="px-4"
+      onClick={onClick}
+      arrow
+      start={<TokenLogoIcon size="lg" tokenInfo={token} className="" />}
+      end={<div className="text-right" />}
+      title={
+        <TokenBalance
+          className="text-base text-gray-900"
+          tokenInfo={token}
+          watchBalanceChange
+          showPrice
+          showUnit
+          maskAssetBalance={maskAssetBalance}
+          classNamePrice="text-xs text-gray-400"
+        />
       }
     />
   );

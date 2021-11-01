@@ -5,14 +5,14 @@ import classnames from 'classnames';
 import AppPageLayout from '../../components/AppPageLayout';
 import utilsStorage from '../../utils/utilsStorage';
 import storeApproveSettings from '../../store/storeApproveSettings';
-import { OneField, OneFieldItem } from '../../components/OneField';
 import utilsApp from '../../utils/utilsApp';
-import OneDetailItem, {
-  OneDetailItemGroup,
-} from '../../components/OneDetailItem';
+import OneDetailItem from '../../components/OneDetailItem';
 import utilsDate from '../../utils/utilsDate';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import useLoadingCallback from '../../hooks/useLoadingCallback';
+import { OneDetailItemGroup } from '../../components/OneDetailItemGroup';
+import { OneField } from '../../components/OneField/OneField';
+import { OneFieldItem } from '../../components/OneField/OneFieldItem';
 import styles from './index.css';
 
 function DeleteLink({ onClick, ...others }) {

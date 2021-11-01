@@ -19,15 +19,13 @@ import TokenSwitchDialog from '../../components/TokenSwitchDialog';
 import OneInput from '../../components/OneInput';
 import OneCellItem from '../../components/OneCellItem';
 import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
-import {
-  OneField,
-  OneFieldInputItem,
-  OneFieldItem,
-} from '../../components/OneField';
 import { TokenLogoIcon } from '../../components/LogoIcon';
 import storeChain from '../../store/storeChain';
 import FeeInfoPanel from '../../components/FeeInfoPanel';
 import useAutorun from '../../hooks/useAutorun';
+import { OneField } from '../../components/OneField/OneField';
+import { OneFieldItem } from '../../components/OneField/OneFieldItem';
+import { OneFieldInputItem } from '../../components/OneField/OneFieldInputItem';
 
 function PageTransfer() {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);

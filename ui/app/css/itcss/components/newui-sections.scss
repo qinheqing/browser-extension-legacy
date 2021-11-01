@@ -31,18 +31,11 @@ $sub-mid-size-breakpoint-range: "screen and (min-width: #{$break-large}) and (ma
   flex: 1 0 auto;
   min-height: 0;
   width: 100%;
-  background: #f2f3f4;
+  background: #2c2d30; // #f2f3f4;
 }
 
-@media screen and (min-width: 576px) {
-  .main-container-wrapper {
-    padding-top: 20px;
-  }
-}
-
-// main-container media queries
-
-@media screen and (min-width: 576px) {
+// Desktop Screen
+@media screen and (min-width: 475px) {
   .lap-visible {
     display: flex;
   }
@@ -52,30 +45,21 @@ $sub-mid-size-breakpoint-range: "screen and (min-width: #{$break-large}) and (ma
   }
 
   .main-container {
-    width: 85vw;
-    margin-bottom: 10vh;
-    min-height: 90vh;
+    max-width: 364px;
+    max-height: 601px;
+    width: 100%;
+    height: 100%
     // box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.08);
+  }
+
+  .main-container-wrapper {
+    justify-content: center;
+    align-items: center;
   }
 }
 
-@media screen and (min-width: 769px) {
-  .main-container {
-    width: 80vw;
-    min-height: 82vh;
-    // box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.08);
-  }
-}
-
-@media screen and (min-width: 1281px) {
-  .main-container {
-    width: 62vw;
-    min-height: 82vh;
-    // box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.08);
-  }
-}
-
-@media screen and (max-width: 575px) {
+// Mobile Screen
+@media screen and (max-width: 474px) {
   .lap-visible {
     display: none;
   }
@@ -86,6 +70,7 @@ $sub-mid-size-breakpoint-range: "screen and (min-width: #{$break-large}) and (ma
 
   .main-container {
     width: 100%;
+    max-height: none;
     overflow-y: auto;
     background-color: $white;
   }

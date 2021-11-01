@@ -159,10 +159,9 @@ class StoreAccount extends BaseStore {
     }
   }
 
-  @computed
-  get currentAccountTypeText() {
-    let type;
-    switch (this.currentAccountInfo?.type) {
+  getAccountTypeText(_type) {
+    let type = _type;
+    switch (_type) {
       case CONST_ACCOUNT_TYPES.Hardware: {
         type = '硬件账户';
         break;
@@ -177,12 +176,18 @@ class StoreAccount extends BaseStore {
         type = '单币种账户';
         break;
       }
+
       case CONST_ACCOUNT_TYPES.Wallet:
       default: {
         type = '钱包账户';
       }
     }
     return type;
+  }
+
+  @computed
+  get currentAccountTypeText() {
+    return this.getAccountTypeText(this.currentAccountInfo?.type);
   }
 
   @action.bound

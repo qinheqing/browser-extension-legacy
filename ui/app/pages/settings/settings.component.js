@@ -21,6 +21,7 @@ import {
 } from '../../helpers/constants/routes';
 import { getEnvironmentType } from '../../../../app/scripts/lib/util';
 import { ENVIRONMENT_TYPE_FULLSCREEN } from '../../../../shared/constants/app';
+import utilsApp from '../../../../src/utils/utilsApp';
 import SettingsTab from './settings-tab';
 import AlertsTab from './alerts-tab';
 import NetworksTab from './networks-tab';
@@ -29,10 +30,24 @@ import InfoTab from './info-tab';
 import SecurityTab from './security-tab';
 import ContactListTab from './contact-list-tab';
 
+function scrollToTop(selector) {
+  const scrollContainer = document.querySelector(selector);
+  if (scrollContainer) {
+    scrollContainer.scrollTop = 0;
+  }
+}
+
 const MenuItem = ({ title, desc, icon, path }) => {
   const history = useHistory();
   const onClick = useCallback(() => {
     history.push(path);
+    utilsApp.delay(100).then(() => {
+      // mobile scroll
+      window.scrollTo(0, 0);
+      scrollToTop('.home__route-view');
+      // desktop scroll
+      scrollToTop('.settings-page__content__modules');
+    });
   }, [path]);
   return (
     <div className="setting-pages-v2__menu-item" onClick={onClick}>
@@ -227,14 +242,9 @@ class SettingsPage extends PureComponent {
     );
   }
 
-  renderTabs() {
+  renderTabsV1() {
     const { history, currentPath } = this.props;
     const { t } = this.context;
-
-    if (getEnvironmentType() !== ENVIRONMENT_TYPE_FULLSCREEN) {
-      return this.renderTabsV2();
-    }
-
     return (
       <TabBar
         tabs={[
@@ -283,6 +293,14 @@ class SettingsPage extends PureComponent {
         onSelect={(key) => history.push(key)}
       />
     );
+  }
+
+  renderTabs() {
+    const { history, currentPath } = this.props;
+    const { t } = this.context;
+
+    return this.renderTabsV2();
+    // return this.renderTabsV1();
   }
 
   renderContent() {
