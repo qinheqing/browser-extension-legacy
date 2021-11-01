@@ -6,7 +6,10 @@ import { BTC, BSC, BSC_TEST } from './MISC';
 // eslint-disable-next-line import/no-mutable-exports
 let chainsEnabled = [SOL, CFX];
 
-if (IS_ENV_IN_TEST_OR_DEBUG) {
-  chainsEnabled = [...chainsEnabled, SOL_TEST, CFX_TEST];
-}
+// if (IS_ENV_IN_TEST_OR_DEBUG) {
+//   chainsEnabled = [...chainsEnabled, SOL_TEST, CFX_TEST];
+// }
+// always show testnet, we can toggle visible in ExtChainSelector
+chainsEnabled = [...chainsEnabled, SOL_TEST, CFX_TEST];
+
 export default chainsEnabled;

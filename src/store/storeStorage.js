@@ -57,6 +57,7 @@ class StoreStorage extends BaseStoreWithStorage {
 
       this.autosave('chainsCustomRaw'),
       this.autosave('chainsSortKeys'),
+      this.autosave('showTestNetChain'),
     ]);
 
     if (dataMigration.CURRENT_DATA_VERSION > this.dataVersion) {
@@ -175,6 +176,9 @@ class StoreStorage extends BaseStoreWithStorage {
 
   @observable.ref
   tokenPricesRaw = {};
+
+  @observable.ref
+  showTestNetChain = false;
 }
 
 global._storeStorage = new StoreStorage();

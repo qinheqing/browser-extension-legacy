@@ -3006,10 +3006,10 @@
   resolved "https://npm.pkg.github.com/download/@onekeyhq/test-dapp/4.0.2/05adf8661ddec7c96d86a1822275272c11e5fb83d1f6bb8e7a628926e4b59792#981356b998f79e2e3822a5514bcec4ac7ea15f6f"
   integrity sha512-v41H4Oa9SSBeHeJGkf3eoV8EXhg/5wwIG0CPndRLnWxC0Drd1j1qIstRandmbuqKRZBf3TIm1uOUdbhtnKt16A==
 
-"@onekeyhq/ui-components@0.0.32":
-  version "0.0.32"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/ui-components/0.0.32/0b16eb2218aa8cb43cd64b61c4789c95044868d8fda8e7bf865e68cc4d68f981#7125fa1d5540623d7ce27f53188e1cc3438a3a2a"
-  integrity sha512-ZC5vPh+OYlwnJUg+Lf6nP3tFD3xRyPDAn1GnA9mG4jkEVzBynJMJHWy3rIueF27mbXDH/UoPbttVpMKOrOQr6w==
+"@onekeyhq/ui-components@^0.0.35":
+  version "0.0.35"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/ui-components/0.0.35/45c06dfbebc3a145e8c6483f7b15da9eee7455a385b7fca6c3a394dd33ea717f#7e726745bafff85642e26f6b8b13cdeb841d1fd2"
+  integrity sha512-1DRa8lH1J0p/pzc2E0fou9Gg4UkxzTj3nrEyhSh/2Xd1mVrDCjhlbZxCSU3/DybjFWqaO/qOXRgOtSEZts76pw==
   dependencies:
     "@ethersproject/providers" "^5.4.5"
     "@headlessui/react" "^1.4.0"
@@ -12886,7 +12886,7 @@ fill-range@^7.0.1:
 
 filter-invalid-dom-props@1.0.0:
   version "1.0.0"
-  resolved "https://registry.yarnpkg.com/filter-invalid-dom-props/-/filter-invalid-dom-props-1.0.0.tgz#44d0d0306657b2584e04f71d428229ebb9867ca1"
+  resolved "https://registry.npmjs.org/filter-invalid-dom-props/-/filter-invalid-dom-props-1.0.0.tgz#44d0d0306657b2584e04f71d428229ebb9867ca1"
   integrity sha1-RNDQMGZXslhOBPcdQoIp67mGfKE=
   dependencies:
     html-attributes "1.1.0"
@@ -14537,7 +14537,7 @@ hosted-git-info@^2.1.4:
 
 html-attributes@1.1.0:
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/html-attributes/-/html-attributes-1.1.0.tgz#82027a4fac7a6070ea6c18cc3886aea18d6dea09"
+  resolved "https://registry.npmjs.org/html-attributes/-/html-attributes-1.1.0.tgz#82027a4fac7a6070ea6c18cc3886aea18d6dea09"
   integrity sha1-ggJ6T6x6YHDqbBjMOIauoY1t6gk=
 
 html-element-map@^1.0.0:
@@ -21667,7 +21667,7 @@ react-idle-timer@^4.2.5:
 
 react-image-fallback@^8.0.0:
   version "8.0.0"
-  resolved "https://registry.yarnpkg.com/react-image-fallback/-/react-image-fallback-8.0.0.tgz#18a88c3e011ee683f35fab1dd6e88eb5152b18ec"
+  resolved "https://registry.npmjs.org/react-image-fallback/-/react-image-fallback-8.0.0.tgz#18a88c3e011ee683f35fab1dd6e88eb5152b18ec"
   integrity sha512-vvlxApJU7/mVl/1PYZTYROHZsG8cBxhHWj4JqkjN/ZAyf5srdAdIW0fg25jz5CYhGbKRJyv1WRrkNiy5FOA7kw==
   dependencies:
     filter-invalid-dom-props "1.0.0"

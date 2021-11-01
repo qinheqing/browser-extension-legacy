@@ -15,11 +15,12 @@ import {
 import utilsApp from '../../utils/utilsApp';
 import useCurrentChainInfo from '../../hooks/useCurrentChainInfo';
 import { ROUTE_APPROVE_SETTINGS } from '../../routes/routeUrls';
+import { ExtAccountSelector } from '../ExtAccountSelector/ExtAccountSelector';
+import { ExtChainSelector } from '../ExtChainSelector/ExtChainSelector';
+import { ExtTestNetBadge } from '../ExtTestNetBadge';
 import { ExtAppHeaderMoreDropdown } from './ExtAppHeaderMoreDropdown';
-import { ExtAccountSelector } from './ExtAccountSelector';
-import { ExtChainSelector } from './ExtChainSelector';
 
-function ExtAppHeader() {
+function ExtAppHeaderExtraInfoBar() {
   const history = useHistory();
   const origin = useSelector(getOriginOfCurrentTab);
   const chainInfo = useCurrentChainInfo();
@@ -31,6 +32,36 @@ function ExtAppHeader() {
     origin !== extension.runtime.id;
 
   return (
+    <div className="flex items-center justify-center pl-4 pr-3">
+      <div className="text-xs text-gray-500">
+        {chainInfo.name}
+        {chainInfo.isTestNet && <ExtTestNetBadge className="ml-2" />}
+      </div>
+      <div className="flex-1" />
+      {showStatus && (
+        <ConnectedStatusIndicator
+          onClick={() => history.push(CONNECTED_ACCOUNTS_ROUTE)}
+        />
+      )}
+      <Button
+        circular
+        type="plain"
+        size="xs"
+        leadingIcon="GlobeAltOutline"
+        onClick={() => {
+          if (utilsApp.isNewHome()) {
+            history.push(ROUTE_APPROVE_SETTINGS);
+          } else {
+            history.push(CONNECTED_ROUTE);
+          }
+        }}
+      />
+    </div>
+  );
+}
+
+function ExtAppHeader() {
+  return (
     <div className="bg-white">
       <div className="flex items-center px-2 ">
         <ExtChainSelector />
@@ -40,28 +71,7 @@ function ExtAppHeader() {
         {/* TODO z-index in MM */}
         <ExtAppHeaderMoreDropdown />
       </div>
-      <div className="flex items-center justify-center pl-4 pr-3">
-        <div className="text-xs text-gray-500">{chainInfo.name}</div>
-        <div className="flex-1" />
-        {showStatus && (
-          <ConnectedStatusIndicator
-            onClick={() => history.push(CONNECTED_ACCOUNTS_ROUTE)}
-          />
-        )}
-        <Button
-          circular
-          type="plain"
-          size="xs"
-          leadingIcon="CubeTransparentSolid"
-          onClick={() => {
-            if (utilsApp.isNewHome()) {
-              history.push(ROUTE_APPROVE_SETTINGS);
-            } else {
-              history.push(CONNECTED_ROUTE);
-            }
-          }}
-        />
-      </div>
+      <ExtAppHeaderExtraInfoBar />
     </div>
   );
 }

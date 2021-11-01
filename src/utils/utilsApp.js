@@ -88,11 +88,15 @@ function shortenAddress(
   address = '',
   { size = 6, head = true, tail = true } = {},
 ) {
+  const headNum = isNumber(head) ? head : null;
+  const tailNum = isNumber(tail) ? tail : null;
   // eslint-disable-next-line no-param-reassign
   address = address || '';
   // TODO if size > address.length
-  const headStr = head ? address.substr(0, size) : '';
-  const tailStr = tail ? address.substr(address.length - size) : '';
+  const headStr = head ? address.substr(0, headNum ?? size) : '';
+  const tailStr = tail
+    ? address.substr(address.length - (tailNum ?? size))
+    : '';
   return `${headStr}...${tailStr}`;
 }
 

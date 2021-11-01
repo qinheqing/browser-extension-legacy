@@ -4,9 +4,7 @@ import { isString } from 'lodash';
 
 import { ChainLogoIcon } from '../../components/LogoIcon';
 import OneButton from '../../components/OneButton';
-import OneDetailItem, {
-  OneDetailItemGroup,
-} from '../../components/OneDetailItem';
+import OneDetailItem from '../../components/OneDetailItem';
 import CopyHandle from '../../components/CopyHandle';
 import utilsApp from '../../utils/utilsApp';
 import OneArrow from '../../components/OneArrow';
@@ -20,6 +18,7 @@ import FeeInfoPanel, {
 } from '../../components/FeeInfoPanel';
 import utilsToast from '../../utils/utilsToast';
 import uiDappApproval from '../../wallets/dapp/uiDappApproval';
+import { OneDetailItemGroup } from '../../components/OneDetailItemGroup';
 import ApproveDappSiteInfo from './ApproveDappSiteInfo';
 import ApprovePageLayout from './ApprovePageLayout';
 

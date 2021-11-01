@@ -11,7 +11,7 @@ import {
 } from '../../../helpers/constants/routes';
 import ColorIndicator from '../../../components/ui/color-indicator';
 import { COLORS, SIZES } from '../../../helpers/constants/design-system';
-import { ExtChainInfo } from '../../../../../src/components/ExtAppHeader/ExtChainSelector';
+import { ExtChainInfo } from '../../../../../src/components/ExtChainSelector/ExtChainSelector';
 import NetworkForm from './network-form';
 
 export default class NetworksTab extends PureComponent {

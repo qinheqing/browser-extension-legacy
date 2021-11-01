@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { observer } from 'mobx-react-lite';
+import cx from 'classnames';
 import storeWallet from '../store/storeWallet';
 import storeBalance from '../store/storeBalance';
+import storeToken from '../store/storeToken';
 import AmountText from './AmountText';
 import TokenAmountInPrice from './TokenAmountInPrice';
 import SensitiveDataMask from './SensitiveDataMask';
@@ -10,6 +12,7 @@ import SensitiveDataMask from './SensitiveDataMask';
 function TokenBalance({
   className,
   classNamePrice,
+  classNameUnit,
   wallet,
   tokenInfo, // { key, address, name },
   maskAssetBalance = false,
@@ -19,6 +22,8 @@ function TokenBalance({
   watchBalanceChange = false, // addAccountChangeListener by websocket
   updateBalanceThrottle = 3 * 1000, // do not update balance in 3s
 }) {
+  // eslint-disable-next-line no-param-reassign
+  tokenInfo = tokenInfo || storeToken.currentNativeToken;
   const { address, symbol, symbolDisplay } = tokenInfo;
   const cacheBalanceInfo = storeBalance.getTokenBalanceInfoInCache(tokenInfo);
   const { balance } = cacheBalanceInfo;
@@ -104,7 +109,9 @@ function TokenBalance({
         <SensitiveDataMask hide={maskAssetBalance}>
           <>
             <AmountText value={balance} decimals={decimals} />
-            {showUnit && <span className="ml-1">{currency}</span>}
+            {showUnit && (
+              <span className={cx('ml-1', classNameUnit)}>{currency}</span>
+            )}
           </>
         </SensitiveDataMask>
       </span>

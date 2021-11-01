@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
+import { Token } from '@onekeyhq/ui-components';
 import AppIcons from '../AppIcons';
 import storeChain from '../../store/storeChain';
 import styles from './index.css';
@@ -78,10 +79,30 @@ const ChainLogoIcon = observer(function ({
   );
 });
 
-function TokenLogoIcon({ tokenInfo, size = 'md', className, ...others }) {
+function TokenLogoIconLegacy({ tokenInfo, size = 'md', className, ...others }) {
   const imgSrc = tokenInfo?.logoURI || tokenInfo?.icon;
   return (
     <LogoIcon size={size} src={imgSrc} className={className} {...others} />
+  );
+}
+
+function TokenLogoIcon({ tokenInfo, size = 'md', className, ...others }) {
+  const { chainKey, contractAddress } = tokenInfo;
+  const chainInfo = storeChain.getChainInfoByKey(chainKey);
+  let chainName = chainInfo?.baseChain;
+  if (chainInfo?.isTestNet) {
+    chainName = `t${chainName}`;
+  }
+  const imgSrc = tokenInfo?.logoURI || tokenInfo?.icon;
+  return (
+    <Token
+      chain={chainName}
+      address={contractAddress}
+      fallbackSrc={imgSrc}
+      size={size}
+      className={className}
+      {...others}
+    />
   );
 }
 

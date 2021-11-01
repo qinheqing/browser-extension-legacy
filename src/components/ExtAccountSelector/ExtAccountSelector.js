@@ -32,6 +32,7 @@ import {
 } from '../../routes/routeUrls';
 import storeHistory from '../../store/storeHistory';
 import useCurrentAccountAvailable from '../../hooks/useCurrentAccountAvailable';
+import ExtAccountTypeBadge from '../ExtAccountTypeBadge';
 
 function getCurrentAccountInfo({ selectedIdentity }) {
   /*  selectedIdentity
@@ -66,7 +67,7 @@ const AccountItemBase = function ({
   return (
     <AccountSelector.Option isSelected={isSelected} onAction={onSelect}>
       <Account address={address} label={label} balance={balance} symbol="" />
-      {type && <Badge>{type}</Badge>}
+      <ExtAccountTypeBadge type={type} />
     </AccountSelector.Option>
   );
 };

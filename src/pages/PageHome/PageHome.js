@@ -44,69 +44,7 @@ import openStandalonePage from '../../utils/openStandalonePage';
 import { ExtAppHeader } from '../../components/ExtAppHeader';
 import useRedirectToCorrectHome from '../../hooks/useRedirectToCorrectHome';
 import useI18n from '../../hooks/useI18n';
-
-const LockScreenButton = () => (
-  <HomeTopActionButton
-    text="锁屏"
-    icon={AppIcons.LockClosedIcon}
-    onClick={storeApp.lockScreen}
-  />
-);
-
-const HomeTopActionsBar = observer(function () {
-  const [copied, handleCopy] = useCopyToClipboard();
-
-  return (
-    <div className="flex items-center justify-around px-4 py-6">
-      <HomeTopActionButton
-        text="转账"
-        icon={AppIcons.ArrowUpIcon}
-        onClick={() => {
-          storeHistory.goToPageTransfer({
-            token: storeToken.currentNativeToken,
-          });
-        }}
-      />
-
-      <HomeTopActionButton
-        text="收款"
-        icon={AppIcons.ArrowDownIcon}
-        onClick={() => {
-          storeHistory.goToPageTokenDetail({
-            token: storeToken.currentNativeToken,
-          });
-        }}
-      />
-
-      <HomeTopActionButton
-        text="授权"
-        icon={AppIcons.ShieldExclamationIcon}
-        onClick={() => {
-          storeHistory.push(ROUTE_APPROVE_SETTINGS);
-        }}
-      />
-
-      <LockScreenButton />
-    </div>
-  );
-});
-
-const HomeTopActionButton = observer(function ({
-  text,
-  icon,
-  onClick,
-  ...others
-}) {
-  const Icon = icon;
-  return (
-    <div className="flex flex-col items-center" onClick={onClick} {...others}>
-      <OneButton rounded type="gray" size="lg">
-        <Icon className="w-6" />
-      </OneButton>
-      <div className="text-sm mt-1">{text}</div>
-    </div>
-  );
-});
+import ExtAccountOverview from '../../components/ExtAccountOverview';
 
 function RefreshButton() {
   const [loading, setLoading] = useState(false);
@@ -137,69 +75,69 @@ function RefreshButton() {
   );
 }
 
-const HomeAssetsHeader = observer(function () {
+function AirdropButton() {
   return (
-    <div className="text-xl flex items-center justify-between">
-      <span>资产</span>
-      <div className="flex-1" />
+    <OneButton
+      type="white"
+      size="xs"
+      rounded
+      onClick={() => {
+        storeWallet.currentWallet.requestAirdrop().then((txid) => {
+          utilsToast.toast.success(
+            <TxSubmitSuccessView txid={txid}>
+              Done! Airdrop request submitted
+            </TxSubmitSuccessView>,
+          );
+        });
+      }}
+    >
+      <AppIcons.PaperAirplaneIcon className="w-5" />
+    </OneButton>
+  );
+}
 
-      {utilsApp.isPopupEnvironment() && (
-        <>
-          {/* // Expand*/}
-          <OneButton
-            type="white"
-            size="xs"
-            rounded
-            onClick={() => openStandalonePage(ROUTE_HOME, '')}
-          >
-            <AppIcons.ArrowsExpandIcon className="w-5" />
-          </OneButton>
-          <div className="w-2" />
-        </>
-      )}
+function TokenAddButton() {
+  return (
+    <OneButton
+      type="white"
+      size="xs"
+      rounded
+      onClick={() => storeHistory.goToPageTokenAdd()}
+    >
+      <AppIcons.PlusIcon className="w-5" />
+    </OneButton>
+  );
+}
+
+const HomeAssetsHeader = observer(function () {
+  const t = useI18n();
+
+  return (
+    <div className="text-xl flex items-center justify-between my-4">
+      <span>{t('assets')}</span>
+      <div className="flex-1" />
 
       <RefreshButton />
       <div className="w-2" />
 
       {storeChain.currentChainInfo?.isTestNet && (
         <>
-          <OneButton
-            type="white"
-            size="xs"
-            rounded
-            onClick={() => {
-              storeWallet.currentWallet.requestAirdrop().then((txid) => {
-                utilsToast.toast.success(
-                  <TxSubmitSuccessView txid={txid}>
-                    Done! Airdrop request submitted
-                  </TxSubmitSuccessView>,
-                );
-              });
-            }}
-          >
-            <AppIcons.PaperAirplaneIcon className="w-5" />
-          </OneButton>
+          <AirdropButton />
           <div className="w-2" />
         </>
       )}
 
-      <OneButton
-        type="white"
-        size="xs"
-        rounded
-        onClick={() => storeHistory.goToPageTokenAdd()}
-      >
-        <AppIcons.PlusIcon className="w-5" />
-      </OneButton>
+      {/* <TokenAddButton />*/}
     </div>
   );
 });
 
 const HomeAssetsList = observer(function () {
+  const t = useI18n();
   const tokens = storeToken.currentTokens;
 
   return (
-    <div className="py-3 -mx-4 ">
+    <div className="my-4 rounded-xl border overflow-hidden bg-white">
       {tokens.map((token, index) => {
         return (
           <TokenInfoCard
@@ -214,6 +152,18 @@ const HomeAssetsList = observer(function () {
           />
         );
       })}
+      <div className="px-2 py-1 border-t">
+        <Button
+          className="flex justify-start"
+          size="lg"
+          type="plain"
+          block
+          leadingIcon="AdjustmentsOutline"
+          onClick={() => storeHistory.goToPageTokenAdd()}
+        >
+          {t('addTokens')}
+        </Button>
+      </div>
     </div>
   );
 });
@@ -224,6 +174,7 @@ function PageHome() {
   const [copied, handleCopy] = useCopyToClipboard();
   const { isUnlocked } = storeApp.legacyState;
   const { currentAccountAddress } = storeAccount;
+  const { currentChainKey } = storeChain;
   const initAccountReady = useInitFirstAccount();
   const t = useI18n();
 
@@ -231,7 +182,7 @@ function PageHome() {
     if (initAccountReady && currentAccountAddress) {
       storeToken.fetchCurrentAccountTokens();
     }
-  }, [initAccountReady, currentAccountAddress]);
+  }, [initAccountReady, currentAccountAddress, currentChainKey]);
 
   useEffect(() => {
     (async () => {
@@ -276,14 +227,14 @@ function PageHome() {
               </Button>
             )}
           </div>
-
-          <LockScreenButton />
         </div>
       );
     }
 
     return (
       <>
+        <ExtAccountOverview />
+        {/*
         <AccountCard
           key={storeAccount.refreshKey}
           showMaskAssetBalanceEye
@@ -294,12 +245,13 @@ function PageHome() {
           showActiveBadge={false}
           onClick={onAccountClick}
         />
-        <div className="bg-white shadow-2xl py-1 px-4 min-h-screen">
-          <HomeTopActionsBar />
-          <div>
-            <HomeAssetsHeader />
-            <HomeAssetsList key={storeAccount.refreshKey} />
-          </div>
+        */}
+        {/* <HomeTopActionsBar />*/}
+
+        {/* min-h-screen force lazyload scroll */}
+        <div className="px-4">
+          <HomeAssetsHeader />
+          <HomeAssetsList key={storeAccount.refreshKey} />
         </div>
       </>
     );
