@@ -45,7 +45,6 @@ export const History = () => {
         </div>
       </div>
       <div className="home-history__content">
-        TODO incoming tx not working
         <TransactionList />
       </div>
     </div>

@@ -122,11 +122,11 @@ export default function TransactionListItem({
         className={className}
         title={title}
         icon={
-          <img
-            style={{ width: '28px', height: '28px' }}
-            src="./images/arrow-circle.svg"
-          />
-          // <TransactionIcon category={category} status={displayedStatusKey} />
+          // <img
+          //   style={{ width: '28px', height: '28px' }}
+          //   src="./images/arrow-circle.svg"
+          // />
+          <TransactionIcon category={category} status={displayedStatusKey} />
         }
         subtitle={
           <div>
