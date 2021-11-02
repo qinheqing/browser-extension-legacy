@@ -40,11 +40,20 @@ function TokenInfoCardLegacy({ token, onClick, maskAssetBalance = false }) {
   );
 }
 
-function TokenInfoCard({ token, onClick, maskAssetBalance = false }) {
-  const { symbol } = token;
-  const { name, icon } = token;
+function TokenInfoCard({
+  token,
+  onClick,
+  maskAssetBalance = false,
+  title,
+  content,
+  chainInfo,
+}) {
+  const { symbol, name, icon } = token;
   const tokenName = token.symbolOrName || token.contractAddressShort;
   const tokenDesc = symbol ? name : token.contractAddressShort;
+
+  const balanceClassName = 'text-base text-gray-900';
+  const balancePriceClassName = 'text-xs text-gray-400';
 
   return (
     <OneCellItem
@@ -54,18 +63,32 @@ function TokenInfoCard({ token, onClick, maskAssetBalance = false }) {
       className="px-4"
       onClick={onClick}
       arrow
-      start={<TokenLogoIcon size="lg" tokenInfo={token} className="" />}
+      start={
+        <TokenLogoIcon
+          chainInfo={chainInfo}
+          size="lg"
+          tokenInfo={token}
+          className=""
+        />
+      }
       end={<div className="text-right" />}
       title={
-        <TokenBalance
-          className="text-base text-gray-900"
-          tokenInfo={token}
-          watchBalanceChange
-          showPrice
-          showUnit
-          maskAssetBalance={maskAssetBalance}
-          classNamePrice="text-xs text-gray-400"
-        />
+        title ? (
+          <div className={balanceClassName}>{title}</div>
+        ) : (
+          <TokenBalance
+            className={balanceClassName}
+            classNamePrice={balancePriceClassName}
+            tokenInfo={token}
+            watchBalanceChange
+            showPrice
+            showUnit
+            maskAssetBalance={maskAssetBalance}
+          />
+        )
+      }
+      content={
+        content && <div className={balancePriceClassName}>{content}</div>
       }
     />
   );

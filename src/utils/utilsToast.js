@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import { createStandaloneNotification } from '@onekeyhq/ui-components/Notification';
 import OneButton from '../components/OneButton';
 
 let lastErrorData = {
@@ -54,7 +55,10 @@ function toastTx({ message, txid }) {
   );
 }
 
+const notification = createStandaloneNotification();
+
 export default {
+  notification,
   toast,
   toastError,
   toastTx,

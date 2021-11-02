@@ -23,6 +23,7 @@ import SwapIcon from '../../ui/icon/swap-icon.component';
 import SendIcon from '../../ui/icon/overview-send-icon.component';
 import IconButton from '../../ui/icon-button';
 import { openSwap } from '../../../../lib/swap-utils';
+import { ExtAccountOverviewActionButtons } from '../../../../../src/components/ExtAccountOverview';
 import WalletOverview from './wallet-overview';
 
 const EthOverview = ({ className }) => {
@@ -87,24 +88,7 @@ const EthOverview = ({ className }) => {
       }
       buttons={
         <>
-          <div
-            className="eth-overview__button"
-            onClick={() => {
-              history.push(SEND_ROUTE);
-            }}
-          >
-            <img src="./images/arrow-up.svg" />
-            <span className="eth-overview__button-text">Send</span>
-          </div>
-          <div
-            className="eth-overview__button"
-            onClick={() => {
-              history.push(RECEIVE_ROUTE);
-            }}
-          >
-            <img src="./images/qrcode.svg" />
-            <span className="eth-overview__button-text">Receive</span>
-          </div>
+          <ExtAccountOverviewActionButtons />
         </>
       }
       className={className}

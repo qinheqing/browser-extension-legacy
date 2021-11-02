@@ -8,6 +8,7 @@
   overflow-y: auto;
   max-width: 400px;
   margin: 0 auto;
+  min-height: 600px;
 
   &__divider {
     position: absolute;
@@ -106,7 +107,7 @@
     padding: 5px 0;
     color: #d73a49;
   }
-  
+
   &__footer-button {
     margin-right: 16px;
     &.cancel-button {

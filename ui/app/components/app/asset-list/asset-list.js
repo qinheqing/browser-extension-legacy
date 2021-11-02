@@ -16,12 +16,16 @@ import {
   getEtherLogo,
 } from '../../../selectors';
 import { useCurrencyDisplay } from '../../../hooks/useCurrencyDisplay';
+import useCurrentChainInfo from '../../../../../src/hooks/useCurrentChainInfo';
+import TokenInfoCard from '../../../../../src/components/TokenInfoCard';
+import storeStorage from '../../../../../src/store/storeStorage';
 
 const AssetList = ({ onClickAsset }) => {
   const history = useHistory();
   const selectedAccountBalance = useSelector(
     (state) => getCurrentAccountWithSendEtherInfo(state).balance,
   );
+  const chainInfo = useCurrentChainInfo();
   const nativeCurrency = useSelector(getNativeCurrency);
   const showFiat = useSelector(getShouldShowFiat);
   const providerImage = useSelector(getEtherLogo);
@@ -65,28 +69,56 @@ const AssetList = ({ onClickAsset }) => {
     },
   );
 
+  const nativeTokenItem = (
+    <TokenInfoCard
+      onClick={() => onClickAsset(nativeCurrency)}
+      maskAssetBalance={storeStorage.maskAssetBalance}
+      chainInfo={chainInfo}
+      token={{
+        symbol: primaryCurrencyProperties.suffix,
+        name: primaryCurrencyProperties.suffix,
+        icon: providerImage,
+        contractAddress: '',
+      }}
+      title={
+        <div>
+          {primaryCurrencyProperties.value} {primaryCurrencyProperties.suffix}
+        </div>
+      }
+      content={<div>{showFiat ? secondaryCurrencyDisplay : undefined}</div>}
+    />
+  );
+  const nativeTokenItemLegacy = (
+    <AssetListItem
+      onClick={() => onClickAsset(nativeCurrency)}
+      data-testid="wallet-balance"
+      tokenImage={providerImage}
+      primary={primaryCurrencyProperties.value}
+      tokenSymbol={primaryCurrencyProperties.suffix}
+      secondary={showFiat ? secondaryCurrencyDisplay : undefined}
+    />
+  );
+
   return (
     <>
-      <AssetListItem
-        onClick={() => onClickAsset(nativeCurrency)}
-        data-testid="wallet-balance"
-        tokenImage={providerImage}
-        primary={primaryCurrencyProperties.value}
-        tokenSymbol={primaryCurrencyProperties.suffix}
-        secondary={showFiat ? secondaryCurrencyDisplay : undefined}
-      />
+      {/* Native Token Item */}
+      {nativeTokenItem}
+      {/* {nativeTokenItemLegacy}*/}
+
+      {/* ERC20 Token List */}
       <TokenList
+        newTheme
         onTokenClick={(tokenAddress) => {
           onClickAsset(tokenAddress);
           selectTokenEvent();
         }}
       />
-      <AddTokenButton
-        onClick={() => {
-          history.push(ADD_TOKEN_ROUTE);
-          addTokenEvent();
-        }}
-      />
+      {/* <TokenList*/}
+      {/*  onTokenClick={(tokenAddress) => {*/}
+      {/*    onClickAsset(tokenAddress);*/}
+      {/*    selectTokenEvent();*/}
+      {/*  }}*/}
+      {/* />*/}
     </>
   );
 };
