@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import ethUtil from 'ethereumjs-util';
-import { createStandaloneNotification } from '@onekeyhq/ui-components/Notification';
 import { checkExistingAddresses } from '../../helpers/utils/util';
 import { tokenInfoGetter } from '../../helpers/utils/token-util';
 import { CONFIRM_ADD_TOKEN_ROUTE } from '../../helpers/constants/routes';
@@ -10,6 +9,7 @@ import PageContainer from '../../components/ui/page-container-v2';
 import { Tabs, Tab } from '../../components/ui/tabs';
 import { addHexPrefix } from '../../../../app/scripts/lib/util';
 import Button from '../../components/ui/button';
+import utilsToast from '../../../../src/utils/utilsToast';
 import TokenList from './token-list';
 import TokenSearch from './token-search';
 import TokenItemDetails from './token-item-details';
@@ -17,8 +17,6 @@ import TokenItemDetails from './token-item-details';
 const emptyAddr = '0x0000000000000000000000000000000000000000';
 
 class AddToken extends Component {
-  notification = createStandaloneNotification();
-
   static contextTypes = {
     t: PropTypes.func,
   };
@@ -89,9 +87,9 @@ class AddToken extends Component {
     const { symbol } = tokenToAdd;
     const { addTokens } = this.props;
     addTokens([tokenToAdd]);
-    this.notification.success(`${symbol} added to your token list`, {
+    utilsToast.notification.success(`${symbol} added to your token list`, {
       title: 'Token Added',
-      duration: 500,
+      // duration: 500,
     });
     this.setState({ tokenToAdd: undefined });
   }

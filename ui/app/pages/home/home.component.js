@@ -8,7 +8,6 @@ import {
   Switch,
 } from 'react-router-dom';
 import { formatDate, goToPageConnectHardware } from '../../helpers/utils/util';
-import AssetList from '../../components/app/asset-list';
 import HomeNotification from '../../components/app/home-notification';
 import MultipleNotifications from '../../components/app/multiple-notifications';
 import TransactionList from '../../components/app/transaction-list';
@@ -104,6 +103,7 @@ export default class Home extends PureComponent {
 
   state = {
     mounted: false,
+    backupReminderVisible: true,
   };
 
   redirectToNewHomeIfNeed() {
@@ -202,9 +202,13 @@ export default class Home extends PureComponent {
 
     return (
       <MultipleNotifications>
-        {!hwOnlyMode && shouldShowSeedPhraseReminder ? (
+        {!hwOnlyMode &&
+        shouldShowSeedPhraseReminder &&
+        this.state.backupReminderVisible ? (
           <HomeNotification
             descriptionText={t('backupApprovalNotice')}
+            ignoreText={t('cancel')}
+            onIgnore={() => this.setState({ backupReminderVisible: false })}
             acceptText={t('backupNow')}
             onAccept={() => {
               if (isPopup) {
@@ -218,7 +222,9 @@ export default class Home extends PureComponent {
             infoText={t('backupApprovalInfo')}
             key="home-backupApprovalNotice"
           />
-        ) : null}
+        ) : (
+          []
+        )}
       </MultipleNotifications>
     );
   }

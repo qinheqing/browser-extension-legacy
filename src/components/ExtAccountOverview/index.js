@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import { Button, Badge, Icon } from '@onekeyhq/ui-components';
+import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import TokenBalance from '../TokenBalance';
 import storeToken from '../../store/storeToken';
 import storeWallet from '../../store/storeWallet';
@@ -17,7 +19,71 @@ import storeApp from '../../store/storeApp';
 import AppIcons from '../AppIcons';
 import storeStorage from '../../store/storeStorage';
 import ExtAccountTypeBadge from '../ExtAccountTypeBadge';
+import { getCurrentChainId, getProvider } from '../../../ui/app/selectors';
+import { openSwap } from '../../../ui/lib/swap-utils';
+import {
+  RECEIVE_ROUTE,
+  SEND_ROUTE,
+} from '../../../ui/app/helpers/constants/routes';
 import styles from './index.css';
+
+const ExtAccountOverviewActionButtons = observer(function () {
+  const history = useHistory();
+  const t = useI18n();
+  const { ticker = 'ETH' } = useSelector(getProvider);
+  const chainId = useSelector(getCurrentChainId);
+  const handleSwap = useCallback(() => openSwap(ticker), [ticker]);
+  const isSwapEnable =
+    utilsApp.isOldHome() && [1, 42, 56, 128, 137].includes(Number(chainId));
+
+  return (
+    <div className="pt-7 flex items-center">
+      <Button
+        type="basic"
+        leadingIcon="ArrowUpOutline"
+        onClick={() => {
+          if (utilsApp.isNewHome()) {
+            storeHistory.goToPageTransfer({
+              token: storeToken.currentNativeToken,
+            });
+            return;
+          }
+          history.push(SEND_ROUTE);
+        }}
+      >
+        {t('send')}
+      </Button>
+      <div className="w-2" />
+      <Button
+        type="basic"
+        leadingIcon="QrcodeOutline"
+        onClick={() => {
+          if (utilsApp.isNewHome()) {
+            storeHistory.goToPageTokenDetail({
+              token: storeToken.currentNativeToken,
+            });
+            return;
+          }
+          history.push(RECEIVE_ROUTE);
+        }}
+      >
+        {t('receive')}
+      </Button>
+      {isSwapEnable && (
+        <>
+          <div className="w-2" />
+          <Button
+            type="basic"
+            leadingIcon="SwitchHorizontalOutline"
+            onClick={handleSwap}
+          >
+            {t('swap')}
+          </Button>
+        </>
+      )}
+    </div>
+  );
+});
 
 function ExtAccountOverview({ children }) {
   const { maskAssetBalance } = storeStorage;
@@ -63,31 +129,7 @@ function ExtAccountOverview({ children }) {
             classNameUnit={classnames('text-gray-600')}
           />
         </div>
-        <div className="pt-7 flex items-center">
-          <Button
-            type="basic"
-            leadingIcon="ArrowUpOutline"
-            onClick={() => {
-              storeHistory.goToPageTransfer({
-                token: storeToken.currentNativeToken,
-              });
-            }}
-          >
-            {t('send')}
-          </Button>
-          <div className="w-4" />
-          <Button
-            type="basic"
-            leadingIcon="QrcodeOutline"
-            onClick={() => {
-              storeHistory.goToPageTokenDetail({
-                token: storeToken.currentNativeToken,
-              });
-            }}
-          >
-            {t('receive')}
-          </Button>
-        </div>
+        <ExtAccountOverviewActionButtons />
       </div>
     </div>
   );
@@ -98,3 +140,4 @@ ExtAccountOverview.propTypes = {
 };
 
 export default observer(ExtAccountOverview);
+export { ExtAccountOverviewActionButtons };

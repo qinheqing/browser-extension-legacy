@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
-import { Token } from '@onekeyhq/ui-components';
+import { Token, TokenGroup } from '@onekeyhq/ui-components';
 import AppIcons from '../AppIcons';
 import storeChain from '../../store/storeChain';
+import utilsApp from '../../utils/utilsApp';
 import styles from './index.css';
 
 function LogoIcon({
@@ -86,24 +87,43 @@ function TokenLogoIconLegacy({ tokenInfo, size = 'md', className, ...others }) {
   );
 }
 
-function TokenLogoIcon({ tokenInfo, size = 'md', className, ...others }) {
-  const { chainKey, contractAddress } = tokenInfo;
-  const chainInfo = storeChain.getChainInfoByKey(chainKey);
-  let chainName = chainInfo?.baseChain;
+function TokenLogoIcon({
+  tokenInfo = {},
+  chainInfo,
+  size = 'md',
+  className,
+  corner = true,
+  ...others
+}) {
+  const { chainKey, contractAddress, logoURI, icon } = tokenInfo;
+  // eslint-disable-next-line no-param-reassign
+  chainInfo = chainInfo || storeChain.getChainInfoByKey(chainKey);
+  let chainName =
+    chainInfo?.baseChain || chainInfo?.chainIcon || chainInfo?.chainName;
+
   if (chainInfo?.isTestNet) {
     chainName = `t${chainName}`;
   }
-  const imgSrc = tokenInfo?.logoURI || tokenInfo?.icon;
-  return (
-    <Token
-      chain={chainName}
-      address={contractAddress}
-      fallbackSrc={imgSrc}
-      size={size}
-      className={className}
-      {...others}
-    />
-  );
+  const imgSrc = logoURI || icon;
+  const tokenProps = {
+    chain: chainName,
+    address: contractAddress,
+    fallbackSrc: imgSrc,
+    size,
+    className,
+    ...others,
+  };
+  if (corner) {
+    return (
+      <TokenGroup
+        cornerToken={{
+          chain: chainName,
+        }}
+        sources={[tokenProps]}
+      />
+    );
+  }
+  return <Token {...tokenProps} />;
 }
 
 export default LogoIcon;
