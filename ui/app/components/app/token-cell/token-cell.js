@@ -72,7 +72,7 @@ export default function TokenCell({
             {`${string || 0}`} {symbol}
           </div>
         }
-        content={<div>{formattedFiat}</div>}
+        content={<div>{formattedFiat || '--'}</div>}
       />
     );
   }

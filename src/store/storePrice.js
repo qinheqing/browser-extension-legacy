@@ -82,10 +82,13 @@ https://api.coingecko.com/api/v3/coins/serum
 
 const priceFetchSemaphore = new Semaphore(1);
 
+const CONST_COIN_GECKO_HOST = 'https://api.coingecko.com';
+// const CONST_COIN_GECKO_HOST = 'https://cdn.trezor.io/dynamic/coingecko'; // 10/min rate limit code=429
+
 async function coinGeckoFetch({ url, query, method = 'GET' }) {
   let _url = url.replace(/^\//giu, '');
   _url = utilsUrl.addQuery({
-    url: `https://api.coingecko.com/${_url}`,
+    url: `${CONST_COIN_GECKO_HOST}/${_url}`,
     query,
   });
   return await priceFetchSemaphore.runExclusive(() =>

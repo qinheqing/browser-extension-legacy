@@ -177,9 +177,13 @@ class StoreAccount extends BaseStore {
         break;
       }
 
-      case CONST_ACCOUNT_TYPES.Wallet:
-      default: {
+      case CONST_ACCOUNT_TYPES.Wallet: {
         type = '钱包账户';
+        break;
+      }
+
+      default: {
+        type = '未知账户';
       }
     }
     return type;
