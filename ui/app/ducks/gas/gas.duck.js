@@ -1,5 +1,6 @@
 import { cloneDeep } from 'lodash';
 import BigNumber from 'bignumber.js';
+import BN from 'bn.js';
 import { getStorageItem, setStorageItem } from '../../../lib/storage-helpers';
 import {
   decGWEIToHexWEI,
@@ -207,7 +208,8 @@ async function fetchEthGasPriceEstimates(state) {
   if (cachedBasicEstimates && Date.now() - timeLastRetrieved < 75000) {
     return cachedBasicEstimates;
   }
-  const gasPrice = await global.eth.gasPrice();
+  let gasPrice = await global.eth.gasPrice();
+  gasPrice = gasPrice ?? new BN(0, 10);
   const numberOfDecimals = gasPrice.toNumber() > 10 ** 9 ? 4 : 7;
   const averageGasPriceInDecGWEI = getValueFromWeiHex({
     value: gasPrice.toString(16),
