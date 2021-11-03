@@ -3006,10 +3006,10 @@
   resolved "https://npm.pkg.github.com/download/@onekeyhq/test-dapp/4.0.2/05adf8661ddec7c96d86a1822275272c11e5fb83d1f6bb8e7a628926e4b59792#981356b998f79e2e3822a5514bcec4ac7ea15f6f"
   integrity sha512-v41H4Oa9SSBeHeJGkf3eoV8EXhg/5wwIG0CPndRLnWxC0Drd1j1qIstRandmbuqKRZBf3TIm1uOUdbhtnKt16A==
 
-"@onekeyhq/ui-components@^0.0.35":
-  version "0.0.35"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/ui-components/0.0.35/45c06dfbebc3a145e8c6483f7b15da9eee7455a385b7fca6c3a394dd33ea717f#7e726745bafff85642e26f6b8b13cdeb841d1fd2"
-  integrity sha512-1DRa8lH1J0p/pzc2E0fou9Gg4UkxzTj3nrEyhSh/2Xd1mVrDCjhlbZxCSU3/DybjFWqaO/qOXRgOtSEZts76pw==
+"@onekeyhq/ui-components@^0.0.37":
+  version "0.0.37"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/ui-components/0.0.37/e96b2aefbbb93aa56fc944083199c7361fefaee4b7f3e115b7a029a45642f894#8bc1079c0bf12e4fedebbc0d364492d8a9938752"
+  integrity sha512-5IWsjstcQAwKQV9ZbeE65IMVtksdJfi+wKuYWnSFv0q/tMroirJXngfoWxPNsXCHPN3xpwtmr+0mP8beTXAxww==
   dependencies:
     "@ethersproject/providers" "^5.4.5"
     "@headlessui/react" "^1.4.0"
@@ -3018,9 +3018,9 @@
     "@web3-react/injected-connector" "^6.0.7"
     bignumber.js "^9.0.1"
     classnames "^2.3.1"
+    filter-invalid-dom-props "1.0.0"
     js-cookie "^3.0.0"
     lodash "^4.17.21"
-    react-image-fallback "^8.0.0"
     react-intl "^5.20.6"
     react-jazzicon "^0.1.3"
     react-select "^4.3.1"
@@ -21664,14 +21664,6 @@ react-idle-timer@^4.2.5:
   version "4.2.5"
   resolved "https://registry.yarnpkg.com/react-idle-timer/-/react-idle-timer-4.2.5.tgz#eb7d6e1b318f7755b5e0ee810254a8e95a2271b7"
   integrity sha512-8B/OwjG8E/DTx1fHYKTpZ4cnCbL9+LOc5I9t8SYe8tbEkP14KChiYg0xPIuyRpO33wUZHcgmQl93CVePaDhmRA==
-
-react-image-fallback@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.npmjs.org/react-image-fallback/-/react-image-fallback-8.0.0.tgz#18a88c3e011ee683f35fab1dd6e88eb5152b18ec"
-  integrity sha512-vvlxApJU7/mVl/1PYZTYROHZsG8cBxhHWj4JqkjN/ZAyf5srdAdIW0fg25jz5CYhGbKRJyv1WRrkNiy5FOA7kw==
-  dependencies:
-    filter-invalid-dom-props "1.0.0"
-    prop-types "^15.5.10"
 
 react-input-autosize@^2.2.2:
   version "2.2.2"
