@@ -4,6 +4,11 @@ import { endsWith, startsWith } from 'lodash';
 
 const Wildcard = '****';
 
+const notificationIgnoreRules = [
+  // noop
+  [`BlockReEmitMiddleware - retries exhausted`],
+];
+
 const sentryIgnoreRules = [
   // https://sentry.io/organizations/onekey_hq/issues/2607470869/
   ['Incorrect password', ['unlockKeyrings', 'submitPassword']],
@@ -19,7 +24,7 @@ const sentryIgnoreRules = [
   // https://sentry.io/organizations/onekey_hq/issues/2650629732/
   [`ProtocolError is not defined`],
   // https://sentry.io/organizations/onekey_hq/issues/2650291701/
-  [`unsupported block number ****`, ['getEthJsonRpcError']],
+  [`unsupported block number ${Wildcard}`, ['getEthJsonRpcError']],
   [`BlockReEmitMiddleware - retries exhausted`],
   [`wrong previous session`],
   [`Iframe timeout`],
@@ -27,12 +32,12 @@ const sentryIgnoreRules = [
 ];
 
 function parseSentryReport({ report }) {
-  const message = report?.exception?.values?.[0]?.value || '';
+  const errorsList = report?.exception?.values;
+  const firstError = errorsList?.[0];
+  const message = firstError?.value || '';
   const functions =
-    report?.exception?.values?.[0]?.stacktrace?.frames?.map(
-      (item) => item.function,
-    ) || [];
-  const length = report?.exception?.values?.length || 0;
+    firstError?.stacktrace?.frames?.map((item) => item.function) || [];
+  const length = errorsList?.length || 0;
   return {
     message,
     functions,
@@ -40,7 +45,8 @@ function parseSentryReport({ report }) {
   };
 }
 
-function isRuleMatch({ rule, message, functions, length }) {
+function isRuleMatch({ rule, message, functions = [], length = 0 }) {
+  // Do not match multiple errors of sentry report
   if (length > 1) {
     return false;
   }
@@ -94,8 +100,27 @@ function ignoreSentry(report) {
   return false;
 }
 
-function ignoreNotification() {
+function ignoreNotification({ error, message, errorCodeI18n, errorUrl }) {
+  if (error?.ignoreBackgroundErrorNotification) {
+    return true;
+  }
+  const ignoreRules = notificationIgnoreRules;
+
+  for (let i = 0; i < ignoreRules.length; i++) {
+    const rule = ignoreRules[i] || [];
+    if (
+      isRuleMatch({
+        rule,
+        message,
+      })
+    ) {
+      console.log('ignore notification error', rule);
+      return true;
+    }
+  }
+
   // err.ignoreBackgroundErrorNotification = true;
+  return false;
 }
 
-export default { ignoreSentry };
+export default { ignoreSentry, ignoreNotification };
