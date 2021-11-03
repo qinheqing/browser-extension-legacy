@@ -29,8 +29,7 @@ import ExtAccountOverview from '../../components/ExtAccountOverview';
 import { ExtHomeAssetsList } from '../../components/ExtHomeAssetsList';
 import ExtAppTabBar from '../../components/ExtAppTabBar';
 
-// TODO redirect to oldHome useRedirectToCorrectHome
-function PageHome() {
+const PageHome = observer(function () {
   const history = useHistory();
   const [copied, handleCopy] = useCopyToClipboard();
   const { isUnlocked } = storeApp.legacyState;
@@ -110,36 +109,22 @@ function PageHome() {
     );
   })();
 
-  const navLeft = currentAccountAddress ? (
-    <AppIcons.ClipboardListIcon
-      role="button"
-      className="w-6"
-      onClick={() => storeHistory.push(ROUTE_TX_HISTORY)}
-    />
-  ) : null;
-  const navRight = (
-    <AppIcons.CollectionIcon
-      role="button"
-      className="w-6"
-      onClick={() => {
-        storeAccount.setAccountsGroupFilterToChain({
-          chainKey: storeChain.currentChainKey,
-        });
-        storeHistory.push(ROUTE_WALLET_SELECT);
-      }}
-    />
-  );
+  return contentView;
+});
+
+function PageHomeLayout() {
+  const { currentChainKey } = storeChain;
+  const { currentAccountAddress } = storeAccount;
+  const { homeType } = storeApp;
+  const key = `${currentChainKey} ${currentAccountAddress} ${homeType}`;
   return (
     <AppPageLayout
-      navLeft={navLeft}
-      navRight={navRight}
       headerView={<ExtAppHeader />}
-      title="钱包"
       footer={<ExtAppTabBar name={ExtAppTabBar.names.Home} />}
     >
-      {contentView}
+      <PageHome key={key} />
     </AppPageLayout>
   );
 }
 
-export default observer(PageHome);
+export default observer(PageHomeLayout);
