@@ -64,12 +64,17 @@ function AppToastContainer() {
   );
 }
 
+function NewOldHomeSwitchLoading() {
+  // return <PreloadScreen />;
+  return null;
+}
+
 function NewHomeRootComponents() {
   return (
     <>
       {/* <CssStyleInNew />*/}
       {/* LoadingScreen*/}
-      <PreloadScreen />
+      <NewOldHomeSwitchLoading />
     </>
   );
 }
@@ -78,7 +83,7 @@ function OldHomeRootComponents() {
   return (
     <>
       {/* <CssStyleInOld />*/}
-      <PreloadScreen />
+      <NewOldHomeSwitchLoading />
     </>
   );
 }
@@ -100,7 +105,7 @@ const UniversalRoutesWrapper = observer(function ({ children }) {
   }
   return (
     <>
-      <CssStyleInAll />
+      {/* <CssStyleInAll />*/}
       {children}
       {/* AppToastContainer should be singleton */}
       <AppToastContainer />
