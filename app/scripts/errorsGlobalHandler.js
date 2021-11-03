@@ -1,4 +1,5 @@
 import { isString } from 'lodash';
+import errorsIgnore from '../../src/utils/errorsIgnore';
 import i18nBackground from './i18nBackground';
 
 global.$$errorNotificationAvailableCount = 5;
@@ -9,10 +10,6 @@ async function showExtensionNotification(error) {
   const errorCodeI18n = error.errorCodeI18n || '';
   const errorUrl = error.errorUrl || '';
 
-  if (error?.ignoreBackgroundErrorNotification) {
-    return;
-  }
-
   if (errorCodeI18n) {
     // should use t0(key) return empty if key has no translation
     msg = i18nBackground.t0(errorCodeI18n) || msg;
@@ -20,24 +17,37 @@ async function showExtensionNotification(error) {
   }
 
   let notificationId;
-  if (global.$$errorNotificationAvailableCount <= 0) {
-    // if availableCount is 0, use fixed notificationId,
-    // so Chrome won't push more notification unless user clear them
-    notificationId = `onekey-background-error-notification`;
-    // return;
-  }
-
-  if (errorUrl) {
-    notificationId = errorUrl;
-  }
 
   if (msg && global?.$ok_extensionPlatform?._showNotification) {
+    if (
+      errorsIgnore.ignoreNotification({
+        error,
+        message: msg,
+        errorCodeI18n,
+        errorUrl,
+      })
+    ) {
+      return;
+    }
+
     if (lastErrorMsg === msg) {
       global.$$errorNotificationAvailableCount -= 1;
     } else {
       global.$$errorNotificationAvailableCount = 5;
     }
     lastErrorMsg = msg;
+
+    if (global.$$errorNotificationAvailableCount <= 0 && !errorUrl) {
+      global.$$errorNotificationAvailableCount = 0;
+      // if availableCount is 0, use fixed notificationId,
+      // so Chrome won't push more notification unless user clear them
+      notificationId = `onekey-background-error-notification`;
+      return;
+    }
+
+    if (errorUrl) {
+      notificationId = errorUrl;
+    }
 
     global.$ok_extensionPlatform._subscribeToNotificationClicked();
     global.$ok_extensionPlatform._showNotification(
@@ -57,12 +67,14 @@ function init() {
     //   event.reason,
     //   ').',
     // );
+    console.log('window.addEventListener on [unhandledrejection]');
     showExtensionNotification(event.reason);
   });
 
   console.log('window.addEventListener#error');
+  // TODO background normal error NOT handled here
   window.addEventListener('error', (event) => {
-    console.log('window.addEventListener on error');
+    console.log('window.addEventListener on [error]');
     showExtensionNotification(event.error);
   });
 }
