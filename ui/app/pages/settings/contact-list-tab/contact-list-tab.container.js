@@ -36,7 +36,8 @@ const mapStateToProps = (state, ownProps) => {
       pathname.match(CONTACT_MY_ACCOUNTS_VIEW_ROUTE) ||
       pathname.match(CONTACT_MY_ACCOUNTS_EDIT_ROUTE),
   );
-  const envIsPopup = getEnvironmentType() === ENVIRONMENT_TYPE_POPUP;
+  // const envIsPopup = getEnvironmentType() === ENVIRONMENT_TYPE_POPUP;
+  const envIsPopup = true;
 
   const hideAddressBook =
     envIsPopup && (viewingContact || editingContact || addingContact);

@@ -16,6 +16,7 @@ function OneArrow({
   if (direction === 'left') {
     Cmp = AppIcons.ChevronLeftIcon;
   }
+
   if (type === 'arrow') {
     Cmp = AppIcons.ArrowRightIcon;
     if (direction === 'left') {

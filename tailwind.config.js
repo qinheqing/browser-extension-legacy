@@ -96,7 +96,7 @@ module.exports = {
       ...theme('colors'),
       DEFAULT: '#363636',
       primary: colorPrimary,
-      'root-body': '#363636',
+      'root-body': '#363636', // text-root-body
     }),
     extend: {},
   },

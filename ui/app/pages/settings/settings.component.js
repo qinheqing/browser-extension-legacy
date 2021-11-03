@@ -23,6 +23,7 @@ import { getEnvironmentType } from '../../../../app/scripts/lib/util';
 import { ENVIRONMENT_TYPE_FULLSCREEN } from '../../../../shared/constants/app';
 import utilsApp from '../../../../src/utils/utilsApp';
 import ExtAppTabBar from '../../../../src/components/ExtAppTabBar';
+import ExtAppNavBar from '../../../../src/components/ExtAppNavBar';
 import SettingsTab from './settings-tab';
 import AlertsTab from './alerts-tab';
 import NetworksTab from './networks-tab';
@@ -91,6 +92,7 @@ class SettingsPage extends PureComponent {
   render() {
     const { history, backRoute, currentPath, mostRecentOverviewPage } =
       this.props;
+    const { t } = this.context;
 
     return (
       <>
@@ -99,15 +101,11 @@ class SettingsPage extends PureComponent {
             'settings-page--selected': currentPath !== SETTINGS_ROUTE,
           })}
         >
-          <div className="settings-page__header">
-            {currentPath !== SETTINGS_ROUTE && (
-              <div
-                className="settings-page__back-button"
-                onClick={() => history.push(backRoute)}
-              />
-            )}
-            {this.renderTitle()}
-          </div>
+          <ExtAppNavBar
+            title={t('settings')}
+            subTitle={this.getSubTitle()}
+            left={currentPath === SETTINGS_ROUTE ? null : undefined}
+          />
           <div className="settings-page__content">
             <div className="settings-page__content__tabs">
               {this.renderTabs()}
@@ -120,6 +118,14 @@ class SettingsPage extends PureComponent {
         </div>
       </>
     );
+  }
+
+  getSubTitle() {
+    const { t } = this.context;
+    const { isPopup, pathnameI18nKey, addressName } = this.props;
+
+    // t('settings');
+    return addressName || (pathnameI18nKey && t(pathnameI18nKey)) || '';
   }
 
   renderTitle() {

@@ -101,7 +101,6 @@
     flex-flow: row nowrap;
     height: 100%;
     overflow: auto;
-    border-top: 1px solid #d8d8d8;
 
     &__tabs {
       display: flex;
@@ -223,7 +222,7 @@
   }
 
   &__remove-wallet-button {
-    max-width: 250px;
+    width: 100%;
   }
 }
 
@@ -268,7 +267,6 @@
   &__menu-item-title {
     font-weight: bold;
     font-size: 16px;
-    color: #12121e;
   }
 
   &__menu-item-desc {
