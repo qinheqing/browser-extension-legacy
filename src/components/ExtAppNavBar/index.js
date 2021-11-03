@@ -4,12 +4,12 @@ import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import styles from './index.css';
 
-function ComponentSample({ children }) {
-  return <div> ComponentSample: {children}</div>;
+function ExtAppNavBar({ children }) {
+  return <div>ExtAppNavBar</div>;
 }
 
-ComponentSample.propTypes = {
+ExtAppNavBar.propTypes = {
   children: PropTypes.any,
 };
 
-export default observer(ComponentSample);
+export default observer(ExtAppNavBar);
