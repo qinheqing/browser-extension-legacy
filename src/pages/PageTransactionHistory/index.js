@@ -19,6 +19,7 @@ import storeHistory from '../../store/storeHistory';
 import NoDataView from '../../components/NoDataView';
 import OneCellItem from '../../components/OneCellItem';
 import storeStorage from '../../store/storeStorage';
+import ExtAppTabBar from '../../components/ExtAppTabBar';
 import styles from './index.css';
 
 const timeAgoLocaleFormatter = buildFormatter(timeAgoZhStrings);
@@ -329,6 +330,7 @@ function PageTransactionHistory() {
         />
       }
       title="交易记录"
+      footer={<ExtAppTabBar name={ExtAppTabBar.names.Transaction} />}
     >
       {loading && <LoadingSpinner fullHeight />}
       {!loading && (

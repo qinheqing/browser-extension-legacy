@@ -86,6 +86,19 @@ function TokenAddButton() {
   );
 }
 
+function TxHistoryButton() {
+  return (
+    <OneButton
+      type="white"
+      size="xs"
+      rounded
+      onClick={() => storeHistory.goToPageTxHistory()}
+    >
+      <AppIcons.ClockIcon className="w-5" />
+    </OneButton>
+  );
+}
+
 const HomeAssetsHeader = observer(function () {
   const t = useI18n();
 
@@ -110,6 +123,9 @@ const HomeAssetsHeader = observer(function () {
 
       {/* <div className="w-2" /> */}
       {/* <TokenAddButton />*/}
+
+      <div className="w-2" />
+      <TxHistoryButton />
     </div>
   );
 });
@@ -117,9 +133,9 @@ const HomeAssetsHeader = observer(function () {
 const ExtHomeAssetsList = observer(function () {
   const t = useI18n();
   const history = useHistory();
-  const tokens = storeToken.currentTokens;
   let tokensListView = null;
   if (utilsApp.isNewHome()) {
+    const tokens = storeToken.currentTokens;
     tokensListView = tokens.map((token, index) => {
       return (
         <TokenInfoCard

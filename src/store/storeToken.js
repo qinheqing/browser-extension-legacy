@@ -125,7 +125,7 @@ class StoreToken extends BaseStore {
   }
 
   buildNativeToken({ account, chainInfo }) {
-    const { address } = account;
+    const { address } = account || {};
     const { tokenId, name, symbol, logoURI, decimals, precision } =
       chainInfo?.nativeToken || {};
     return new OneTokenInfo({

@@ -13,6 +13,7 @@ import { getAccountType, getCurrentChainId } from '../../../../selectors';
 import useI18n from '../../../../../../src/hooks/useI18n';
 import useCurrentAccountAvailable from '../../../../../../src/hooks/useCurrentAccountAvailable';
 import { ExtHomeAssetsList } from '../../../../../../src/components/ExtHomeAssetsList';
+import ExtAppTabBar from '../../../../../../src/components/ExtAppTabBar';
 
 const Overview = () => {
   const history = useHistory();
@@ -46,14 +47,16 @@ const Overview = () => {
   }
 
   return (
-    <div className="home__container">
-      {/* <AppHeader />*/}
-      <ExtAppHeader />
-      <div className="home__main-view">
-        {/* <MenuBar /> */}
-        {contentView}
+    <>
+      <div className="home__container">
+        {/* <AppHeader />*/}
+        <ExtAppHeader />
+        <div className="home__main-view">
+          {/* <MenuBar /> */}
+          {contentView}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

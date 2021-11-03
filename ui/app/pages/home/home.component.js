@@ -41,6 +41,7 @@ import utilsApp from '../../../../src/utils/utilsApp';
 import useRedirectToCorrectHome, {
   redirectToCorrectHome,
 } from '../../../../src/hooks/useRedirectToCorrectHome';
+import ExtAppTabBar from '../../../../src/components/ExtAppTabBar';
 import { History as TxHistory } from './components/history';
 import Overview from './components/overview';
 import { Tabs, Tab } from './components/tabs';
@@ -269,35 +270,7 @@ export default class Home extends PureComponent {
                   <Route component={Overview} />
                 </Switch>
               </div>
-              <div className="home__route-list">
-                <MenuItem
-                  currentPath={currentPath}
-                  history={history}
-                  path={utilsApp.isOldHome() ? OVERVIEW_ROUTE : ROUTE_HOME}
-                  exact
-                  defaultIcon={<img src="./images/tabs/home.svg" />}
-                  activeIcon={<img src="./images/tabs/home-active.svg" />}
-                />
-                <MenuItem
-                  history={history}
-                  exact
-                  currentPath={currentPath}
-                  path={
-                    utilsApp.isOldHome() ? TRANSACTIONS_ROUTE : ROUTE_TX_HISTORY
-                  }
-                  defaultIcon={<img src="./images/tabs/transaction.svg" />}
-                  activeIcon={
-                    <img src="./images/tabs/transaction-active.svg" />
-                  }
-                />
-                <MenuItem
-                  currentPath={currentPath}
-                  history={history}
-                  path={SETTINGS_ROUTE}
-                  defaultIcon={<img src="./images/tabs/preference.svg" />}
-                  activeIcon={<img src="./images/tabs/preference-active.svg" />}
-                />
-              </div>
+              <ExtAppTabBar />
             </div>
             {this.renderNotifications()}
           </div>

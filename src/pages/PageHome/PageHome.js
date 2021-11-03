@@ -27,6 +27,7 @@ import useRedirectToCorrectHome from '../../hooks/useRedirectToCorrectHome';
 import useI18n from '../../hooks/useI18n';
 import ExtAccountOverview from '../../components/ExtAccountOverview';
 import { ExtHomeAssetsList } from '../../components/ExtHomeAssetsList';
+import ExtAppTabBar from '../../components/ExtAppTabBar';
 
 // TODO redirect to oldHome useRedirectToCorrectHome
 function PageHome() {
@@ -134,6 +135,7 @@ function PageHome() {
       navRight={navRight}
       headerView={<ExtAppHeader />}
       title="钱包"
+      footer={<ExtAppTabBar name={ExtAppTabBar.names.Home} />}
     >
       {contentView}
     </AppPageLayout>

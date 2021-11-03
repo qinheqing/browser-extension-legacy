@@ -16,11 +16,15 @@ import {
   ROUTE_TOKEN_ADD,
   ROUTE_TOKEN_DETAIL,
   ROUTE_TRANSFER,
+  ROUTE_TX_HISTORY,
 } from '../routes/routeUrls';
 import openStandalonePage from '../utils/openStandalonePage';
 import { goToPageConnectHardware } from '../../ui/app/helpers/utils/util';
 import utilsApp from '../utils/utilsApp';
-import { NEW_ACCOUNT_ROUTE } from '../../ui/app/helpers/constants/routes';
+import {
+  NEW_ACCOUNT_ROUTE,
+  TRANSACTIONS_ROUTE,
+} from '../../ui/app/helpers/constants/routes';
 import BaseStore from './BaseStore';
 
 class StoreHistory extends BaseStore {
@@ -163,6 +167,15 @@ class StoreHistory extends BaseStore {
       ...others,
     });
     window.open(link);
+  }
+
+  async goToPageTxHistory() {
+    if (utilsApp.isNewHome()) {
+      this.push(ROUTE_TX_HISTORY);
+      return;
+    }
+
+    this.push(TRANSACTIONS_ROUTE);
   }
 }
 

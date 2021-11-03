@@ -22,6 +22,7 @@ import {
 import { getEnvironmentType } from '../../../../app/scripts/lib/util';
 import { ENVIRONMENT_TYPE_FULLSCREEN } from '../../../../shared/constants/app';
 import utilsApp from '../../../../src/utils/utilsApp';
+import ExtAppTabBar from '../../../../src/components/ExtAppTabBar';
 import SettingsTab from './settings-tab';
 import AlertsTab from './alerts-tab';
 import NetworksTab from './networks-tab';
@@ -92,30 +93,32 @@ class SettingsPage extends PureComponent {
       this.props;
 
     return (
-      <div
-        className={classnames('main-container settings-page', {
-          'settings-page--selected': currentPath !== SETTINGS_ROUTE,
-        })}
-      >
-        <div className="settings-page__header">
-          {currentPath !== SETTINGS_ROUTE && (
-            <div
-              className="settings-page__back-button"
-              onClick={() => history.push(backRoute)}
-            />
-          )}
-          {this.renderTitle()}
-        </div>
-        <div className="settings-page__content">
-          <div className="settings-page__content__tabs">
-            {this.renderTabs()}
+      <>
+        <div
+          className={classnames('main-container settings-page', {
+            'settings-page--selected': currentPath !== SETTINGS_ROUTE,
+          })}
+        >
+          <div className="settings-page__header">
+            {currentPath !== SETTINGS_ROUTE && (
+              <div
+                className="settings-page__back-button"
+                onClick={() => history.push(backRoute)}
+              />
+            )}
+            {this.renderTitle()}
           </div>
-          <div className="settings-page__content__modules">
-            {this.renderSubHeader()}
-            {this.renderContent()}
+          <div className="settings-page__content">
+            <div className="settings-page__content__tabs">
+              {this.renderTabs()}
+            </div>
+            <div className="settings-page__content__modules">
+              {this.renderSubHeader()}
+              {this.renderContent()}
+            </div>
           </div>
         </div>
-      </div>
+      </>
     );
   }
 

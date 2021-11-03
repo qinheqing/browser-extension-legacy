@@ -4,6 +4,7 @@ import {
   ArrowsExpandIcon as ArrowsExpandIconSolid,
   DuplicateIcon as DuplicateIconSolid,
   DeviceMobileIcon as DeviceMobileIconSolid,
+  ClockIcon as ClockIconSolid,
 } from '@heroicons/react/solid';
 import {
   ArrowLeftIcon,
@@ -35,6 +36,7 @@ import {
   PencilIcon,
   ShieldCheckIcon,
   ShieldExclamationIcon,
+  ClockIcon,
 } from '@heroicons/react/outline';
 import { SpinnerIcon, QuestionIcon } from './icons';
 
@@ -77,6 +79,8 @@ const AppIcons = {
   PencilIcon,
   ShieldExclamationIcon,
   ShieldCheckIcon,
+  ClockIcon,
+  ClockIconSolid,
 };
 
 export default AppIcons;

@@ -92,12 +92,7 @@ export function ExtAppHeaderMoreDropdown() {
               content: t('activity'),
               icon: 'ClockSolid',
               onAction: () => {
-                if (utilsApp.isNewHome()) {
-                  storeHistory.push(ROUTE_TX_HISTORY);
-                  return;
-                }
-
-                storeHistory.push(TRANSACTIONS_ROUTE);
+                storeHistory.goToPageTxHistory();
               },
             },
             {

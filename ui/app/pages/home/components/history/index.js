@@ -12,6 +12,7 @@ import {
   getSelectedIdentity,
 } from '../../../../selectors/selectors';
 import getAccountLink from '../../../../../lib/account-link';
+import ExtAppTabBar from '../../../../../../src/components/ExtAppTabBar';
 
 export const History = () => {
   const selectedAccount = useSelector(getSelectedAccount);
@@ -28,25 +29,27 @@ export const History = () => {
   )}...${selectedAccount.address.slice(-4)}`;
 
   return (
-    <div className="home-history">
-      <div className="home-history__header">
-        <div className="home-history__info">
-          <div className="home-history__title">Transaction</div>
-          <div className="home-history__address">{shortAddress}</div>
+    <>
+      <div className="home-history">
+        <div className="home-history__header">
+          <div className="home-history__info">
+            <div className="home-history__title">Transaction</div>
+            <div className="home-history__address">{shortAddress}</div>
+          </div>
+          <div
+            onClick={() => {
+              global.platform.openTab({
+                url: getAccountLink(address, chainId, rpcPrefs, network),
+              });
+            }}
+          >
+            <img className="home-history__link" src="./images/icons/link.svg" />
+          </div>
         </div>
-        <div
-          onClick={() => {
-            global.platform.openTab({
-              url: getAccountLink(address, chainId, rpcPrefs, network),
-            });
-          }}
-        >
-          <img className="home-history__link" src="./images/icons/link.svg" />
+        <div className="home-history__content">
+          <TransactionList />
         </div>
       </div>
-      <div className="home-history__content">
-        <TransactionList />
-      </div>
-    </div>
+    </>
   );
 };
