@@ -29,13 +29,6 @@ class BaseStoreWithStorage extends BaseStore {
   // this.storageNamespace = utilsStorage.STORAGE_NAMESPACES.storage;
   storageNamespace = '';
 
-  async getStorageItemAsync(key, { useLocalStorage = USE_LOCAL_STORAGE } = {}) {
-    if (useLocalStorage) {
-      return utilsStorage.getItem(key);
-    }
-    return (await extStorage.get([key]))?.[key];
-  }
-
   async setStorageItemAsync(
     key,
     value,
@@ -85,7 +78,8 @@ class BaseStoreWithStorage extends BaseStore {
     );
 
     // * init from localStorage
-    let value = await this.getStorageItemAsync(storageKey, {
+    let value = await utilsStorage.getAutoSaveStorageItemAsync({
+      key: storageKey,
       useLocalStorage,
     });
     value = value ?? defaultValue;

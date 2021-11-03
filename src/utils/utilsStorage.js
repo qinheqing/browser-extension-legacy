@@ -1,4 +1,8 @@
+import ExtensionStore from '../../app/scripts/lib/local-store';
+
 const KEYS = {};
+
+const extStorage = new ExtensionStore();
 
 // TODO add dev、test、prd flag
 const STORAGE_KEY_PREFIX = 'onekey/';
@@ -44,6 +48,20 @@ function clear() {
   global.localStorage.clear();
 }
 
+async function getAutoSaveStorageItemAsync({
+  key,
+  field,
+  namespace = STORAGE_NAMESPACES.storage,
+  useLocalStorage = false,
+} = {}) {
+  const storageKey = key || buildAutoSaveStorageKey(field, namespace);
+
+  if (useLocalStorage) {
+    return getItem(storageKey);
+  }
+  return (await extStorage.get([storageKey]))?.[storageKey];
+}
+
 export default {
   STORAGE_NAMESPACES,
   KEYS,
@@ -51,6 +69,7 @@ export default {
   getItem,
   removeItem,
   clear,
-  getAutoSaveLocalStorageItem,
+  getAutoSaveLocalStorageItem, // localStorage only
+  getAutoSaveStorageItemAsync, // localStorage + ExtensionStorage
   buildAutoSaveStorageKey,
 };
