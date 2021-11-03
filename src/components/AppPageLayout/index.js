@@ -1,12 +1,14 @@
 import React from 'react';
 import classnames from 'classnames';
 import NavBackButton from '../NavBackButton';
+import ExtAppNavBar from '../ExtAppNavBar';
 import styles from './index.css';
 
 // eslint-disable-next-line react/prop-types
 export default function AppPageLayout({
-  headerView = null,
+  header = null,
   title = 'OneKey',
+  subTitle = '',
   navLeft,
   navRight,
   showBack = true,
@@ -15,22 +17,18 @@ export default function AppPageLayout({
   footer,
 }) {
   console.log('AppPageLayout render');
-  const showNavigationHeader = !headerView;
+  const showNavBar = !header;
   return (
     <div className={styles.root}>
-      {showNavigationHeader && (
-        <div
-          data-name="AppPageLayoutHeader"
-          className="bg-nav-bar px-3 h-11 flex flex-row items-center border-b"
-        >
-          <div className="w-9 flex justify-start">
-            {navLeft === undefined ? <NavBackButton /> : navLeft}
-          </div>
-          <div className="text-center flex-1">{title}</div>
-          <div className="w-9 flex justify-end">{navRight}</div>
-        </div>
+      {showNavBar && (
+        <ExtAppNavBar
+          title={title}
+          left={navLeft}
+          right={navRight}
+          subTitle={subTitle}
+        />
       )}
-      {headerView}
+      {header}
       <div
         data-name="AppPageLayoutBody"
         className={classnames(

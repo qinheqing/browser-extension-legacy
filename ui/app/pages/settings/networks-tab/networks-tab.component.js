@@ -216,7 +216,7 @@ export default class NetworksTab extends PureComponent {
               setNetworksTabAddMode(false);
               setSelectedSettingsRpcUrl('');
               if (shouldUpdateHistory && !isFullScreen) {
-                history.push(NETWORKS_ROUTE);
+                history.replace(NETWORKS_ROUTE);
               }
             }}
             showConfirmDeleteNetworkModal={showConfirmDeleteNetworkModal}

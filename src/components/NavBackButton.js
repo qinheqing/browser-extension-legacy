@@ -6,15 +6,19 @@ import OneArrow from './OneArrow';
 
 function NavBackButton() {
   return (
-    <OneArrow
-      type="arrow"
-      direction="left"
+    <div
+      className="p-2 -m-2"
       role="button"
-      className="w-6"
-      classNameDefault=""
       // onClick={() => window.onekeyHistory.goBack()}
       onClick={() => storeHistory.goBack({ fallbackUrl: ROUTE_HOME })}
-    />
+    >
+      <OneArrow
+        type="chevron"
+        direction="left"
+        className="w-6"
+        classNameDefault=""
+      />
+    </div>
   );
 }
 

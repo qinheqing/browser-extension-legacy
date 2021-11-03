@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../../components/ui/button';
 import utilsApp from '../../../../../src/utils/utilsApp';
+import { IS_ENV_IN_TEST_OR_DEBUG } from '../../../helpers/constants/common';
+import ErrorTestCase from '../../../../../src/components/ErrorTestCase';
 
 export default class InfoTab extends PureComponent {
   state = {
@@ -113,6 +115,7 @@ export default class InfoTab extends PureComponent {
         <div className="info-tab__logo-wrapper">
           <img src="images/info-logo.png" className="info-tab__logo" alt="" />
         </div>
+        <ErrorTestCase />
       </div>
     );
   }

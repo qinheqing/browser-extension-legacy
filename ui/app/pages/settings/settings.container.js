@@ -55,7 +55,8 @@ const mapStateToProps = (state, ownProps) => {
   );
   const isNetworksFormPage = Boolean(pathname.match(NETWORKS_FORM_ROUTE));
 
-  const isPopup = getEnvironmentType() === ENVIRONMENT_TYPE_POPUP;
+  // const isPopup = getEnvironmentType() === ENVIRONMENT_TYPE_POPUP;
+  const isPopup = true;
   const pathnameI18nKey = ROUTES_TO_I18N_KEYS[pathname];
 
   let backRoute = SETTINGS_ROUTE;

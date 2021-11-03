@@ -166,6 +166,7 @@ export default class SecurityTab extends PureComponent {
         >
           {this.context.t('resetWalletButton')}
         </Button>
+        <div className="h-4" />
       </div>
     );
   }

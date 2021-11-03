@@ -27,8 +27,8 @@ const mapStateToProps = (state, ownProps) => {
     location: { pathname },
   } = ownProps;
 
-  const environmentType = getEnvironmentType();
-  const isFullScreen = environmentType === ENVIRONMENT_TYPE_FULLSCREEN;
+  // const isFullScreen = getEnvironmentType() === ENVIRONMENT_TYPE_FULLSCREEN;
+  const isFullScreen = false;
   const shouldRenderNetworkForm =
     isFullScreen || Boolean(pathname.match(NETWORKS_FORM_ROUTE));
 

@@ -28,6 +28,7 @@ import useI18n from '../../hooks/useI18n';
 import ExtAccountOverview from '../../components/ExtAccountOverview';
 import { ExtHomeAssetsList } from '../../components/ExtHomeAssetsList';
 import ExtAppTabBar from '../../components/ExtAppTabBar';
+import ErrorTestCase from '../../components/ErrorTestCase';
 
 const PageHome = observer(function () {
   const history = useHistory();
@@ -119,10 +120,11 @@ function PageHomeLayout() {
   const key = `${currentChainKey} ${currentAccountAddress} ${homeType}`;
   return (
     <AppPageLayout
-      headerView={<ExtAppHeader />}
+      header={<ExtAppHeader />}
       footer={<ExtAppTabBar name={ExtAppTabBar.names.Home} />}
     >
       <PageHome key={key} />
+      <ErrorTestCase />
     </AppPageLayout>
   );
 }
