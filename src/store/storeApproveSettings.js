@@ -35,9 +35,10 @@ class StoreApproveSettings extends BaseStoreWithStorage {
 
   async fetchSettings() {
     this.settings =
-      (await this.getStorageItemAsync(
-        `autosave.${utilsStorage.STORAGE_NAMESPACES.dappApproval}.connections`,
-      )) ?? {};
+      (await utilsStorage.getAutoSaveStorageItemAsync({
+        field: 'connections',
+        namespace: utilsStorage.STORAGE_NAMESPACES.dappApproval,
+      })) ?? {};
   }
 
   async deleteSetting({ origin, account }) {
