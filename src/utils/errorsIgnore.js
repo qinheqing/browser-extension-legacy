@@ -15,10 +15,15 @@ const sentryIgnoreRules = [
   ['Segment page tracking found unmatched route'],
   // https://sentry.io/organizations/onekey_hq/issues/2607487371/
   [`Non-200 status code: '404'`],
+  [`Non-200 status code: '403'`],
   // https://sentry.io/organizations/onekey_hq/issues/2650629732/
   [`ProtocolError is not defined`],
   // https://sentry.io/organizations/onekey_hq/issues/2650291701/
   [`unsupported block number ****`, ['getEthJsonRpcError']],
+  [`BlockReEmitMiddleware - retries exhausted`],
+  [`wrong previous session`],
+  [`Iframe timeout`],
+  [`Error: Iframe timeout`],
 ];
 
 function parseSentryReport({ report }) {

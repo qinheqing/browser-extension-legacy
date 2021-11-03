@@ -95,16 +95,21 @@ export default function setupSentry({ release, getState }) {
     );
   }
 
+  // https://docs.sentry.io/platforms/javascript/configuration/options/#common-options
   Sentry.init({
     dsn: sentryTarget,
     debug: METAMASK_DEBUG,
+    release,
     environment: METAMASK_ENVIRONMENT,
+    // The default is 1.0 which means that 100% of error events are sent.
+    //  If set to 0.1 only 10% of error events will be sent.
+    //  Events are picked randomly.
+    sampleRate: 1,
     integrations: [
       new Dedupe(),
       new ExtraErrorData(),
       new Integrations.BrowserTracing(),
     ],
-    release,
     // https://docs.sentry.io/platforms/javascript/configuration/filtering/#using-beforesend
     beforeSend: (report) => rewriteReport(report),
     // Setup Apdex
