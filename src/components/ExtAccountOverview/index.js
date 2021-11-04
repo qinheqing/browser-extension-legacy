@@ -85,20 +85,26 @@ const ExtAccountOverviewActionButtons = observer(function () {
   );
 });
 
-function ExtAccountOverview({ children }) {
+const ExtAccountOverviewInfoBar = observer(function ({ address, type }) {
   const { maskAssetBalance } = storeStorage;
-  const t = useI18n();
   const onToggle = useCallback((e) => {
     e.stopPropagation();
     storeApp.toggleAssetBalanceVisible();
   }, []);
-  const account = storeAccount.currentAccountInfo;
-  if (!account) {
+  if (!address) {
     return null;
   }
   return (
-    <div>
-      <div className="w-full px-4 py-2 flex items-center justify-between">
+    <div className="w-full px-4 py-2 flex items-center  ">
+      <div className="text-xs text-gray-400">
+        <CopyHandle text={address}>
+          {utilsApp.shortenAddress(address)}
+        </CopyHandle>
+      </div>
+
+      <div className="flex-1" />
+
+      {utilsApp.isNewHome() && (
         <span onClick={onToggle}>
           {maskAssetBalance ? (
             <AppIcons.EyeOffIcon role="button" className="w-4 ml-1 " />
@@ -106,15 +112,28 @@ function ExtAccountOverview({ children }) {
             <AppIcons.EyeIcon role="button" className="w-4 ml-1 " />
           )}
         </span>
+      )}
 
-        <div className="text-xs text-gray-400">
-          <CopyHandle text={account.address}>
-            {utilsApp.shortenAddress(account.address)}
-          </CopyHandle>
-        </div>
+      <div className="w-2" />
+      <ExtAccountTypeBadge type={type} />
+    </div>
+  );
+});
 
-        <ExtAccountTypeBadge type={account?.type} />
-      </div>
+function ExtAccountOverview({ children }) {
+  const { maskAssetBalance } = storeStorage;
+  const t = useI18n();
+
+  const account = storeAccount.currentAccountInfo;
+  if (!account) {
+    return null;
+  }
+  return (
+    <div>
+      <ExtAccountOverviewInfoBar
+        address={account.address}
+        type={account.type}
+      />
 
       <div className="flex flex-col items-center text-center p-4 pt-6">
         <div className="text-sm text-gray-400 hidden">Total Balance</div>
@@ -125,7 +144,7 @@ function ExtAccountOverview({ children }) {
             watchBalanceChange
             maskAssetBalance={maskAssetBalance}
             className={classnames('text-3xl mt-2 block')}
-            classNamePrice={classnames('text-sm text-gray-700')}
+            classNamePrice={classnames('text-sm text-gray-400')}
             classNameUnit={classnames('text-gray-600')}
           />
         </div>
@@ -140,4 +159,4 @@ ExtAccountOverview.propTypes = {
 };
 
 export default observer(ExtAccountOverview);
-export { ExtAccountOverviewActionButtons };
+export { ExtAccountOverviewActionButtons, ExtAccountOverviewInfoBar };

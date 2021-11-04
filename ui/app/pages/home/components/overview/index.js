@@ -9,16 +9,22 @@ import { ASSET_ROUTE } from '../../../../helpers/constants/routes';
 import { ExtAppHeader } from '../../../../../../src/components/ExtAppHeader';
 import { WALLET_ACCOUNT_TYPES } from '../../../../helpers/constants/common';
 import { goToPageConnectHardware } from '../../../../helpers/utils/util';
-import { getAccountType, getCurrentChainId } from '../../../../selectors';
+import {
+  getAccountType,
+  getCurrentChainId,
+  getSelectedAddress,
+} from '../../../../selectors';
 import useI18n from '../../../../../../src/hooks/useI18n';
 import useCurrentAccountAvailable from '../../../../../../src/hooks/useCurrentAccountAvailable';
 import { ExtHomeAssetsList } from '../../../../../../src/components/ExtHomeAssetsList';
 import ExtAppTabBar from '../../../../../../src/components/ExtAppTabBar';
+import { ExtAccountOverviewInfoBar } from '../../../../../../src/components/ExtAccountOverview';
 
 const Overview = () => {
   const history = useHistory();
   const t = useI18n();
   const accountType = useSelector(getAccountType);
+  const accountAddress = useSelector(getSelectedAddress);
   const hwOnlyMode = useSelector((state) => state?.metamask?.hwOnlyMode);
   const available = useCurrentAccountAvailable();
   const chainId = useSelector(getCurrentChainId);
@@ -26,6 +32,10 @@ const Overview = () => {
   let contentView = (
     <>
       <div className="home__balance-wrapper">
+        <ExtAccountOverviewInfoBar
+          address={accountAddress}
+          type={accountType}
+        />
         <EthOverview />
       </div>
       {/* <ExtHomeAssetsList key={chainId} />*/}

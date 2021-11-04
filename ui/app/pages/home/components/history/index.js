@@ -18,6 +18,8 @@ import ExtAppNavBar from '../../../../../../src/components/ExtAppNavBar';
 import useI18n from '../../../../../../src/hooks/useI18n';
 import storeHistory from '../../../../../../src/store/storeHistory';
 import storeAccount from '../../../../../../src/store/storeAccount';
+import useDataRequiredOrRedirect from '../../../../../../src/utils/hooks/useDataRequiredOrRedirect';
+import utilsApp from '../../../../../../src/utils/utilsApp';
 
 export const History = () => {
   const t = useI18n();
@@ -27,12 +29,13 @@ export const History = () => {
   const chainId = useSelector(getCurrentChainId);
   const rpcPrefs = useSelector(getRpcPrefsForCurrentProvider);
   const selectedIdentity = useSelector(getSelectedIdentity);
-  const { address } = selectedAccount;
+  const address = selectedAccount?.address || '';
 
-  const shortAddress = `${selectedAccount.address.slice(
-    0,
-    6,
-  )}...${selectedAccount.address.slice(-4)}`;
+  if (useDataRequiredOrRedirect(address)) {
+    return <div />;
+  }
+
+  const shortAddress = utilsApp.shortenAddress(address, { head: 6, tail: 4 });
 
   return (
     <>

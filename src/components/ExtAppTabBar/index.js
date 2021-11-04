@@ -78,27 +78,28 @@ const homeTabContentRender = createTabContentRender([
 const ExtAppTabBar = observer(function ({ children, name }) {
   let _name = name;
   const location = useLocation();
+  const { pathname } = location;
   let index = 0;
   if (!_name) {
     if (
-      location.pathname.startsWith(ROUTE_HOME_OLD) ||
-      location.pathname.startsWith(OVERVIEW_ROUTE)
+      pathname.startsWith(ROUTE_HOME_OLD) ||
+      pathname.startsWith(OVERVIEW_ROUTE)
     ) {
       _name = CONST_TABS_NAMES.Home;
     }
 
-    if (location.pathname.startsWith(TRANSACTIONS_ROUTE)) {
+    if (pathname.startsWith(TRANSACTIONS_ROUTE)) {
       _name = CONST_TABS_NAMES.Transaction;
     }
 
-    if (location.pathname.startsWith(SETTINGS_ROUTE)) {
+    if (pathname.startsWith(SETTINGS_ROUTE)) {
       _name = CONST_TABS_NAMES.Settings;
     }
   }
   index = homeTabContentRender.items.findIndex((item) => item.name === _name);
 
   return (
-    <div className="bg-white">
+    <div className="bg-white" key={pathname}>
       <Tabs
         defaultIndex={index}
         onChange={(_index) => homeTabContentRender.items[_index]?.onClick()}

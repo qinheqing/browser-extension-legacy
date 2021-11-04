@@ -23,6 +23,7 @@ import storeStorage from '../../store/storeStorage';
 import ExtAppTabBar from '../../components/ExtAppTabBar';
 import useI18n from '../../hooks/useI18n';
 import ExtAppNavBar from '../../components/ExtAppNavBar';
+import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
 import styles from './index.css';
 
 const timeAgoLocaleFormatter = buildFormatter(timeAgoZhStrings);
@@ -304,8 +305,14 @@ function PageTransactionHistory() {
   const [txList, setTxList] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetchTxHistory();
+    if (storeAccount.currentAccountAddress) {
+      fetchTxHistory();
+    }
   }, []);
+
+  if (useDataRequiredOrRedirect(storeAccount.currentAccountInfo)) {
+    return <div />;
+  }
 
   async function fetchTxHistory() {
     try {

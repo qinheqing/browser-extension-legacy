@@ -1674,7 +1674,7 @@
     "message": "访问我们的支持中心"
   },
   "swap": {
-    "message": "兑换 Swap"
+    "message": "Swap"
   },
   "swapTokenToToken": {
     "message": "兑换 {1} 到 {2}"
