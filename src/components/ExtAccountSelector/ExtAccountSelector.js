@@ -15,7 +15,10 @@ import storeChain from '../../store/storeChain';
 import storeToken from '../../store/storeToken';
 import styles from '../AccountCard/index.css';
 import TokenBalance from '../TokenBalance';
-import { PRIMARY } from '../../../ui/app/helpers/constants/common';
+import {
+  IS_ENV_IN_TEST_OR_DEBUG,
+  PRIMARY,
+} from '../../../ui/app/helpers/constants/common';
 import UserPreferencedCurrencyDisplay from '../../../ui/app/components/app/user-preferenced-currency-display';
 import * as actions from '../../../ui/app/store/actions';
 import useI18n from '../../hooks/useI18n';
@@ -29,6 +32,7 @@ import openStandalonePage from '../../utils/openStandalonePage';
 import {
   ROUTE_CONNECT_HARDWARE,
   ROUTE_CREATE_ACCOUNT,
+  ROUTE_WALLET_SELECT,
 } from '../../routes/routeUrls';
 import storeHistory from '../../store/storeHistory';
 import useCurrentAccountAvailable from '../../hooks/useCurrentAccountAvailable';
@@ -239,6 +243,15 @@ const ExtAccountSelectorComponent = observer(function ({
             close();
           },
         },
+        IS_ENV_IN_TEST_OR_DEBUG &&
+          utilsApp.isNewHome() && {
+            content: '选择钱包 (Deprecated)',
+            iconName: 'ColorSwatchOutline',
+            onAction: () => {
+              storeHistory.push(ROUTE_WALLET_SELECT);
+              close();
+            },
+          },
       ].filter(Boolean)}
       place="bottom-center"
       trigger={{

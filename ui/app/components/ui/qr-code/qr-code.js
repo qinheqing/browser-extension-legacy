@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { isHexPrefixed } from 'ethereumjs-util';
 import ReadOnlyInput from '../readonly-input/readonly-input';
 import { checksumAddress } from '../../../helpers/utils/util';
+import CopyHandle from '../../../../../src/components/CopyHandle';
 
 export default connect(mapStateToProps)(QrCodeView);
 
@@ -24,7 +25,7 @@ function QrCodeView(props) {
   const qrImage = qrCode(4, 'M');
   qrImage.addData(address);
   qrImage.make();
-
+  const addressCheckSum = checksumAddress(data);
   return (
     <div className="qr-code">
       {Array.isArray(message) ? (
@@ -45,7 +46,9 @@ function QrCodeView(props) {
           __html: qrImage.createTableTag(4),
         }}
       />
-      <div className="ellip-address-wrapper">{checksumAddress(data)}</div>
+      <div className="ellip-address-wrapper text-center">
+        <CopyHandle text={addressCheckSum}>{addressCheckSum}</CopyHandle>
+      </div>
     </div>
   );
 }

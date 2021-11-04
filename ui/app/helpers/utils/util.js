@@ -545,9 +545,11 @@ export function getAccountMetaInfo({ account, keyrings }) {
   };
 }
 
-export function goToPageConnectHardware() {
+export function goToPageConnectHardware({ replace = false } = {}) {
   if (getEnvironmentType() === ENVIRONMENT_TYPE_POPUP) {
     global.platform.openExtensionInBrowser(CONNECT_HARDWARE_ROUTE);
+  } else if (replace) {
+    global.onekeyHistory.replace(CONNECT_HARDWARE_ROUTE);
   } else {
     global.onekeyHistory.push(CONNECT_HARDWARE_ROUTE);
   }

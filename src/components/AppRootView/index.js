@@ -91,10 +91,7 @@ function OldHomeRootComponents() {
 function AppRootView({ children }) {
   return (
     <div className={classnames(styles.root, '')}>
-      <div className={classnames(styles.content, 'shadow-2xl')}>
-        <NewHomeRootComponents />
-        {children}
-      </div>
+      <div className={classnames(styles.content, 'shadow-2xl')}>{children}</div>
     </div>
   );
 }

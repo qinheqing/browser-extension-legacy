@@ -8,6 +8,7 @@ import {
   CONNECT_HARDWARE_ROUTE,
 } from '../../helpers/constants/routes';
 import { goToPageConnectHardware } from '../../helpers/utils/util';
+import storeHistory from '../../../../src/store/storeHistory';
 import NewAccountCreateForm from './new-account.container';
 import NewAccountImportForm from './import-account';
 import ConnectHardwareForm from './connect-hardware';
@@ -28,18 +29,18 @@ export default class CreateAccountPage extends Component {
       });
 
     return (
-      <div className="new-account__tabs">
+      <div className="new-account__tabs relative">
         {!hwOnlyMode && (
           <>
             <div
               className={getClassNames(NEW_ACCOUNT_ROUTE)}
-              onClick={() => history.push(NEW_ACCOUNT_ROUTE)}
+              onClick={() => history.replace(NEW_ACCOUNT_ROUTE)}
             >
               {this.context.t('create')}
             </div>
             <div
               className={getClassNames(IMPORT_ACCOUNT_ROUTE)}
-              onClick={() => history.push(IMPORT_ACCOUNT_ROUTE)}
+              onClick={() => history.replace(IMPORT_ACCOUNT_ROUTE)}
             >
               {this.context.t('import')}
             </div>
@@ -48,10 +49,17 @@ export default class CreateAccountPage extends Component {
 
         <div
           className={getClassNames(CONNECT_HARDWARE_ROUTE)}
-          onClick={() => goToPageConnectHardware()}
+          onClick={() => goToPageConnectHardware({ replace: true })}
         >
           {this.context.t('hardware')}
         </div>
+
+        <span
+          onClick={() => storeHistory.goBack()}
+          className="cursor-pointer text-[40px] absolute right-[4px] top-[4px] leading-none px-2"
+        >
+          &times;
+        </span>
       </div>
     );
   }

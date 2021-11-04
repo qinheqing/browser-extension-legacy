@@ -7,7 +7,10 @@ const colorPrimary = '#00B812';
 
 module.exports = {
   mode: 'jit',
-  purge: ['./src/**/*.{js,jsx,ts,tsx,vue,html,css,scss}'],
+  purge: [
+    './src/**/*.{js,jsx,ts,tsx,vue,html,css,scss}',
+    './ui/**/*.{js,jsx,ts,tsx,vue,html,css,scss}',
+  ],
   darkMode: false, // or 'media' or 'class'
   important: false,
   theme: {

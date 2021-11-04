@@ -33,11 +33,11 @@ function RefreshButton() {
       onClick={async () => {
         setLoading(true);
         try {
+          await utilsApp.delay(1000);
           await storeToken.fetchCurrentAccountTokens({
             forceUpdateTokenMeta: true,
           });
           storeAccount.refreshKey = new Date().getTime();
-          await utilsApp.delay(1500);
         } finally {
           setLoading(false);
         }
