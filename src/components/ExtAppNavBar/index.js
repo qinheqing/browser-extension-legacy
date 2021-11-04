@@ -6,14 +6,15 @@ import NavBackButton from '../NavBackButton';
 import styles from './index.css';
 
 function ExtAppNavBar({ children, left, right, title, subTitle }) {
-  const leftView = left === undefined ? <NavBackButton /> : left;
+  const leftView =
+    left === undefined ? <NavBackButton className="-m-2" /> : left;
   return (
     <div
       data-name="AppPageLayoutHeader"
       className="bg-nav-bar px-3 py-2 min-h-[60px] flex flex-row items-center border-b"
     >
       {leftView && (
-        <div className="min-w-8 flex justify-start border-r pr-2 mr-2">
+        <div className="min-w-8 flex justify-start border-r pr-2 mr-3">
           {leftView}
         </div>
       )}

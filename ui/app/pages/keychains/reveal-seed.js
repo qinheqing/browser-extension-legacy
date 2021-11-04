@@ -7,6 +7,7 @@ import ExportTextContainer from '../../components/ui/export-text-container';
 import { getMostRecentOverviewPage } from '../../ducks/history/history';
 
 import Button from '../../components/ui/button';
+import NavBackButton from '../../../../src/components/NavBackButton';
 
 const PASSWORD_PROMPT_SCREEN = 'PASSWORD_PROMPT_SCREEN';
 const REVEAL_SEED_SCREEN = 'REVEAL_SEED_SCREEN';
@@ -156,10 +157,13 @@ class RevealSeedPage extends Component {
 
   render() {
     return (
-      <div className="page-container">
+      <div className="page-container page-layout-old">
         <div className="page-container__header">
           <div className="page-container__title">
-            {this.context.t('revealSeedWordsTitle')}
+            <div className="flex items-center">
+              <NavBackButton className="-ml-2 " />
+              {this.context.t('revealSeedWordsTitle')}
+            </div>
           </div>
           <div className="page-container__subtitle">
             {this.context.t('revealSeedWordsDescription')}

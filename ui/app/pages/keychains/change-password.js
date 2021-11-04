@@ -108,7 +108,7 @@ class ChangePasswordPage extends Component {
       this.hasError();
 
     return (
-      <div className="first-view-main-wrapper">
+      <div className="first-view-main-wrapper page-layout-old">
         <div className="first-view-main">
           <div className="import-account">
             <a

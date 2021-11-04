@@ -286,7 +286,9 @@ export default class Routes extends Component {
           frequentRpcListDetail={frequentRpcListDetail}
         />
         <AccountMenu />
-        <div className={classnames('main-container-wrapper')}>
+        <div
+          className={classnames('main-container-wrapper all-routes-wrapper')}
+        >
           {isLoading && <Loading loadingMessage={loadMessage} />}
           {!isLoading && isNetworkLoading && <LoadingNetwork />}
           <UniversalRoutesWrapper>
