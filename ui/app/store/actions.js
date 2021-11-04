@@ -276,6 +276,11 @@ export function removeAccount(address) {
         });
       });
       await forceUpdateMetamaskState(dispatch);
+      await utilsApp.delay(300);
+
+      // * auto select hardware account
+      await dispatch(actionAutoSelectHwAccountInHwOnlyModeAsync());
+      await forceUpdateMetamaskState(dispatch);
     } catch (error) {
       dispatch(displayWarning(error.message));
       throw error;
