@@ -31,6 +31,7 @@ function createTabContentRender(items) {
               reversed={reversed}
               fitted={fitted}
               icon={null}
+              className="min-w-[64px]"
             >
               <Icon name={item.icon} size={30} />
             </TabItem>

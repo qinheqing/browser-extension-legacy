@@ -117,7 +117,7 @@ function ExtAccountOverview({ children }) {
       </div>
 
       <div className="flex flex-col items-center text-center p-4 pt-6">
-        <div className="text-sm text-gray-400">Total Balance</div>
+        <div className="text-sm text-gray-400 hidden">Total Balance</div>
         <div>
           <TokenBalance
             showUnit

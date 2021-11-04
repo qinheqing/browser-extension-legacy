@@ -124,8 +124,8 @@ const HomeAssetsHeader = observer(function () {
       {/* <div className="w-2" /> */}
       {/* <TokenAddButton />*/}
 
-      <div className="w-2" />
-      <TxHistoryButton />
+      {/* <div className="w-2" />*/}
+      {/* <TxHistoryButton />*/}
     </div>
   );
 });

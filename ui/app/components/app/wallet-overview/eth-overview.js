@@ -92,7 +92,9 @@ const EthOverview = ({ className }) => {
         </>
       }
       className={className}
-      icon={<div className="eth-overview__balance-text">Total Balance</div>}
+      icon={
+        <div className="eth-overview__balance-text hidden">Total Balance</div>
+      }
     />
   );
 };

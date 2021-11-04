@@ -18,6 +18,12 @@ const evmChainsConfig = [
     isTestNet: true,
     chainIcon: 'eth',
   },
+  {
+    chain: 'bsc_test',
+    chainName: 'BSC Test',
+    isTestNet: true,
+    chainIcon: 'bsc',
+  },
 ];
 
 export default evmChainsConfig;

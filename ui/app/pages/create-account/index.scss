@@ -14,10 +14,6 @@
     display: none;
   }
 
-  @media screen and (min-width: 576px) {
-    position: absolute;
-  }
-
   &__header {
     display: flex;
     flex-flow: column;

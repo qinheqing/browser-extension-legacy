@@ -9,10 +9,12 @@ import OneAccountInfo from '../../classes/OneAccountInfo';
 import { CONST_ACCOUNT_TYPES } from '../../consts/consts';
 import ReactJsonView from '../../components/ReactJsonView';
 import ImportAccountsList from '../../components/ImportAccountsList';
+import useI18n from '../../hooks/useI18n';
 
 // const PageSample = observer(PageSamplePure);
 
 function PageCreateAccount() {
+  const t = useI18n();
   const _wallet = useMemo(() => {
     const chainInfo = storeAccount.chainInfoOfAccountsGroup;
     return walletFactory.createWallet({
@@ -38,7 +40,7 @@ function PageCreateAccount() {
     <Observer>
       {() => {
         return (
-          <AppPageLayout title="创建账户">
+          <AppPageLayout title={t('createAccount')}>
             <ImportAccountsList
               wallet={_wallet}
               onLoadMore={generateAccounts}
