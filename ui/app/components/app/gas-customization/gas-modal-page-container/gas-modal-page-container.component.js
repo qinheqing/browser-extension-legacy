@@ -34,6 +34,7 @@ export default class GasModalPageContainer extends Component {
     isSpeedUp: PropTypes.bool,
     isRetry: PropTypes.bool,
     disableSave: PropTypes.bool,
+    reason: PropTypes.string,
   };
 
   componentDidMount() {
@@ -74,7 +75,14 @@ export default class GasModalPageContainer extends Component {
     );
   }
 
-  renderInfoRows(newTotalFiat, newTotalEth, sendAmount, transactionFee) {
+  renderInfoRows(
+    newTotalFiat,
+    newTotalEth,
+    sendAmount,
+    transactionFee,
+    reason,
+    disableSave,
+  ) {
     return (
       <div className="gas-modal-content__info-row-wrapper">
         <div className="gas-modal-content__info-row">
@@ -107,6 +115,13 @@ export default class GasModalPageContainer extends Component {
               {newTotalFiat}
             </span>
           </div>
+          {reason && (
+            <div className="gas-modal-content__info-row__error-info">
+              <span className="gas-modal-content__info-row__error-info__value">
+                {reason}
+              </span>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -117,6 +132,8 @@ export default class GasModalPageContainer extends Component {
       gasPriceButtonGroupProps,
       hideBasic,
       isMainnet,
+      reason,
+      disableSave,
       infoRowProps: { newTotalFiat, newTotalEth, sendAmount, transactionFee },
     } = this.props;
 
@@ -149,6 +166,8 @@ export default class GasModalPageContainer extends Component {
                 newTotalEth,
                 sendAmount,
                 transactionFee,
+                reason,
+                disableSave,
               )}
             </div>
           </Tab>
