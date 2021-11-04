@@ -82,6 +82,7 @@ function mapDispatchToProps(dispatch) {
       to,
       value,
       data,
+      chainId,
     }) => {
       editingTransactionId
         ? dispatch(setGasTotal(calcGasTotal(gasLimit, gasPrice)))
@@ -94,6 +95,7 @@ function mapDispatchToProps(dispatch) {
               to,
               value,
               data,
+              chainId,
             }),
           );
     },

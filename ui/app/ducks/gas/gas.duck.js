@@ -173,11 +173,8 @@ export function fetchBasicGasEstimates() {
 }
 
 async function fetchExternalBasicGasEstimates(dispatch) {
-  const {
-    SafeGasPrice,
-    ProposeGasPrice,
-    FastGasPrice,
-  } = await basicGasPriceQuery();
+  const { SafeGasPrice, ProposeGasPrice, FastGasPrice } =
+    await basicGasPriceQuery();
 
   const [safeLow, average, fast] = [
     SafeGasPrice,
@@ -211,9 +208,10 @@ async function fetchEthGasPriceEstimates(state) {
     return cachedBasicEstimates;
   }
   const gasPrice = await global.eth.gasPrice();
+  const numberOfDecimals = gasPrice.toNumber() > 10 ** 9 ? 4 : 7;
   const averageGasPriceInDecGWEI = getValueFromWeiHex({
     value: gasPrice.toString(16),
-    numberOfDecimals: 4,
+    numberOfDecimals,
     toDenomination: 'GWEI',
   });
   const basicEstimates = {

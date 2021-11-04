@@ -700,6 +700,7 @@ export function updateGasData({
   to,
   value,
   data,
+  chainId,
 }) {
   return (dispatch) => {
     dispatch(gasLoadingStarted());
@@ -712,12 +713,14 @@ export function updateGasData({
       value,
       estimateGasPrice: gasPrice,
       data,
+      chainId,
     })
       .then((gas) => {
         dispatch(setGasLimit(gas));
         dispatch(setCustomGasLimit(gas));
         dispatch(updateSendErrors({ gasLoadingError: null }));
         dispatch(gasLoadingFinished());
+        forceUpdateMetamaskState(dispatch);
       })
       .catch((err) => {
         log.error(err);

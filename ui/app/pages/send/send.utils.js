@@ -12,6 +12,10 @@ import { calcTokenAmount } from '../../helpers/utils/token-util';
 import { addHexPrefix } from '../../../../app/scripts/lib/util';
 
 import {
+  CHAIN_ID_TO_GAS_LIMIT_BUFFER_MAP,
+  L2_NETWORK_CHAINS,
+} from '../../../../shared/constants/network';
+import {
   BASE_TOKEN_GAS_COST,
   INSUFFICIENT_FUNDS_ERROR,
   INSUFFICIENT_TOKENS_ERROR,
@@ -199,11 +203,11 @@ async function estimateGasForSend({
   data,
   gasPrice,
   estimateGasMethod,
+  chainId,
 }) {
   const paramsForGasEstimate = { from: selectedAddress, value, gasPrice };
-
   // if recipient has no code, gas is 21k max:
-  if (!sendToken && !data) {
+  if (!L2_NETWORK_CHAINS.includes(chainId) && !sendToken && !data) {
     // * send native token
     const code = Boolean(to) && (await global.eth.getCode(to));
     // Geth will return '0x', and ganache-core v2.2.1 will return '0x0'
@@ -254,13 +258,18 @@ async function estimateGasForSend({
     }),
   );
 
+  let bufferMultiplier = 1.5;
+  if (CHAIN_ID_TO_GAS_LIMIT_BUFFER_MAP[chainId]) {
+    bufferMultiplier = CHAIN_ID_TO_GAS_LIMIT_BUFFER_MAP[chainId];
+  }
+
   // run tx
   try {
     const estimatedGas = await estimateGasMethod(paramsForGasEstimate);
     const estimateWithBuffer = addGasBuffer(
       estimatedGas.toString(16),
       blockGasLimit,
-      1.5,
+      bufferMultiplier,
     );
     return addHexPrefix(estimateWithBuffer);
   } catch (error) {

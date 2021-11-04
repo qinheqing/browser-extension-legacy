@@ -42,6 +42,30 @@ export const MATIC_CHAIN_ID = '0x89';
 export const FANTOM_CHAIN_ID = '0xfa';
 export const OKEX_CHAIN_ID = '0x42';
 
+// L2 NETWORKS
+export const ARBITRUM_XDAI_CHAIN_ID = '0xc8';
+export const ARBITRUM_CHAIN_ID = '0xa4b1';
+export const ARBITRUM_RINKEBY_CHAIN_ID = '0x66eeb';
+
+export const OPTIMISTIC_CHAIN_ID = '0xa';
+export const OPTIMISTIC_KOVAN_CHAIN_ID = '0x45';
+export const OPTIMISTIC_GOERLI_CHAIN_ID = '0x1a4';
+
+export const L2_NETWORK_CHAINS = [
+  ARBITRUM_XDAI_CHAIN_ID,
+  ARBITRUM_CHAIN_ID,
+  ARBITRUM_RINKEBY_CHAIN_ID,
+  OPTIMISTIC_CHAIN_ID,
+  OPTIMISTIC_KOVAN_CHAIN_ID,
+  OPTIMISTIC_GOERLI_CHAIN_ID,
+];
+
+export const CHAIN_ID_TO_GAS_LIMIT_BUFFER_MAP = {
+  [OPTIMISTIC_CHAIN_ID]: 1,
+  [OPTIMISTIC_KOVAN_CHAIN_ID]: 1,
+  [OPTIMISTIC_GOERLI_CHAIN_ID]: 1,
+};
+
 /**
  * The largest possible chain ID we can handle.
  * Explanation: https://gist.github.com/rekmarks/a47bd5f2525936c4b8eee31a16345553

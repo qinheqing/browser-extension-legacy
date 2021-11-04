@@ -279,6 +279,7 @@ export default class SendTransactionScreen extends Component {
       gasPrice,
       selectedAddress,
       sendToken,
+      chainId,
       to: currentToAddress,
       updateAndSetGasLimit,
     } = this.props;
@@ -293,6 +294,7 @@ export default class SendTransactionScreen extends Component {
       to: getToAddressForGasUpdate(updatedToAddress, currentToAddress),
       value: value || amount,
       data,
+      chainId,
     });
   }
 
