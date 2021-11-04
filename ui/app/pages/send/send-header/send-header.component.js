@@ -26,7 +26,8 @@ export default class SendHeader extends Component {
         onBackButtonClick={() => this.onClose()}
         onClose={() => this.onClose()}
         // title={this.context.t(this.props.titleKey)}
-        title="Send"
+        title={this.context.t('send')}
+        // title="Send"
         headerCloseText={this.context.t('cancel')}
       />
     );

@@ -373,8 +373,7 @@ class AddToken extends Component {
     return (
       <div className="add-token">
         <PageContainer
-          // title={this.context.t('addTokens')}
-          title="Manage Tokens"
+          title={this.context.t('addTokens')}
           tabsComponent={this.renderTabs()}
           hideFooter
           onSubmit={() => this.handleNext()}

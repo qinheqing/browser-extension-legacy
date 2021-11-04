@@ -23,6 +23,7 @@ import SwapIcon from '../../ui/icon/swap-icon.component';
 import SendIcon from '../../ui/icon/overview-send-icon.component';
 
 import IconButton from '../../ui/icon-button';
+import { ExtAccountOverviewActionButtons } from '../../../../../src/components/ExtAccountOverview';
 import WalletOverview from './wallet-overview';
 
 const TokenOverview = ({ className, token }) => {
@@ -73,16 +74,7 @@ const TokenOverview = ({ className, token }) => {
       }
       buttons={
         <>
-          <div
-            className="eth-overview__button"
-            onClick={() => {
-              dispatch(updateSendToken(token));
-              history.push(SEND_ROUTE);
-            }}
-          >
-            <img src="./images/arrow-up.svg" />
-            <span className="eth-overview__button-text">Send</span>
-          </div>
+          <ExtAccountOverviewActionButtons sendToken={token} />
         </>
       }
       className={className}

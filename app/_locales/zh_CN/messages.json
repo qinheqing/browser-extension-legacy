@@ -1079,6 +1079,9 @@
   "networkNameDefinition": {
     "message": "网络名称"
   },
+  "networkSettings": {
+    "message": "网络设置"
+  },
   "networkSettingsChainIdDescription": {
     "message": "链 ID 用于签署交易。它必须与网络返回的链 ID 相匹配。您可以输入十进制或'0x'前缀的十六进制数字，但我们将以十进制显示。"
   },

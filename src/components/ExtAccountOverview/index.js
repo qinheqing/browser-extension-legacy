@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import { Button, Badge, Icon } from '@onekeyhq/ui-components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import TokenBalance from '../TokenBalance';
 import storeToken from '../../store/storeToken';
@@ -25,14 +25,19 @@ import {
   RECEIVE_ROUTE,
   SEND_ROUTE,
 } from '../../../ui/app/helpers/constants/routes';
+import { updateSendToken } from '../../../ui/app/store/actions';
 import styles from './index.css';
 
-const ExtAccountOverviewActionButtons = observer(function () {
+const ExtAccountOverviewActionButtons = observer(function ({ sendToken }) {
   const history = useHistory();
+  const dispatch = useDispatch();
   const t = useI18n();
   const { ticker = 'ETH' } = useSelector(getProvider);
   const chainId = useSelector(getCurrentChainId);
-  const handleSwap = useCallback(() => openSwap(ticker), [ticker]);
+  const handleSwap = useCallback(
+    () => openSwap(sendToken?.symbol ?? ticker),
+    [ticker, sendToken?.symbol],
+  );
   const isSwapEnable =
     utilsApp.isOldHome() && [1, 42, 56, 128, 137].includes(Number(chainId));
 
@@ -47,6 +52,10 @@ const ExtAccountOverviewActionButtons = observer(function () {
               token: storeToken.currentNativeToken,
             });
             return;
+          }
+
+          if (sendToken) {
+            dispatch(updateSendToken(sendToken));
           }
           history.push(SEND_ROUTE);
         }}

@@ -199,6 +199,7 @@ const ExtChainSelectorComponent = observer(function ({
   setSelectedSettingsRpcUrl,
   setNetworksTabAddMode,
 }) {
+  const t = useI18n();
   const history = useHistory();
   const triggerBtnRef = useRef(null);
   const close = useCallback(() => {
@@ -223,11 +224,7 @@ const ExtChainSelectorComponent = observer(function ({
       }}
       actions={[
         {
-          content: (
-            <div>
-              Customize this list in <Link color> Networks</Link>
-            </div>
-          ),
+          content: <div>{t('networkSettings')}</div>,
           iconName: 'CogSolid',
           onAction: () => {
             // history.push(

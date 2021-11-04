@@ -40,7 +40,8 @@ const Receive = (props) => {
   return (
     <PageLayout
       className="receive"
-      title="Receive"
+      // title="Receive"
+      title={t('receive')}
       onBack={onClick}
       subtitle={shortenAddress(address)}
     >
