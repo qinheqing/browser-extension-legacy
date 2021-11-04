@@ -88,6 +88,8 @@ export function ExtAppHeaderMoreDropdown() {
                 dispatch(showModal({ name: 'ACCOUNT_DETAILS' }));
               },
             },
+
+            /*
             {
               content: t('activity'),
               icon: 'ClockSolid',
@@ -95,6 +97,8 @@ export function ExtAppHeaderMoreDropdown() {
                 storeHistory.goToPageTxHistory();
               },
             },
+            */
+
             {
               content: t('viewinExplorer'),
               icon: 'ExternalLinkSolid',
@@ -140,12 +144,15 @@ export function ExtAppHeaderMoreDropdown() {
               icon: 'LockClosedSolid',
               onAction: storeApp.lockScreen,
             },
+
+            /*
             {
               content: t('settings'),
               icon: 'CogSolid',
               // eslint-disable-next-line no-alert
               onAction: () => storeHistory.push(SETTINGS_ROUTE),
             },
+            */
           ],
         },
       ])}

@@ -5,12 +5,14 @@ import { Badge, Icon } from '@onekeyhq/ui-components';
 import cx from 'classnames';
 import { CONST_ACCOUNT_TYPES } from '../../consts/consts';
 import storeAccount from '../../store/storeAccount';
+import { WALLET_ACCOUNT_TYPES } from '../../../ui/app/helpers/constants/common';
 import styles from './index.css';
 
 function ExtAccountTypeBadge({ children, type }) {
-  // TODO old type, new type
   const typeText = storeAccount.getAccountTypeText(type);
-  const isHardWare = type === CONST_ACCOUNT_TYPES.Hardware;
+  const isHardWare =
+    type === CONST_ACCOUNT_TYPES.Hardware ||
+    type === WALLET_ACCOUNT_TYPES.HARDWARE;
   return (
     <Badge type="success" className="">
       {isHardWare && (

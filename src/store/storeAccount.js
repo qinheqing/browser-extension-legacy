@@ -17,6 +17,7 @@ import OneAccountInfo from '../classes/OneAccountInfo';
 import walletFactory from '../wallets/walletFactory';
 import utilsApp from '../utils/utilsApp';
 import uiGetBgControllerAsync from '../wallets/bg/uiGetBgControllerAsync';
+import { WALLET_ACCOUNT_TYPES } from '../../ui/app/helpers/constants/common';
 import BaseStore from './BaseStore';
 import storeChain from './storeChain';
 import storeWallet from './storeWallet';
@@ -161,23 +162,28 @@ class StoreAccount extends BaseStore {
 
   getAccountTypeText(_type) {
     let type = _type;
+
     switch (_type) {
-      case CONST_ACCOUNT_TYPES.Hardware: {
+      case CONST_ACCOUNT_TYPES.Hardware:
+      case WALLET_ACCOUNT_TYPES.HARDWARE: {
         type = '硬件账户';
         break;
       }
 
-      case CONST_ACCOUNT_TYPES.WatchOnly: {
+      case CONST_ACCOUNT_TYPES.WatchOnly:
+      case WALLET_ACCOUNT_TYPES.WATCHED: {
         type = '观察账户';
         break;
       }
 
-      case CONST_ACCOUNT_TYPES.SingleChain: {
+      case CONST_ACCOUNT_TYPES.SingleChain:
+      case WALLET_ACCOUNT_TYPES.IMPORTED: {
         type = '单币种账户';
         break;
       }
 
-      case CONST_ACCOUNT_TYPES.Wallet: {
+      case CONST_ACCOUNT_TYPES.Wallet:
+      case WALLET_ACCOUNT_TYPES.DEFAULT: {
         type = '钱包账户';
         break;
       }
