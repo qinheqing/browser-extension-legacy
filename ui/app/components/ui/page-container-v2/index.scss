@@ -110,11 +110,13 @@
 
   &__footer-button {
     margin-right: 16px;
+
     &.cancel-button {
       background-color: rgba(0, 170, 17, 0.1);
       color: rgba(0, 170, 17, 1);
       border: none;
     }
+
     &.confirm-button {
       background-color: rgba(0, 170, 17, 1);
       color: white;
@@ -141,6 +143,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+
     img {
       height: 14px;
     }
@@ -212,40 +215,11 @@
   }
 }
 
-@media screen and (max-width: 250px) {
-  .page-container {
-    &__footer {
-      flex-flow: column-reverse;
-    }
-
-    &__footer-button {
-      width: 100%;
-      margin-bottom: 1rem;
-      margin-right: 0;
-
-      &:first-of-type {
-        margin-bottom: 0;
-      }
-    }
-  }
+.page-container {
+  height: 100%;
+  width: 100%;
+  background-color: $white;
+  flex: 1;
+  overflow-y: auto;
 }
 
-@media screen and (max-width: 575px) {
-  .page-container {
-    height: 100%;
-    width: 100%;
-    background-color: $white;
-    flex: 1;
-    overflow-y: auto;
-  }
-}
-
-@media screen and (min-width: 576px) {
-  .page-container {
-    max-height: 82vh;
-    min-height: 570px;
-    flex: 0 0 auto;
-    margin-right: auto;
-    margin-left: auto;
-  }
-}
