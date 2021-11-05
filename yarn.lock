@@ -3006,10 +3006,10 @@
   resolved "https://npm.pkg.github.com/download/@onekeyhq/test-dapp/4.0.2/05adf8661ddec7c96d86a1822275272c11e5fb83d1f6bb8e7a628926e4b59792#981356b998f79e2e3822a5514bcec4ac7ea15f6f"
   integrity sha512-v41H4Oa9SSBeHeJGkf3eoV8EXhg/5wwIG0CPndRLnWxC0Drd1j1qIstRandmbuqKRZBf3TIm1uOUdbhtnKt16A==
 
-"@onekeyhq/ui-components@^0.0.37":
-  version "0.0.37"
-  resolved "https://npm.pkg.github.com/download/@onekeyhq/ui-components/0.0.37/e96b2aefbbb93aa56fc944083199c7361fefaee4b7f3e115b7a029a45642f894#8bc1079c0bf12e4fedebbc0d364492d8a9938752"
-  integrity sha512-5IWsjstcQAwKQV9ZbeE65IMVtksdJfi+wKuYWnSFv0q/tMroirJXngfoWxPNsXCHPN3xpwtmr+0mP8beTXAxww==
+"@onekeyhq/ui-components@^0.0.38":
+  version "0.0.38"
+  resolved "https://npm.pkg.github.com/download/@onekeyhq/ui-components/0.0.38/21ba60cf68e9b46ba32e0f7807582f529751cd1606d3ca20d775ad1db2afc9b7#42c8590089f4404dd5448e7d51c829817668bc91"
+  integrity sha512-tEuWZBgZKe9zKT3lab9ZE8GC1Xy1cmFjvVh/M5O2gkceFEUlGzmp+9vSM8LLvK3mLpd+GBuXOyZC1GfWFtPLuw==
   dependencies:
     "@ethersproject/providers" "^5.4.5"
     "@headlessui/react" "^1.4.0"
