@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Button } from '@onekeyhq/ui-components';
+import { isEqual } from 'lodash';
 import MenuBar from '../../../../components/app/menu-bar';
 import AppHeader from '../../../../components/app/app-header';
 import { EthOverview } from '../../../../components/app/wallet-overview';
@@ -19,6 +20,7 @@ import useCurrentAccountAvailable from '../../../../../../src/hooks/useCurrentAc
 import { ExtHomeAssetsList } from '../../../../../../src/components/ExtHomeAssetsList';
 import ExtAppTabBar from '../../../../../../src/components/ExtAppTabBar';
 import { ExtAccountOverviewInfoBar } from '../../../../../../src/components/ExtAccountOverview';
+import { getTokens } from '../../../../ducks/metamask/metamask';
 
 const Overview = () => {
   const history = useHistory();
@@ -28,6 +30,7 @@ const Overview = () => {
   const hwOnlyMode = useSelector((state) => state?.metamask?.hwOnlyMode);
   const available = useCurrentAccountAvailable();
   const chainId = useSelector(getCurrentChainId);
+  const tokens = useSelector(getTokens);
 
   let contentView = (
     <>

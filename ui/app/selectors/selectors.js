@@ -454,3 +454,7 @@ export function getWeb3ShimUsageStateForOrigin(state, origin) {
 export function getWarningMessage(state) {
   return state?.appState?.warning ?? '';
 }
+
+export function getTokens(state) {
+  return state.metamask.tokens;
+}
