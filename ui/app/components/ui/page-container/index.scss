@@ -90,18 +90,25 @@
     padding: 5px 0;
     color: #d73a49;
   }
-  
+
   &__footer-button {
     margin-right: 16px;
+
     &.cancel-button {
       background-color: rgba(0, 170, 17, 0.1);
       color: rgba(0, 170, 17, 1);
       border: none;
     }
+
     &.confirm-button {
       background-color: rgba(0, 170, 17, 1);
       color: white;
       border: none;
+
+      &[disabled] {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
     }
 
     &:last-of-type {
@@ -111,6 +118,7 @@
 
   &__back-button {
     @include Paragraph;
+
     color: $primary;
     cursor: pointer;
   }

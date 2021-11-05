@@ -108,7 +108,7 @@ export default class ConfirmPageContainer extends Component {
       contentComponent || (!contentComponent && !identiconAddress);
 
     return (
-      <div className="tx-confirm page-container">
+      <div className="tx-confirm page-container page-layout-old">
         <ConfirmPageContainerNavigation
           totalTx={totalTx}
           positionOfCurrentTx={positionOfCurrentTx}

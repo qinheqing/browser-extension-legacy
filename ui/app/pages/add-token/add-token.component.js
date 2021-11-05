@@ -371,7 +371,7 @@ class AddToken extends Component {
     const { tokenToAdd } = this.state;
 
     return (
-      <div className="add-token">
+      <div className="add-token page-layout-old">
         <PageContainer
           title={this.context.t('addTokens')}
           tabsComponent={this.renderTabs()}

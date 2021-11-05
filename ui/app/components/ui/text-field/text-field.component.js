@@ -189,10 +189,13 @@ const TextField = ({
     startAdornment,
     largeLabel,
     dir,
+    autoComplete: 'off',
   });
 
   return (
     <MaterialTextField
+      autoComplete="off"
+      InputProps={{ autoComplete: 'off' }}
       error={Boolean(error)}
       helperText={error}
       {...inputProps}

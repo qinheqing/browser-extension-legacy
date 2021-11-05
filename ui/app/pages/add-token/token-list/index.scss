@@ -15,6 +15,9 @@
   }
 
   &__token {
+    &:hover{
+      background-color: #f9f9f9;
+    }
     transition: 200ms ease-in-out;
     display: flex;
     flex-flow: row nowrap;
@@ -83,10 +86,10 @@
 
   &__token-name {
     /*rtl:ignore*/
-    direction: ltr;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    //direction: ltr;
+    //overflow: hidden;
+    //text-overflow: ellipsis;
+    //white-space: nowrap;
   }
 
   &__token-address {

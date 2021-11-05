@@ -39,7 +39,7 @@ const Receive = (props) => {
 
   return (
     <PageLayout
-      className="receive"
+      className="receive page-layout-old"
       // title="Receive"
       title={t('receive')}
       onBack={onClick}

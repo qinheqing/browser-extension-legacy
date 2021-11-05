@@ -1,12 +1,6 @@
 @import 'token-list/index';
 @import 'token-item-details/index';
 
-@media screen and (min-width: 576px) {
-  .add-token  {
-    margin-top: 30px;
-  }
-}
-
 .add-token {
   width: 100%;
   & .page-container {
@@ -16,7 +10,7 @@
   & .page-container-v2__tabs {
     justify-content: space-around;
   }
-  
+
   & .page-container__footer {
     border-top: none;
     background-color: rgb(242, 243, 244)
