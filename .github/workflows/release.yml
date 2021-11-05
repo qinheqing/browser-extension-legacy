@@ -183,11 +183,6 @@ jobs:
           tagDiffChangeLogUrl: '${{ steps.auto_create_beta_tag.outputs.change-log-url }}'
         run: |
           changeLog=''
-#          inputChangeLog='${{ github.event.inputs.change-log-cn }}'
-#          prChangeLog='${{ steps.pr_info.outputs.content_body }}'
-#          prUrl='${{ steps.pr_info.outputs.url }}'
-#          tagDiffChangeLog='${{ steps.auto_create_beta_tag.outputs.change-log }}'
-#          tagDiffChangeLogUrl='${{ steps.auto_create_beta_tag.outputs.change-log-url }}'
 
           if [ -n "$inputChangeLog" ]
           then
