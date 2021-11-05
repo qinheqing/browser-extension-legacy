@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router-dom';
 import * as Sentry from '@sentry/browser';
+import UIProvider from '@onekeyhq/ui-components/Provider';
 import {
   I18nProvider,
   IntlI18nProvider,
@@ -47,21 +48,23 @@ class Index extends PureComponent {
 
     return (
       <Provider store={store}>
-        <HashRouter hashType="noslash">
-          <TrackEventsContextProvider>
-            <LegacyTrackEventsContextProvider>
-              <IntlI18nProvider>
-                <I18nProvider>
-                  <LegacyI18nProvider>
-                    <ForceSelectHwAccountProvider>
-                      <Routes />
-                    </ForceSelectHwAccountProvider>
-                  </LegacyI18nProvider>
-                </I18nProvider>
-              </IntlI18nProvider>
-            </LegacyTrackEventsContextProvider>
-          </TrackEventsContextProvider>
-        </HashRouter>
+        <UIProvider>
+          <HashRouter hashType="noslash">
+            <TrackEventsContextProvider>
+              <LegacyTrackEventsContextProvider>
+                <IntlI18nProvider>
+                  <I18nProvider>
+                    <LegacyI18nProvider>
+                      <ForceSelectHwAccountProvider>
+                        <Routes />
+                      </ForceSelectHwAccountProvider>
+                    </LegacyI18nProvider>
+                  </I18nProvider>
+                </IntlI18nProvider>
+              </LegacyTrackEventsContextProvider>
+            </TrackEventsContextProvider>
+          </HashRouter>
+        </UIProvider>
       </Provider>
     );
   }

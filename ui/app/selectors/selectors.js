@@ -450,3 +450,7 @@ export function getUSDConversionRate(state) {
 export function getWeb3ShimUsageStateForOrigin(state, origin) {
   return state.metamask.web3ShimUsageOrigins[origin];
 }
+
+export function getWarningMessage(state) {
+  return state?.appState?.warning ?? '';
+}

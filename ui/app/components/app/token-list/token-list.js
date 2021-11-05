@@ -11,8 +11,9 @@ import {
   getTokensWithBalance,
   getTokens,
 } from '../../../ducks/metamask/metamask';
+import LoadingSpinner from '../../../../../src/components/LoadingSpinner';
 
-export default function TokenList({ onTokenClick }) {
+export default function TokenList({ onTokenClick, newTheme }) {
   const t = useI18nContext();
   const assetImages = useSelector(getAssetImages);
   const contractMap = useSelector(getContractMap);
@@ -29,33 +30,34 @@ export default function TokenList({ onTokenClick }) {
 
   if (loading) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          height: '250px',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '30px',
-        }}
-      >
-        {t('loadingTokens')}
+      <div className="flex flex-col items-center justify-center py-6">
+        <LoadingSpinner className="w-8" />
+        <div className="mt-2 text-sm text-gray-400">{t('loadingTokens')}</div>
       </div>
     );
   }
 
   return (
-    <div>
+    <>
       {tokensWithBalances.map((tokenData, index) => {
         const image =
           assetImages[tokenData.address] ||
           contractMap[tokenData.address]?.logoURI;
         tokenData.image = image;
-        return <TokenCell key={index} {...tokenData} onClick={onTokenClick} />;
+        return (
+          <TokenCell
+            newTheme={newTheme}
+            key={index}
+            {...tokenData}
+            onClick={onTokenClick}
+          />
+        );
       })}
-    </div>
+    </>
   );
 }
 
 TokenList.propTypes = {
   onTokenClick: PropTypes.func.isRequired,
+  newTheme: PropTypes.bool,
 };

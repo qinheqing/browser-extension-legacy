@@ -39,7 +39,7 @@ class OneTokenInfo {
       this.symbol ||
       utilsApp.shortenAddress(contractAddress, {
         size: 4,
-        head: false,
+        head: 2,
       });
     this.associatedAddress = associatedAddress;
     this.chainKey = chainKey;

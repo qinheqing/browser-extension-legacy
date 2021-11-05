@@ -3,15 +3,14 @@
   <head>
     <title>Ethereum Phishing Detection - OneKey</title>
 
+    {{it.cssCode | safe}}
+
     <script src="./globalthis.js" type="text/javascript" charset="utf-8"></script>
     <script src="./lockdown-install.js" type="text/javascript" charset="utf-8"></script>
 
     {{@each(it.jsBundles) => val}}
       <script src="{{val}}" type="text/javascript" charset="utf-8"></script>
     {{/each}}
-
-    <link rel="stylesheet" type="text/css" href="./index.css" title="ltr">
-    <link rel="stylesheet" type="text/css" href="./index-rtl.css" title="rtl" disabled>
 
     <style>
       *                          { margin: 0; padding: 0; box-sizing: border-box; }

@@ -14,11 +14,11 @@ import storeToken from '../../store/storeToken';
 import { ChainLogoIcon } from '../LogoIcon';
 import styles from './index.css';
 
-function HardwareTypeTag() {
+function HardwareTypeTag({ label = '' }) {
   return (
     <div className={classnames(styles.AccountCard__typeTag)}>
       <AppIcons.DeviceMobileIconSolid className="w-4" />
-      <span>OneKey硬件</span>
+      <span>{label}</span>
     </div>
   );
 }
@@ -121,3 +121,4 @@ function AccountCard({
 }
 
 export default observer(AccountCard);
+export { HardwareTypeTag };

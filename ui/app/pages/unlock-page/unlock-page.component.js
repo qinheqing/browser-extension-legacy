@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
+// import Button from '@onekeyhq/ui-components/Button';
+
 import TextField from '../../components/ui/text-field';
 import { DEFAULT_ROUTE } from '../../helpers/constants/routes';
 import utilsApp from '../../../../src/utils/utilsApp';
@@ -99,7 +101,7 @@ export default class UnlockPage extends Component {
 
     return (
       <Button
-        type="submit"
+        type="primary"
         style={style}
         disabled={!this.state.password}
         fullWidth

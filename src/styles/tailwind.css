@@ -1,3 +1,4 @@
+@import '@onekeyhq/ui-components/index.css';
 @import 'tailwindcss/base';
 
 /*----------------------------------------------*/
@@ -29,6 +30,17 @@
 @layer components {
   .btn-test-hahah {
     @apply px-4 py-2 bg-blue-600 text-white rounded;
+  }
+
+  @media screen and (min-width: 475px) {
+    .page-layout-old {
+      max-width: 364px;
+      max-height: 601px;
+      width: 100%;
+      height: 100%;
+
+      @apply shadow-2xl;
+    }
   }
 }
 

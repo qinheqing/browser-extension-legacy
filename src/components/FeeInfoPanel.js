@@ -2,9 +2,10 @@ import React from 'react';
 import { observer } from 'mobx-react-lite';
 import storeChain from '../store/storeChain';
 import storeAccount from '../store/storeAccount';
-import { OneField, OneFieldItem } from './OneField';
 import AmountText from './AmountText';
 import OneDetailItem from './OneDetailItem';
+import { OneField } from './OneField/OneField';
+import { OneFieldItem } from './OneField/OneFieldItem';
 
 const FeeInfoPanelInDappApproval = observer(function ({ feeInfo }) {
   const { decimals, currency } = storeAccount.currentAccountInfo;

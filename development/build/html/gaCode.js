@@ -1,3 +1,6 @@
+// googleAnalyticsCode
+// ----------------------------------------------
+
 const head = `
 <!-- Google Tag Manager -->
 <script type="text/javascript"  src="/vendor/gtm.js"></script>

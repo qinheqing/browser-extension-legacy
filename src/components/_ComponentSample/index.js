@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import styles from './index.css';
 
 function ComponentSample({ children }) {
-  return <div>{children}</div>;
+  return <div> ComponentSample: {children}</div>;
 }
 
 ComponentSample.propTypes = {

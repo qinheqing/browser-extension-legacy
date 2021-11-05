@@ -44,6 +44,11 @@ class StoreChain extends BaseStore {
   }
 
   @computed
+  get chainsList() {
+    return Object.values(this.chains);
+  }
+
+  @computed
   get chainsKeys() {
     return sortBy(Object.keys(this.chains), (item) => {
       return storeStorage.chainsSortKeys.indexOf(item.key);
@@ -112,6 +117,11 @@ class StoreChain extends BaseStore {
   @computed
   get currentBaseChain() {
     return this.currentChainInfo?.baseChain;
+  }
+
+  @computed
+  get currentChainSupportHardware() {
+    return Boolean(this.currentChainInfo?.hardwareSupport);
   }
 
   @computed

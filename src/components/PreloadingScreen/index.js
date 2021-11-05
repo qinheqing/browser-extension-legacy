@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import Provider from '@onekeyhq/ui-components/Provider';
 import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
 import { useTimeout } from '../../../ui/app/hooks/useTimeout';
@@ -31,33 +32,35 @@ function PreloadingScreen({ children, autoHideTimeout = 400 }) {
     return null;
   }
   return (
-    <div
-      onTransitionEnd={() => {
-        !loading && setHide(true);
-      }}
-      // because this component should work in both old and new UI
-      //    css will not working, use inline-style instead
-      style={{
-        opacity: 1,
-        transition: 'all 0.5s',
-        position: 'fixed',
-        left: 0,
-        top: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 999999999,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'white',
-        ...doneStyle,
-      }}
-    >
-      <div style={{ width: 40 }}>
-        <Spinner />
+    <Provider>
+      <div
+        onTransitionEnd={() => {
+          !loading && setHide(true);
+        }}
+        // because this component should work in both old and new UI
+        //    css will not working, use inline-style instead
+        style={{
+          opacity: 1,
+          transition: 'all 0.5s',
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 999999999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'white',
+          ...doneStyle,
+        }}
+      >
+        <div style={{ width: 40 }}>
+          <Spinner />
+        </div>
+        {/* <img src="images/loading-n.svg" style={{ width: 80 }} />*/}
       </div>
-      {/* <img src="images/loading-n.svg" style={{ width: 80 }} />*/}
-    </div>
+    </Provider>
   );
 }
 

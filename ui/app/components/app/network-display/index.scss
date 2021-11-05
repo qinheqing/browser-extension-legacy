@@ -1,64 +1,22 @@
 .network-display {
   display: flex;
+  flex-direction: row;
   align-items: center;
   justify-content: flex-start;
-  padding: 0 10px;
   border-radius: 4px;
   min-height: 25px;
   cursor: pointer;
-
-  &--disabled {
-    cursor: not-allowed;
+  &__content {
+    margin: 0 8px;
+    color: #12121E;
+    font-weight: 700;
   }
-
-  &--colored {
-    background-color: lighten(rgb(125, 128, 130), 45%);
-  }
-
-  &--mainnet {
-    background-color: lighten($blue-lagoon, 68%);
-  }
-
-  &--ropsten {
-    background-color: lighten($crimson, 45%);
-  }
-
-  &--kovan {
-    background-color: lighten($purple, 65%);
-  }
-
-  &--rinkeby {
-    background-color: lighten($tulip-tree, 35%);
-  }
-
-  &--goerli {
-    background-color: lighten($dodger-blue, 35%);
-  }
-
-  &.chip {
-    border-color: black;
-    span {
-      color: black;
-    }
-  }
-
-  & .chip__label {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  & .chip__left-icon {
-    margin-left: 4px;
-  }
-
-  & .chip__right-icon {
-    margin-right: 4px;
-  }
-
   &__icon {
-    height: 8px;
-    width: 12px;
-    display: block;
+    width: 10px;
+    height: 10px;
+    background-image: url(/images/icons/caret-down.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
   }
 }

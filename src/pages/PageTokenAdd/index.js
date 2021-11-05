@@ -24,9 +24,16 @@ import storeAccount from '../../store/storeAccount';
 import { TokenLogoIcon } from '../../components/LogoIcon';
 import CopyHandle from '../../components/CopyHandle';
 import useLoadingCallback from '../../hooks/useLoadingCallback';
+import storeChain from '../../store/storeChain';
 import styles from './index.css';
 
 const TokenAddItem = observer(function ({ token, onAddClick }) {
+  const tokenInfo = {
+    ...token,
+    chainKey: token.chainKey || storeChain.currentChainKey,
+    contractAddress: token.contractAddress || token.address,
+  };
+
   /*
   address: "So11111111111111111111111111111111111111112"
   chainId: 102
@@ -46,7 +53,7 @@ const TokenAddItem = observer(function ({ token, onAddClick }) {
   );
   return (
     <OneCellItem
-      start={<TokenLogoIcon tokenInfo={token} />}
+      start={<TokenLogoIcon tokenInfo={tokenInfo} />}
       title={
         <span>
           {symbol || '未知币种'} {token.name && <span>({token.name})</span>}

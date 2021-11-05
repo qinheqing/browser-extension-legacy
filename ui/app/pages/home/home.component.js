@@ -1,18 +1,24 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Redirect, Route } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  matchPath,
+  useHistory,
+  Switch,
+} from 'react-router-dom';
 import { formatDate, goToPageConnectHardware } from '../../helpers/utils/util';
-import AssetList from '../../components/app/asset-list';
 import HomeNotification from '../../components/app/home-notification';
 import MultipleNotifications from '../../components/app/multiple-notifications';
 import TransactionList from '../../components/app/transaction-list';
 import MenuBar from '../../components/app/menu-bar';
+import AppHeader from '../../components/app/app-header';
 import Popover from '../../components/ui/popover';
 import Button from '../../components/ui/button';
 import ConnectedSites from '../connected-sites';
 import ConnectedAccounts from '../connected-accounts';
-import { Tabs, Tab } from '../../components/ui/tabs';
 import { EthOverview } from '../../components/app/wallet-overview';
+import Settings from '../settings';
 
 import {
   ASSET_ROUTE,
@@ -24,15 +30,46 @@ import {
   CONNECTED_ROUTE,
   CONNECTED_ACCOUNTS_ROUTE,
   CONFIRMATION_V_NEXT_ROUTE,
+  SETTINGS_ROUTE,
+  TRANSACTIONS_ROUTE,
+  OVERVIEW_ROUTE,
+  DEFAULT_ROUTE,
 } from '../../helpers/constants/routes';
 import { WALLET_ACCOUNT_TYPES } from '../../helpers/constants/common';
-import { ROUTE_HOME } from '../../../../src/routes/routeUrls';
+import { ROUTE_HOME, ROUTE_TX_HISTORY } from '../../../../src/routes/routeUrls';
 import utilsApp from '../../../../src/utils/utilsApp';
+import useRedirectToCorrectHome, {
+  redirectToCorrectHome,
+} from '../../../../src/hooks/useRedirectToCorrectHome';
+import ExtAppTabBar from '../../../../src/components/ExtAppTabBar';
+import { History as TxHistory } from './components/history';
+import Overview from './components/overview';
+import { Tabs, Tab } from './components/tabs';
 
-const LEARN_MORE_URL =
-  'https://metamask.zendesk.com/hc/en-us/articles/360045129011-Intro-to-MetaMask-v8-extension';
-const LEGACY_WEB3_URL =
-  'https://metamask.zendesk.com/hc/en-us/articles/360053147012';
+export const MenuItem = ({
+  defaultIcon,
+  activeIcon,
+  path,
+  history,
+  currentPath,
+  exact,
+}) => {
+  const isActive = () => {
+    if (path === OVERVIEW_ROUTE && currentPath === DEFAULT_ROUTE) {
+      return true;
+    }
+    return matchPath(currentPath, { path, exact });
+  };
+
+  const onClick = useCallback(() => {
+    history.push(path);
+  }, [path, history]);
+  return (
+    <div className="home__route-item" onClick={onClick}>
+      {isActive() ? activeIcon : defaultIcon}
+    </div>
+  );
+};
 
 export default class Home extends PureComponent {
   static contextTypes = {
@@ -67,7 +104,17 @@ export default class Home extends PureComponent {
 
   state = {
     mounted: false,
+    backupReminderVisible: true,
   };
+
+  redirectToNewHomeIfNeed() {
+    const { history } = this.props;
+    return redirectToCorrectHome({
+      fromNewHome: false,
+      history,
+      location: history.location,
+    });
+  }
 
   componentDidMount() {
     const {
@@ -80,9 +127,7 @@ export default class Home extends PureComponent {
       pendingApprovals,
     } = this.props;
 
-    // if Dapp create approve window (isNotification=true), do NOT redirect to new home
-    if (!isNotification && utilsApp.isNewHome()) {
-      history.replace(ROUTE_HOME);
+    if (this.redirectToNewHomeIfNeed()) {
       return;
     }
 
@@ -135,6 +180,10 @@ export default class Home extends PureComponent {
     if (!prevState.closing && this.state.closing) {
       global.platform.closeCurrentWindow();
     }
+
+    if (this.redirectToNewHomeIfNeed()) {
+      // return
+    }
   }
 
   renderNotifications() {
@@ -154,34 +203,13 @@ export default class Home extends PureComponent {
 
     return (
       <MultipleNotifications>
-        {shouldShowWeb3ShimUsageNotification ? (
-          <HomeNotification
-            descriptionText={t('web3ShimUsageNotification', [
-              <span
-                key="web3ShimUsageNotificationLink"
-                className="home-notification__text-link"
-                onClick={() =>
-                  global.platform.openTab({ url: LEGACY_WEB3_URL })
-                }
-              >
-                {t('here')}
-              </span>,
-            ])}
-            ignoreText={t('dismiss')}
-            onIgnore={(disable) => {
-              setWeb3ShimUsageAlertDismissed(originOfCurrentTab);
-              if (disable) {
-                disableWeb3ShimUsageAlert();
-              }
-            }}
-            checkboxText={t('dontShowThisAgain')}
-            checkboxTooltipText={t('canToggleInSettings')}
-            key="home-web3ShimUsageNotification"
-          />
-        ) : null}
-        {!hwOnlyMode && shouldShowSeedPhraseReminder ? (
+        {!hwOnlyMode &&
+        shouldShowSeedPhraseReminder &&
+        this.state.backupReminderVisible ? (
           <HomeNotification
             descriptionText={t('backupApprovalNotice')}
+            ignoreText={t('cancel')}
+            onIgnore={() => this.setState({ backupReminderVisible: false })}
             acceptText={t('backupNow')}
             onAccept={() => {
               if (isPopup) {
@@ -195,126 +223,23 @@ export default class Home extends PureComponent {
             infoText={t('backupApprovalInfo')}
             key="home-backupApprovalNotice"
           />
-        ) : null}
+        ) : (
+          []
+        )}
       </MultipleNotifications>
     );
   }
 
-  renderPopover = () => {
-    const { setConnectedStatusPopoverHasBeenShown } = this.props;
-    const { t } = this.context;
-    return (
-      <Popover
-        title={t('whatsThis')}
-        onClose={setConnectedStatusPopoverHasBeenShown}
-        className="home__connected-status-popover"
-        showArrow
-        CustomBackground={({ onClose }) => {
-          return (
-            <div
-              className="home__connected-status-popover-bg-container"
-              onClick={onClose}
-            >
-              <div className="home__connected-status-popover-bg" />
-            </div>
-          );
-        }}
-        footer={
-          <>
-            <a href={LEARN_MORE_URL} target="_blank" rel="noopener noreferrer">
-              {t('learnMore')}
-            </a>
-            <Button
-              type="primary"
-              onClick={setConnectedStatusPopoverHasBeenShown}
-            >
-              {t('dismiss')}
-            </Button>
-          </>
-        }
-      >
-        <main className="home__connect-status-text">
-          <div>{t('metaMaskConnectStatusParagraphOne')}</div>
-          <div>{t('metaMaskConnectStatusParagraphTwo')}</div>
-          <div>{t('metaMaskConnectStatusParagraphThree')}</div>
-        </main>
-      </Popover>
-    );
-  };
-
-  renderContent() {
-    const { t } = this.context;
+  render() {
     const {
-      defaultHomeActiveTabName,
-      onTabClick,
-      history,
-      connectedStatusPopoverHasBeenShown,
-      isPopup,
+      forgottenPassword,
       hwOnlyMode,
       accountType,
+      history,
+      currentPath,
+      shouldShowSeedPhraseReminder,
     } = this.props;
-    if (
-      hwOnlyMode &&
-      accountType &&
-      accountType !== WALLET_ACCOUNT_TYPES.HARDWARE
-    ) {
-      return (
-        <div className="home__container home__connect-hw">
-          <Button
-            type="secondary"
-            onClick={() => {
-              goToPageConnectHardware();
-            }}
-          >
-            {t('connectHardwareWallet')}
-          </Button>
-        </div>
-      );
-    }
-    return (
-      <div className="home__container">
-        {isPopup && !connectedStatusPopoverHasBeenShown
-          ? this.renderPopover()
-          : null}
-        <div className="home__main-view">
-          <MenuBar />
-          <div className="home__balance-wrapper">
-            <EthOverview />
-          </div>
-          <Tabs
-            defaultActiveTabName={defaultHomeActiveTabName}
-            onTabClick={onTabClick}
-            tabsClassName="home__tabs"
-          >
-            <Tab
-              activeClassName="home__tab--active"
-              className="home__tab"
-              data-testid="home__asset-tab"
-              name={t('assets')}
-            >
-              <AssetList
-                onClickAsset={(asset) =>
-                  history.push(`${ASSET_ROUTE}/${asset}`)
-                }
-              />
-            </Tab>
-            <Tab
-              activeClassName="home__tab--active"
-              className="home__tab"
-              data-testid="home__activity-tab"
-              name={t('activity')}
-            >
-              <TransactionList />
-            </Tab>
-          </Tabs>
-        </div>
-        {this.renderNotifications()}
-      </div>
-    );
-  }
-
-  render() {
-    const { forgottenPassword } = this.props;
+    const { t } = this.context;
 
     if (forgottenPassword) {
       return <Redirect to={{ pathname: RESTORE_VAULT_ROUTE }} />;
@@ -323,15 +248,34 @@ export default class Home extends PureComponent {
     }
 
     return (
-      <div className="main-container">
-        <Route path={CONNECTED_ROUTE} component={ConnectedSites} exact />
-        <Route
-          path={CONNECTED_ACCOUNTS_ROUTE}
-          component={ConnectedAccounts}
-          exact
-        />
-        {this.renderContent()}
-      </div>
+      <>
+        <div className="main-container page-layout-old">
+          <Route path={CONNECTED_ROUTE} component={ConnectedSites} exact />
+          <Route
+            path={CONNECTED_ACCOUNTS_ROUTE}
+            component={ConnectedAccounts}
+            exact
+          />
+          <div className="home__container-wrapper">
+            <div className="home__route-container">
+              <div className="home__route-view">
+                <Switch>
+                  <Route path={OVERVIEW_ROUTE} component={Overview} exact />
+                  <Route
+                    path={TRANSACTIONS_ROUTE}
+                    component={TxHistory}
+                    exact
+                  />
+                  <Route path={SETTINGS_ROUTE} component={Settings} />
+                  <Route component={Overview} />
+                </Switch>
+              </div>
+              <ExtAppTabBar />
+            </div>
+            {this.renderNotifications()}
+          </div>
+        </div>
+      </>
     );
   }
 }

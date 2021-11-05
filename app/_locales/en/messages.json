@@ -1079,6 +1079,9 @@
   "networkNameDefinition": {
     "message": "The name associated with this network."
   },
+  "networkSettings": {
+    "message": "Network Settings"
+  },
   "networkSettingsChainIdDescription": {
     "message": "The chain ID is used for signing transactions. It must match the chain ID returned by the network. You can enter a decimal or '0x'-prefixed hexadecimal number, but we will display the number in decimal."
   },

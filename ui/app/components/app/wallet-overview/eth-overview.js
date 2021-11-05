@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 
 import Identicon from '../../ui/identicon';
 import { I18nContext } from '../../../contexts/i18n';
-import { SEND_ROUTE } from '../../../helpers/constants/routes';
+import { SEND_ROUTE, RECEIVE_ROUTE } from '../../../helpers/constants/routes';
 import { useTrackEvent } from '../../../hooks/useTrackEvent';
 import Tooltip from '../../ui/tooltip';
 import UserPreferencedCurrencyDisplay from '../user-preferenced-currency-display';
@@ -23,6 +23,7 @@ import SwapIcon from '../../ui/icon/swap-icon.component';
 import SendIcon from '../../ui/icon/overview-send-icon.component';
 import IconButton from '../../ui/icon-button';
 import { openSwap } from '../../../../lib/swap-utils';
+import { ExtAccountOverviewActionButtons } from '../../../../../src/components/ExtAccountOverview';
 import WalletOverview from './wallet-overview';
 
 const EthOverview = ({ className }) => {
@@ -87,27 +88,13 @@ const EthOverview = ({ className }) => {
       }
       buttons={
         <>
-          <IconButton
-            className="eth-overview__button"
-            data-testid="eth-overview-send"
-            Icon={SendIcon}
-            label={t('send')}
-            onClick={() => {
-              sendEvent();
-              history.push(SEND_ROUTE);
-            }}
-          />
-          <IconButton
-            className="eth-overview__button"
-            disabled={!isSwapEnable}
-            Icon={SwapIcon}
-            onClick={handleSwap}
-            label={t('swap')}
-          />
+          <ExtAccountOverviewActionButtons />
         </>
       }
       className={className}
-      icon={<Identicon diameter={32} ethLogo={etherLogo} />}
+      icon={
+        <div className="eth-overview__balance-text hidden">Total Balance</div>
+      }
     />
   );
 };

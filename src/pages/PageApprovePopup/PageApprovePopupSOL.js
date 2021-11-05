@@ -24,13 +24,10 @@ import TokenBalance from '../../components/TokenBalance';
 import storeToken from '../../store/storeToken';
 import OneButton from '../../components/OneButton';
 import AppIcons from '../../components/AppIcons';
-import OneDetailItem, {
-  OneDetailItemGroup,
-} from '../../components/OneDetailItem';
+import OneDetailItem from '../../components/OneDetailItem';
 import storeTransfer from '../../store/storeTransfer';
 import utilsUrl from '../../utils/utilsUrl';
 import utilsApp from '../../utils/utilsApp';
-import { OneField } from '../../components/OneField';
 import OneCellItem from '../../components/OneCellItem';
 import OneArrow from '../../components/OneArrow';
 import { ChainLogoIcon } from '../../components/LogoIcon';
@@ -39,6 +36,8 @@ import storeChain from '../../store/storeChain';
 import storeApp from '../../store/storeApp';
 import { CONST_DAPP_METHODS_SOL } from '../../wallets/providers/SOL/dapp/consts';
 import uiBackgroundProxy from '../../wallets/bg/uiBackgroundProxy';
+import { OneDetailItemGroup } from '../../components/OneDetailItemGroup';
+import { OneField } from '../../components/OneField/OneField';
 import ApprovePageLayout from './ApprovePageLayout';
 import ApproveDappSiteInfo from './ApproveDappSiteInfo';
 import ApproveConnection from './ApproveConnection';

@@ -15,6 +15,7 @@ import {
   TYPOGRAPHY,
 } from '../../../helpers/constants/design-system';
 import Chip from '../../ui/chip/chip';
+import { NetworkIcon } from '../../ui/network-icon';
 import { useI18nContext } from '../../../hooks/useI18nContext';
 import { isNetworkLoading } from '../../../selectors';
 
@@ -33,54 +34,21 @@ export default function NetworkDisplay({
     nickname: state.metamask.provider.nickname,
     chainType: state.metamask.provider.type,
   }));
-  const t = useI18nContext();
 
+  const t = useI18nContext();
   const { nickname: networkNickname, chainType: networkType } =
     targetNetwork ?? currentNetwork;
 
   return (
-    <Chip
-      borderColor={outline ? COLORS.UI3 : COLORS.TRANSPARENT}
-      onClick={onClick}
-      leftIcon={
-        <LoadingIndicator
-          alt={t('attemptingConnect')}
-          title={t('attemptingConnect')}
-          isLoading={networkIsLoading}
-        >
-          <ColorIndicator
-            color={networkType === NETWORK_TYPE_RPC ? COLORS.UI4 : networkType}
-            size={indicatorSize}
-            type={ColorIndicator.TYPES.FILLED}
-            iconClassName={
-              networkType === NETWORK_TYPE_RPC && indicatorSize !== SIZES.XS
-                ? 'fa fa-question'
-                : undefined
-            }
-          />
-        </LoadingIndicator>
-      }
-      rightIcon={
-        iconClassName && (
-          <i className={classnames('network-display__icon', iconClassName)} />
-        )
-      }
-      label={
-        networkType === NETWORK_TYPE_RPC
+    <div className="network-display" onClick={onClick}>
+      <NetworkIcon networkType={networkType} />
+      <div className="network-display__content">
+        {networkType === NETWORK_TYPE_RPC
           ? networkNickname ?? t('privateNetwork')
-          : t(networkType)
-      }
-      className={classnames('network-display', {
-        'network-display--colored': colored,
-        'network-display--disabled': disabled,
-        [`network-display--${networkType}`]: colored && networkType,
-        'network-display--clickable': typeof onClick === 'function',
-      })}
-      labelProps={{
-        variant: TYPOGRAPHY.H7,
-        ...labelProps,
-      }}
-    />
+          : t(networkType)}
+      </div>
+      <i className="network-display__icon" />
+    </div>
   );
 }
 

@@ -1,65 +1,51 @@
 .networks-tab {
   &__content {
-    margin-top: 24px;
     display: flex;
     height: 100%;
     max-width: 739px;
+    margin: 15px 15px;
+    border-radius: 10px;
+    border: 1px solid #d8d8d8;
+    background-color: #fff;
     justify-content: space-between;
-
-    @media screen and (max-width: 575px) {
-      margin-top: 0;
-      flex-direction: column;
-      overflow-x: hidden;
-      align-items: center;
-    }
+    flex-direction: column;
+    overflow-x: hidden;
+    align-items: center;
   }
 
   &__body {
-    padding-right: 24px;
     height: 100%;
     display: flex;
     flex-direction: column;
-
-    @media screen and (max-width: 575px) {
-      padding: 0;
-    }
+    background-color: #f9f9fb;
+    padding: 0;
   }
 
   &__network-form {
-    display: flex;
-    flex: 1 0 auto;
     flex-direction: column;
     justify-content: space-between;
-    max-width: 343px;
-    max-height: 465px;
 
     .page-container__footer {
       border-top: none;
-
-      @media screen and (max-width: 575px) {
-        width: 93%;
-      }
+      width: 93%;
 
       footer {
         padding: 10px 0;
       }
     }
 
-    @media screen and (max-width: 575px) {
-      display: flex;
-      flex: auto;
-      max-width: 100%;
-      max-height: 100%;
-      align-items: center;
-      width: 100%;
-      margin-top: 10px;
-    }
+    display: flex;
+    flex: auto;
+    max-width: 100%;
+    max-height: 100%;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+    margin-right: 0;
   }
 
   &__network-form-row {
-    @media screen and (max-width: 575px) {
-      width: 93%;
-    }
+    width: 93%;
 
     &--warning {
       @include H7;
@@ -70,10 +56,7 @@
       box-sizing: border-box;
       padding: 12px;
       margin: 12px 0;
-
-      @media screen and (max-width: 575px) {
-        width: 93%;
-      }
+      width: 93%;
     }
   }
 
@@ -95,23 +78,17 @@
   }
 
   &__networks-list {
-    flex: 0.5 0 auto;
-    max-width: 343px;
-
-    @media screen and (max-width: 575px) {
-      flex: 1;
-      overflow-y: auto;
-      max-width: 100vw;
-      width: 100vw;
-    }
+    flex: 1;
+    overflow-y: auto;
+    width: 100%;
   }
 
   &__networks-list-popup-footer {
     width: 100%;
     display: flex;
     justify-content: center;
-    padding-top: 23px;
-    padding-bottom: 23px;
+    padding-top: 12px;
+    padding-bottom: 12px;
     border-top: 1px solid #d8d8d8;
 
     .button {
@@ -127,44 +104,37 @@
       padding: 10px;
     }
 
-    @media screen and (max-width: 575px) {
-      display: none;
-    }
+    display: none;
   }
 
   &__networks-list--selection {
-    @media screen and (max-width: 575px) {
-      display: none;
-    }
+    display: none;
   }
 
   &__networks-list-item {
     display: flex;
-    padding: 13px 0 13px 17px;
     position: relative;
     align-items: center;
+    cursor: pointer;
+
+    &:hover {
+      background: #f9f9f9;
+    }
 
     .color-indicator {
       &:hover {
         cursor: pointer;
       }
 
-      @media screen and (max-width: 575px) {
-        margin: 0 4px 0 10px;
-      }
+      margin: 0 4px 0 10px;
     }
 
-    @media screen and (max-width: 575px) {
-      padding: 20px 23px 21px 17px;
-      border-bottom: 1px solid #d8d8d8;
-      max-width: 351px;
-    }
+    padding: 20px 23px 21px 17px;
+    border-bottom: 1px solid #d8d8d8;
   }
 
   &__networks-list-item:last-of-type {
-    @media screen and (max-width: 575px) {
-      border-bottom: none;
-    }
+    border-bottom: none;
   }
 
   &__networks-list-name {
@@ -176,6 +146,8 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    display: flex;
+    align-items: center;
 
     &:hover {
       cursor: pointer;
@@ -188,26 +160,20 @@
   }
 
   &__networks-list-arrow {
-    display: none;
+    display: block;
+    background-image: url('/images/caret-right2.svg');
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    right: 10px;
+    cursor: pointer;
+    position: absolute;
+    margin: 0 5px;
 
-    @media screen and (max-width: 575px) {
-      display: block;
-      background-image: url('/images/caret-right.svg');
-      width: 24px;
-      height: 24px;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      right: 10px;
-      cursor: pointer;
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      margin: 0 5px;
-
-      [dir='rtl'] & {
-        transform: rotate(180deg);
-      }
+    [dir='rtl'] & {
+      transform: rotate(180deg);
     }
   }
 
@@ -220,6 +186,16 @@
     font-weight: 300;
     color: #cdcdcd;
   }
+
+  &__network_icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #454e5d;
+  }
 }
 
 .network-form {
@@ -227,10 +203,7 @@
     display: flex;
     flex-flow: row nowrap;
     padding: 0.75rem 0;
-
-    @media screen and (max-width: 575px) {
-      width: 93%;
-    }
+    width: 93%;
 
     .btn-default {
       margin-right: 0.375rem;

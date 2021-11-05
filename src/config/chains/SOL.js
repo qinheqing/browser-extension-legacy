@@ -6,13 +6,14 @@ const SOL = configsHelper.normalizeChainInfo({
   key: CONST_CHAIN_KEYS.SOL,
   baseChain: CONST_CHAIN_KEYS.SOL,
 
-  name: 'Solana',
+  name: 'Solana 主网',
   shortname: 'Solana',
   chainLogo: 'images/chains/solana.svg',
   isTestNet: false,
   addTokenMode: CONST_ADD_TOKEN_MODE.CHAIN,
   hdPathTemplate: `m/44'/501'/{{index}}'/0'`,
   colorBg: '#8125f2',
+  hardwareSupport: true,
 
   rpc: [
     'https://api.mainnet-beta.solana.com',

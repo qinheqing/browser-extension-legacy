@@ -49,23 +49,4 @@
     padding-top: 0;
     padding-bottom: 0;
   }
-
-  @media (min-width: 576px) {
-    &__warning-tooltip {
-      display: none;
-    }
-
-    .list-item__mid-content {
-      display: flex;
-    }
-
-    &:hover &__send-token-button,
-    &:focus-within &__send-token-button {
-      display: inline-block;
-    }
-
-    &__chevron-right {
-      display: none;
-    }
-  }
 }

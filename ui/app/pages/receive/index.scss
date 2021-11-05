@@ -1,0 +1,30 @@
+.receive {
+  max-width: 400px;
+  &__address-name {
+    font-size: 1.125rem;
+    font-family: Euclid, Roboto, Helvetica, Arial, sans-serif;
+    line-height: 140%;
+    font-style: normal;
+    font-weight: normal;
+    margin-top: 20px;
+  }
+  & .ellip-address-wrapper {
+    width: 274px;
+    word-break: break-all;
+    padding: 5px 12px;
+    background-color: white;
+    border: 1px solid #D3D3DE;
+  }
+
+  &__button-group {
+    width: 275px;
+    margin: 50px auto;
+  }
+  &__button {
+    margin-top: 10px;
+  }
+  &__header {
+    display: flex;
+    justify-content: center;
+  }
+}

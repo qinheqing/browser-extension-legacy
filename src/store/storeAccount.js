@@ -17,6 +17,7 @@ import OneAccountInfo from '../classes/OneAccountInfo';
 import walletFactory from '../wallets/walletFactory';
 import utilsApp from '../utils/utilsApp';
 import uiGetBgControllerAsync from '../wallets/bg/uiGetBgControllerAsync';
+import { WALLET_ACCOUNT_TYPES } from '../../ui/app/helpers/constants/common';
 import BaseStore from './BaseStore';
 import storeChain from './storeChain';
 import storeWallet from './storeWallet';
@@ -67,6 +68,7 @@ class StoreAccount extends BaseStore {
       },
       () => {
         const { isHardwareOnlyMode, homeType } = storeApp;
+        const { currentChainKey } = storeChain;
       },
     )();
 
@@ -158,30 +160,44 @@ class StoreAccount extends BaseStore {
     }
   }
 
-  @computed
-  get currentAccountTypeText() {
-    let type;
-    switch (this.currentAccountInfo?.type) {
-      case CONST_ACCOUNT_TYPES.Hardware: {
+  getAccountTypeText(_type) {
+    let type = _type;
+
+    switch (_type) {
+      case CONST_ACCOUNT_TYPES.Hardware:
+      case WALLET_ACCOUNT_TYPES.HARDWARE: {
         type = '硬件账户';
         break;
       }
 
-      case CONST_ACCOUNT_TYPES.WatchOnly: {
+      case CONST_ACCOUNT_TYPES.WatchOnly:
+      case WALLET_ACCOUNT_TYPES.WATCHED: {
         type = '观察账户';
         break;
       }
 
-      case CONST_ACCOUNT_TYPES.SingleChain: {
+      case CONST_ACCOUNT_TYPES.SingleChain:
+      case WALLET_ACCOUNT_TYPES.IMPORTED: {
         type = '单币种账户';
         break;
       }
+
       case CONST_ACCOUNT_TYPES.Wallet:
-      default: {
+      case WALLET_ACCOUNT_TYPES.DEFAULT: {
         type = '钱包账户';
+        break;
+      }
+
+      default: {
+        type = '未知账户';
       }
     }
     return type;
+  }
+
+  @computed
+  get currentAccountTypeText() {
+    return this.getAccountTypeText(this.currentAccountInfo?.type);
   }
 
   @action.bound
@@ -219,6 +235,11 @@ class StoreAccount extends BaseStore {
       );
     }
     return [];
+  }
+
+  @computed
+  get accountsListOfCurrentChain() {
+    return this.getAccountsByChainKey(storeChain.currentChainKey);
   }
 
   getAccountsByChainKey(chainKey) {

@@ -3,6 +3,7 @@ import { createAsyncMiddleware } from '@onekeyhq/json-rpc-engine';
 import { ethErrors } from 'eth-rpc-errors';
 import { isString } from 'lodash';
 import utilsUrl from '../../../../../src/utils/utilsUrl';
+import { IS_ENV_IN_TEST_OR_DEBUG } from '../../../../../ui/app/helpers/constants/common';
 
 const RETRIABLE_ERRORS = [
   // ignore server overload errors
@@ -58,10 +59,14 @@ export function createFetchMiddleware({
         });
 
         let fetchUrlWithQuery = fetchUrl;
-        if (req.method && isString(req.method)) {
+        if (IS_ENV_IN_TEST_OR_DEBUG && req.method && isString(req.method)) {
+          // celo RPC will fail if change url
+          //  Infura Client:
+          //    node_modules/eth-json-rpc-infura/src/index.js
+          //      fetchUrl: `https://${network}.infura.io/v3/${projectId}`,
           fetchUrlWithQuery = utilsUrl.addQuery({
             url: fetchUrl,
-            query: { method: req.method },
+            query: { method: req.method, appendFetchParamsInUrl: true },
           });
         }
 

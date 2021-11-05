@@ -3,9 +3,8 @@
   justify-content: space-between;
   align-items: center;
   flex: 1;
-  min-height: 209px;
+  min-height: 170px;
   min-width: 0;
-  padding-top: 10px;
   flex-direction: column;
   width: 100%;
 
@@ -20,8 +19,7 @@
   &__buttons {
     display: flex;
     flex-direction: row;
-    height: 68px;
-    margin-bottom: 24px;
+    padding: 0 0 16px;
   }
 }
 
@@ -38,14 +36,18 @@
 }
 
 .eth-overview {
+  &__balance-text {
+    font-weight: 500;
+    color: #A0A0B0;
+    font-size: 12px;
+  }
   &__balance {
     display: flex;
     flex-direction: column;
     min-width: 0;
     position: relative;
     align-items: center;
-    margin: 16px 0;
-    padding: 0 16px;
+    padding: 24px 16px 0;
     max-width: 100%;
   }
 
@@ -80,14 +82,27 @@
     @include Paragraph;
 
     color: $Grey-400;
+    font-size: 14px;
   }
 
   &__button {
-    margin-right: 24px;
+    width: 120px;
+    height: 40px;
+    border: 1px solid #E7E7EE;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: white;
+    & + & {
+      margin-left: 10px;
+    }
   }
 
-  &__button:last-of-type {
-    margin-right: 0;
+  &__button-text {
+    margin-left: 10px;
   }
 
   &__circle {
@@ -129,10 +144,18 @@
   }
 
   &__button {
-    margin-right: 24px;
-  }
-
-  &__button:last-of-type {
-    margin-right: 0;
+    width: 120px;
+    height: 40px;
+    border: 1px solid #E7E7EE;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: white;
+    & + & {
+      margin-left: 10px;
+    }
   }
 }

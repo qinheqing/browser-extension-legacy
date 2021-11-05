@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import { NETWORK_TYPE_RPC } from '../../../../../shared/constants/network';
 import Button from '../../../components/ui/button';
+import { NetworkIcon } from '../../../components/ui/network-icon';
 import LockIcon from '../../../components/ui/lock-icon';
 import {
   NETWORKS_ROUTE,
@@ -10,6 +11,7 @@ import {
 } from '../../../helpers/constants/routes';
 import ColorIndicator from '../../../components/ui/color-indicator';
 import { COLORS, SIZES } from '../../../helpers/constants/design-system';
+import { ExtChainInfo } from '../../../../../src/components/ExtChainSelector/ExtChainSelector';
 import NetworkForm from './network-form';
 
 export default class NetworksTab extends PureComponent {
@@ -111,11 +113,8 @@ export default class NetworksTab extends PureComponent {
           }
         }}
       >
-        <ColorIndicator
-          color={labelKey}
-          type={ColorIndicator.TYPES.FILLED}
-          size={SIZES.LG}
-        />
+        {/* <NetworkIcon networkType={network.labelKey} />*/}
+        <ExtChainInfo chain={network.labelKey} name="" description="" />
         <div
           className={classnames('networks-tab__networks-list-name', {
             'networks-tab__networks-list-name--selected':
@@ -217,7 +216,7 @@ export default class NetworksTab extends PureComponent {
               setNetworksTabAddMode(false);
               setSelectedSettingsRpcUrl('');
               if (shouldUpdateHistory && !isFullScreen) {
-                history.push(NETWORKS_ROUTE);
+                history.replace(NETWORKS_ROUTE);
               }
             }}
             showConfirmDeleteNetworkModal={showConfirmDeleteNetworkModal}

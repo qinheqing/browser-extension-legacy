@@ -48,9 +48,9 @@ const fetchWithTimeout = getFetchWithTimeout(30000);
  */
 const etherscanSupportedNetworks = [
   // AVAX_CHAIN_ID,
+  MAINNET_CHAIN_ID,
   GOERLI_CHAIN_ID,
   KOVAN_CHAIN_ID,
-  MAINNET_CHAIN_ID,
   RINKEBY_CHAIN_ID,
   ROPSTEN_CHAIN_ID,
   BSC_CHAIN_ID,
@@ -66,6 +66,7 @@ export default class IncomingTransactionsController {
     this.networkController = networkController;
     this.preferencesController = preferencesController;
 
+    this.lastChainId = null;
     this._onLatestBlock = async (newBlockNumberHex) => {
       const selectedAddress = this.preferencesController.getSelectedAddress();
       const newBlockNumberDec = parseInt(newBlockNumberHex, 16);
@@ -150,6 +151,7 @@ export default class IncomingTransactionsController {
       return;
     }
 
+    this.lastChainId = null;
     this.blockTracker.removeListener('latest', this._onLatestBlock);
     this.blockTracker.addListener('latest', this._onLatestBlock);
   }
@@ -188,6 +190,12 @@ export default class IncomingTransactionsController {
     if (blockToFetchFrom === undefined) {
       blockToFetchFrom = parseInt(this.blockTracker.getCurrentBlock(), 16);
     }
+
+    // DO not set current block here, so that scan api can get all txs first time of chain changed
+    if (this.lastChainId !== chainId) {
+      blockToFetchFrom = undefined;
+    }
+    this.lastChainId = chainId;
 
     const { latestIncomingTxBlockNumber, txs: newTxs } = await this._fetchAll(
       address,
@@ -255,11 +263,13 @@ export default class IncomingTransactionsController {
 
   async _fetchTxs(address, fromBlock, chainId) {
     const apiUrl = this.getBlockApiUrl(chainId);
-    let url = `${apiUrl}/api?module=account&action=txlist&address=${address}&tag=latest&page=1`;
+    let url = `${apiUrl}/api?_=incomingTxTracker&module=account&action=txlist&address=${address}&tag=latest&page=1`;
 
     if (fromBlock) {
       url += `&startBlock=${parseInt(fromBlock, 10)}`;
     }
+    // https://api-rinkeby.etherscan.io/api?module=account&action=txlist&address=0x67e49a99843325b4a7ed43effb1da911540c86a6&tag=latest&page=1&startBlock=9572101
+
     const response = await fetchWithTimeout(url);
     const parsedResponse = await response.json();
 

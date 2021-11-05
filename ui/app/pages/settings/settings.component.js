@@ -1,6 +1,6 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Switch, Route, matchPath } from 'react-router-dom';
+import { Switch, Route, matchPath, useHistory } from 'react-router-dom';
 import classnames from 'classnames';
 import TabBar from '../../components/app/tab-bar';
 import {
@@ -19,6 +19,11 @@ import {
   CONTACT_MY_ACCOUNTS_VIEW_ROUTE,
   CONTACT_MY_ACCOUNTS_EDIT_ROUTE,
 } from '../../helpers/constants/routes';
+import { getEnvironmentType } from '../../../../app/scripts/lib/util';
+import { ENVIRONMENT_TYPE_FULLSCREEN } from '../../../../shared/constants/app';
+import utilsApp from '../../../../src/utils/utilsApp';
+import ExtAppTabBar from '../../../../src/components/ExtAppTabBar';
+import ExtAppNavBar from '../../../../src/components/ExtAppNavBar';
 import SettingsTab from './settings-tab';
 import AlertsTab from './alerts-tab';
 import NetworksTab from './networks-tab';
@@ -26,6 +31,44 @@ import AdvancedTab from './advanced-tab';
 import InfoTab from './info-tab';
 import SecurityTab from './security-tab';
 import ContactListTab from './contact-list-tab';
+
+function scrollToTop(selector) {
+  const scrollContainer = document.querySelector(selector);
+  if (scrollContainer) {
+    scrollContainer.scrollTop = 0;
+  }
+}
+
+const MenuItem = ({ title, desc, icon, path }) => {
+  const history = useHistory();
+  const onClick = useCallback(() => {
+    history.push(path);
+    utilsApp.delay(100).then(() => {
+      // mobile scroll
+      window.scrollTo(0, 0);
+      scrollToTop('.home__route-view');
+      // desktop scroll
+      scrollToTop('.settings-page__content__modules');
+    });
+  }, [path]);
+  return (
+    <div className="setting-pages-v2__menu-item" onClick={onClick}>
+      <div className="setting-pages-v2__menu-item-icon">{icon}</div>
+      <div className="setting-pages-v2__menu-item-content">
+        <div className="setting-pages-v2__menu-item-mid">
+          <div className="setting-pages-v2__menu-item-title">{title}</div>
+          <div className="setting-pages-v2__menu-item-desc">{desc}</div>
+        </div>
+        <div className="setting-pages-v2__menu-item-arrow">
+          <img
+            className="setting-pages-v2__menu-item-img"
+            src="./images/preference/setting-arrow.svg"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 class SettingsPage extends PureComponent {
   static propTypes = {
@@ -47,43 +90,42 @@ class SettingsPage extends PureComponent {
   };
 
   render() {
-    const {
-      history,
-      backRoute,
-      currentPath,
-      mostRecentOverviewPage,
-    } = this.props;
+    const { history, backRoute, currentPath, mostRecentOverviewPage } =
+      this.props;
+    const { t } = this.context;
 
     return (
-      <div
-        className={classnames('main-container settings-page', {
-          'settings-page--selected': currentPath !== SETTINGS_ROUTE,
-        })}
-      >
-        <div className="settings-page__header">
-          {currentPath !== SETTINGS_ROUTE && (
-            <div
-              className="settings-page__back-button"
-              onClick={() => history.push(backRoute)}
-            />
-          )}
-          {this.renderTitle()}
-          <div
-            className="settings-page__close-button"
-            onClick={() => history.push(mostRecentOverviewPage)}
+      <>
+        <div
+          className={classnames('main-container settings-page', {
+            'settings-page--selected': currentPath !== SETTINGS_ROUTE,
+          })}
+        >
+          <ExtAppNavBar
+            title={t('settings')}
+            subTitle={this.getSubTitle()}
+            left={currentPath === SETTINGS_ROUTE ? null : undefined}
           />
-        </div>
-        <div className="settings-page__content">
-          <div className="settings-page__content__tabs">
-            {this.renderTabs()}
+          <div className="settings-page__content">
+            <div className="settings-page__content__tabs">
+              {this.renderTabs()}
+            </div>
+            <div className="settings-page__content__modules">
+              {this.renderSubHeader()}
+              {this.renderContent()}
+            </div>
           </div>
-          <div className="settings-page__content__modules">
-            {this.renderSubHeader()}
-            {this.renderContent()}
-          </div>
         </div>
-      </div>
+      </>
     );
+  }
+
+  getSubTitle() {
+    const { t } = this.context;
+    const { isPopup, pathnameI18nKey, addressName } = this.props;
+
+    // t('settings');
+    return addressName || (pathnameI18nKey && t(pathnameI18nKey)) || '';
   }
 
   renderTitle() {
@@ -157,10 +199,61 @@ class SettingsPage extends PureComponent {
     );
   }
 
-  renderTabs() {
+  renderTabsV2() {
+    const { t } = this.context;
+    return (
+      <div className="settings-pages-v2">
+        <div className="setting-pages-v2__menus">
+          <MenuItem
+            path={GENERAL_ROUTE}
+            title={t('general')}
+            desc={t('generalSettingsDescription')}
+            icon={<img src="./images/preference/setting-general.svg" />}
+          />
+          <MenuItem
+            path={ADVANCED_ROUTE}
+            title={t('advanced')}
+            desc={t('advancedSettingsDescription')}
+            icon={<img src="./images/preference/setting-advanced.svg" />}
+          />
+          <MenuItem
+            path={CONTACT_LIST_ROUTE}
+            title={t('contacts')}
+            desc={t('contactsSettingsDescription')}
+            icon={<img src="./images/preference/setting-networks.svg" />}
+          />
+          <MenuItem
+            path={SECURITY_ROUTE}
+            title={t('securityAndPrivacy')}
+            desc={t('securitySettingsDescription')}
+            icon={<img src="./images/preference/setting-security.svg" />}
+          />
+          <MenuItem
+            path={ALERTS_ROUTE}
+            title={t('alerts')}
+            desc={t('alertsSettingsDescription')}
+            icon={<img src="./images/preference/setting-notification.svg" />}
+          />
+          <MenuItem
+            path={NETWORKS_ROUTE}
+            title={t('networks')}
+            desc={t('networkSettingsDescription')}
+            icon={<img src="./images/preference/setting-networks.svg" />}
+          />
+          <MenuItem
+            path={ABOUT_US_ROUTE}
+            title={t('about')}
+            desc={t('aboutSettingsDescription')}
+            icon={<img src="./images/preference/setting-accounts.svg" />}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  renderTabsV1() {
     const { history, currentPath } = this.props;
     const { t } = this.context;
-
     return (
       <TabBar
         tabs={[
@@ -209,6 +302,14 @@ class SettingsPage extends PureComponent {
         onSelect={(key) => history.push(key)}
       />
     );
+  }
+
+  renderTabs() {
+    const { history, currentPath } = this.props;
+    const { t } = this.context;
+
+    return this.renderTabsV2();
+    // return this.renderTabsV1();
   }
 
   renderContent() {

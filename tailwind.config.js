@@ -7,7 +7,10 @@ const colorPrimary = '#00B812';
 
 module.exports = {
   mode: 'jit',
-  purge: ['./src/**/*.{js,jsx,ts,tsx,vue,html,css,scss}'],
+  purge: [
+    './src/**/*.{js,jsx,ts,tsx,vue,html,css,scss}',
+    './ui/**/*.{js,jsx,ts,tsx,vue,html,css,scss}',
+  ],
   darkMode: false, // or 'media' or 'class'
   important: false,
   theme: {
@@ -81,8 +84,8 @@ module.exports = {
     backgroundColor: (theme) => ({
       ...theme('colors'),
       primary: colorPrimary,
-      'root-html': '#2c2d30',
-      'root-body': '#f3f3f3', // bg-root-body
+      'root-html': '#f2f3f4', // bg-root-html #2c2d30 #f2f3f4
+      'root-body': '#F9F9FB', // bg-root-body #f3f3f3
       'nav-bar': '#fff',
     }),
     borderColor: (theme) => ({
@@ -96,7 +99,7 @@ module.exports = {
       ...theme('colors'),
       DEFAULT: '#363636',
       primary: colorPrimary,
-      'root-body': '#363636',
+      'root-body': '#363636', // text-root-body
     }),
     extend: {},
   },

@@ -24,6 +24,7 @@ export default class PageContainer extends PureComponent {
     cancelText: PropTypes.string,
     disabled: PropTypes.bool,
     hideCancel: PropTypes.bool,
+    hideFooter: PropTypes.bool,
     onCancel: PropTypes.func,
     onSubmit: PropTypes.func,
     submitText: PropTypes.string,
@@ -102,6 +103,7 @@ export default class PageContainer extends PureComponent {
       disabled,
       headerCloseText,
       hideCancel,
+      hideFooter,
     } = this.props;
 
     return (
@@ -119,14 +121,16 @@ export default class PageContainer extends PureComponent {
         />
         <div className="page-container__bottom">
           <div className="page-container__content">{this.renderContent()}</div>
-          <PageContainerFooter
-            onCancel={onCancel}
-            cancelText={cancelText}
-            hideCancel={hideCancel}
-            onSubmit={onSubmit}
-            submitText={submitText}
-            disabled={disabled}
-          />
+          {!hideFooter && (
+            <PageContainerFooter
+              onCancel={onCancel}
+              cancelText={cancelText}
+              hideCancel={hideCancel}
+              onSubmit={onSubmit}
+              submitText={submitText}
+              disabled={disabled}
+            />
+          )}
         </div>
       </div>
     );

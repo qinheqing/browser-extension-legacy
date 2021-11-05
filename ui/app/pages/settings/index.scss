@@ -8,6 +8,7 @@
   position: relative;
   background: $white;
   display: flex;
+  height: 100%;
   flex-flow: column nowrap;
 
   &__header {
@@ -33,12 +34,8 @@
     margin-right: 24px;
     height: 72px;
     align-items: center;
-    display: flex;
     flex-flow: row nowrap;
-
-    @media screen and (max-width: 575px) {
-      display: none;
-    }
+    display: none;
   }
 
   &__subheader--link {
@@ -57,48 +54,38 @@
   }
 
   &__sub-header {
-    height: 72px;
     border-bottom: 1px solid #d8d8d8;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 16px 0;
-
-    @media screen and (max-width: 575px) {
-      height: 69px;
-      position: relative;
-      text-align: center;
-    }
+    height: 69px;
+    position: relative;
+    text-align: center;
   }
 
   &__sub-header-text {
-    @include H4;
+    margin-left: 15px;
 
-    @media screen and (max-width: 575px) {
-      @include H5;
+    @include H5;
 
-      width: 100%;
-    }
+    width: 100%;
   }
 
   &__back-button {
-    display: none;
+    display: block;
+    background-image: url('/images/caret-left-black.svg');
+    width: 18px;
+    height: 18px;
+    opacity: 0.5;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin-right: 16px;
+    cursor: pointer;
 
-    @media screen and (max-width: 575px) {
-      display: block;
-      background-image: url('/images/caret-left-black.svg');
-      width: 18px;
-      height: 18px;
-      opacity: 0.5;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      margin-right: 16px;
-      cursor: pointer;
-
-      [dir='rtl'] & {
-        transform: rotate(180deg);
-      }
+    [dir='rtl'] & {
+      transform: rotate(180deg);
     }
   }
 
@@ -114,44 +101,29 @@
     flex-flow: row nowrap;
     height: 100%;
     overflow: auto;
-    border-top: 1px solid #d8d8d8;
 
     &__tabs {
       display: flex;
       flex-direction: column;
       flex: 1 1 auto;
+      background-color: #f9f9fb;
 
-      @media screen and (min-width: 576px) {
-        flex: 0 0 40%;
-        max-width: 210px;
-        padding-top: 8px;
-      }
 
       .tab-bar__tab {
-        @media screen and (min-width: 576px) {
-          padding: 16px 24px 0;
-        }
+
       }
     }
 
     &__modules {
       overflow-y: auto;
       flex: 1 1 auto;
-      display: flex;
       flex-flow: column;
-
-      @media screen and (max-width: 575px) {
-        display: none;
-      }
+      display: none;
     }
   }
 
   &__body {
     padding: 12px 24px;
-
-    @media screen and (min-width: 576px) {
-      padding: 12px;
-    }
   }
 
   &__content-row {
@@ -166,11 +138,8 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
-
-    @media screen and (max-width: 575px) {
-      height: initial;
-      padding: 5px 0;
-    }
+    height: initial;
+    padding: 5px 0;
 
     &--without-height {
       height: initial;
@@ -204,14 +173,10 @@
   }
 
   &__content-item-col {
-    max-width: 300px;
     display: flex;
     flex-direction: column;
-
-    @media screen and (max-width: 575px) {
-      max-width: 100%;
-      width: 100%;
-    }
+    max-width: 100%;
+    width: 100%;
   }
 
   &__copy-icon {
@@ -237,15 +202,11 @@
     .settings-page {
       &__content {
         &__tabs {
-          @media screen and (max-width: 575px) {
-            display: none;
-          }
+          display: none;
         }
 
         &__modules {
-          @media screen and (max-width: 575px) {
-            display: block;
-          }
+          display: block;
         }
       }
     }
@@ -261,6 +222,59 @@
   }
 
   &__remove-wallet-button {
-    max-width: 250px;
+    width: 100%;
+  }
+}
+
+.setting-pages-v2 {
+  display: block;
+
+  &__menus {
+    padding: 10px 16px;
+  }
+
+  &__menu-item {
+    & + & {
+      margin-top: 8px;;
+    }
+
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    background-color: white;
+    border-radius: 8px;
+    border: 1px solid #e7e7ee;
+    padding: 14px;
+    cursor: pointer;
+  }
+
+  &__menu-item-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 10px;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  &__menu-item-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+
+  &__menu-item-title {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  &__menu-item-desc {
+    font-size: 13px;
+    color: #a0a0b0;
+  }
+
+  &__menu-item-arrow {
+    flex-shrink: 0;
   }
 }

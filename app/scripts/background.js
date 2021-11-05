@@ -62,10 +62,27 @@ const platform = new ExtensionPlatform();
 platform.clearCurrentTabsList();
 // duplicate with [ global.METAMASK_NOTIFIER.platform ]
 global.$ok_extensionPlatform = platform;
-global.$ok_testThrowError = () => {
-  setTimeout(() => {
-    throw new Error(`Error test: ${new Date().getTime()}`);
-  }, 1000);
+global.$ok_testThrowError = {
+  randomError: () => {
+    setTimeout(() => {
+      throw new Error(`Error test: ${new Date().getTime()}`);
+    }, 1000);
+  },
+  promiseCall: () => {
+    setTimeout(() => window.ooooooPPPPPPqqqqqq(), 1000);
+  },
+  // TODO background normal error can NOT be handled by errorsGlobalHandler.js
+  methodCall: () => window.aaaaaBBBBBccccccc(),
+  customError1: () => {
+    setTimeout(() => {
+      throw new Error('BlockReEmitMiddleware - retries exhausted');
+    }, 0);
+  },
+  customError2: () => {
+    setTimeout(() => {
+      throw new Error('BlockReEmitMiddleware - retries exhausted 111');
+    }, 0);
+  },
 };
 errorsGlobalHandler.init();
 
@@ -101,7 +118,7 @@ if (inTest || process.env.METAMASK_DEBUG) {
     } catch (ex) {}
     try {
       await extension.storage.local.clear(); // chrome
-    }catch (ex){}
+    } catch (ex) {}
     const currentStore = await localStore.get();
     console.log('currentStore=', JSON.stringify(currentStore, null, 2));
     console.log('Page will be reloaded in 3s...');

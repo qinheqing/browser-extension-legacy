@@ -20,11 +20,13 @@ import ReactJsonView from '../../components/ReactJsonView';
 import OneAccountInfo from '../../classes/OneAccountInfo';
 import ImportAccountsList from '../../components/ImportAccountsList';
 import NavBackButton from '../../components/NavBackButton';
+import useI18n from '../../hooks/useI18n';
 
 export default observer(function PageConnectHardware() {
   const [browserSupported, setBrowserSupported] = useState(true);
   const [wallet, setWallet] = useState(null);
   const [error, setError] = useState(null);
+  const t = useI18n();
 
   const generateAccounts = useCallback(
     async ({ start, limit }) => {
@@ -64,7 +66,7 @@ export default observer(function PageConnectHardware() {
   };
 
   return (
-    <AppPageLayout className="" title="连接硬件设备">
+    <AppPageLayout className="" title={t('connectHardwareWallet')}>
       <div className="PageConnectHardware">
         {wallet ? (
           <ImportAccountsList wallet={wallet} onLoadMore={generateAccounts} />

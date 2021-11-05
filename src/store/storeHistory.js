@@ -9,13 +9,22 @@ import {
 } from 'mobx';
 import { cloneDeep } from 'lodash';
 import {
+  ROUTE_CONNECT_HARDWARE,
+  ROUTE_CREATE_ACCOUNT,
   ROUTE_HOME,
   ROUTE_HOME_OLD,
   ROUTE_TOKEN_ADD,
   ROUTE_TOKEN_DETAIL,
   ROUTE_TRANSFER,
+  ROUTE_TX_HISTORY,
 } from '../routes/routeUrls';
 import openStandalonePage from '../utils/openStandalonePage';
+import { goToPageConnectHardware } from '../../ui/app/helpers/utils/util';
+import utilsApp from '../utils/utilsApp';
+import {
+  NEW_ACCOUNT_ROUTE,
+  TRANSACTIONS_ROUTE,
+} from '../../ui/app/helpers/constants/routes';
 import BaseStore from './BaseStore';
 
 class StoreHistory extends BaseStore {
@@ -60,23 +69,62 @@ class StoreHistory extends BaseStore {
     this.replace(ROUTE_HOME);
   }
 
-  async goToHomeNew({ chainKey } = {}) {
+  async goToHomeNew({ chainKey, replace = false } = {}) {
     const storeApp = (await import('./storeApp')).default;
     const storeChain = (await import('./storeChain')).default;
     const storeStorage = (await import('./storeStorage')).default;
     const utilsToast = (await import('../utils/utilsToast')).default;
 
     storeStorage.homeType = 'NEW';
+
     if (chainKey) {
       storeChain.setCurrentChainKey(chainKey);
     }
-    this.push(ROUTE_HOME);
+
+    if (replace) {
+      this.replace(ROUTE_HOME);
+    } else {
+      this.push(ROUTE_HOME);
+    }
   }
 
-  async goToHomeOld() {
+  async goToHomeOld({ replace = false }) {
     const storeStorage = (await import('./storeStorage')).default;
     storeStorage.homeType = 'OLD';
-    this.push(ROUTE_HOME_OLD);
+
+    if (replace) {
+      this.replace(ROUTE_HOME_OLD);
+    } else {
+      this.push(ROUTE_HOME_OLD);
+    }
+  }
+
+  async goToPageCreateAccount({ chainKey } = {}) {
+    if (utilsApp.isOldHome()) {
+      this.push(NEW_ACCOUNT_ROUTE);
+      return;
+    }
+    const storeAccount = (await import('./storeAccount')).default;
+    const storeChain = (await import('./storeChain')).default;
+
+    storeAccount.setAccountsGroupFilterToChain({
+      chainKey: chainKey || storeChain.currentChainKey,
+    });
+    this.push(ROUTE_CREATE_ACCOUNT);
+  }
+
+  async goToPageConnectHardware({ chainKey } = {}) {
+    if (utilsApp.isOldHome()) {
+      goToPageConnectHardware();
+      return;
+    }
+    const storeAccount = (await import('./storeAccount')).default;
+    const storeChain = (await import('./storeChain')).default;
+
+    storeAccount.setAccountsGroupFilterToChain({
+      chainKey: chainKey || storeChain.currentChainKey,
+    });
+    openStandalonePage(ROUTE_CONNECT_HARDWARE);
   }
 
   async goToPageTokenAdd() {
@@ -119,6 +167,15 @@ class StoreHistory extends BaseStore {
       ...others,
     });
     window.open(link);
+  }
+
+  async goToPageTxHistory() {
+    if (utilsApp.isNewHome()) {
+      this.push(ROUTE_TX_HISTORY);
+      return;
+    }
+
+    this.push(TRANSACTIONS_ROUTE);
   }
 }
 

@@ -84,16 +84,16 @@ time,
 mark,
 audio,
 video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font-weight: inherit;
-  font-style: inherit;
-  font-variant: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  vertical-align: baseline;
+  //margin: 0;
+  //padding: 0;
+  //border: 0;
+  //font-size: 100%;
+  //font-weight: inherit;
+  //font-style: inherit;
+  //font-variant: inherit;
+  //font-size: inherit;
+  //line-height: inherit;
+  //vertical-align: baseline;
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -138,11 +138,11 @@ table {
 }
 
 button {
-  border-style: none;
+  //border-style: none;
   cursor: pointer;
 
   &::-moz-focus-inner {
-    border: none;
+    //border: none;
   }
 }
 

@@ -58,13 +58,11 @@ class StoreDappApproval extends BaseStoreWithStorage {
     return wallet;
   }
 
-  async getUiStorageItem(key) {
-    const storageKey = utilsStorage.buildAutoSaveStorageKey(
-      key,
-      utilsStorage.STORAGE_NAMESPACES.storage,
-    );
-    const value = await this.getStorageItemAsync(storageKey);
-    return value;
+  async getUiStorageItem(field) {
+    return await utilsStorage.getAutoSaveStorageItemAsync({
+      field,
+      namespace: utilsStorage.STORAGE_NAMESPACES.storage,
+    });
   }
 
   async getCurrentAccountRaw() {

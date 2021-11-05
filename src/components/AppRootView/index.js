@@ -9,6 +9,52 @@ import storeStorage from '../../store/storeStorage';
 import storeApp from '../../store/storeApp';
 import styles from './index.css';
 
+function CssStyleInNew() {
+  return (
+    <>
+      <Helmet>
+        <link rel="stylesheet" type="text/css" href="./tailwind.css" />
+        <link rel="stylesheet" type="text/css" href="./index.new.css" />
+      </Helmet>
+    </>
+  );
+}
+
+function CssStyleInOld() {
+  return (
+    <Helmet>
+      <link rel="stylesheet" type="text/css" href="./tailwind.css" />
+      <link rel="stylesheet" type="text/css" href="./index.css" title="ltr" />
+      <link
+        rel="stylesheet"
+        type="text/css"
+        href="./index-rtl.css"
+        title="rtl"
+        disabled
+      />
+    </Helmet>
+  );
+}
+
+function CssStyleInAll() {
+  return (
+    <Helmet>
+      <link rel="stylesheet" type="text/css" href="./index.css" title="ltr" />
+      <link
+        rel="stylesheet"
+        type="text/css"
+        href="./index-rtl.css"
+        title="rtl"
+        disabled
+      />
+
+      <link rel="stylesheet" type="text/css" href="./tailwind.css" />
+      {/* standalone page css at new home */}
+      <link rel="stylesheet" type="text/css" href="./index.new.css" />
+    </Helmet>
+  );
+}
+
 // AppToastContainer should be singleton
 function AppToastContainer() {
   return (
@@ -18,15 +64,17 @@ function AppToastContainer() {
   );
 }
 
+function NewOldHomeSwitchLoading() {
+  // return <PreloadScreen />;
+  return null;
+}
+
 function NewHomeRootComponents() {
   return (
     <>
-      <Helmet>
-        <link rel="stylesheet" type="text/css" href="./tailwind.css" />
-        <link rel="stylesheet" type="text/css" href="./index.new.css" />
-      </Helmet>
+      {/* <CssStyleInNew />*/}
       {/* LoadingScreen*/}
-      <PreloadScreen />
+      <NewOldHomeSwitchLoading />
     </>
   );
 }
@@ -34,18 +82,8 @@ function NewHomeRootComponents() {
 function OldHomeRootComponents() {
   return (
     <>
-      <Helmet>
-        {/* <link rel="stylesheet" type="text/css" href="./tailwind.css" /> */}
-        <link rel="stylesheet" type="text/css" href="./index.css" title="ltr" />
-        <link
-          rel="stylesheet"
-          type="text/css"
-          href="./index-rtl.css"
-          title="rtl"
-          disabled
-        />
-      </Helmet>
-      <PreloadScreen />
+      {/* <CssStyleInOld />*/}
+      <NewOldHomeSwitchLoading />
     </>
   );
 }
@@ -53,10 +91,7 @@ function OldHomeRootComponents() {
 function AppRootView({ children }) {
   return (
     <div className={classnames(styles.root, '')}>
-      <div className={classnames(styles.content, '')}>
-        <NewHomeRootComponents />
-        {children}
-      </div>
+      <div className={classnames(styles.content, 'shadow-2xl')}>{children}</div>
     </div>
   );
 }
@@ -67,6 +102,7 @@ const UniversalRoutesWrapper = observer(function ({ children }) {
   }
   return (
     <>
+      {/* <CssStyleInAll />*/}
       {children}
       {/* AppToastContainer should be singleton */}
       <AppToastContainer />

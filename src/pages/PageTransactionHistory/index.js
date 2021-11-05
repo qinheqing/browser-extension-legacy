@@ -6,6 +6,7 @@ import TimeAgo from 'react-timeago';
 import timeAgoZhStrings from 'react-timeago/lib/language-strings/zh-CN';
 import buildFormatter from 'react-timeago/lib/formatters/buildFormatter';
 import { isNil } from 'lodash';
+import { Link } from '@onekeyhq/ui-components';
 import AppPageLayout from '../../components/AppPageLayout';
 import OneButton from '../../components/OneButton';
 import storeWallet from '../../store/storeWallet';
@@ -19,6 +20,10 @@ import storeHistory from '../../store/storeHistory';
 import NoDataView from '../../components/NoDataView';
 import OneCellItem from '../../components/OneCellItem';
 import storeStorage from '../../store/storeStorage';
+import ExtAppTabBar from '../../components/ExtAppTabBar';
+import useI18n from '../../hooks/useI18n';
+import ExtAppNavBar from '../../components/ExtAppNavBar';
+import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
 import styles from './index.css';
 
 const timeAgoLocaleFormatter = buildFormatter(timeAgoZhStrings);
@@ -296,11 +301,18 @@ function PendingTransactionCard({ txid, ...others }) {
 }
 
 function PageTransactionHistory() {
+  const t = useI18n();
   const [txList, setTxList] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    fetchTxHistory();
+    if (storeAccount.currentAccountAddress) {
+      fetchTxHistory();
+    }
   }, []);
+
+  if (useDataRequiredOrRedirect(storeAccount.currentAccountInfo)) {
+    return <div />;
+  }
 
   async function fetchTxHistory() {
     try {
@@ -318,23 +330,33 @@ function PageTransactionHistory() {
 
   return (
     <AppPageLayout
-      navRight={
-        <AppIcons.ExternalLinkIcon
-          className="w-6 cursor-pointer"
-          onClick={() =>
-            storeHistory.openBlockBrowserLink({
-              account: storeAccount.currentAccountAddress,
-            })
+      header={
+        <ExtAppNavBar
+          title={t('activity')}
+          subTitle={storeAccount.currentAccountAddressShort}
+          left={null}
+          right={
+            <Link
+              icon
+              color
+              className="cursor-pointer"
+              onClick={(event) => {
+                // event.preventDefault();
+                storeHistory.openBlockBrowserLink({
+                  account: storeAccount.currentAccountAddress,
+                });
+              }}
+            />
           }
         />
       }
-      title="交易记录"
+      footer={<ExtAppTabBar name={ExtAppTabBar.names.Transaction} />}
     >
       {loading && <LoadingSpinner fullHeight />}
       {!loading && (
         <>
           {!storeStorage.currentPendingTxid.length && !txList.length && (
-            <NoDataView fullHeight />
+            <NoDataView fullHeight>{t('noTransactions')}</NoDataView>
           )}
 
           {storeStorage.currentPendingTxid.map((txid) => (

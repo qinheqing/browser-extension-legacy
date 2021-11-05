@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, useCallback, useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import copyToClipboard from 'copy-to-clipboard';
 import { getBlockExplorerUrlForTx } from '../../../helpers/utils/transactions.util';
@@ -6,10 +6,40 @@ import SenderToRecipient from '../../ui/sender-to-recipient';
 import { FLAT_VARIANT } from '../../ui/sender-to-recipient/sender-to-recipient.constants';
 import TransactionActivityLog from '../transaction-activity-log';
 import TransactionBreakdown from '../transaction-breakdown';
+import { shortenAddress } from '../../../helpers/utils/util';
 import Button from '../../ui/button';
 import Tooltip from '../../ui/tooltip';
 import Copy from '../../ui/icon/copy-icon.component';
 import Popover from '../../ui/popover';
+import { useI18nContext } from '../../../hooks/useI18nContext';
+
+export const Address = ({ value }) => {
+  const t = useI18nContext();
+  const [addressCopied, setAddressCopied] = useState(false);
+  const onClick = useCallback(() => {
+    setAddressCopied(true);
+    copyToClipboard(value);
+    setTimeout(() => setAddressCopied(false), 1000);
+  }, [value]);
+  const title = addressCopied ? t('copiedExclamation') : t('copyToClipboard');
+  return (
+    <div className="transaction-list-item-details__address">
+      <div>{shortenAddress(value)}</div>
+      <Tooltip
+        position="left"
+        title={title}
+        onHidden={() => setAddressCopied(false)}
+      >
+        <div
+          className="transaction-list-item-details__address-icon"
+          onClick={onClick}
+        >
+          <Copy size={10} color="#00b812" />
+        </div>
+      </Tooltip>
+    </div>
+  );
+};
 
 export default class TransactionListItemDetails extends PureComponent {
   static contextTypes = {
@@ -192,7 +222,7 @@ export default class TransactionListItemDetails extends PureComponent {
                   onClick={this.handleCopyTxId}
                   disabled={!hash}
                 >
-                  <Copy size={10} color="#3098DC" />
+                  <Copy size={10} color="#00b812" />
                 </Button>
               </Tooltip>
               <Tooltip
@@ -225,7 +255,23 @@ export default class TransactionListItemDetails extends PureComponent {
           </div>
           <div className="transaction-list-item-details__body">
             <div className="transaction-list-item-details__sender-to-recipient-container">
-              <SenderToRecipient
+              <div className="transaction-list-item-details__row">
+                <div className="transaction-list-item-details__row-label">
+                  From
+                </div>
+                <div className="transaction-list-item-details__row-content">
+                  <Address value={senderAddress} />
+                </div>
+              </div>
+              <div className="transaction-list-item-details__row">
+                <div className="transaction-list-item-details__row-label">
+                  To
+                </div>
+                <div className="transaction-list-item-details__row-content">
+                  <Address value={recipientAddress} />
+                </div>
+              </div>
+              {/* <SenderToRecipient
                 warnUserOnAccountMismatch={false}
                 variant={FLAT_VARIANT}
                 addressOnly
@@ -252,7 +298,7 @@ export default class TransactionListItemDetails extends PureComponent {
                     },
                   });
                 }}
-              />
+              /> */}
             </div>
             <div className="transaction-list-item-details__cards-container">
               <TransactionBreakdown

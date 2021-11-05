@@ -555,21 +555,24 @@
     margin: 1rem 1rem 0;
     position: relative;
     display: flex;
-    flex-flow: row;
+    flex-direction: column;
+    // flex-flow: row;
     flex: 1 0 auto;
-    justify-content: space-between;
-    align-items: center;
+    // justify-content: space-between;
+    align-items: flex-start;
   }
 
   &__form-field-container {
     display: flex;
     flex-direction: column;
-    width: 277px;
+    // width: 277px;
+    width: 100%;
   }
 
   &__form-field {
     flex: 1 1 auto;
     min-width: 0;
+    width: 100%;
 
     .currency-display {
       color: $tundora;
@@ -593,10 +596,13 @@
 
   &__form-label {
     @include Paragraph;
-
     color: $scorpion;
-    width: 95px;
     flex: 0 0 auto;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5px;
+    align-items: center;
   }
 
   &__from-dropdown,
@@ -631,6 +637,11 @@
       margin-top: 11px;
       margin-left: -1px;
       overflow-y: scroll;
+      
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
     }
   }
 

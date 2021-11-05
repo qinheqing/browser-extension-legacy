@@ -53,6 +53,15 @@ const defaultNetworksData = [
     blockExplorerUrl: 'https://etherscan.io',
   },
   {
+    labelKey: BSC,
+    iconColor: '#ffd33d',
+    providerType: BSC,
+    rpcUrl: BSC_RPC_URL,
+    chainId: BSC_CHAIN_ID,
+    ticker: BSC_TICKER,
+    blockExplorerUrl: 'https://bscscan.com',
+  },
+  {
     labelKey: HECO,
     iconColor: '#037dd6',
     providerType: HECO,
@@ -62,13 +71,13 @@ const defaultNetworksData = [
     blockExplorerUrl: 'https://hecoinfo.com',
   },
   {
-    labelKey: BSC,
-    iconColor: '#ffd33d',
-    providerType: BSC,
-    rpcUrl: BSC_RPC_URL,
-    chainId: BSC_CHAIN_ID,
-    ticker: BSC_TICKER,
-    blockExplorerUrl: 'https://bscscan.com',
+    labelKey: OKEX,
+    iconColor: '#1969ff',
+    providerType: OKEX,
+    rpcUrl: OKEX_RPC_URL,
+    chainId: OKEX_CHAIN_ID,
+    ticker: OKEX_TICKER,
+    blockExplorerUrl: 'https://www.oklink.com/okexchain',
   },
   {
     labelKey: MATIC,
@@ -80,15 +89,6 @@ const defaultNetworksData = [
     blockExplorerUrl: 'https://polygonscan.com',
   },
   {
-    labelKey: XDAI,
-    iconColor: '#48A9A6',
-    providerType: XDAI,
-    rpcUrl: XDAI_RPC_URL,
-    chainId: XDAI_CHAIN_ID,
-    ticker: XDAI_TICKER,
-    blockExplorerUrl: 'https://blockscout.com/xdai/mainnet​',
-  },
-  {
     labelKey: FANTOM,
     iconColor: '#1969ff',
     providerType: FANTOM,
@@ -98,15 +98,14 @@ const defaultNetworksData = [
     blockExplorerUrl: 'https://ftmscan.com',
   },
   {
-    labelKey: OKEX,
-    iconColor: '#1969ff',
-    providerType: OKEX,
-    rpcUrl: OKEX_RPC_URL,
-    chainId: OKEX_CHAIN_ID,
-    ticker: OKEX_TICKER,
-    blockExplorerUrl: 'https://www.oklink.com/okexchain',
+    labelKey: XDAI,
+    iconColor: '#48A9A6',
+    providerType: XDAI,
+    rpcUrl: XDAI_RPC_URL,
+    chainId: XDAI_CHAIN_ID,
+    ticker: XDAI_TICKER,
+    blockExplorerUrl: 'https://blockscout.com/xdai/mainnet​',
   },
-
   {
     labelKey: AVAX,
     providerType: AVAX,
@@ -116,7 +115,6 @@ const defaultNetworksData = [
     ticker: AVAX_TICKER,
     blockExplorerUrl: AVAX_BLOCK_EXPLORER_URL,
   },
-
   {
     labelKey: ROPSTEN,
     iconColor: '#FF4A8D',
@@ -127,15 +125,6 @@ const defaultNetworksData = [
     blockExplorerUrl: 'https://ropsten.etherscan.io',
   },
   {
-    labelKey: RINKEBY,
-    iconColor: '#F6C343',
-    providerType: RINKEBY,
-    rpcUrl: `https://rinkeby.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
-    chainId: RINKEBY_CHAIN_ID,
-    ticker: 'ETH',
-    blockExplorerUrl: 'https://rinkeby.etherscan.io',
-  },
-  {
     labelKey: KOVAN,
     iconColor: '#9064FF',
     providerType: KOVAN,
@@ -143,6 +132,15 @@ const defaultNetworksData = [
     chainId: KOVAN_CHAIN_ID,
     ticker: 'ETH',
     blockExplorerUrl: 'https://kovan.etherscan.io',
+  },
+  {
+    labelKey: RINKEBY,
+    iconColor: '#F6C343',
+    providerType: RINKEBY,
+    rpcUrl: `https://rinkeby.infura.io/v3/${process.env.INFURA_PROJECT_ID}`,
+    chainId: RINKEBY_CHAIN_ID,
+    ticker: 'ETH',
+    blockExplorerUrl: 'https://rinkeby.etherscan.io',
   },
 ];
 

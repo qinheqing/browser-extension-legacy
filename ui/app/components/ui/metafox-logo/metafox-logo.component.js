@@ -32,15 +32,6 @@ export default class MetaFoxLogo extends PureComponent {
           )}
           alt=""
         />
-        <img
-          {...iconProps}
-          src="/images/logo/metamask-fox.svg"
-          className={classnames(
-            'app-header__metafox-logo',
-            'app-header__metafox-logo--icon',
-          )}
-          alt=""
-        />
       </div>
     );
   }

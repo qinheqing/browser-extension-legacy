@@ -309,7 +309,7 @@ export default class SendTransactionScreen extends Component {
     }
 
     return (
-      <div className="send page-container">
+      <div className="send page-container page-layout-old">
         <SendHeader history={history} />
         {this.renderInput()}
         {content}

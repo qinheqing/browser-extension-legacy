@@ -32,6 +32,7 @@ import {
   goToPageConnectHardware,
 } from '../../../helpers/utils/util';
 import { ROUTE_HOME } from '../../../../../src/routes/routeUrls';
+import PopoverBeta from '../../ui/popover-beta';
 
 export function AccountMenuItem(props) {
   const { icon, children, text, subText, className, onClick } = props;
@@ -322,149 +323,98 @@ export default class AccountMenu extends Component {
     }
 
     return (
-      <div className="account-menu">
-        <div className="account-menu__close-area" onClick={toggleAccountMenu} />
-        <AccountMenuItem className="account-menu__header">
-          {t('myAccounts')}
-
-          {IS_ENV_IN_TEST_OR_DEBUG && (
+      <PopoverBeta onClose={toggleAccountMenu}>
+        <div className="account-menu">
+          <AccountMenuItem className="account-menu__header">
+            {t('myAccounts')}
+            {IS_ENV_IN_TEST_OR_DEBUG && (
+              <button
+                className="account-menu__lock-button"
+                onClick={() => {
+                  toggleAccountMenu();
+                  history.push(RESTORE_VAULT_ROUTE);
+                  if (getEnvironmentType() === ENVIRONMENT_TYPE_POPUP) {
+                    global.platform.openExtensionInBrowser(RESTORE_VAULT_ROUTE);
+                  }
+                }}
+              >
+                重置插件
+              </button>
+            )}
             <button
               className="account-menu__lock-button"
               onClick={() => {
-                toggleAccountMenu();
-                history.push(RESTORE_VAULT_ROUTE);
-                if (getEnvironmentType() === ENVIRONMENT_TYPE_POPUP) {
-                  global.platform.openExtensionInBrowser(RESTORE_VAULT_ROUTE);
-                }
+                lockMetamask();
+                history.push(DEFAULT_ROUTE);
               }}
             >
-              重置插件
+              {t('lock')}
             </button>
-          )}
-          <button
-            className="account-menu__lock-button"
-            onClick={() => {
-              lockMetamask();
-              history.push(DEFAULT_ROUTE);
-            }}
-          >
-            {t('lock')}
-          </button>
-        </AccountMenuItem>
-        <div className="account-menu__divider" />
-        <div className="account-menu__accounts-container">
-          {shouldShowAccountsSearch ? this.renderAccountsSearch() : null}
-          <div
-            className="account-menu__accounts"
-            onScroll={this.onScroll}
-            ref={(ref) => {
-              this.accountsRef = ref;
-            }}
-          >
-            {this.renderAccounts()}
+          </AccountMenuItem>
+          <div className="account-menu__divider" />
+          <div className="account-menu__accounts-container">
+            <div
+              className="account-menu__accounts"
+              onScroll={this.onScroll}
+              ref={(ref) => {
+                this.accountsRef = ref;
+              }}
+            >
+              {this.renderAccounts()}
+            </div>
+            {this.renderScrollButton()}
           </div>
-          {this.renderScrollButton()}
+          <div className="account-menu__divider" />
+          {!hwOnlyMode && (
+            <>
+              <AccountMenuItem
+                onClick={() => {
+                  toggleAccountMenu();
+                  history.push(NEW_ACCOUNT_ROUTE);
+                }}
+                icon={
+                  <img
+                    className="account-menu__item-icon"
+                    src="images/plus-btn.svg"
+                    alt={t('createAccount')}
+                  />
+                }
+                text={t('createAccount')}
+              />
+              {/* <AccountMenuItem
+                onClick={() => {
+                  toggleAccountMenu();
+                  history.push(SETTINGS_ROUTE);
+                }}
+                icon={
+                  <img
+                    className="account-menu__item-icon"
+                    src="images/settings.svg"
+                  />
+                }
+                text={t('settings')}
+              /> */}
+            </>
+          )}
+          {hwOnlyMode && (
+            <AccountMenuItem
+              onClick={() => {
+                toggleAccountMenu();
+                goToPageConnectHardware();
+              }}
+              icon={
+                <img
+                  className="account-menu__item-icon"
+                  src="images/connect-icon.svg"
+                  alt={t('connectHardwareWallet')}
+                />
+              }
+              text={t('connectHardwareWallet')}
+            />
+          )}
+          <div className="account-menu__divider" />
         </div>
-        <div className="account-menu__divider" />
-
-        {!hwOnlyMode && (
-          <>
-            <AccountMenuItem
-              onClick={() => {
-                toggleAccountMenu();
-                trackEvent({
-                  eventOpts: {
-                    category: 'Navigation',
-                    action: 'Main Menu',
-                    name: 'Clicked Create Account',
-                  },
-                });
-                history.push(NEW_ACCOUNT_ROUTE);
-              }}
-              icon={
-                <img
-                  className="account-menu__item-icon"
-                  src="images/plus-btn-white.svg"
-                  alt={t('createAccount')}
-                />
-              }
-              text={t('createAccount')}
-            />
-            <AccountMenuItem
-              onClick={() => {
-                toggleAccountMenu();
-                trackEvent({
-                  eventOpts: {
-                    category: 'Navigation',
-                    action: 'Main Menu',
-                    name: 'Clicked Import Account',
-                  },
-                });
-                history.push(IMPORT_ACCOUNT_ROUTE);
-              }}
-              icon={
-                <img
-                  className="account-menu__item-icon"
-                  src="images/import-account.svg"
-                  alt={t('importAccount')}
-                />
-              }
-              text={t('importAccount')}
-            />
-          </>
-        )}
-
-        <AccountMenuItem
-          onClick={() => {
-            toggleAccountMenu();
-            trackEvent({
-              eventOpts: {
-                category: 'Navigation',
-                action: 'Main Menu',
-                name: 'Clicked Connect Hardware',
-              },
-            });
-            goToPageConnectHardware();
-          }}
-          icon={
-            <img
-              className="account-menu__item-icon"
-              src="images/connect-icon.svg"
-              alt={t('connectHardwareWallet')}
-            />
-          }
-          text={t('connectHardwareWallet')}
-        />
-        <div className="account-menu__divider" />
-        <AccountMenuItem
-          onClick={() => {
-            toggleAccountMenu();
-            history.push(ABOUT_US_ROUTE);
-          }}
-          icon={<img src="images/mm-info-icon.svg" alt={t('infoHelp')} />}
-          text={t('infoHelp')}
-        />
-        <AccountMenuItem
-          onClick={() => {
-            toggleAccountMenu();
-            history.push(SETTINGS_ROUTE);
-            this.context.trackEvent({
-              eventOpts: {
-                category: 'Navigation',
-                action: 'Main Menu',
-                name: 'Opened Settings',
-              },
-            });
-          }}
-          icon={
-            <img
-              className="account-menu__item-icon"
-              src="images/settings.svg"
-            />
-          }
-          text={t('settings')}
-        />
-      </div>
+      </PopoverBeta>
     );
   }
 }

@@ -1,23 +1,5 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Observer, observer } from 'mobx-react-lite';
 import classnames from 'classnames';
-import styles from './index.css';
-
-function OneDetailItemGroup({ children, divide = true, className }) {
-  return (
-    <div
-      className={classnames(
-        {
-          'divide-y': divide,
-        },
-        className,
-      )}
-    >
-      {children}
-    </div>
-  );
-}
 
 function OneDetailItem({
   alignY = false,
@@ -54,4 +36,3 @@ function OneDetailItem({
 }
 
 export default OneDetailItem;
-export { OneDetailItemGroup };
