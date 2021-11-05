@@ -41,6 +41,9 @@
   "activityLog": {
     "message": "activity log"
   },
+  "add": {
+    "message": "Add"
+  },
   "addAccount": {
     "message": "Add an account"
   },
@@ -85,6 +88,9 @@
   },
   "addTokens": {
     "message": "Add Tokens"
+  },
+  "added": {
+    "message": "Added"
   },
   "advanced": {
     "message": "Advanced"
@@ -1744,6 +1750,9 @@
   },
   "tokenContractAddress": {
     "message": "Token Contract Address"
+  },
+  "tokenName": {
+    "message": "Token Name"
   },
   "tokenOptions": {
     "message": "Token options"

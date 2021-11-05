@@ -26,6 +26,7 @@ export default class TokenList extends Component {
       onToggleToken,
       tokens = [],
     } = this.props;
+    const { t } = this.context;
 
     return results.length === 0 ? (
       <TokenListPlaceholder />
@@ -74,7 +75,7 @@ export default class TokenList extends Component {
                         'token-list__token-button--added': tokenAlreadyAdded,
                       })}
                     >
-                      {tokenAlreadyAdded ? 'Added' : 'Add'}
+                      {tokenAlreadyAdded ? t('added') : t('add')}
                     </div>
                   </div>
                 )

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import TokenTracker from '@onekeyhq/eth-token-tracker';
 import { useSelector } from 'react-redux';
 import { isNil } from 'lodash';
@@ -10,6 +10,19 @@ export function useTokenTracker(
   defaultTokensWithBalance,
   includeFailedTokens = false,
 ) {
+  const memoizedTokens = useEqualityCheck(tokens);
+  const memoizedTokensWithBalance = useEqualityCheck(defaultTokensWithBalance);
+
+  const tokensWithBalance = useMemo(() => {
+    const _tokens = memoizedTokens || [];
+    const _defaultTokensWithBalance = memoizedTokensWithBalance || [];
+    return _tokens.map((token1) => {
+      const token2 = _defaultTokensWithBalance.find(
+        (item) => item?.address === token1?.address,
+      );
+      return token2 ?? token1;
+    });
+  }, [memoizedTokensWithBalance, memoizedTokens]);
   const chainId = useSelector(getCurrentChainId);
   const userAddress = useSelector(getSelectedAddress);
 
@@ -17,7 +30,6 @@ export function useTokenTracker(
   const [tokensWithBalances, setTokensWithBalances] = useState([]);
   const [error, setError] = useState(null);
   const tokenTracker = useRef(null);
-  const memoizedTokens = useEqualityCheck(tokens);
 
   const updateBalances = useCallback((tokenWithBalances) => {
     setTokensWithBalances(tokenWithBalances);
@@ -86,11 +98,8 @@ export function useTokenTracker(
       return;
     }
 
-    if (
-      Array.isArray(defaultTokensWithBalance) &&
-      defaultTokensWithBalance.length > 0
-    ) {
-      updateBalances(defaultTokensWithBalance);
+    if (Array.isArray(tokensWithBalance) && tokensWithBalance.length > 0) {
+      updateBalances(tokensWithBalance);
       teardownTracker();
       setLoading(false);
       return;
@@ -109,7 +118,7 @@ export function useTokenTracker(
     memoizedTokens,
     updateBalances,
     buildTracker,
-    defaultTokensWithBalance,
+    tokensWithBalance,
   ]);
 
   return { loading, tokensWithBalances, error };
