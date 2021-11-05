@@ -384,7 +384,8 @@ class AddToken extends Component {
           disabled={Boolean(this.hasError()) || !this.hasSelected()}
           onBackButtonClick={() => {
             clearPendingTokens();
-            history.push(mostRecentOverviewPage);
+            history.goBack();
+            // history.push(mostRecentOverviewPage);
           }}
           onCancel={() => {
             clearPendingTokens();

@@ -147,7 +147,7 @@ const MODALS = {
       top: getEnvironmentType() === ENVIRONMENT_TYPE_POPUP ? '52vh' : '36.5vh',
     },
     laptopModalStyle: {
-      width: '449px',
+      width: '360px',
       top: 'calc(33% + 45px)',
     },
   },
