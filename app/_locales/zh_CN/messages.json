@@ -41,6 +41,9 @@
   "activityLog": {
     "message": "活动日志"
   },
+  "add": {
+    "message": "添加"
+  },
   "addAccount": {
     "message": "添加一个账户"
   },
@@ -85,6 +88,9 @@
   },
   "addTokens": {
     "message": "添加代币"
+  },
+  "added": {
+    "message": "已添加"
   },
   "advanced": {
     "message": "高级"
@@ -1744,6 +1750,9 @@
   },
   "tokenContractAddress": {
     "message": "代币合约地址"
+  },
+  "tokenName": {
+    "message": "代币名称"
   },
   "tokenOptions": {
     "message": "代币选项"

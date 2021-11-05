@@ -87,10 +87,14 @@ class AddToken extends Component {
     const { symbol } = tokenToAdd;
     const { addTokens } = this.props;
     addTokens([tokenToAdd]);
-    utilsToast.notification.success(`${symbol} added to your token list`, {
-      title: 'Token Added',
-      // duration: 500,
-    });
+
+    utilsToast.notification.success(
+      `${symbol} ${this.context.t('tokenAlreadyAdded')}`,
+      {
+        title: this.context.t('tokenAlreadyAdded'),
+        // duration: 500,
+      },
+    );
     this.setState({ tokenToAdd: undefined });
   }
 
@@ -327,7 +331,7 @@ class AddToken extends Component {
           onClick={() => this.handleCustomAddToken()}
           disabled={hasError || !hasValues}
         >
-          Add
+          {this.context.t('add')}
         </Button>
       </div>
     );
