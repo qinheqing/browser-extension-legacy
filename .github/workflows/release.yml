@@ -182,7 +182,7 @@ jobs:
           tagDiffChangeLog: '${{ steps.auto_create_beta_tag.outputs.change-log }}'
           tagDiffChangeLogUrl: '${{ steps.auto_create_beta_tag.outputs.change-log-url }}'
         run: |
-          changeLog=''
+          changeLog='' 
 
           if [ -n "$inputChangeLog" ]
           then
