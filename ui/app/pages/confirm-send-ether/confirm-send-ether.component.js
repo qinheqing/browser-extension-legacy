@@ -17,7 +17,7 @@ export default class ConfirmSendEther extends Component {
   handleEdit({ txData }) {
     const { editTransaction, history } = this.props;
     editTransaction(txData);
-    history.push(SEND_ROUTE);
+    history.replace(SEND_ROUTE);
   }
 
   shouldHideData() {
