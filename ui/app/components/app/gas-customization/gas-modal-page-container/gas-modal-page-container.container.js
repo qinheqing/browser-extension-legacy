@@ -253,6 +253,15 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     ...otherDispatchProps
   } = dispatchProps;
 
+  let reason = '';
+  if (insufficientBalance) {
+    reason = 'insufficient balance';
+  } else if (isSpeedUp && customGasPrice === 0) {
+    reason = 'gas price must be greater than 0.';
+  } else if (customGasLimit < Number(MIN_GAS_LIMIT_DEC)) {
+    reason = 'gas limit must be greater than 21000';
+  }
+
   return {
     ...stateProps,
     ...otherDispatchProps,
@@ -304,6 +313,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
       //   dispatchHideSidebar();
       // }
     },
+    reason,
     disableSave:
       insufficientBalance ||
       (isSpeedUp && customGasPrice === 0) ||

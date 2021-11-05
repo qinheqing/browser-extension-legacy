@@ -4,7 +4,7 @@
 .gas-modal-page-container {
   .page-container {
     max-width: 391px;
-    min-height: 585px;
+    min-height: 560px;
     overflow-y: initial;
 
     @media screen and (max-width: $break-small) {
@@ -149,6 +149,13 @@
 
       &__value {
         @include H6;
+      }
+    }
+
+    &__error-info {
+      justify-content: flex-end;
+      &__value {
+        color: $error-1;
       }
     }
   }

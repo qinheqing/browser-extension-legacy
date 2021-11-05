@@ -44,6 +44,7 @@ const alertStateReducer = produce((state, action) => {
       if (!state[action.confirmationId]) {
         state[action.confirmationId] = {};
       }
+
       action.alerts.forEach((alert) => {
         state[action.confirmationId][alert.id] = {
           ...alert,
@@ -92,6 +93,7 @@ function useAlertState(pendingConfirmation) {
         }
       });
     }
+
     return () => {
       isMounted = false;
     };
@@ -116,9 +118,8 @@ export default function ConfirmationPage() {
   const dispatch = useDispatch();
   const history = useHistory();
   const pendingConfirmations = useSelector(getUnapprovedConfirmations, isEqual);
-  const [currentPendingConfirmation, setCurrentPendingConfirmation] = useState(
-    0,
-  );
+  const [currentPendingConfirmation, setCurrentPendingConfirmation] =
+    useState(0);
   const pendingConfirmation = pendingConfirmations[currentPendingConfirmation];
   const originMetadata = useOriginMetadata(pendingConfirmation?.origin);
   const [alertState, dismissAlert] = useAlertState(pendingConfirmation);
@@ -143,6 +144,7 @@ export default function ConfirmationPage() {
       setCurrentPendingConfirmation(pendingConfirmations.length - 1);
     }
   }, [pendingConfirmations, history, currentPendingConfirmation]);
+
   if (!pendingConfirmation) {
     return null;
   }
@@ -164,7 +166,7 @@ export default function ConfirmationPage() {
                 setCurrentPendingConfirmation(currentPendingConfirmation - 1)
               }
             >
-              <i className="fas fa-chevron-left"></i>
+              <i className="fas fa-chevron-left" />
             </button>
           )}
           <button
@@ -176,19 +178,12 @@ export default function ConfirmationPage() {
               setCurrentPendingConfirmation(currentPendingConfirmation + 1)
             }
           >
-            <i className="fas fa-chevron-right"></i>
+            <i className="fas fa-chevron-right" />
           </button>
         </div>
       )}
       <div className="confirmation-page__content">
-        <Box justifyContent="center">
-          <NetworkDisplay
-            colored={false}
-            indicatorSize={SIZES.XS}
-            labelProps={{ color: COLORS.BLACK }}
-          />
-        </Box>
-        <Box justifyContent="center" padding={[1, 4, 4]}>
+        <Box justifyContent="center" padding={[4, 4, 4]}>
           <Chip
             label={stripHttpsScheme(originMetadata.origin)}
             leftIcon={
