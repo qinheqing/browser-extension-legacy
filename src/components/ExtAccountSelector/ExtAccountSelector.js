@@ -255,6 +255,7 @@ const ExtAccountSelectorComponent = observer(function ({
       ].filter(Boolean)}
       place="bottom-center"
       trigger={{
+        ring: false,
         account: getCurrentAccountInfo({ selectedIdentity }),
       }}
     >

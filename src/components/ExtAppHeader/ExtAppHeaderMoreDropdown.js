@@ -56,6 +56,7 @@ export function ExtAppHeaderMoreDropdown() {
   return (
     <Dropdown
       place="bottom-end"
+      triggerProps={{ ring: false }}
       sections={cleanSections([
         // Expand View action
         {

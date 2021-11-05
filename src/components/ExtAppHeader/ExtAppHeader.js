@@ -44,6 +44,7 @@ function ExtAppHeaderExtraInfoBar() {
         />
       )}
       <Button
+        ring={false}
         circular
         type="plain"
         size="xs"

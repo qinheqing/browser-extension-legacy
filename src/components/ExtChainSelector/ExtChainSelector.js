@@ -217,6 +217,7 @@ const ExtChainSelectorComponent = observer(function ({
       triggerButtonRef={(ref) => (triggerBtnRef.current = ref)}
       place="bottom-start"
       trigger={{
+        ring: false,
         token: {
           chain,
           size: 'md',

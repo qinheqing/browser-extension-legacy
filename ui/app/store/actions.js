@@ -381,7 +381,8 @@ export function addNewAccount() {
 export function checkHardwareStatus(deviceName, hdPath) {
   log.debug(`background.checkHardwareStatus`, deviceName, hdPath);
   return async (dispatch) => {
-    dispatch(showLoadingIndication());
+    // cause Screen Flashing
+    // dispatch(showLoadingIndication());
 
     let unlocked;
     try {

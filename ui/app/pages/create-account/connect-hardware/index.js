@@ -58,6 +58,8 @@ class ConnectHardwareForm extends Component {
   async checkIfUnlocked() {
     for (const device of ['onekey', 'trezor', 'ledger']) {
       const path = this.props.defaultHdPaths[device];
+      // show loading here
+      //    dispatch(showLoadingIndication());
       const unlocked = await this.props.checkHardwareStatus(device, path);
       if (unlocked) {
         this.setState({ unlocked: true });
