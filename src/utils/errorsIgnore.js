@@ -7,6 +7,9 @@ const Wildcard = '****';
 const notificationIgnoreRules = [
   // noop
   [`BlockReEmitMiddleware - retries exhausted`],
+  [`Non-200 status code: '404'`],
+  [`Non-200 status code: '403'`],
+  [`Non-200 status code: '401'`],
 ];
 
 const sentryIgnoreRules = [
@@ -21,6 +24,7 @@ const sentryIgnoreRules = [
   // https://sentry.io/organizations/onekey_hq/issues/2607487371/
   [`Non-200 status code: '404'`],
   [`Non-200 status code: '403'`],
+  [`Non-200 status code: '401'`],
   // https://sentry.io/organizations/onekey_hq/issues/2650629732/
   [`ProtocolError is not defined`],
   // https://sentry.io/organizations/onekey_hq/issues/2650291701/
@@ -48,6 +52,10 @@ function parseSentryReport({ report }) {
 function isRuleMatch({ rule, message, functions = [], length = 0 }) {
   // Do not match multiple errors of sentry report
   if (length > 1) {
+    return false;
+  }
+
+  if (!message) {
     return false;
   }
   const [ruleMsg, ruleFuncName] = rule;

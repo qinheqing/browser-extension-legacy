@@ -7,6 +7,7 @@ import * as actions from '../../../store/actions';
 import { getMetaMaskAccounts } from '../../../selectors';
 import Button from '../../../components/ui/button';
 import { getMostRecentOverviewPage } from '../../../ducks/history/history';
+import ReduxErrorWarningMessage from '../../../../../src/components/ReduxErrorWarningMessage';
 
 class PrivateKeyImportView extends Component {
   static contextTypes = {
@@ -124,7 +125,7 @@ class PrivateKeyImportView extends Component {
             {this.context.t('import')}
           </Button>
         </div>
-        {error ? <span className="error">{error}</span> : null}
+        {error ? <ReduxErrorWarningMessage className="error" /> : null}
       </div>
     );
   }

@@ -8,6 +8,7 @@ import * as actions from '../../../store/actions';
 import { getMetaMaskAccounts } from '../../../selectors';
 import Button from '../../../components/ui/button';
 import { getMostRecentOverviewPage } from '../../../ducks/history/history';
+import ReduxErrorWarningMessage from '../../../../../src/components/ReduxErrorWarningMessage';
 
 const HELP_LINK =
   'https://metamask.zendesk.com/hc/en-us/articles/360015489331-Importing-an-Account';
@@ -74,7 +75,7 @@ class JsonImportSubview extends Component {
             {this.context.t('import')}
           </Button>
         </div>
-        {error ? <span className="error">{error}</span> : null}
+        {error ? <ReduxErrorWarningMessage className="error" /> : null}
       </div>
     );
   }

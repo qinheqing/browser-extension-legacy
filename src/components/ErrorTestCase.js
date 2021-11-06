@@ -18,6 +18,22 @@ function ErrorTestCase() {
           >
             show promise error
           </div>
+          <div
+            onClick={() => {
+              throw new Error(`Non-200 status code: '404'`);
+            }}
+          >
+            {/* eslint-disable-next-line react/no-unescaped-entities */}
+            Non-200 status code: '404'
+          </div>
+          <div
+            onClick={() => {
+              throw new Error(`Non-200 status code: '409'`);
+            }}
+          >
+            {/* eslint-disable-next-line react/no-unescaped-entities */}
+            Non-200 status code: '409'
+          </div>
         </>
       )}
     </>
