@@ -131,6 +131,7 @@ export default class NetworkForm extends PureComponent {
     this.setState({
       isSubmitting: true,
     });
+    const { viewOnly } = this.props;
 
     try {
       const {
@@ -184,6 +185,10 @@ export default class NetworkForm extends PureComponent {
         isSubmitting: false,
       });
       throw error;
+    } finally {
+      this.setState({
+        isSubmitting: false,
+      });
     }
   };
 
@@ -263,6 +268,7 @@ export default class NetworkForm extends PureComponent {
     optionalTextFieldKey,
     tooltipText,
     autoFocus = false,
+    inlineEditable = false,
   }) {
     const { errors } = this.state;
     const { viewOnly } = this.props;
@@ -290,7 +296,7 @@ export default class NetworkForm extends PureComponent {
           fullWidth
           margin="dense"
           value={value}
-          disabled={viewOnly}
+          disabled={viewOnly && !inlineEditable}
           error={errors[fieldKey]}
           autoFocus={autoFocus}
         />
@@ -485,6 +491,7 @@ export default class NetworkForm extends PureComponent {
           textFieldId: 'rpc-url',
           onChange: this.setStateWithValue('rpcUrl', this.validateUrlRpcUrl),
           value: rpcUrl,
+          inlineEditable: true,
         })}
         {this.renderFormTextField({
           fieldKey: 'chainId',
@@ -521,22 +528,22 @@ export default class NetworkForm extends PureComponent {
                   {t('delete')}
                 </Button>
               )}
-              <Button
-                type="default"
-                onClick={this.onCancel}
-                // disabled={this.stateIsUnchanged()}
-              >
-                {t('cancel')}
-              </Button>
-              <Button
-                type="secondary"
-                disabled={isSubmitDisabled}
-                onClick={this.onSubmit}
-              >
-                {t('save')}
-              </Button>
             </>
           )}
+          <Button
+            type="default"
+            onClick={this.onCancel}
+            // disabled={this.stateIsUnchanged()}
+          >
+            {t('cancel')}
+          </Button>
+          <Button
+            type="secondary"
+            disabled={isSubmitDisabled}
+            onClick={this.onSubmit}
+          >
+            {t('save')}
+          </Button>
         </div>
       </div>
     );

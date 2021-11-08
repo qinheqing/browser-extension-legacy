@@ -229,8 +229,18 @@ export default class NetworkController extends EventEmitter {
     this._switchNetwork(config);
   }
 
-  rollbackToPreviousProvider() {
+  rollbackToPreviousProvider(fallbackConfig) {
+    const currentConfig = this.getProviderConfig();
     const config = this.previousProviderStore.getState();
+    if (currentConfig?.chainId === config?.chainId && config?.chainId) {
+      if (fallbackConfig) {
+        this.providerStore.updateState(fallbackConfig);
+        this._switchNetwork(fallbackConfig);
+      } else {
+        this.setProviderType('mainnet');
+      }
+      return;
+    }
     this.providerStore.updateState(config);
     this._switchNetwork(config);
   }

@@ -253,12 +253,12 @@ const ExtChainSelectorComponent = observer(function ({
       {/* TODO max-height max-width popup */}
       <div className="max-h-[420px] overflow-y-auto">
         <EVMChainGroup
-          setRpcTarget={setRpcTarget}
+          setProviderType={setProviderType} // built-in chain
+          setRpcTarget={setRpcTarget} // custom chain
           displayInvalidCustomNetworkAlert={displayInvalidCustomNetworkAlert}
           frequentRpcListDetail={frequentRpcListDetail}
           provider={provider}
           onClose={close}
-          setProviderType={setProviderType}
         />
 
         <NewChainGroup baseChain={CONST_CHAIN_KEYS.SOL} onClose={close} />

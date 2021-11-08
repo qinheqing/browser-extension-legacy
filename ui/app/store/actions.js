@@ -1776,7 +1776,8 @@ export function setRpcTarget(newRpc, chainId, ticker = 'ETH', nickname) {
 export function rollbackToPreviousProvider() {
   return async (dispatch) => {
     try {
-      await promisifiedBackground.rollbackToPreviousProvider();
+      const fallbackConfig = null;
+      await promisifiedBackground.rollbackToPreviousProvider(fallbackConfig);
     } catch (error) {
       log.error(error);
       dispatch(displayWarning('Had a problem changing networks!'));
