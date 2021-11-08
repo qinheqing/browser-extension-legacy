@@ -1,3 +1,8 @@
+import {
+  METHOD_SET_OTHER_PROVIDER_STATUS,
+  METHOD_GET_PROVIDER_OVERWRITE_ENABLED,
+} from '../../app/scripts/constants/consts';
+
 /**
  * A string representing the type of environment the application is currently running in
  * popup - When the user click's the icon in their browser's extension bar; the default view
@@ -29,4 +34,8 @@ export const MESSAGE_TYPE = {
   WATCH_ASSET_LEGACY: 'metamask_watchAsset',
   ADD_ETHEREUM_CHAIN: 'wallet_addEthereumChain',
   SWITCH_ETHEREUM_CHAIN: 'metamask_switchEthereumChain',
+  GET_DEVICE_FEATURES: 'onekey_getDeviceFeatures',
+  GET_DEVICE_FEATURES_BAK: 'eth_getDeviceFeatures',
+  SET_OTHER_PROVIDER_STATUS: METHOD_SET_OTHER_PROVIDER_STATUS,
+  GET_PROVIDER_OVERWRITE_ENABLED: METHOD_GET_PROVIDER_OVERWRITE_ENABLED,
 };

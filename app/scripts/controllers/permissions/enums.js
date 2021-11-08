@@ -1,3 +1,5 @@
+import { MESSAGE_TYPE } from '../../../../shared/constants/app';
+
 export const APPROVAL_TYPE = 'wallet_requestPermissions';
 
 export const WALLET_PREFIX = 'wallet_';
@@ -34,6 +36,7 @@ export const LOG_METHOD_TYPES = {
 export const LOG_LIMIT = 100;
 
 export const SAFE_METHODS = [
+  MESSAGE_TYPE.GET_DEVICE_FEATURES_BAK,
   'eth_blockNumber',
   'eth_call',
   'eth_chainId',
