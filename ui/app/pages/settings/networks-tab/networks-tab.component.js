@@ -204,6 +204,7 @@ export default class NetworksTab extends PureComponent {
         {this.renderNetworksList()}
         {shouldRenderNetworkForm ? (
           <NetworkForm
+            selectedNetwork={this.props.selectedNetwork}
             setProviderType={setProviderType}
             rpcUrls={networksToRender.map((network) => network.rpcUrl)}
             setRpcTarget={setRpcTarget}

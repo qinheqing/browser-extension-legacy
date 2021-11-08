@@ -1,3 +1,5 @@
+import { getRpcUrlAndSaveDefault } from './getRpcUrl';
+
 export const ROPSTEN = 'ropsten';
 export const RINKEBY = 'rinkeby';
 export const KOVAN = 'kovan';
@@ -89,7 +91,10 @@ export const AVAX = 'avalanche';
 export const AVAX_NETWORK_ID = '43114'; // 1 or 43114?
 export const AVAX_CHAIN_ID = '0xa86a'; // hex in chainId
 export const AVAX_DISPLAY_NAME = 'Avax Main C-Chain';
-export const AVAX_RPC_URL = 'https://api.avax.network/ext/bc/C/rpc';
+export const AVAX_RPC_URL = getRpcUrlAndSaveDefault(
+  AVAX,
+  'https://api.avax.network/ext/bc/C/rpc',
+);
 export const AVAX_BLOCK_EXPLORER_URL = 'https://cchain.explorer.avax.network';
 // export const AVAX_BLOCK_API_URL = 'https://docs.avascan.info/avax-supply';
 export const AVAX_TICKER = 'AVAX';
@@ -111,31 +116,54 @@ export const SECURE_NETWORKS = []
   .concat(INFURA_PROVIDER_TYPES)
   .concat(BUILDINT_PROVIDER_TYPES);
 
-export const ETH_RPC_URL = 'https://rpc.onekey.so/eth';
+export const ETH_RPC_URL = getRpcUrlAndSaveDefault(
+  MAINNET,
+  'https://rpc.onekey.so/eth',
+);
 
-export const HECO_RPC_URL = 'https://rpc.onekey.so/heco';
+export const HECO_RPC_URL = getRpcUrlAndSaveDefault(
+  HECO,
+  'https://rpc.onekey.so/heco',
+);
 export const HECO_TICKER = 'HT';
 export const HECO_IMAGE = './images/ht_logo.svg';
 
-export const BSC_RPC_URL = 'https://rpc.onekey.so/bsc';
-export const BSC_TEST_RPC_URL =
-  'https://data-seed-prebsc-1-s1.binance.org:8545';
+export const BSC_RPC_URL = getRpcUrlAndSaveDefault(
+  BSC,
+  'https://rpc.onekey.so/bsc',
+);
+export const BSC_TEST_RPC_URL = getRpcUrlAndSaveDefault(
+  BSC_TEST,
+  'https://data-seed-prebsc-1-s1.binance.org:8545',
+);
 export const BSC_TICKER = 'BNB';
 export const BSC_IMAGE = './images/bsc_logo.svg';
 
-export const MATIC_RPC_URL = 'https://rpc-mainnet.matic.network';
+export const MATIC_RPC_URL = getRpcUrlAndSaveDefault(
+  MATIC,
+  'https://rpc-mainnet.matic.network',
+);
 export const MATIC_TICKER = 'MATIC';
 export const MATIC_IMAGE = './images/matic_logo.svg';
 
-export const XDAI_RPC_URL = 'https://rpc.xdaichain.com';
+export const XDAI_RPC_URL = getRpcUrlAndSaveDefault(
+  XDAI,
+  'https://rpc.xdaichain.com',
+);
 export const XDAI_TICKER = 'xDai';
 export const XDAI_IMAGE = './images/xdai_logo.svg';
 
-export const FANTOM_RPC_URL = 'https://rpcapi.fantom.network';
+export const FANTOM_RPC_URL = getRpcUrlAndSaveDefault(
+  FANTOM,
+  'https://rpcapi.fantom.network',
+);
 export const FANTOM_TICKER = 'FTM';
 export const FANTOM_IMAGE = './images/fantom_logo.svg';
 
-export const OKEX_RPC_URL = 'https://exchainrpc.okex.org';
+export const OKEX_RPC_URL = getRpcUrlAndSaveDefault(
+  OKEX,
+  'https://exchainrpc.okex.org',
+);
 export const OKEX_TICKER = 'OKT';
 export const OKEX_IMAGE = './images/okex_logo.svg';
 

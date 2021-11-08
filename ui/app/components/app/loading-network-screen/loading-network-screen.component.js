@@ -5,6 +5,7 @@ import LoadingScreen from '../../ui/loading-screen';
 
 export default class LoadingNetworkScreen extends PureComponent {
   state = {
+    showLoadingSpinner: true,
     showErrorScreen: false,
   };
 
@@ -76,7 +77,9 @@ export default class LoadingNetworkScreen extends PureComponent {
             type="default"
             onClick={() => {
               window.clearTimeout(this.cancelCallTimeout);
-              showNetworkDropdown();
+              this.setState({ showLoadingSpinner: false });
+              setProviderType('mainnet');
+              // showNetworkDropdown();
             }}
           >
             {this.context.t('switchNetworks')}
@@ -128,6 +131,9 @@ export default class LoadingNetworkScreen extends PureComponent {
 
   render() {
     const { rollbackToPreviousProvider } = this.props;
+    if (!this.state.showLoadingSpinner) {
+      return null;
+    }
 
     return (
       <LoadingScreen

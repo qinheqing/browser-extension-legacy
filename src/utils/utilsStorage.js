@@ -1,6 +1,8 @@
 import ExtensionStore from '../../app/scripts/lib/local-store';
 
-const KEYS = {};
+const KEYS = {
+  BUILT_IN_NETWORK_CUSTOM_RPC_URL: 'BUILT_IN_NETWORK_CUSTOM_RPC_URL',
+};
 
 const extStorage = new ExtensionStore();
 

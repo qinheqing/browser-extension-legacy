@@ -36,7 +36,13 @@ export async function jsonRpcRequest(rpcUrl, rpcMethod, rpcParams = []) {
     }),
     headers,
     cache: 'default',
-  }).then((httpResponse) => httpResponse.json());
+  }).then(async (httpResponse) => {
+    if (httpResponse.status !== 200) {
+      return null;
+    }
+    const d = await httpResponse.json();
+    return d;
+  });
 
   if (
     !jsonRpcResponse ||

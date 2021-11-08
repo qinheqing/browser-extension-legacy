@@ -10,6 +10,12 @@ import {
   isSafeChainId,
 } from '../../../../../../shared/modules/network.utils';
 import { jsonRpcRequest } from '../../../../../../shared/modules/rpc.utils';
+import utilsStorage from '../../../../../../src/utils/utilsStorage';
+import getRpcUrl, {
+  buildCustomRpcUrlStorageKey,
+  getDefaultRpcUrl,
+} from '../../../../../../shared/constants/getRpcUrl';
+import utilsToast from '../../../../../../src/utils/utilsToast';
 
 const FORM_STATE_KEYS = [
   'rpcUrl',
@@ -42,10 +48,12 @@ export default class NetworkForm extends PureComponent {
     rpcUrls: PropTypes.array,
     setProviderType: PropTypes.func.isRequired,
     isFullScreen: PropTypes.bool,
+    selectedNetwork: PropTypes.object,
   };
 
   state = {
-    rpcUrl: this.props.rpcUrl,
+    rpcUrlInit: this.initStateRpcUrlFromProps(),
+    rpcUrl: this.initStateRpcUrlFromProps(),
     chainId: this.getDisplayChainId(this.props.chainId),
     ticker: this.props.ticker,
     networkName: this.props.networkName,
@@ -94,9 +102,20 @@ export default class NetworkForm extends PureComponent {
     this.props.onClear(false);
   }
 
+  initStateRpcUrlFromProps() {
+    // eslint-disable-next-line prefer-const
+    let { rpcUrl, viewOnly } = this.props;
+    const providerType = this.getProviderType();
+    if (viewOnly && providerType) {
+      rpcUrl = this.getSavedCustomRpcUrl(providerType) || rpcUrl;
+    }
+    return rpcUrl;
+  }
+
   resetForm() {
-    const { rpcUrl, chainId, ticker, networkName, blockExplorerUrl } =
-      this.props;
+    const { chainId, ticker, networkName, blockExplorerUrl } = this.props;
+
+    const rpcUrl = this.initStateRpcUrlFromProps();
 
     this.setState({
       rpcUrl,
@@ -127,6 +146,18 @@ export default class NetworkForm extends PureComponent {
     return parseInt(chainId, 16).toString(10);
   }
 
+  getProviderType() {
+    return this.props?.selectedNetwork?.providerType;
+  }
+
+  buildProviderTypeStorageKey(providerType) {
+    return buildCustomRpcUrlStorageKey(providerType);
+  }
+
+  getSavedCustomRpcUrl(providerType) {
+    return getRpcUrl(providerType);
+  }
+
   onSubmit = async () => {
     this.setState({
       isSubmitting: true,
@@ -141,6 +172,7 @@ export default class NetworkForm extends PureComponent {
         rpcPrefs = {},
         onClear,
         networksTabIsInAddMode,
+        selectedNetwork,
       } = this.props;
       const {
         networkName,
@@ -149,6 +181,8 @@ export default class NetworkForm extends PureComponent {
         ticker,
         blockExplorerUrl,
       } = this.state;
+      const providerType = this.getProviderType();
+      // console.log('built-in network providerType: ', providerType);
 
       const formChainId = stateChainId.trim().toLowerCase();
       // Ensure chainId is a 0x-prefixed, lowercase hex string
@@ -157,10 +191,21 @@ export default class NetworkForm extends PureComponent {
         chainId = `0x${parseInt(chainId, 10).toString(16)}`;
       }
 
+      // send "eth_chainId" rpc call to check rpc server is valid and chain is matched
       if (!(await this.validateChainIdOnSubmit(formChainId, chainId, rpcUrl))) {
         this.setState({
           isSubmitting: false,
         });
+        return;
+      }
+
+      if (viewOnly) {
+        if (providerType) {
+          const storageKey = this.buildProviderTypeStorageKey(providerType);
+          utilsStorage.setItem(storageKey, rpcUrl);
+        }
+        global.onekeyHistory.goBack();
+        utilsToast.notification.success('RPC 修改成功，请重启浏览器生效');
         return;
       }
 
@@ -236,6 +281,7 @@ export default class NetworkForm extends PureComponent {
     } = this.props;
 
     const {
+      rpcUrlInit,
       rpcUrl: stateRpcUrl,
       chainId: stateChainId,
       ticker: stateTicker,
@@ -252,7 +298,7 @@ export default class NetworkForm extends PureComponent {
       stateChainId === this.getDisplayChainId(propsChainId);
 
     return (
-      stateRpcUrl === rpcUrl &&
+      stateRpcUrl === rpcUrlInit &&
       chainIdIsUnchanged &&
       stateTicker === ticker &&
       stateNetworkName === networkName &&
@@ -269,13 +315,14 @@ export default class NetworkForm extends PureComponent {
     tooltipText,
     autoFocus = false,
     inlineEditable = false,
+    onReset = null,
   }) {
     const { errors } = this.state;
     const { viewOnly } = this.props;
 
     return (
       <div className="networks-tab__network-form-row">
-        <div className="networks-tab__network-form-label">
+        <div className="networks-tab__network-form-label flex items-center">
           <div className="networks-tab__network-form-label-text">
             {this.context.t(optionalTextFieldKey || fieldKey)}
           </div>
@@ -288,6 +335,15 @@ export default class NetworkForm extends PureComponent {
               <i className="fa fa-info-circle" />
             </Tooltip>
           ) : null}
+          <div className="flex-1" />
+          {onReset && (
+            <div
+              onClick={onReset}
+              className="text-xs text-blue-500 cursor-pointer"
+            >
+              恢复默认值
+            </div>
+          )}
         </div>
         <TextField
           type="text"
@@ -354,6 +410,9 @@ export default class NetworkForm extends PureComponent {
    * @param {string} rpcUrl - The RPC URL from the form.
    */
   validateChainIdOnSubmit = async (formChainId, parsedChainId, rpcUrl) => {
+    // formChainId: "56"
+    // parsedChainId: "0x38"
+
     const { t } = this.context;
     let errorMessage;
     let endpointChainId;
@@ -466,6 +525,8 @@ export default class NetworkForm extends PureComponent {
       !chainId ||
       Object.values(errors).some((x) => x);
 
+    const defaultRpcUrl = getDefaultRpcUrl(this.getProviderType());
+
     return (
       <div className="networks-tab__network-form">
         {networksTabIsInAddMode && (
@@ -492,6 +553,10 @@ export default class NetworkForm extends PureComponent {
           onChange: this.setStateWithValue('rpcUrl', this.validateUrlRpcUrl),
           value: rpcUrl,
           inlineEditable: true,
+          onReset:
+            defaultRpcUrl &&
+            defaultRpcUrl !== rpcUrl &&
+            (() => this.setState({ rpcUrl: defaultRpcUrl })),
         })}
         {this.renderFormTextField({
           fieldKey: 'chainId',
