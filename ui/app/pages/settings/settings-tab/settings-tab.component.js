@@ -7,6 +7,7 @@ import ToggleButton from '../../../components/ui/toggle-button';
 import locales from '../../../../../app/_locales/index.json';
 import { RESOLVE_CONFLICT_ONEKEY_NOT_REPLACING } from '../../../../../app/scripts/constants/consts';
 import { IS_ENV_IN_TEST_OR_DEBUG } from '../../../helpers/constants/common';
+import ReduxErrorWarningMessage from '../../../../../src/components/ReduxErrorWarningMessage';
 import LanguageDropdown from './language-dropdown';
 
 const sortedCurrencies = availableCurrencies.sort((a, b) => {
@@ -250,7 +251,10 @@ export default class SettingsTab extends PureComponent {
 
     return (
       <div className="settings-page__body">
-        {warning && <div className="settings-tab__error">{warning}</div>}
+        {warning && (
+          <span />
+          // <ReduxErrorWarningMessage className="settings-tab__error" />
+        )}
         {this.renderCurrentConversion()}
         {this.renderUsePrimaryCurrencyOptions()}
         <LanguageDropdown />

@@ -5,6 +5,7 @@ import { exportAsFile } from '../../../helpers/utils/util';
 import ToggleButton from '../../../components/ui/toggle-button';
 import TextField from '../../../components/ui/text-field';
 import Button from '../../../components/ui/button';
+import ReduxErrorWarningMessage from '../../../../../src/components/ReduxErrorWarningMessage';
 
 export default class AdvancedTab extends PureComponent {
   static contextTypes = {
@@ -383,7 +384,9 @@ export default class AdvancedTab extends PureComponent {
 
     return (
       <div className="settings-page__body">
-        {warning && <div className="settings-tab__error">{warning}</div>}
+        {warning && (
+          <ReduxErrorWarningMessage className="settings-tab__error" />
+        )}
         {this.renderStateLogs()}
         {this.renderResetAccount()}
         {this.renderAdvancedGasInputInline()}

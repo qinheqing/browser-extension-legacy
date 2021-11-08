@@ -98,12 +98,16 @@ export function useTokenTracker(
       return;
     }
 
+    // comment logic here
+    // otherwise buildTracker() won't be executed if tokensWithBalance exists
+    /*
     if (Array.isArray(tokensWithBalance) && tokensWithBalance.length > 0) {
       updateBalances(tokensWithBalance);
       teardownTracker();
       setLoading(false);
       return;
     }
+    */
 
     if (memoizedTokens.length === 0) {
       // sets loading state to false and token list to empty

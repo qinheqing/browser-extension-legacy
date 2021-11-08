@@ -457,6 +457,7 @@ export default class MetamaskController extends EventEmitter {
         }
         return []; // changing this is a breaking change
       },
+      getDeviceFeatures: this.getDeviceFeatures.bind(this),
       // tx signing
       processTransaction: this.newUnapprovedTransaction.bind(this),
       // msg signing
@@ -549,6 +550,15 @@ export default class MetamaskController extends EventEmitter {
   // EXPOSED TO THE UI SUBSYSTEM
   // = ============================================================================
 
+  async getDeviceFeatures() {
+    const res = await OneKeyKeyring.connect.getFeatures();
+    if (res?.success && res.payload) {
+      return res.payload;
+    }
+    const errorMsg = res?.payload?.error || 'Hardware Error: getDeviceFeatures';
+    throw new Error(errorMsg);
+  }
+
   /**
    * The metamask-state of the various controllers, made available to the UI
    *
@@ -593,6 +603,7 @@ export default class MetamaskController extends EventEmitter {
 
     return {
       // etc
+      getDeviceFeatures: this.getDeviceFeatures.bind(this),
       getState: (cb) => cb(null, this.getState()),
       setCurrentCurrency: this.setCurrentCurrency.bind(this),
       setUseBlockie: this.setUseBlockie.bind(this),
@@ -2095,6 +2106,7 @@ export default class MetamaskController extends EventEmitter {
     engine.push(
       createMethodMiddleware({
         origin,
+        getDeviceFeatures: this.getDeviceFeatures.bind(this),
         getProviderState: this.getProviderState.bind(this),
         trackEvent: this.noop.bind(this),
         handleWatchAssetRequest:

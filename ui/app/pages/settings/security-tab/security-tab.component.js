@@ -9,6 +9,7 @@ import {
 import Button from '../../../components/ui/button';
 import { getEnvironmentType } from '../../../../../app/scripts/lib/util';
 import { ENVIRONMENT_TYPE_POPUP } from '../../../../../shared/constants/app';
+import ReduxErrorWarningMessage from '../../../../../src/components/ReduxErrorWarningMessage';
 
 export default class SecurityTab extends PureComponent {
   static contextTypes = {
@@ -149,7 +150,9 @@ export default class SecurityTab extends PureComponent {
 
     return (
       <div className="settings-page__body">
-        {warning && <div className="settings-tab__error">{warning}</div>}
+        {warning && (
+          <ReduxErrorWarningMessage className="settings-tab__error" />
+        )}
         {this.renderSeedWords()}
         {this.renderChangePassword()}
         {this.renderIncomingTransactionsOptIn()}

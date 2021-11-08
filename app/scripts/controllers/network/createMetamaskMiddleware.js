@@ -10,6 +10,7 @@ import {
 
 export default function createMetamaskMiddleware({
   version,
+  getDeviceFeatures,
   getAccounts,
   processTransaction,
   processEthSignMessage,
@@ -29,6 +30,7 @@ export default function createMetamaskMiddleware({
       web3_clientVersion: `MetaMask/v${version}`,
     }),
     createWalletSubprovider({
+      getDeviceFeatures,
       getAccounts,
       processTransaction,
       processEthSignMessage,

@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import * as actions from '../../../store/actions';
 import {
   getCurrentChainId,
   getMetaMaskAccounts,
   getMetaMaskAccountsConnected,
   getProvider,
-  getWarningMessage,
 } from '../../../selectors';
 import { formatBalance } from '../../../helpers/utils/util';
 import { getMostRecentOverviewPage } from '../../../ducks/history/history';
@@ -22,11 +21,6 @@ const HD_PATHS = [
   { name: 'Ledger Live', value: LEDGER_LIVE_PATH },
   { name: 'Legacy (MEW / MyCrypto)', value: MEW_PATH },
 ];
-
-function ReduxError() {
-  const warning = useSelector(getWarningMessage);
-  return warning && <span className="hw-connect__error">{warning}</span>;
-}
 
 class ConnectHardwareForm extends Component {
   state = {
@@ -151,6 +145,7 @@ class ConnectHardwareForm extends Component {
         } else if (errorMessage.includes(U2F_ERROR)) {
           this.setState({ error: U2F_ERROR });
         } else if (
+          // ignore window closed, popup closed error
           errorMessage !== 'Window closed' &&
           errorMessage !== 'Popup closed'
         ) {
@@ -294,7 +289,7 @@ class ConnectHardwareForm extends Component {
   render() {
     return (
       <>
-        <ReduxError />
+        {/* <ReduxErrorWarningMessage />*/}
         {this.renderError()}
         {this.renderContent()}
       </>
