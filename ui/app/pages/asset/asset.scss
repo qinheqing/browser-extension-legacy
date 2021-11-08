@@ -1,6 +1,12 @@
 .asset {
   &__container {
     background-color: white;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    .transaction-list {
+    }
   }
 
   &__overview {
