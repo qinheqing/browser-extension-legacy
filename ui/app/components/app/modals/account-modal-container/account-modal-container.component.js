@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import classnames from 'classnames';
+import { Avatar } from '@onekeyhq/ui-components';
 import Identicon from '../../../ui/identicon';
 
 export default function AccountModalContainer(props, context) {
@@ -20,7 +21,7 @@ export default function AccountModalContainer(props, context) {
     >
       <div className="account-modal__container">
         <div>
-          <Identicon address={selectedIdentity.address} diameter={64} />
+          <Avatar address={selectedIdentity.address} size="2xl" />
         </div>
         {showBackButton && (
           <div className="account-modal__back" onClick={backButtonAction}>

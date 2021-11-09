@@ -1,10 +1,47 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from '@onekeyhq/ui-components';
+import { useDispatch, useSelector } from 'react-redux';
 import AccountModalContainer from '../account-modal-container';
 import getAccountLink from '../../../../../lib/account-link';
 import QrView from '../../../ui/qr-code';
 import EditableLabel from '../../../ui/editable-label';
-import Button from '../../../ui/button';
+import { getCurrentKeyring, getSelectedIdentity } from '../../../../selectors';
+import utilsApp from '../../../../../../src/utils/utilsApp';
+import useI18n from '../../../../../../src/hooks/useI18n';
+import { showModal } from '../../../../store/actions';
+
+function RemoveAccountButton() {
+  const t = useI18n();
+  const dispatch = useDispatch();
+  const keyring = useSelector(getCurrentKeyring);
+  const selectedIdentity = useSelector(getSelectedIdentity);
+  const { address } = selectedIdentity;
+  const isRemovable = utilsApp.isOldHome() && keyring.type !== 'HD Key Tree';
+
+  if (isRemovable) {
+    return (
+      <>
+        <div className="h-2" />
+        <Button
+          block
+          type="destructive"
+          onClick={() => {
+            dispatch(
+              showModal({
+                name: 'CONFIRM_REMOVE_ACCOUNT',
+                identity: selectedIdentity,
+              }),
+            );
+          }}
+        >
+          {t('removeAccount')}
+        </Button>
+      </>
+    );
+  }
+  return null;
+}
 
 export default class AccountDetailsModal extends Component {
   static propTypes = {
@@ -62,31 +99,34 @@ export default class AccountDetailsModal extends Component {
 
         <div className="account-details-modal__divider" />
 
-        <Button
-          type="secondary"
-          className="account-details-modal__button"
-          onClick={() => {
-            global.platform.openTab({
-              url: getAccountLink(address, chainId, rpcPrefs, network),
-            });
-          }}
-        >
-          {rpcPrefs.blockExplorerUrl
-            ? this.context.t('blockExplorerView', [
-                rpcPrefs.blockExplorerUrl.match(/^https?:\/\/(.+)/u)[1],
-              ])
-            : this.context.t('viewOnEtherscan')}
-        </Button>
-
-        {exportPrivateKeyFeatureEnabled ? (
+        <div className="px-4 pt-4 w-full">
           <Button
-            type="secondary"
-            className="account-details-modal__button"
-            onClick={() => showExportPrivateKeyModal()}
+            block
+            onClick={() => {
+              global.platform.openTab({
+                url: getAccountLink(address, chainId, rpcPrefs, network),
+              });
+            }}
           >
-            {this.context.t('exportPrivateKey')}
+            {rpcPrefs.blockExplorerUrl
+              ? this.context.t('blockExplorerView', [
+                  rpcPrefs.blockExplorerUrl.match(/^https?:\/\/(.+)/u)[1],
+                ])
+              : this.context.t('viewinExplorer')}
           </Button>
-        ) : null}
+          <div className="h-2" />
+
+          {exportPrivateKeyFeatureEnabled ? (
+            <>
+              <Button block onClick={() => showExportPrivateKeyModal()}>
+                {this.context.t('exportPrivateKey')}
+              </Button>
+              <div className="h-2" />
+            </>
+          ) : null}
+
+          <RemoveAccountButton />
+        </div>
       </AccountModalContainer>
     );
   }

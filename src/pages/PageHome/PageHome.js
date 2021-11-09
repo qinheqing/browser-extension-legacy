@@ -124,7 +124,7 @@ function PageHomeLayout() {
       footer={<ExtAppTabBar name={ExtAppTabBar.names.Home} />}
     >
       <PageHome key={key} />
-      <ErrorTestCase />
+      {/* <ErrorTestCase />*/}
     </AppPageLayout>
   );
 }

@@ -72,7 +72,7 @@ const Receive = (props) => {
               ? t('blockExplorerView', [
                   rpcPrefs.blockExplorerUrl.match(/^https?:\/\/(.+)/u)[1],
                 ])
-              : t('viewOnEtherscan')}
+              : t('viewinExplorer')}
           </Button>
 
           {exportPrivateKeyFeatureEnabled ? (

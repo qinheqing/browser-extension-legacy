@@ -116,17 +116,12 @@ export function ExtAppHeaderMoreDropdown() {
                 });
               },
             },
-            isRemovable && {
+
+            /*
+              isRemovable && {
               content: t('removeAccount'),
               icon: 'TrashSolid',
               onAction: () => {
-                if (utilsApp.isNewHome()) {
-                  storeHistory.openBlockBrowserLink({
-                    account: storeAccount.currentAccountAddress,
-                  });
-                  return;
-                }
-
                 dispatch(
                   showModal({
                     name: 'CONFIRM_REMOVE_ACCOUNT',
@@ -135,6 +130,7 @@ export function ExtAppHeaderMoreDropdown() {
                 );
               },
             },
+            */
           ],
         },
         // System related actions
