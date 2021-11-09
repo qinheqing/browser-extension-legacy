@@ -1,9 +1,14 @@
 import utilsToast from './utilsToast';
 import errorsIgnore from './errorsIgnore';
+import utilsApp from './utilsApp';
 
 // node_modules/@sentry/utils/dist/instrument.js
 
 function showErrorToast(error) {
+  if (utilsApp.isOldHome()) {
+    return;
+  }
+
   if (
     errorsIgnore.ignoreNotification({
       error,

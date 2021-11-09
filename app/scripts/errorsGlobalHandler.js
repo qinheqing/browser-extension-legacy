@@ -6,6 +6,9 @@ global.$$errorNotificationAvailableCount = 5;
 let lastErrorMsg = '';
 
 async function showExtensionNotification(error) {
+  return;
+
+  // eslint-disable-next-line no-unreachable
   let msg = isString(error) ? error : error?.message;
   const errorCodeI18n = error.errorCodeI18n || '';
   const errorUrl = error.errorUrl || '';
