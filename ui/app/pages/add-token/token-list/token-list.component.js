@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
+import { Token, TokenGroup } from '@onekeyhq/ui-components';
 import { checkExistingAddresses } from '../../../helpers/utils/util';
+import { TokenLogoIcon } from '../../../../../src/components/LogoIcon';
 import TokenListPlaceholder from './token-list-placeholder';
 
 const shortAddress = (address) =>
@@ -57,12 +59,14 @@ export default class TokenList extends Component {
                     tabIndex="0"
                   >
                     <div className="token-list__token-info">
-                      <div
-                        className="token-list__token-icon"
-                        style={{
-                          backgroundImage: logoURI && `url(${logoURI})`,
+                      <TokenLogoIcon
+                        tokenInfo={{
+                          logoURI,
+                          address,
                         }}
                       />
+                      <div className="w-4" />
+
                       <div className="token-list__token-data">
                         <span className="token-list__token-name">{`${name} (${symbol})`}</span>
                         <span className="token-list__token-address">

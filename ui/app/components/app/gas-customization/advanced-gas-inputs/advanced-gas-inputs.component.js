@@ -20,6 +20,7 @@ export default class AdvancedGasInputs extends Component {
     isSpeedUp: PropTypes.bool,
     customGasLimitMessage: PropTypes.string,
     minimumGasLimit: PropTypes.number,
+    nativeCurrency: PropTypes.string,
   };
 
   static defaultProps = {
@@ -47,6 +48,7 @@ export default class AdvancedGasInputs extends Component {
     if (customGasPrice !== prevCustomGasPrice && customGasPrice !== gasPrice) {
       this.setState({ gasPrice: customGasPrice });
     }
+
     if (customGasLimit !== prevCustomGasLimit && customGasLimit !== gasLimit) {
       this.setState({ gasLimit: customGasLimit });
     }
@@ -185,18 +187,17 @@ export default class AdvancedGasInputs extends Component {
       isSpeedUp,
       customGasLimitMessage,
       minimumGasLimit,
+      nativeCurrency,
     } = this.props;
     const { gasPrice, gasLimit } = this.state;
 
-    const {
-      errorText: gasPriceErrorText,
-      errorType: gasPriceErrorType,
-    } = this.gasPriceError({
-      insufficientBalance,
-      customPriceIsSafe,
-      isSpeedUp,
-      gasPrice,
-    });
+    const { errorText: gasPriceErrorText, errorType: gasPriceErrorType } =
+      this.gasPriceError({
+        insufficientBalance,
+        customPriceIsSafe,
+        isSpeedUp,
+        gasPrice,
+      });
     const gasPriceErrorComponent = gasPriceErrorType ? (
       <div
         className={`advanced-gas-inputs__gas-edit-row__${gasPriceErrorType}-text`}
@@ -205,10 +206,8 @@ export default class AdvancedGasInputs extends Component {
       </div>
     ) : null;
 
-    const {
-      errorText: gasLimitErrorText,
-      errorType: gasLimitErrorType,
-    } = this.gasLimitError({ insufficientBalance, gasLimit, minimumGasLimit });
+    const { errorText: gasLimitErrorText, errorType: gasLimitErrorType } =
+      this.gasLimitError({ insufficientBalance, gasLimit, minimumGasLimit });
     const gasLimitErrorComponent = gasLimitErrorType ? (
       <div
         className={`advanced-gas-inputs__gas-edit-row__${gasLimitErrorType}-text`}
@@ -227,7 +226,9 @@ export default class AdvancedGasInputs extends Component {
       <div className="advanced-gas-inputs__gas-edit-rows">
         {this.renderGasInput({
           label: this.context.t('gasPrice'),
-          tooltipTitle: this.context.t('gasPriceInfoTooltipContent'),
+          tooltipTitle: this.context.t('gasPriceInfoTooltipContent', [
+            nativeCurrency,
+          ]),
           value: this.state.gasPrice,
           onChange: this.onChangeGasPrice,
           errorComponent: gasPriceErrorComponent,

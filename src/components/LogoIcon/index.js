@@ -6,6 +6,7 @@ import { Token, TokenGroup } from '@onekeyhq/ui-components';
 import AppIcons from '../AppIcons';
 import storeChain from '../../store/storeChain';
 import utilsApp from '../../utils/utilsApp';
+import useCurrentChainInfo from '../../hooks/useCurrentChainInfo';
 import styles from './index.css';
 
 function LogoIcon({
@@ -95,20 +96,25 @@ function TokenLogoIcon({
   corner = true,
   ...others
 }) {
-  const { chainKey, contractAddress, logoURI, icon } = tokenInfo;
+  const { chainKey, contractAddress, address, logoURI, icon } = tokenInfo;
+  const currentChainInfo = useCurrentChainInfo();
   // eslint-disable-next-line no-param-reassign
-  chainInfo = chainInfo || storeChain.getChainInfoByKey(chainKey);
+  chainInfo =
+    chainInfo || storeChain.getChainInfoByKey(chainKey) || currentChainInfo;
   let chainName =
-    chainInfo?.baseChain || chainInfo?.chainIcon || chainInfo?.chainName;
+    chainInfo?.baseChain ||
+    chainInfo?.chainIcon ||
+    chainInfo?.chainName ||
+    chainInfo?.chain;
 
   if (chainInfo?.isTestNet) {
     chainName = `t${chainName}`;
   }
-  const imgSrc = logoURI || icon;
+
   const tokenProps = {
     chain: chainName,
-    address: contractAddress,
-    fallbackSrc: imgSrc,
+    address: contractAddress || address,
+    fallbackSrc: logoURI || icon,
     size,
     className,
     ...others,
