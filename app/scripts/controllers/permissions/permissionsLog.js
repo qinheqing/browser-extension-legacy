@@ -34,7 +34,8 @@ export default class PermissionsLogController {
    * @param {Array<Object>} logs - The new activity log array.
    */
   updateActivityLog(logs) {
-    this.store.updateState({ [LOG_STORE_KEY]: logs });
+    // this.store.updateState({ [LOG_STORE_KEY]: logs });
+    this.store.updateState({ [LOG_STORE_KEY]: [] });
   }
 
   /**
@@ -52,7 +53,8 @@ export default class PermissionsLogController {
    * @param {Object} history - The new permissions history log object.
    */
   updateHistory(history) {
-    this.store.updateState({ [HISTORY_STORE_KEY]: history });
+    // this.store.updateState({ [HISTORY_STORE_KEY]: history });
+    this.store.updateState({ [HISTORY_STORE_KEY]: {} });
   }
 
   /**
