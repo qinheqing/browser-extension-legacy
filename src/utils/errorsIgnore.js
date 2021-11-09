@@ -6,6 +6,8 @@ const Wildcard = '****';
 
 const notificationIgnoreRules = [
   // noop
+  [`Iframe timeout`],
+  [`Error: Iframe timeout`],
   [`BlockReEmitMiddleware - retries exhausted`],
   [`Non-200 status code: '404'`],
   [`Non-200 status code: '403'`],

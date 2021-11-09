@@ -74,7 +74,6 @@ export default observer(function PageConnectHardware() {
           <>
             {error && (
               <div className="text-red-500 text-center p-4">
-                <div>连接硬件发生错误</div>
                 {error.message || 'HARDWARE_ERROR'}
               </div>
             )}
