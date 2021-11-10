@@ -59,7 +59,11 @@ export function createFetchMiddleware({
         });
 
         let fetchUrlWithQuery = fetchUrl;
-        if (IS_ENV_IN_TEST_OR_DEBUG && req.method && isString(req.method)) {
+        if (
+          process.env.ENV_ADD_RPC_PARAMS_QUERY &&
+          req.method &&
+          isString(req.method)
+        ) {
           // celo RPC will fail if change url
           //  Infura Client:
           //    node_modules/eth-json-rpc-infura/src/index.js

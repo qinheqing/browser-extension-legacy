@@ -825,6 +825,7 @@ function getEnvironmentVariables({ devMode, testing }) {
       process.env.ENV_DEFAULT_PASSWORD_AUTO_FILLED || '',
     GITHUB_TAG: process.env.GITHUB_TAG || (devMode && 'DEV'),
     ENV_TEST_MNEMONIC: process.env.ENV_TEST_MNEMONIC || '',
+    ENV_ADD_RPC_PARAMS_QUERY: process.env.ENV_ADD_RPC_PARAMS_QUERY || '',
   };
 }
 
