@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 import Button from '../../button';
+import { ExtAppHeader } from '../../../../../../src/components/ExtAppHeader';
+import ExtAppNavBar from '../../../../../../src/components/ExtAppNavBar';
 
 export default class PageContainerHeader extends Component {
   static propTypes = {
@@ -50,38 +52,23 @@ export default class PageContainerHeader extends Component {
     const {
       title,
       subtitle,
-      onClose,
-      tabs,
-      headerCloseText,
       onBackButtonClick,
+      onClose,
+      // ----
+      tabs,
       backButtonStyles,
       className,
     } = this.props;
 
     return (
-      <div
-        className={classnames('page-container-v2__header', className, {
-          'page-container-v2__header--no-padding-bottom': Boolean(tabs),
-        })}
-      >
-        <div className="page-container-v2__sub-header">
-          <span
-            className="page-container-v2__back-button"
-            onClick={onBackButtonClick}
-            style={backButtonStyles}
-          >
-            <img src="./images/caret-left-black.svg" />
-            <div className="page-container-v2__divider" />
-          </span>
-          <div className="page-container-v2__header-content">
-            {title && <div className="page-container-v2__title">{title}</div>}
-            {subtitle && (
-              <div className="page-container-v2__subtitle">{subtitle}</div>
-            )}
-          </div>
-        </div>
+      <>
+        <ExtAppNavBar
+          onBackClick={onBackButtonClick}
+          title={title}
+          subTitle={subtitle}
+        />
         {this.renderTabs()}
-      </div>
+      </>
     );
   }
 }

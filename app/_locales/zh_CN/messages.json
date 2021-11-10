@@ -1434,7 +1434,7 @@
     "message": "Ropsten 测试网"
   },
   "rpcUrl": {
-    "message": "新增 RPC URL"
+    "message": "RPC URL"
   },
   "save": {
     "message": "保存"

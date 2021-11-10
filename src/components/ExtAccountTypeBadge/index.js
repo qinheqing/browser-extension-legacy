@@ -8,13 +8,48 @@ import storeAccount from '../../store/storeAccount';
 import { WALLET_ACCOUNT_TYPES } from '../../../ui/app/helpers/constants/common';
 import styles from './index.css';
 
+function getAccountTypeColor(_type) {
+  let color = 'default';
+
+  switch (_type) {
+    case CONST_ACCOUNT_TYPES.Hardware:
+    case WALLET_ACCOUNT_TYPES.HARDWARE: {
+      color = 'success'; // green
+      break;
+    }
+
+    case CONST_ACCOUNT_TYPES.WatchOnly:
+    case WALLET_ACCOUNT_TYPES.WATCHED: {
+      color = 'default'; // gray
+      break;
+    }
+
+    case CONST_ACCOUNT_TYPES.SingleChain:
+    case WALLET_ACCOUNT_TYPES.IMPORTED: {
+      color = 'warning'; // yellow
+      break;
+    }
+
+    case CONST_ACCOUNT_TYPES.Wallet:
+    case WALLET_ACCOUNT_TYPES.DEFAULT: {
+      color = 'info'; // blue
+      break;
+    }
+
+    default: {
+      color = 'default';
+    }
+  }
+  return color;
+}
+
 function ExtAccountTypeBadge({ children, type }) {
   const typeText = storeAccount.getAccountTypeText(type);
   const isHardWare =
     type === CONST_ACCOUNT_TYPES.Hardware ||
     type === WALLET_ACCOUNT_TYPES.HARDWARE;
   return (
-    <Badge type="success" className="">
+    <Badge type={getAccountTypeColor(type)} className="">
       {isHardWare && (
         <Icon
           name="DeviceMobileOutline"

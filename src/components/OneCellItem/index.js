@@ -49,10 +49,8 @@ function OneCellItem({
         })}
       >
         <div className="flex-1 flex flex-col justify-center">
-          <div className="">{title || children}</div>
-          {content && (
-            <div className="mt-1 text-xs text-gray-400">{content}</div>
-          )}
+          <div className="text-md">{title || children}</div>
+          {content && <div className="text-xs text-gray-400">{content}</div>}
         </div>
 
         {end && (

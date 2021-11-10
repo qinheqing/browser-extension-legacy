@@ -24,6 +24,8 @@ import ExtAppTabBar from '../../components/ExtAppTabBar';
 import useI18n from '../../hooks/useI18n';
 import ExtAppNavBar from '../../components/ExtAppNavBar';
 import useDataRequiredOrRedirect from '../../utils/hooks/useDataRequiredOrRedirect';
+import TokenAmountInPrice from '../../components/TokenAmountInPrice';
+import storeToken from '../../store/storeToken';
 import styles from './index.css';
 
 const timeAgoLocaleFormatter = buildFormatter(timeAgoZhStrings);
@@ -90,13 +92,13 @@ function TransactionInfoIcon({ IconComponent, iconClassName, className }) {
   return (
     <div
       className={classnames(
-        'w-10 h-10 rounded-full u-flex-center',
+        'w-8 h-8 rounded-full u-flex-center',
         className, //  bg-indigo-50
       )}
     >
       <IconComponent
         className={classnames(
-          'w-5',
+          'w-4',
           iconClassName, // text-indigo-600
         )}
       />
@@ -111,6 +113,7 @@ function TransactionInfoCardView({
   content,
   time,
   onClick,
+  priceAmount,
 }) {
   if (loading) {
     // eslint-disable-next-line no-param-reassign
@@ -128,13 +131,22 @@ function TransactionInfoCardView({
   }
   return (
     <OneCellItem
+      className="!px-3"
+      border={false}
       onClick={onClick}
       title={title}
-      content={content}
-      arrow
-      appearance="card"
+      content={
+        <div>
+          {content}
+          <div className="text-xs">
+            <TimeAgo date={time} formatter={timeAgoLocaleFormatter} />
+          </div>
+        </div>
+      }
+      appearance="flat"
       start={icon}
-      end={<TimeAgo date={time} formatter={timeAgoLocaleFormatter} />}
+      end={priceAmount}
+      arrow
     />
   );
 }
@@ -148,8 +160,10 @@ function InstructionsInfoCard({
   txMeta,
   error,
 }) {
+  const t = useI18n();
   const { program, programId, parsed } = ix;
   const timeMs = time * 1000;
+  let priceAmount = null;
   let title = utilsApp.shortenAddress(txid);
   let content = '交易成功';
   let icon = (
@@ -167,9 +181,18 @@ function InstructionsInfoCard({
     const okStatus = txMeta?.status?.Ok;
 
     const amount = lamports;
+    // account = storeAccount.currentAccountInfo
     const { decimals, currency } = account;
 
     if (program === 'system' && ixType === 'transfer') {
+      // fiat price amount
+      priceAmount = (
+        <TokenAmountInPrice
+          token={storeToken.currentNativeToken}
+          value={amount}
+        />
+      );
+
       if (destination === account.address) {
         icon = (
           <TransactionInfoIcon
@@ -181,10 +204,20 @@ function InstructionsInfoCard({
 
         title = (
           <span>
-            接收 <AmountText value={amount} decimals={decimals} /> {currency}
+            {t('receive')}
+            <strong>
+              {' '}
+              <AmountText value={amount} decimals={decimals} />{' '}
+            </strong>
+            {currency}
           </span>
         );
-        content = <span>发送方: {utilsApp.shortenAddress(source)}</span>;
+
+        content = (
+          <span>
+            {t('from')}: {utilsApp.shortenAddress(source)}
+          </span>
+        );
       } else if (source === account.address) {
         icon = (
           <TransactionInfoIcon
@@ -196,10 +229,20 @@ function InstructionsInfoCard({
 
         title = (
           <span>
-            发送 <AmountText value={amount} decimals={decimals} /> {currency}
+            {t('send')}
+            <strong>
+              {' '}
+              <AmountText value={amount} decimals={decimals} />{' '}
+            </strong>
+            {currency}
           </span>
         );
-        content = <span>接收方: {utilsApp.shortenAddress(destination)}</span>;
+
+        content = (
+          <span>
+            {t('to')}: {utilsApp.shortenAddress(destination)}
+          </span>
+        );
       }
     } else {
       // content = '交易成功'
@@ -237,6 +280,7 @@ function InstructionsInfoCard({
       content={content}
       time={timeMs}
       onClick={onClick}
+      priceAmount={priceAmount}
     />
   );
 }
@@ -359,30 +403,32 @@ function PageTransactionHistory() {
             <NoDataView fullHeight>{t('noTransactions')}</NoDataView>
           )}
 
-          {storeStorage.currentPendingTxid.map((txid) => (
-            <PendingTransactionCard
-              key={txid}
-              txid={txid}
-              account={storeAccount.currentAccountInfo}
-              onClick={() => {
-                storeHistory.openBlockBrowserLink({ tx: txid });
-              }}
-            />
-          ))}
-
-          {txList.map((tx) => {
-            const txid = getTxid(tx);
-            return (
-              <TransactionInfoCard
+          <div className="m-4 border rounded-xl overflow-hidden ">
+            {storeStorage.currentPendingTxid.map((txid) => (
+              <PendingTransactionCard
                 key={txid}
-                tx={tx}
+                txid={txid}
                 account={storeAccount.currentAccountInfo}
                 onClick={() => {
                   storeHistory.openBlockBrowserLink({ tx: txid });
                 }}
               />
-            );
-          })}
+            ))}
+
+            {txList.map((tx) => {
+              const txid = getTxid(tx);
+              return (
+                <TransactionInfoCard
+                  key={txid}
+                  tx={tx}
+                  account={storeAccount.currentAccountInfo}
+                  onClick={() => {
+                    storeHistory.openBlockBrowserLink({ tx: txid });
+                  }}
+                />
+              );
+            })}
+          </div>
         </>
       )}
     </AppPageLayout>

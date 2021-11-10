@@ -5,12 +5,16 @@ import classnames from 'classnames';
 import NavBackButton from '../NavBackButton';
 import styles from './index.css';
 
-function ExtAppNavBar({ children, left, right, title, subTitle }) {
+function ExtAppNavBar({ children, left, right, title, subTitle, onBackClick }) {
   const leftView =
-    left === undefined ? <NavBackButton className="-m-2" /> : left;
+    left === undefined ? (
+      <NavBackButton onBackClick={onBackClick} className="-m-2" />
+    ) : (
+      left
+    );
   return (
     <div
-      data-name="AppPageLayoutHeader"
+      data-name="ExtAppNavBar"
       className="bg-nav-bar px-3 py-2 min-h-[60px] flex flex-row items-center border-b"
     >
       {leftView && (

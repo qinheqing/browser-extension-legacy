@@ -1434,7 +1434,7 @@
     "message": "Ropsten Test Network"
   },
   "rpcUrl": {
-    "message": "New RPC URL"
+    "message": "RPC URL"
   },
   "save": {
     "message": "Save"
